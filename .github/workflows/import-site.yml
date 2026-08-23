@@ -1,0 +1,29 @@
+name: Import CFMOTO website
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/import-site.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  import-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Mirror published website
+        run: ruby scripts/mirror_site.rb
+
+      - name: Commit website files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --cached --quiet && exit 0
+          git commit -m "Import CFMOTO Azerbaijan website"
+          git push
