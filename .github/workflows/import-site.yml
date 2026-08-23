@@ -19,6 +19,9 @@ jobs:
       - name: Mirror published website
         run: ruby scripts/mirror_site.rb
 
+      - name: Audit SEO output
+        run: ruby scripts/audit_seo.rb
+
       - name: Commit website files
         run: |
           git config user.name "github-actions[bot]"
