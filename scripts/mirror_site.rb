@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require "fileutils"
 require "net/http"
+require "rbconfig"
 require "set"
 require "uri"
 
@@ -65,3 +66,6 @@ end
 
 FileUtils.touch(File.join(DEST, ".nojekyll"))
 puts "Imported #{seen.size} discovered URLs"
+
+seo_script = File.join(__dir__, "apply_seo.rb")
+abort "SEO processing failed" unless system(RbConfig.ruby, seo_script)
