@@ -6,13 +6,20 @@ ASSETS = File.join(ROOT, "assets")
 
 OLD_RUNTIME = "index-WBfaOMAt.js"
 PREVIOUS_RUNTIME = "index-CfmotoAug24.js"
-NEW_RUNTIME = "index-CfmotoAug24Fix.js"
+CURRENT_RUNTIME = "index-CfmotoAug24Fix.js"
+NEW_RUNTIME = "index-CfmotoMobileFix.js"
 OLD_HOME_BUNDLE = "page-DZgbTvch.js"
 PREVIOUS_HOME_BUNDLE = "page-CfmotoAug24.js"
-NEW_HOME_BUNDLE = "page-CfmotoAug24Fix.js"
+CURRENT_HOME_BUNDLE = "page-CfmotoAug24Fix.js"
+NEW_HOME_BUNDLE = "page-CfmotoMobileFix.js"
 OLD_MENU_BUNDLE = "ProductMegaMenu-Cpx-ytn3.js"
 PREVIOUS_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24.js"
 NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24Fix.js"
+CURRENT_STYLESHEET = "index-DiLMqMiY.css"
+NEW_STYLESHEET = "index-CfmotoMobileFix.css"
+
+RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME].freeze
+HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE].freeze
 
 SERVICE_BASE_COPY = "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir."
 SERVICE_HOURS_COPY = "Bazar ertəsi xaric hər gün 10:00–19:00."
@@ -41,15 +48,17 @@ SUPPORT_ASSET_SOURCES = {
 }.freeze
 
 PRIMARY_ASSET_SOURCES = {
-  [OLD_RUNTIME, PREVIOUS_RUNTIME] => NEW_RUNTIME,
-  [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE] => NEW_HOME_BUNDLE,
+  RUNTIME_SOURCES => NEW_RUNTIME,
+  HOME_BUNDLE_SOURCES => NEW_HOME_BUNDLE,
   [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE] => NEW_MENU_BUNDLE
 }.freeze
 
 ASSET_SOURCE_GROUPS = SUPPORT_ASSET_SOURCES.merge(PRIMARY_ASSET_SOURCES).freeze
 ASSET_RENAMES = ASSET_SOURCE_GROUPS.each_with_object({}) do |(sources, target), renames|
   sources.each { |source| renames[source] = target }
-end.freeze
+end
+ASSET_RENAMES[CURRENT_STYLESHEET] = NEW_STYLESHEET
+ASSET_RENAMES.freeze
 
 def read_utf8(path)
   File.read(path, encoding: "UTF-8")
@@ -145,12 +154,12 @@ update_asset([OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE], NEW_MENU_BUNDLE) do |javas
     'e.price===null?`Qiyməti dəqiqləşdirin`:`${l(e.price)} AZN`',
     'e.price===null?`Qiyməti dəqiqləşdirin`:`${l(e.price)} AZN${e.vatIncluded?` · ƏDV daxil`:``}`'
   )
-  [OLD_RUNTIME, PREVIOUS_RUNTIME].each { |name| javascript.gsub!(name, NEW_RUNTIME) }
-  [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE].each { |name| javascript.gsub!(name, NEW_HOME_BUNDLE) }
+  RUNTIME_SOURCES.each { |name| javascript.gsub!(name, NEW_RUNTIME) }
+  HOME_BUNDLE_SOURCES.each { |name| javascript.gsub!(name, NEW_HOME_BUNDLE) }
   [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
 end
 
-update_asset([OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE], NEW_HOME_BUNDLE) do |javascript|
+update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
   [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
   javascript.gsub!("https://maps.google.com/?q=Babek+Avenue+188+Baku", SHOWROOM_MAP_URL)
   javascript.gsub!('`Kredit`,`#kredit`', "`Kredit`,`##{MOBILE_CREDIT_ID}`")
@@ -188,9 +197,9 @@ update_asset([OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE], NEW_HOME_BUNDLE) do |javas
   )
 end
 
-update_asset([OLD_RUNTIME, PREVIOUS_RUNTIME], NEW_RUNTIME) do |javascript|
+update_asset(RUNTIME_SOURCES, NEW_RUNTIME) do |javascript|
   [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
-  [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE].each { |name| javascript.gsub!(name, NEW_HOME_BUNDLE) }
+  HOME_BUNDLE_SOURCES.each { |name| javascript.gsub!(name, NEW_HOME_BUNDLE) }
 end
 
 SUPPORT_ASSET_SOURCES.each do |source_names, new_name|
@@ -278,11 +287,16 @@ home.gsub!("46<!-- --> aktual model", "47<!-- --> aktual model")
 home.gsub!("46 aktual model", "47 aktual model")
 write_utf8(home_path, home)
 
-Dir.glob(File.join(ASSETS, "*.css")).each do |path|
-  css = read_utf8(path)
-  css = "#{css.rstrip}\n#{MOBILE_CREDIT_CSS}\n" unless css.include?(MOBILE_CREDIT_CSS_MARKER)
-  write_utf8(path, css)
-end
+stylesheet_source = [CURRENT_STYLESHEET, NEW_STYLESHEET]
+  .map { |name| File.join(ASSETS, name) }
+  .find { |path| File.file?(path) }
+abort "Missing required stylesheet: #{CURRENT_STYLESHEET}" unless stylesheet_source
+
+stylesheet = read_utf8(stylesheet_source)
+stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CREDIT_CSS}\n" unless stylesheet.include?(MOBILE_CREDIT_CSS_MARKER)
+new_stylesheet_path = File.join(ASSETS, NEW_STYLESHEET)
+write_utf8(new_stylesheet_path, stylesheet)
+FileUtils.rm_f(File.join(ASSETS, CURRENT_STYLESHEET)) unless CURRENT_STYLESHEET == NEW_STYLESHEET
 
 u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 u10 = read_utf8(u10_path)
@@ -307,7 +321,7 @@ checks = {
   "home map link" => home.include?(SHOWROOM_MAP_URL),
   "home mobile calculator target" => home.include?(%(id="#{MOBILE_CREDIT_ID}")) && home.include?(%(href="##{MOBILE_CREDIT_ID}")),
   "home calculator top link" => home.include?('class="calc-top-link"'),
-  "mobile calculator CSS" => Dir.glob(File.join(ASSETS, "*.css")).any? { |path| read_utf8(path).include?(MOBILE_CREDIT_CSS_MARKER) },
+  "mobile calculator CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_CREDIT_CSS_MARKER),
   "home C5 card" => home.include?('href="/model/cforce-c5"'),
   "home C5 engine class" => home.include?('CFORCE C5</h3><p>Kvadrosikl<!-- --> · <!-- -->500 cc</p>'),
   "home C5 calculator option" => home.include?('value="CFORCE C5"'),
