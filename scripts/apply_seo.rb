@@ -4,6 +4,7 @@ require "json"
 ROOT = File.expand_path("..", __dir__)
 SITE_ORIGIN = "https://cfmoto.az"
 SOURCE_ORIGIN = "https://cfmoto-azerbaijan.dvhqpbbkmw.chatgpt.site"
+SERVICE_PHONE = "+994102414299"
 
 HOME_TITLE = "CFMOTO Azerbaijan | Motosiklet, ATV və Buggy"
 HOME_DESCRIPTION = "CFMOTO-nun Azərbaycanda rəsmi nümayəndəsi. Motosiklet, kvadrosikl, buggy, kredit, rəsmi servis və ehtiyat hissələri."
@@ -21,6 +22,15 @@ organization_schema = {
       "logo" => "#{SITE_ORIGIN}/cfmoto-logo-black.png",
       "image" => HOME_IMAGE,
       "telephone" => "+994125709766",
+      "contactPoint" => [
+        {
+          "@type" => "ContactPoint",
+          "telephone" => SERVICE_PHONE,
+          "contactType" => "technical support",
+          "areaServed" => "AZ",
+          "availableLanguage" => ["az"]
+        }
+      ],
       "priceRange" => "₼₼₼",
       "address" => {
         "@type" => "PostalAddress",

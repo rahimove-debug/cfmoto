@@ -16,6 +16,17 @@ NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24Fix.js"
 
 SERVICE_BASE_COPY = "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir."
 SERVICE_HOURS_COPY = "Bazar ertəsi xaric hər gün 10:00–19:00."
+SERVICE_PHONE = "+994102414299"
+SERVICE_PHONE_DISPLAY = "+994 10 241 42 99"
+SHOWROOM_MAP_URL = "https://maps.app.goo.gl/onFPjWTaXRN92rDfA"
+MOBILE_CREDIT_ID = "kredit-kalkulyator"
+MOBILE_CREDIT_CSS_MARKER = "/* CFMOTO:MOBILE-CREDIT */"
+MOBILE_CREDIT_CSS = <<~CSS.strip
+  #{MOBILE_CREDIT_CSS_MARKER}
+  .calc-top-link{display:none}
+  @media (width<=860px){html{scroll-behavior:auto}##{MOBILE_CREDIT_ID}{scroll-margin-top:18px}}
+  @media (width<=580px){.finance{gap:24px}.finance>.calculator{order:-1}.calculator{padding:20px 16px}.calc-title{margin-bottom:14px}.calc-title span{font-size:20px}.mode-switch{margin-bottom:14px}.mode-switch button{min-height:36px;font-size:12px}.calculator>label{margin-bottom:12px}.calculator select{padding:10px 12px}.range-line{margin:11px 0 4px}.calc-result{margin:14px 0 10px;padding:15px}.calc-result strong{font-size:32px}.calc-top-link{border:1px solid var(--line);min-height:40px;color:var(--copy);justify-content:center;align-items:center;margin-top:12px;font-size:12px;display:flex}}
+CSS
 
 SUPPORT_ASSET_SOURCES = {
   ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js"] => "rolldown-runtime-CfmotoAug24Fix.js",
@@ -141,6 +152,25 @@ end
 
 update_asset([OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE], NEW_HOME_BUNDLE) do |javascript|
   [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
+  javascript.gsub!("https://maps.google.com/?q=Babek+Avenue+188+Baku", SHOWROOM_MAP_URL)
+  javascript.gsub!('`Kredit`,`#kredit`', "`Kredit`,`##{MOBILE_CREDIT_ID}`")
+  javascript.gsub!('href:`#kredit`', "href:`##{MOBILE_CREDIT_ID}`")
+  javascript.gsub!(
+    'className:`calculator`,"aria-label":`Kredit kalkulyatoru`',
+    "className:`calculator`,id:`#{MOBILE_CREDIT_ID}`,\"aria-label\":`Kredit kalkulyatoru`"
+  )
+  calculator_note = '(0,c.jsx)(`small`,{className:`calc-note`,children:`Hesablama məlumat xarakterlidir; bank faizi və komissiyalar daxil deyil. Yekun şərtlər fərqlənə bilər.`})'
+  unless javascript.include?('className:`calc-top-link`')
+    abort "Home calculator note anchor not found" unless javascript.include?(calculator_note)
+    javascript.sub!(
+      calculator_note,
+      "#{calculator_note},(0,c.jsx)(`a`,{className:`calc-top-link`,href:`#top`,children:`↑ Yuxarı qayıt`})"
+    )
+  end
+  javascript.gsub!(
+    '(0,c.jsx)(`a`,{href:`${u}?text=Salam%2C%20servis%20qəbulu%20üçün%20yazılıram`,target:`_blank`,rel:`noreferrer`,children:`Servisə yazıl →`})',
+    "(0,c.jsx)(`a`,{href:`tel:#{SERVICE_PHONE}`,children:`#{SERVICE_PHONE_DISPLAY} · Servisə zəng et →`})"
+  )
   javascript.gsub!(
     "Babək pr. 188 · Hər gün 10:00–19:00 · Bazar ertəsi bağlıdır",
     "Babək pr. 188 · Salon hər gün 10:00–19:00"
@@ -196,6 +226,24 @@ end
 home_path = File.join(ROOT, "index.html")
 home = read_utf8(home_path)
 normalize_service_schedule!(home)
+home.gsub!("https://maps.google.com/?q=Babek+Avenue+188+Baku", SHOWROOM_MAP_URL)
+home.gsub!('href="#kredit"', %(href="##{MOBILE_CREDIT_ID}"))
+home.gsub!(
+  '<div class="calculator" aria-label="Kredit kalkulyatoru">',
+  %(<div class="calculator" id="#{MOBILE_CREDIT_ID}" aria-label="Kredit kalkulyatoru">)
+)
+calculator_note_html = '<small class="calc-note">Hesablama məlumat xarakterlidir; bank faizi və komissiyalar daxil deyil. Yekun şərtlər fərqlənə bilər.</small>'
+unless home.include?('class="calc-top-link"')
+  abort "Prerendered calculator note anchor not found" unless home.include?(calculator_note_html)
+  home.sub!(
+    calculator_note_html,
+    %(#{calculator_note_html}<a class="calc-top-link" href="#top">↑ Yuxarı qayıt</a>)
+  )
+end
+home.gsub!(
+  '<a href="https://wa.me/994512332484?text=Salam%2C%20servis%20qəbulu%20üçün%20yazılıram" target="_blank" rel="noreferrer">Servisə yazıl →</a>',
+  %(<a href="tel:#{SERVICE_PHONE}">#{SERVICE_PHONE_DISPLAY} · Servisə zəng et →</a>)
+)
 home.gsub!('<span>Şəhərdaxili</span><h3>35 AZN</h3>', '<span>Şəhərdaxili çatdırılma</span><h3>45 AZN</h3>')
 home.gsub!(
   '<small>İş saatları</small><strong>10:00–19:00<br/>Bazar ertəsi bağlıdır</strong>',
@@ -209,12 +257,32 @@ unless home.include?('href="/model/cforce-c5"')
   c5_card = c4_card.dup
   c5_card.gsub!("cforce-c4", "cforce-c5")
   c5_card.gsub!("CFORCE C4", "CFORCE C5")
+  c5_card.gsub!("400 cc", "500 cc")
   c5_card.gsub!("12,400 AZN", "13,900 AZN · ƏDV daxil")
   c5_card.sub!('loading="lazy"/>', 'loading="lazy"/><span class="badge">Yeni</span>')
   home.sub!(c4_card, "#{c4_card}#{c5_card}")
 end
+home.gsub!(
+  'CFORCE C5</h3><p>Kvadrosikl<!-- --> · <!-- -->400 cc</p>',
+  'CFORCE C5</h3><p>Kvadrosikl<!-- --> · <!-- -->500 cc</p>'
+)
+
+unless home.include?('value="CFORCE C5"')
+  c4_option = '<option value="CFORCE C4">CFORCE C4<!-- --> — <!-- -->12,400<!-- --> AZN</option>'
+  c5_option = '<option value="CFORCE C5">CFORCE C5<!-- --> — <!-- -->13,900<!-- --> AZN</option>'
+  abort "CFORCE C4 calculator option not found" unless home.include?(c4_option)
+  home.sub!(c4_option, "#{c4_option}#{c5_option}")
+end
+
+home.gsub!("46<!-- --> aktual model", "47<!-- --> aktual model")
 home.gsub!("46 aktual model", "47 aktual model")
 write_utf8(home_path, home)
+
+Dir.glob(File.join(ASSETS, "*.css")).each do |path|
+  css = read_utf8(path)
+  css = "#{css.rstrip}\n#{MOBILE_CREDIT_CSS}\n" unless css.include?(MOBILE_CREDIT_CSS_MARKER)
+  write_utf8(path, css)
+end
 
 u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 u10 = read_utf8(u10_path)
@@ -235,7 +303,15 @@ checks = {
   "home showroom hours" => home.include?("Salon hər gün açıqdır"),
   "home service hours" => home.include?("Bazar ertəsi xaric hər gün 10:00–19:00"),
   "home service hours appear once" => home.scan(SERVICE_HOURS_COPY).size == 1,
+  "home service phone" => home.include?(%(href="tel:#{SERVICE_PHONE}")) && home.include?(SERVICE_PHONE_DISPLAY),
+  "home map link" => home.include?(SHOWROOM_MAP_URL),
+  "home mobile calculator target" => home.include?(%(id="#{MOBILE_CREDIT_ID}")) && home.include?(%(href="##{MOBILE_CREDIT_ID}")),
+  "home calculator top link" => home.include?('class="calc-top-link"'),
+  "mobile calculator CSS" => Dir.glob(File.join(ASSETS, "*.css")).any? { |path| read_utf8(path).include?(MOBILE_CREDIT_CSS_MARKER) },
   "home C5 card" => home.include?('href="/model/cforce-c5"'),
+  "home C5 engine class" => home.include?('CFORCE C5</h3><p>Kvadrosikl<!-- --> · <!-- -->500 cc</p>'),
+  "home C5 calculator option" => home.include?('value="CFORCE C5"'),
+  "home catalog count" => home.include?("47<!-- --> aktual model") || home.include?("47 aktual model"),
   "C5 VAT price" => c5.include?("13,900 AZN"),
   "C5 blue color image" => c5.include?("/models/cforce-c5.webp"),
   "C5 red color image" => c5.include?("/models/cforce-c5-red.webp"),
