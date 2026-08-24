@@ -1,0 +1,46 @@
+{
+  "format": "cloudflare-dashboard-wildcard-redirects/v1",
+  "notes": "Create rules as Cloudflare Single Redirects after both zones are active and proxied. Create account_bulk_redirect as an account-level Bulk Redirect. ${2} is the path captured by the second wildcard in request_url.",
+  "rules": [
+    {
+      "zone": "cfmoto.com.az",
+      "name": "Legacy apex to cfmoto.az",
+      "request_url": "http*://cfmoto.com.az/*",
+      "target_origin": "https://cfmoto.az",
+      "target_url": "https://cfmoto.az/${2}",
+      "status_code": 301,
+      "preserve_path": true,
+      "preserve_query_string": true
+    },
+    {
+      "zone": "cfmoto.com.az",
+      "name": "Legacy www to cfmoto.az",
+      "request_url": "http*://www.cfmoto.com.az/*",
+      "target_origin": "https://cfmoto.az",
+      "target_url": "https://cfmoto.az/${2}",
+      "status_code": 301,
+      "preserve_path": true,
+      "preserve_query_string": true
+    },
+    {
+      "zone": "cfmoto.az",
+      "name": "Canonicalize www to apex",
+      "request_url": "http*://www.cfmoto.az/*",
+      "target_origin": "https://cfmoto.az",
+      "target_url": "https://cfmoto.az/${2}",
+      "status_code": 301,
+      "preserve_path": true,
+      "preserve_query_string": true
+    }
+  ],
+  "account_bulk_redirect": {
+    "name": "Pages hostname to cfmoto.az",
+    "source_url": "https://cfmoto-azerbaijan.pages.dev",
+    "target_url": "https://cfmoto.az",
+    "status_code": 301,
+    "preserve_query_string": true,
+    "subpath_matching": true,
+    "preserve_path_suffix": true,
+    "include_subdomains": true
+  }
+}
