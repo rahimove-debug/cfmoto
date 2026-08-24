@@ -17,6 +17,12 @@ files = %w[
   official-800mtx-hero.webp
 ]
 
+updates = File.join(__dir__, "apply_site_updates.rb")
+abort "Site updates failed" unless system(RbConfig.ruby, updates)
+
+seo = File.join(__dir__, "apply_seo.rb")
+abort "SEO processing failed" unless system(RbConfig.ruby, seo)
+
 audit = File.join(__dir__, "audit_seo.rb")
 abort "SEO audit failed" unless system(RbConfig.ruby, audit)
 
@@ -36,7 +42,7 @@ files.each do |file|
 end
 
 html_count = Dir.glob(File.join(DIST, "**", "*.html")).size
-abort "Expected 48 HTML files in dist, found #{html_count}" unless html_count == 48
+abort "Expected 49 HTML files in dist, found #{html_count}" unless html_count == 49
 
 forbidden = %w[README.md .github scripts]
 leaked = forbidden.select { |path| File.exist?(File.join(DIST, path)) }

@@ -14,7 +14,7 @@ titles = []
 descriptions = []
 canonicals = []
 
-errors << "Expected 47 HTML pages, found #{html_paths.size}" unless html_paths.size == 47
+errors << "Expected 48 HTML pages, found #{html_paths.size}" unless html_paths.size == 48
 
 html_paths.each do |path|
   relative = path.delete_prefix("#{ROOT}/")
@@ -79,6 +79,65 @@ elsif !File.read(robots_path, encoding: "UTF-8").include?("Sitemap: #{SITE_ORIGI
 end
 
 errors << "Missing social preview image" unless File.exist?(File.join(ROOT, "official-800mtx-hero.webp"))
+
+home_path = File.join(ROOT, "index.html")
+home = File.read(home_path, encoding: "UTF-8")
+{
+  "delivery price" => "45 AZN",
+  "delivery label" => "Şəhərdaxili çatdırılma",
+  "showroom schedule" => "Salon hər gün açıqdır",
+  "service schedule" => "Bazar ertəsi xaric hər gün 10:00–19:00",
+  "CFORCE C5 card" => 'href="/model/cforce-c5"',
+  "CFORCE C5 VAT note" => "13,900 AZN · ƏDV daxil",
+  "U10 PRO HIGHLAND card" => "U10 PRO HIGHLAND"
+}.each do |label, text|
+  errors << "Home is missing #{label}" unless home.include?(text)
+end
+
+c5_path = File.join(ROOT, "model", "cforce-c5", "index.html")
+if !File.file?(c5_path)
+  errors << "Missing CFORCE C5 detail page"
+else
+  c5 = File.read(c5_path, encoding: "UTF-8")
+  errors << "CFORCE C5 page is missing VAT-inclusive price" unless c5.include?("Nağd satış qiyməti · ƏDV daxil") && c5.include?("13,900 AZN")
+  errors << "CFORCE C5 page is missing Product schema" unless c5.include?('"@type":"Product"')
+end
+
+u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
+if !File.file?(u10_path)
+  errors << "Missing U10 PRO HIGHLAND detail page"
+else
+  u10 = File.read(u10_path, encoding: "UTF-8")
+  errors << "U10 page is missing HIGHLAND version name" unless u10.include?("U10 PRO HIGHLAND")
+  errors << "U10 PRO HIGHLAND must show four seats" unless u10.include?("4 nəfər") && u10.include?("üç sərnişin")
+end
+
+html_paths.each do |path|
+  html = File.read(path, encoding: "UTF-8")
+  errors << "#{path.delete_prefix("#{ROOT}/")}: contains obsolete Monday-closed showroom text" if html.include?("Bazar ertəsi bağlıdır")
+  html.scan(%r{(?:href|src)="(/assets/[^"?#]+\.js)}) do |match|
+    asset_path = File.join(ROOT, match.first.delete_prefix("/"))
+    errors << "#{path.delete_prefix("#{ROOT}/")}: missing JS asset #{match.first}" unless File.file?(asset_path)
+  end
+end
+
+Dir.glob(File.join(ROOT, "assets", "*.js")).each do |path|
+  javascript = File.read(path, encoding: "UTF-8")
+  javascript.scan(%r{(?:from|import\()[`"]\./([^`"]+\.js)}) do |match|
+    dependency = File.join(File.dirname(path), match.first)
+    errors << "#{File.basename(path)}: missing JS dependency #{match.first}" unless File.file?(dependency)
+  end
+end
+
+%w[
+  models/cforce-c5.webp
+  models/cforce-c5-red.webp
+  gallery/cforce-c5-1.webp
+  gallery/cforce-c5-2.webp
+  gallery/cforce-c5-3.webp
+].each do |relative|
+  errors << "Missing CFORCE C5 image: #{relative}" unless File.file?(File.join(ROOT, relative))
+end
 
 not_found_path = File.join(ROOT, "404.html")
 if !File.exist?(not_found_path)

@@ -32,7 +32,7 @@ organization_schema = {
       "openingHoursSpecification" => [
         {
           "@type" => "OpeningHoursSpecification",
-          "dayOfWeek" => %w[Tuesday Wednesday Thursday Friday Saturday Sunday],
+          "dayOfWeek" => %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday],
           "opens" => "10:00",
           "closes" => "19:00"
         }

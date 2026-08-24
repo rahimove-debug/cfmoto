@@ -29,7 +29,7 @@ def candidates(body, base_uri)
   raw = []
   raw.concat(body.scan(/(?:href|src)=["']([^"']+)["']/i).flatten)
   raw.concat(body.scan(/url\(\s*["']?([^\)"']+)/i).flatten)
-  raw.concat(body.scan(/(?:from\s*|import\s*)["']([^"']+)["']/).flatten)
+  raw.concat(body.scan(/(?:from\s*|import\s*\(\s*)["'`]([^"'`]+)["'`]/).flatten)
   raw.concat(body.scan(/["'](\/[^"'\s]+\.(?:css|js|mjs|json|png|jpe?g|webp|svg|gif|ico|woff2?|ttf|mp4|webm))["']/i).flatten)
   raw.map do |value|
     next if value.empty? || value.start_with?("#", "data:", "mailto:", "tel:", "javascript:")
@@ -66,6 +66,9 @@ end
 
 FileUtils.touch(File.join(DEST, ".nojekyll"))
 puts "Imported #{seen.size} discovered URLs"
+
+updates_script = File.join(__dir__, "apply_site_updates.rb")
+abort "Site updates failed" unless system(RbConfig.ruby, updates_script)
 
 seo_script = File.join(__dir__, "apply_seo.rb")
 abort "SEO processing failed" unless system(RbConfig.ruby, seo_script)
