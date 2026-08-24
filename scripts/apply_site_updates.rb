@@ -9,24 +9,31 @@ PREVIOUS_RUNTIME = "index-CfmotoAug24.js"
 CURRENT_RUNTIME = "index-CfmotoAug24Fix.js"
 LAST_RUNTIME = "index-CfmotoMobileFix.js"
 CURRENT_V2_RUNTIME = "index-CfmotoMobileFixV2.js"
-NEW_RUNTIME = "index-CfmotoMobileFixV3.js"
+CURRENT_V3_RUNTIME = "index-CfmotoMobileFixV3.js"
+NEW_RUNTIME = "index-CfmotoMobilePerfV4.js"
 OLD_HOME_BUNDLE = "page-DZgbTvch.js"
 PREVIOUS_HOME_BUNDLE = "page-CfmotoAug24.js"
 CURRENT_HOME_BUNDLE = "page-CfmotoAug24Fix.js"
 LAST_HOME_BUNDLE = "page-CfmotoMobileFix.js"
 CURRENT_V2_HOME_BUNDLE = "page-CfmotoMobileFixV2.js"
-NEW_HOME_BUNDLE = "page-CfmotoMobileFixV3.js"
+CURRENT_V3_HOME_BUNDLE = "page-CfmotoMobileFixV3.js"
+NEW_HOME_BUNDLE = "page-CfmotoMobilePerfV4.js"
 OLD_MENU_BUNDLE = "ProductMegaMenu-Cpx-ytn3.js"
 PREVIOUS_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24.js"
 CURRENT_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24Fix.js"
-NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoMobileFixV3.js"
+CURRENT_V3_MENU_BUNDLE = "ProductMegaMenu-CfmotoMobileFixV3.js"
+NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoMobilePerfV4.js"
 CURRENT_STYLESHEET = "index-DiLMqMiY.css"
 LAST_STYLESHEET = "index-CfmotoMobileFix.css"
 CURRENT_V2_STYLESHEET = "index-CfmotoMobileFixV2.css"
-NEW_STYLESHEET = "index-CfmotoMobileFixV3.css"
+CURRENT_V3_STYLESHEET = "index-CfmotoMobileFixV3.css"
+NEW_STYLESHEET = "index-CfmotoMobilePerfV4.css"
+NEW_LINK_BUNDLE = "link-CfmotoMobilePerfV4.js"
+NEW_MODEL_COLOR_BUNDLE = "ModelColorSelector-CfmotoMobilePerfV4.js"
+NEW_MODEL_FINANCE_BUNDLE = "ModelFinance-CfmotoMobilePerfV4.js"
 
-RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME, LAST_RUNTIME, CURRENT_V2_RUNTIME].freeze
-HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE, CURRENT_V2_HOME_BUNDLE].freeze
+RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME, LAST_RUNTIME, CURRENT_V2_RUNTIME, CURRENT_V3_RUNTIME].freeze
+HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE, CURRENT_V2_HOME_BUNDLE, CURRENT_V3_HOME_BUNDLE].freeze
 
 SERVICE_BASE_COPY = "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir."
 SERVICE_HOURS_COPY = "Bazar ertəsi xaric hər gün 10:00–19:00."
@@ -41,23 +48,27 @@ MOBILE_CREDIT_CSS = <<~CSS.strip
   @media (width<=860px){html{scroll-behavior:auto}##{MOBILE_CREDIT_ID}{scroll-margin-top:18px}}
   @media (width<=580px){.finance{gap:24px}.finance>.calculator{order:-1}.calculator{padding:20px 16px}.calc-title{margin-bottom:14px}.calc-title span{font-size:20px}.mode-switch{margin-bottom:14px}.mode-switch button{min-height:36px;font-size:12px}.calculator>label{margin-bottom:12px}.calculator select{padding:10px 12px}.range-line{margin:11px 0 4px}.calc-result{margin:14px 0 10px;padding:15px}.calc-result strong{font-size:32px}.calc-top-link{border:1px solid var(--line);min-height:40px;color:var(--copy);justify-content:center;align-items:center;margin-top:12px;font-size:12px;display:flex}}
 CSS
-
+MOBILE_PERFORMANCE_CSS_MARKER = "/* CFMOTO:MOBILE-PERFORMANCE */"
+MOBILE_PERFORMANCE_CSS = <<~CSS.strip
+  #{MOBILE_PERFORMANCE_CSS_MARKER}
+  @media (width<=860px){.category-hero-panel:not(.active){background-image:none!important}}
+CSS
 SUPPORT_ASSET_SOURCES = {
-  ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js", "rolldown-runtime-CfmotoAug24Fix.js"] => "rolldown-runtime-CfmotoMobileFixV3.js",
-  ["framework-CXnKph_e.js", "framework-CfmotoAug24.js", "framework-CfmotoAug24Fix.js"] => "framework-CfmotoMobileFixV3.js",
-  ["layout-segment-context-BqNUFdFf.js", "layout-segment-context-CfmotoAug24.js", "layout-segment-context-CfmotoAug24Fix.js"] => "layout-segment-context-CfmotoMobileFixV3.js",
-  ["link-IATORi5E.js", "link-CfmotoAug24.js", "link-CfmotoAug24Fix.js"] => "link-CfmotoMobileFixV3.js",
-  ["router-CzKeCzcA.js", "router-CfmotoAug24.js", "router-CfmotoAug24Fix.js"] => "router-CfmotoMobileFixV3.js",
-  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js", "ModelFinance-CfmotoAug24Fix.js"] => "ModelFinance-CfmotoMobileFixV3.js",
-  ["ModelGallery-BT140N7z.js", "ModelGallery-CfmotoAug24.js", "ModelGallery-CfmotoAug24Fix.js"] => "ModelGallery-CfmotoMobileFixV3.js",
-  ["ModelSpecs-BJB4gaLM.js", "ModelSpecs-CfmotoAug24.js", "ModelSpecs-CfmotoAug24Fix.js"] => "ModelSpecs-CfmotoMobileFixV3.js",
-  ["ModelColorSelector-DIxmErfw.js", "ModelColorSelector-CfmotoAug24.js", "ModelColorSelector-CfmotoAug24Fix.js"] => "ModelColorSelector-CfmotoMobileFixV3.js"
+  ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js", "rolldown-runtime-CfmotoAug24Fix.js", "rolldown-runtime-CfmotoMobileFixV3.js"] => "rolldown-runtime-CfmotoMobilePerfV4.js",
+  ["framework-CXnKph_e.js", "framework-CfmotoAug24.js", "framework-CfmotoAug24Fix.js", "framework-CfmotoMobileFixV3.js"] => "framework-CfmotoMobilePerfV4.js",
+  ["layout-segment-context-BqNUFdFf.js", "layout-segment-context-CfmotoAug24.js", "layout-segment-context-CfmotoAug24Fix.js", "layout-segment-context-CfmotoMobileFixV3.js"] => "layout-segment-context-CfmotoMobilePerfV4.js",
+  ["link-IATORi5E.js", "link-CfmotoAug24.js", "link-CfmotoAug24Fix.js", "link-CfmotoMobileFixV3.js"] => NEW_LINK_BUNDLE,
+  ["router-CzKeCzcA.js", "router-CfmotoAug24.js", "router-CfmotoAug24Fix.js", "router-CfmotoMobileFixV3.js"] => "router-CfmotoMobilePerfV4.js",
+  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js", "ModelFinance-CfmotoAug24Fix.js", "ModelFinance-CfmotoMobileFixV3.js"] => NEW_MODEL_FINANCE_BUNDLE,
+  ["ModelGallery-BT140N7z.js", "ModelGallery-CfmotoAug24.js", "ModelGallery-CfmotoAug24Fix.js", "ModelGallery-CfmotoMobileFixV3.js"] => "ModelGallery-CfmotoMobilePerfV4.js",
+  ["ModelSpecs-BJB4gaLM.js", "ModelSpecs-CfmotoAug24.js", "ModelSpecs-CfmotoAug24Fix.js", "ModelSpecs-CfmotoMobileFixV3.js"] => "ModelSpecs-CfmotoMobilePerfV4.js",
+  ["ModelColorSelector-DIxmErfw.js", "ModelColorSelector-CfmotoAug24.js", "ModelColorSelector-CfmotoAug24Fix.js", "ModelColorSelector-CfmotoMobileFixV3.js"] => NEW_MODEL_COLOR_BUNDLE
 }.freeze
 
 PRIMARY_ASSET_SOURCES = {
   RUNTIME_SOURCES => NEW_RUNTIME,
   HOME_BUNDLE_SOURCES => NEW_HOME_BUNDLE,
-  [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE] => NEW_MENU_BUNDLE
+  [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE, CURRENT_V3_MENU_BUNDLE] => NEW_MENU_BUNDLE
 }.freeze
 
 ASSET_SOURCE_GROUPS = SUPPORT_ASSET_SOURCES.merge(PRIMARY_ASSET_SOURCES).freeze
@@ -67,6 +78,7 @@ end
 ASSET_RENAMES[CURRENT_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES[LAST_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES[CURRENT_V2_STYLESHEET] = NEW_STYLESHEET
+ASSET_RENAMES[CURRENT_V3_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES.freeze
 
 def read_utf8(path)
@@ -99,6 +111,10 @@ def normalize_service_schedule!(content)
   base = Regexp.escape(SERVICE_BASE_COPY)
   hours = Regexp.escape(SERVICE_HOURS_COPY)
   content.gsub!(/#{base}(?: #{hours})*/, "#{SERVICE_BASE_COPY} #{SERVICE_HOURS_COPY}")
+end
+
+def remove_unused_font_preloads!(content)
+  content.gsub!(%r{<link\s+rel="preload"\s+href="/assets/_vinext_fonts/[^"]+"\s+as="font"\s+type="font/woff2"\s+crossorigin\s*/>\s*}i, "")
 end
 
 def build_c5_page
@@ -151,7 +167,7 @@ end
 
 build_c5_page
 
-update_asset([OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE], NEW_MENU_BUNDLE) do |javascript|
+update_asset([OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE, CURRENT_V3_MENU_BUNDLE], NEW_MENU_BUNDLE) do |javascript|
   unless javascript.include?('slug:`cforce-c5`')
     anchor = '{slug:`cforce-c4`,name:`CFORCE C4`,type:`Kvadrosikl`,segment:`Utility ATV`,engineClass:`400 cc`,price:12400,image:`/models/cforce-c4.webp`,officialPage:`https://cfmoto.az/cforce-c4`},'
     addition = '{slug:`cforce-c5`,name:`CFORCE C5`,type:`Kvadrosikl`,segment:`Utility ATV`,engineClass:`500 cc`,price:13900,image:`/models/cforce-c5.webp`,officialPage:`https://www.cfmoto.com/global/atv/atv/c5.html`,badge:`Yeni`,vatIncluded:!0},'
@@ -163,6 +179,13 @@ update_asset([OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE], NEW_M
     'e.price===null?`Qiyməti dəqiqləşdirin`:`${l(e.price)} AZN`',
     'e.price===null?`Qiyməti dəqiqləşdirin`:`${l(e.price)} AZN${e.vatIncluded?` · ƏDV daxil`:``}`'
   )
+  javascript.gsub!('new Intl.NumberFormat(`az-AZ`,{maximumFractionDigits:0})', 'new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0})')
+  menu_hover_source = 'onMouseEnter:()=>n(!0),onMouseLeave:()=>n(!1)'
+  menu_hover_replacement = 'onPointerEnter:e=>e.pointerType===`mouse`&&n(!0),onPointerLeave:e=>e.pointerType===`mouse`&&n(!1)'
+  unless javascript.include?(menu_hover_replacement)
+    abort "Touch-safe product menu anchor not found" unless javascript.include?(menu_hover_source)
+    javascript.sub!(menu_hover_source, menu_hover_replacement)
+  end
   RUNTIME_SOURCES.each { |name| javascript.gsub!(name, NEW_RUNTIME) }
   HOME_BUNDLE_SOURCES.each { |name| javascript.gsub!(name, NEW_HOME_BUNDLE) }
   [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
@@ -204,15 +227,65 @@ update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
     'e.price===null?`Dəqiqləşdirin`:`${o(e.price)} AZN`',
     'e.price===null?`Dəqiqləşdirin`:`${o(e.price)} AZN${e.vatIncluded?` · ƏDV daxil`:``}`'
   )
+  javascript.gsub!('"aria-label":`Menyunu aç`,"aria-expanded":e', '"aria-label":e?`Menyunu bağla`:`Menyunu aç`,"aria-expanded":e')
 end
 
 update_asset(RUNTIME_SOURCES, NEW_RUNTIME) do |javascript|
   [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
   HOME_BUNDLE_SOURCES.each { |name| javascript.gsub!(name, NEW_HOME_BUNDLE) }
+  scroll_source = 'history.scrollRestoration=`manual`'
+  scroll_replacement = 'history.scrollRestoration=`auto`'
+  unless javascript.include?(scroll_replacement)
+    abort "Static scroll restoration anchor not found" unless javascript.include?(scroll_source)
+    javascript.sub!(scroll_source, scroll_replacement)
+  end
+
+  popstate_source = 'window.addEventListener(`popstate`,e=>{M(window.location.href,`traverse`);let t=window.__VINEXT_RSC_NAVIGATE__?.(window.location.href,0,`traverse`)??Promise.resolve();window.__VINEXT_RSC_PENDING__=t,t.finally(()=>{$i(e.state),window.__VINEXT_RSC_PENDING__===t&&(window.__VINEXT_RSC_PENDING__=null)})})'
+  popstate_replacement = '/* CFMOTO:STATIC-HISTORY */void 0'
+  unless javascript.include?(popstate_replacement)
+    abort "Static popstate anchor not found" unless javascript.include?(popstate_source)
+    javascript.sub!(popstate_source, popstate_replacement)
+  end
 end
 
 SUPPORT_ASSET_SOURCES.each do |source_names, new_name|
-  update_asset(source_names, new_name) { |_javascript| }
+  update_asset(source_names, new_name) do |javascript|
+    if new_name == NEW_MODEL_COLOR_BUNDLE
+      preload_source = '(0,r.useEffect)(()=>{e.forEach(e=>{if(!e.image)return;let t=new Image;t.src=e.image})},[e]),l?'
+      preload_replacement = ' l?'
+      javascript.sub!('returnl?', 'return l?')
+      if javascript.include?(preload_source)
+        javascript.sub!(preload_source, preload_replacement)
+      elsif !javascript.include?('return l?(0,i.jsxs)')
+        abort "Color image preload anchor not found"
+      end
+    end
+
+    if new_name == NEW_MODEL_FINANCE_BUNDLE
+      javascript.gsub!('new Intl.NumberFormat(`az-AZ`,{maximumFractionDigits:0})', 'new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0})')
+    end
+
+    next unless new_name == NEW_LINK_BUNDLE
+
+    prefetch_source = 'function re(e){return e.nodeEnv===`production`&&e.prefetch!==!1&&!e.isDangerous}'
+    prefetch_replacement = 'function re(e){return!1}'
+    javascript.sub!('function re(){return!1}', prefetch_replacement)
+    unless javascript.include?(prefetch_replacement)
+      abort "Link prefetch anchor not found" unless javascript.include?(prefetch_source)
+      javascript.sub!(prefetch_source, prefetch_replacement)
+    end
+
+    navigation_source = 'P=async e=>{if(c&&c(e),e.defaultPrevented'
+    navigation_replacement = 'P=async e=>{c&&c(e);return;if(e.defaultPrevented'
+    javascript.sub!(navigation_replacement, navigation_source)
+
+    rendered_link_source = 'ref:A,href:C,onClick:e=>{P(e)},onMouseEnter:M,onTouchStart:N,...I,children:a'
+    rendered_link_replacement = 'ref:A,href:C,onClick:c,onMouseEnter:l,onTouchStart:u,...I,children:a'
+    unless javascript.include?(rendered_link_replacement)
+      abort "Rendered Link navigation anchor not found" unless javascript.include?(rendered_link_source)
+      javascript.sub!(rendered_link_source, rendered_link_replacement)
+    end
+  end
 end
 
 Dir.glob(File.join(ASSETS, "*.js")).each do |path|
@@ -229,6 +302,8 @@ html_paths = [
 html_paths.each do |path|
   html = read_utf8(path)
   ASSET_RENAMES.each { |old_name, new_name| html.gsub!(old_name, new_name) }
+  html.gsub!(%(<link rel="modulepreload" href="/assets/#{NEW_RUNTIME}" />\n), "")
+  remove_unused_font_preloads!(html)
   html.gsub!(
     "Babək pr. 188 · Hər gün 10:00–19:00 · Bazar ertəsi bağlıdır",
     "Babək pr. 188 · Salon hər gün 10:00–19:00"
@@ -243,6 +318,12 @@ end
 
 home_path = File.join(ROOT, "index.html")
 home = read_utf8(home_path)
+hero_preload = '<link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high"/>'
+unless home.include?(hero_preload)
+  logo_preload = '<link rel="preload" as="image" href="/cfmoto-logo-black.png"/>'
+  abort "Home logo preload anchor not found" unless home.include?(logo_preload)
+  home.sub!(logo_preload, "#{logo_preload}#{hero_preload}")
+end
 normalize_service_schedule!(home)
 home.gsub!("https://maps.google.com/?q=Babek+Avenue+188+Baku", SHOWROOM_MAP_URL)
 home.gsub!('href="#kredit"', %(href="##{MOBILE_CREDIT_ID}"))
@@ -296,18 +377,20 @@ home.gsub!("46<!-- --> aktual model", "47<!-- --> aktual model")
 home.gsub!("46 aktual model", "47 aktual model")
 write_utf8(home_path, home)
 
-stylesheet_source = [CURRENT_STYLESHEET, LAST_STYLESHEET, CURRENT_V2_STYLESHEET, NEW_STYLESHEET]
+stylesheet_source = [CURRENT_STYLESHEET, LAST_STYLESHEET, CURRENT_V2_STYLESHEET, CURRENT_V3_STYLESHEET, NEW_STYLESHEET]
   .map { |name| File.join(ASSETS, name) }
   .find { |path| File.file?(path) }
 abort "Missing required stylesheet: #{CURRENT_STYLESHEET}" unless stylesheet_source
 
 stylesheet = read_utf8(stylesheet_source)
 stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CREDIT_CSS}\n" unless stylesheet.include?(MOBILE_CREDIT_CSS_MARKER)
+stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_PERFORMANCE_CSS}\n" unless stylesheet.include?(MOBILE_PERFORMANCE_CSS_MARKER)
 new_stylesheet_path = File.join(ASSETS, NEW_STYLESHEET)
 write_utf8(new_stylesheet_path, stylesheet)
 FileUtils.rm_f(File.join(ASSETS, CURRENT_STYLESHEET)) unless CURRENT_STYLESHEET == NEW_STYLESHEET
 FileUtils.rm_f(File.join(ASSETS, LAST_STYLESHEET)) unless LAST_STYLESHEET == NEW_STYLESHEET
 FileUtils.rm_f(File.join(ASSETS, CURRENT_V2_STYLESHEET)) unless CURRENT_V2_STYLESHEET == NEW_STYLESHEET
+FileUtils.rm_f(File.join(ASSETS, CURRENT_V3_STYLESHEET)) unless CURRENT_V3_STYLESHEET == NEW_STYLESHEET
 
 u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 u10 = read_utf8(u10_path)
@@ -332,7 +415,19 @@ checks = {
   "home map link" => home.include?(SHOWROOM_MAP_URL),
   "home mobile calculator target" => home.include?(%(id="#{MOBILE_CREDIT_ID}")) && home.include?(%(href="##{MOBILE_CREDIT_ID}")),
   "home calculator top link" => home.include?('class="calc-top-link"'),
+  "home active hero preload" => home.include?(hero_preload),
   "mobile calculator CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_CREDIT_CSS_MARKER),
+  "mobile hero image deferral CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_PERFORMANCE_CSS_MARKER),
+  "unused font preloads removed" => html_paths.none? { |path| read_utf8(path).include?('<link rel="preload" href="/assets/_vinext_fonts/') },
+  "single runtime module preload" => html_paths.all? { |path| read_utf8(path).scan(%r{<link rel="modulepreload" href="/assets/#{Regexp.escape(NEW_RUNTIME)}"[^>]*>}).size == 1 },
+  "static links use native navigation" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('ref:A,href:C,onClick:c,onMouseEnter:l,onTouchStart:u,...I,children:a'),
+  "static links skip RSC prefetch" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('function re(e){return!1}'),
+  "alternate color images load on demand" => !read_utf8(File.join(ASSETS, NEW_MODEL_COLOR_BUNDLE)).include?('let t=new Image;t.src=e.image'),
+  "number formatting matches prerendered HTML" => [NEW_MENU_BUNDLE, NEW_MODEL_FINANCE_BUNDLE].all? { |name| read_utf8(File.join(ASSETS, name)).include?('new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0})') },
+  "native browser scroll restoration" => read_utf8(File.join(ASSETS, NEW_RUNTIME)).include?('history.scrollRestoration=`auto`'),
+  "static runtime skips RSC popstate" => read_utf8(File.join(ASSETS, NEW_RUNTIME)).include?('/* CFMOTO:STATIC-HISTORY */void 0'),
+  "touch menu ignores synthetic mouse events" => read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('onPointerEnter:e=>e.pointerType===`mouse`&&n(!0)'),
+  "mobile menu has dynamic label" => read_utf8(File.join(ASSETS, NEW_HOME_BUNDLE)).include?('"aria-label":e?`Menyunu bağla`:`Menyunu aç`'),
   "home C5 card" => home.include?('href="/model/cforce-c5"'),
   "home C5 engine class" => home.include?('CFORCE C5</h3><p>Kvadrosikl<!-- --> · <!-- -->500 cc</p>'),
   "home C5 calculator option" => home.include?('value="CFORCE C5"'),
