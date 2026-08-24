@@ -7,19 +7,22 @@ ASSETS = File.join(ROOT, "assets")
 OLD_RUNTIME = "index-WBfaOMAt.js"
 PREVIOUS_RUNTIME = "index-CfmotoAug24.js"
 CURRENT_RUNTIME = "index-CfmotoAug24Fix.js"
-NEW_RUNTIME = "index-CfmotoMobileFix.js"
+LAST_RUNTIME = "index-CfmotoMobileFix.js"
+NEW_RUNTIME = "index-CfmotoMobileFixV2.js"
 OLD_HOME_BUNDLE = "page-DZgbTvch.js"
 PREVIOUS_HOME_BUNDLE = "page-CfmotoAug24.js"
 CURRENT_HOME_BUNDLE = "page-CfmotoAug24Fix.js"
-NEW_HOME_BUNDLE = "page-CfmotoMobileFix.js"
+LAST_HOME_BUNDLE = "page-CfmotoMobileFix.js"
+NEW_HOME_BUNDLE = "page-CfmotoMobileFixV2.js"
 OLD_MENU_BUNDLE = "ProductMegaMenu-Cpx-ytn3.js"
 PREVIOUS_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24.js"
 NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24Fix.js"
 CURRENT_STYLESHEET = "index-DiLMqMiY.css"
-NEW_STYLESHEET = "index-CfmotoMobileFix.css"
+LAST_STYLESHEET = "index-CfmotoMobileFix.css"
+NEW_STYLESHEET = "index-CfmotoMobileFixV2.css"
 
-RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME].freeze
-HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE].freeze
+RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME, LAST_RUNTIME].freeze
+HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE].freeze
 
 SERVICE_BASE_COPY = "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir."
 SERVICE_HOURS_COPY = "Bazar ertəsi xaric hər gün 10:00–19:00."
@@ -58,6 +61,7 @@ ASSET_RENAMES = ASSET_SOURCE_GROUPS.each_with_object({}) do |(sources, target), 
   sources.each { |source| renames[source] = target }
 end
 ASSET_RENAMES[CURRENT_STYLESHEET] = NEW_STYLESHEET
+ASSET_RENAMES[LAST_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES.freeze
 
 def read_utf8(path)
@@ -287,7 +291,7 @@ home.gsub!("46<!-- --> aktual model", "47<!-- --> aktual model")
 home.gsub!("46 aktual model", "47 aktual model")
 write_utf8(home_path, home)
 
-stylesheet_source = [CURRENT_STYLESHEET, NEW_STYLESHEET]
+stylesheet_source = [CURRENT_STYLESHEET, LAST_STYLESHEET, NEW_STYLESHEET]
   .map { |name| File.join(ASSETS, name) }
   .find { |path| File.file?(path) }
 abort "Missing required stylesheet: #{CURRENT_STYLESHEET}" unless stylesheet_source
@@ -297,6 +301,7 @@ stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CREDIT_CSS}\n" unless stylesheet.in
 new_stylesheet_path = File.join(ASSETS, NEW_STYLESHEET)
 write_utf8(new_stylesheet_path, stylesheet)
 FileUtils.rm_f(File.join(ASSETS, CURRENT_STYLESHEET)) unless CURRENT_STYLESHEET == NEW_STYLESHEET
+FileUtils.rm_f(File.join(ASSETS, LAST_STYLESHEET)) unless LAST_STYLESHEET == NEW_STYLESHEET
 
 u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 u10 = read_utf8(u10_path)
