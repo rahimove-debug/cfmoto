@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 require "json"
+require_relative "domain_config"
 
 ROOT = File.expand_path("..", __dir__)
-SITE_ORIGIN = "https://cfmoto.az"
-SOURCE_ORIGIN = "https://cfmoto-azerbaijan.dvhqpbbkmw.chatgpt.site"
+SITE_ORIGIN = DomainConfig::SITE_ORIGIN
 
 errors = []
 html_paths = [
@@ -23,11 +23,22 @@ html_paths.each do |path|
   title = html[/<title>(.*?)<\/title>/m, 1]
   description = html[/<meta name="description" content="([^"]+)"\s*\/>/, 1]
   canonical = html[/<link rel="canonical" href="([^"]+)"\s*\/>/, 1]
+  og_url = html[/<meta property="og:url" content="([^"]+)"\s*\/>/, 1]
+  og_image = html[/<meta property="og:image" content="([^"]+)"\s*\/>/, 1]
+  twitter_image = html[/<meta name="twitter:image" content="([^"]+)"\s*\/>/, 1]
+  expected_canonical = if relative == "index.html"
+    "#{SITE_ORIGIN}/"
+  else
+    "#{SITE_ORIGIN}/model/#{File.basename(File.dirname(path))}"
+  end
 
   errors << "#{relative}: missing title" unless title
   errors << "#{relative}: missing meta description" unless description
   errors << "#{relative}: missing canonical" unless canonical
-  errors << "#{relative}: canonical is outside #{SITE_ORIGIN}" if canonical && !canonical.start_with?(SITE_ORIGIN)
+  errors << "#{relative}: canonical must be #{expected_canonical}" unless canonical == expected_canonical
+  errors << "#{relative}: og:url must match canonical" unless og_url == expected_canonical
+  errors << "#{relative}: og:image must use #{SITE_ORIGIN}" unless og_image&.start_with?("#{SITE_ORIGIN}/")
+  errors << "#{relative}: twitter:image must use #{SITE_ORIGIN}" unless twitter_image&.start_with?("#{SITE_ORIGIN}/")
 
   titles << title if title
   descriptions << description if description
@@ -52,7 +63,9 @@ html_paths.each do |path|
     errors << "#{relative}: invalid JSON-LD (#{error.message})"
   end
 
-  errors << "#{relative}: contains source domain" if html.include?(SOURCE_ORIGIN)
+  DomainConfig::NON_CANONICAL_SITE_ORIGINS.each do |origin|
+    errors << "#{relative}: contains non-canonical origin #{origin}" if html.include?(origin)
+  end
   errors << "#{relative}: contains development preview meta" if html.include?("codex-preview")
   errors << "#{relative}: contains copied Cloudflare challenge" if html.include?("cdn-cgi/challenge-platform")
   errors << "#{relative}: contains broken showroom link" if html.include?('href=".showroom"')
@@ -66,7 +79,7 @@ sitemap_path = File.join(ROOT, "sitemap.xml")
 if File.exist?(sitemap_path)
   sitemap_urls = File.read(sitemap_path, encoding: "UTF-8").scan(%r{<loc>(.*?)</loc>}).flatten
   errors << "Sitemap URL count does not match canonicals" unless sitemap_urls.size == canonicals.size
-  errors << "Sitemap and canonical URLs differ" unless sitemap_urls.sort == canonicals.sort
+  errors << "Sitemap and canonical URLs differ" unless sitemap_urls == canonicals
 else
   errors << "Missing sitemap.xml"
 end
@@ -74,8 +87,8 @@ end
 robots_path = File.join(ROOT, "robots.txt")
 if !File.exist?(robots_path)
   errors << "Missing robots.txt"
-elsif !File.read(robots_path, encoding: "UTF-8").include?("Sitemap: #{SITE_ORIGIN}/sitemap.xml")
-  errors << "robots.txt does not advertise the sitemap"
+elsif File.read(robots_path, encoding: "UTF-8") != "User-agent: *\nAllow: /\nSitemap: #{SITE_ORIGIN}/sitemap.xml\n"
+  errors << "robots.txt does not contain the canonical sitemap directive"
 end
 
 errors << "Missing social preview image" unless File.exist?(File.join(ROOT, "official-800mtx-hero.webp"))
@@ -135,6 +148,84 @@ Dir.glob(File.join(ROOT, "assets", "*.js")).each do |path|
   end
 end
 
+public_text_paths = [
+  *html_paths,
+  *Dir.glob(File.join(ROOT, "assets", "*.{js,css}")),
+  sitemap_path,
+  robots_path,
+  File.join(ROOT, "_redirects")
+].select { |path| File.file?(path) }
+public_text_paths.each do |path|
+  content = File.read(path, encoding: "UTF-8")
+  errors << "#{path.delete_prefix("#{ROOT}/")}: contains a pages.dev origin" if content.match?(DomainConfig::PAGES_SITE_ORIGIN_PATTERN)
+  DomainConfig::NON_CANONICAL_SITE_ORIGINS.each do |origin|
+    errors << "#{path.delete_prefix("#{ROOT}/")}: contains non-canonical origin #{origin}" if content.include?(origin)
+  end
+end
+
+redirects_path = File.join(ROOT, "_redirects")
+redirects = {}
+if !File.file?(redirects_path)
+  errors << "Missing _redirects"
+else
+  File.readlines(redirects_path, chomp: true, encoding: "UTF-8").each_with_index do |line, index|
+    next if line.empty? || line.start_with?("#")
+
+    source, destination, status, extra = line.split(/\s+/, 4)
+    if !source || !destination || !status || extra
+      errors << "_redirects line #{index + 1} is malformed"
+      next
+    end
+    errors << "_redirects line #{index + 1} must be a 301" unless status == "301"
+    errors << "_redirects line #{index + 1} uses unsupported domain-level matching" if source.match?(%r{\Ahttps?://})
+    errors << "_redirects repeats source #{source}" if redirects.key?(source)
+    redirects[source] = destination
+  end
+
+  expected_redirects = DomainConfig::LEGACY_PATH_REDIRECTS.dup
+  Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.each do |path|
+    slug = File.basename(File.dirname(path))
+    expected_redirects["/#{slug}"] ||= "/model/#{slug}"
+  end
+  missing_redirects = expected_redirects.reject { |source, destination| redirects[source] == destination }
+  unexpected_redirects = redirects.reject { |source, destination| expected_redirects[source] == destination }
+  errors << "_redirects is missing or misroutes: #{missing_redirects.keys.join(', ')}" unless missing_redirects.empty?
+  errors << "_redirects has unexpected rules: #{unexpected_redirects.keys.join(', ')}" unless unexpected_redirects.empty?
+end
+
+host_redirects_path = File.join(ROOT, "cloudflare", "domain-redirects.json")
+if !File.file?(host_redirects_path)
+  errors << "Missing Cloudflare host redirect manifest"
+else
+  begin
+    manifest = JSON.parse(File.read(host_redirects_path, encoding: "UTF-8"))
+    rules = manifest.fetch("rules")
+    expected_patterns = %w[
+      http*://cfmoto.com.az/*
+      http*://www.cfmoto.com.az/*
+      http*://www.cfmoto.az/*
+    ]
+    actual_patterns = rules.map { |rule| rule["request_url"] }
+    errors << "Cloudflare host redirect patterns are incomplete" unless actual_patterns.sort == expected_patterns.sort
+    rules.each do |rule|
+      errors << "Cloudflare host redirect #{rule['name']} must be a 301" unless rule["status_code"] == 301
+      errors << "Cloudflare host redirect #{rule['name']} must preserve paths" unless rule["preserve_path"] == true
+      errors << "Cloudflare host redirect #{rule['name']} must preserve query strings" unless rule["preserve_query_string"] == true
+      errors << "Cloudflare host redirect #{rule['name']} must target #{SITE_ORIGIN}" unless rule["target_origin"] == SITE_ORIGIN
+    end
+
+    bulk_redirect = manifest.fetch("account_bulk_redirect")
+    errors << "Pages bulk redirect must use the production pages.dev source" unless bulk_redirect["source_url"] == "https://cfmoto-azerbaijan.pages.dev"
+    errors << "Pages bulk redirect must target #{SITE_ORIGIN}" unless bulk_redirect["target_url"] == SITE_ORIGIN
+    errors << "Pages bulk redirect must be a 301" unless bulk_redirect["status_code"] == 301
+    %w[preserve_query_string subpath_matching preserve_path_suffix include_subdomains].each do |setting|
+      errors << "Pages bulk redirect must enable #{setting}" unless bulk_redirect[setting] == true
+    end
+  rescue JSON::ParserError, KeyError => error
+    errors << "Invalid Cloudflare host redirect manifest: #{error.message}"
+  end
+end
+
 %w[
   models/cforce-c5.webp
   models/cforce-c5-red.webp
@@ -165,7 +256,7 @@ else
 end
 
 if errors.empty?
-  puts "SEO audit passed: #{html_paths.size} pages, #{canonicals.size} canonicals, valid JSON-LD and sitemap"
+  puts "SEO audit passed: #{html_paths.size} pages, #{canonicals.size} canonicals, valid JSON-LD, sitemap and #{redirects.size} redirects"
 else
   warn errors.map { |error| "- #{error}" }.join("\n")
   exit 1

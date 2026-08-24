@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 require "json"
+require_relative "domain_config"
 
 ROOT = File.expand_path("..", __dir__)
-SITE_ORIGIN = "https://cfmoto.az"
-SOURCE_ORIGIN = "https://cfmoto-azerbaijan.dvhqpbbkmw.chatgpt.site"
+SITE_ORIGIN = DomainConfig::SITE_ORIGIN
 SERVICE_PHONE = "+994102414299"
 
 HOME_TITLE = "CFMOTO Azerbaijan | Motosiklet, ATV və Buggy"
@@ -81,13 +81,20 @@ HTML
 
 challenge_script = %r{<script>\(function\(\)\{function c\(\)\{.*?/cdn-cgi/challenge-platform/scripts/jsd/main\.js.*?</script>}m
 
+def normalize_site_origins!(content)
+  content.gsub!(DomainConfig::PAGES_SITE_ORIGIN_PATTERN, SITE_ORIGIN)
+  DomainConfig::NON_CANONICAL_SITE_ORIGINS.each do |origin|
+    content.gsub!(origin, SITE_ORIGIN)
+  end
+end
+
 html_paths = [
   File.join(ROOT, "index.html"),
   *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort
 ]
 html_paths.each do |path|
   html = File.read(path, encoding: "UTF-8")
-  html.gsub!(SOURCE_ORIGIN, SITE_ORIGIN)
+  normalize_site_origins!(html)
   html.gsub!(%r{<!-- SEO:START -->.*?<!-- SEO:END -->}m, "")
   html.gsub!(%r{<meta name="codex-preview" content="development"\s*/>}, "")
   html.gsub!(%r{,\[\\"\$\\",\\"meta\\",\\"\d+\\",\{\\"name\\":\\"codex-preview\\",\\"content\\":\\"development\\"\}\]}, "")
@@ -119,6 +126,7 @@ end
 
 Dir.glob(File.join(ROOT, "assets", "*.js")).each do |page_bundle|
   javascript = File.read(page_bundle, encoding: "UTF-8")
+  normalize_site_origins!(javascript)
   javascript.gsub!('`Satış mərkəzi`,`.showroom`', '`Satış mərkəzi`,`#showroom`')
   javascript.gsub!(
     /className:`showroom section`(?:,id:`showroom`)*/,
@@ -154,4 +162,16 @@ sitemap = [
 File.write(File.join(ROOT, "sitemap.xml"), sitemap)
 File.write(File.join(ROOT, "robots.txt"), "User-agent: *\nAllow: /\nSitemap: #{SITE_ORIGIN}/sitemap.xml\n")
 
-puts "SEO applied to #{html_paths.size} HTML pages; sitemap contains #{sitemap_urls.size} URLs"
+redirects = DomainConfig::LEGACY_PATH_REDIRECTS.dup
+model_urls.each do |url|
+  slug = File.basename(url)
+  redirects["/#{slug}"] ||= "/model/#{slug}"
+end
+redirect_file = [
+  "# Former cfmoto.az paths; host-level redirects are configured separately in Cloudflare Rules.",
+  *redirects.map { |source, destination| "#{source} #{destination} 301" },
+  ""
+].join("\n")
+File.write(File.join(ROOT, "_redirects"), redirect_file)
+
+puts "SEO applied to #{html_paths.size} HTML pages; sitemap contains #{sitemap_urls.size} URLs; redirects contain #{redirects.size} rules"

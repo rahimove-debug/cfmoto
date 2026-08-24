@@ -10,11 +10,13 @@ files = %w[
   index.html
   404.html
   _headers
+  _redirects
   robots.txt
   sitemap.xml
   favicon.svg
   cfmoto-logo-black.png
   official-800mtx-hero.webp
+  official-800mtx-hero-mobile.jpg
 ]
 
 updates = File.join(__dir__, "apply_site_updates.rb")
@@ -44,7 +46,7 @@ end
 html_count = Dir.glob(File.join(DIST, "**", "*.html")).size
 abort "Expected 49 HTML files in dist, found #{html_count}" unless html_count == 49
 
-forbidden = %w[README.md .github scripts]
+forbidden = %w[README.md .github cloudflare scripts]
 leaked = forbidden.select { |path| File.exist?(File.join(DIST, path)) }
 abort "Non-public files copied to dist: #{leaked.join(', ')}" unless leaked.empty?
 
