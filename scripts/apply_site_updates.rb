@@ -8,21 +8,25 @@ OLD_RUNTIME = "index-WBfaOMAt.js"
 PREVIOUS_RUNTIME = "index-CfmotoAug24.js"
 CURRENT_RUNTIME = "index-CfmotoAug24Fix.js"
 LAST_RUNTIME = "index-CfmotoMobileFix.js"
-NEW_RUNTIME = "index-CfmotoMobileFixV2.js"
+CURRENT_V2_RUNTIME = "index-CfmotoMobileFixV2.js"
+NEW_RUNTIME = "index-CfmotoMobileFixV3.js"
 OLD_HOME_BUNDLE = "page-DZgbTvch.js"
 PREVIOUS_HOME_BUNDLE = "page-CfmotoAug24.js"
 CURRENT_HOME_BUNDLE = "page-CfmotoAug24Fix.js"
 LAST_HOME_BUNDLE = "page-CfmotoMobileFix.js"
-NEW_HOME_BUNDLE = "page-CfmotoMobileFixV2.js"
+CURRENT_V2_HOME_BUNDLE = "page-CfmotoMobileFixV2.js"
+NEW_HOME_BUNDLE = "page-CfmotoMobileFixV3.js"
 OLD_MENU_BUNDLE = "ProductMegaMenu-Cpx-ytn3.js"
 PREVIOUS_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24.js"
-NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24Fix.js"
+CURRENT_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24Fix.js"
+NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoMobileFixV3.js"
 CURRENT_STYLESHEET = "index-DiLMqMiY.css"
 LAST_STYLESHEET = "index-CfmotoMobileFix.css"
-NEW_STYLESHEET = "index-CfmotoMobileFixV2.css"
+CURRENT_V2_STYLESHEET = "index-CfmotoMobileFixV2.css"
+NEW_STYLESHEET = "index-CfmotoMobileFixV3.css"
 
-RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME, LAST_RUNTIME].freeze
-HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE].freeze
+RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME, LAST_RUNTIME, CURRENT_V2_RUNTIME].freeze
+HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE, CURRENT_V2_HOME_BUNDLE].freeze
 
 SERVICE_BASE_COPY = "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir."
 SERVICE_HOURS_COPY = "Bazar ertəsi xaric hər gün 10:00–19:00."
@@ -39,21 +43,21 @@ MOBILE_CREDIT_CSS = <<~CSS.strip
 CSS
 
 SUPPORT_ASSET_SOURCES = {
-  ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js"] => "rolldown-runtime-CfmotoAug24Fix.js",
-  ["framework-CXnKph_e.js", "framework-CfmotoAug24.js"] => "framework-CfmotoAug24Fix.js",
-  ["layout-segment-context-BqNUFdFf.js", "layout-segment-context-CfmotoAug24.js"] => "layout-segment-context-CfmotoAug24Fix.js",
-  ["link-IATORi5E.js", "link-CfmotoAug24.js"] => "link-CfmotoAug24Fix.js",
-  ["router-CzKeCzcA.js", "router-CfmotoAug24.js"] => "router-CfmotoAug24Fix.js",
-  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js"] => "ModelFinance-CfmotoAug24Fix.js",
-  ["ModelGallery-BT140N7z.js", "ModelGallery-CfmotoAug24.js"] => "ModelGallery-CfmotoAug24Fix.js",
-  ["ModelSpecs-BJB4gaLM.js", "ModelSpecs-CfmotoAug24.js"] => "ModelSpecs-CfmotoAug24Fix.js",
-  ["ModelColorSelector-DIxmErfw.js", "ModelColorSelector-CfmotoAug24.js"] => "ModelColorSelector-CfmotoAug24Fix.js"
+  ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js", "rolldown-runtime-CfmotoAug24Fix.js"] => "rolldown-runtime-CfmotoMobileFixV3.js",
+  ["framework-CXnKph_e.js", "framework-CfmotoAug24.js", "framework-CfmotoAug24Fix.js"] => "framework-CfmotoMobileFixV3.js",
+  ["layout-segment-context-BqNUFdFf.js", "layout-segment-context-CfmotoAug24.js", "layout-segment-context-CfmotoAug24Fix.js"] => "layout-segment-context-CfmotoMobileFixV3.js",
+  ["link-IATORi5E.js", "link-CfmotoAug24.js", "link-CfmotoAug24Fix.js"] => "link-CfmotoMobileFixV3.js",
+  ["router-CzKeCzcA.js", "router-CfmotoAug24.js", "router-CfmotoAug24Fix.js"] => "router-CfmotoMobileFixV3.js",
+  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js", "ModelFinance-CfmotoAug24Fix.js"] => "ModelFinance-CfmotoMobileFixV3.js",
+  ["ModelGallery-BT140N7z.js", "ModelGallery-CfmotoAug24.js", "ModelGallery-CfmotoAug24Fix.js"] => "ModelGallery-CfmotoMobileFixV3.js",
+  ["ModelSpecs-BJB4gaLM.js", "ModelSpecs-CfmotoAug24.js", "ModelSpecs-CfmotoAug24Fix.js"] => "ModelSpecs-CfmotoMobileFixV3.js",
+  ["ModelColorSelector-DIxmErfw.js", "ModelColorSelector-CfmotoAug24.js", "ModelColorSelector-CfmotoAug24Fix.js"] => "ModelColorSelector-CfmotoMobileFixV3.js"
 }.freeze
 
 PRIMARY_ASSET_SOURCES = {
   RUNTIME_SOURCES => NEW_RUNTIME,
   HOME_BUNDLE_SOURCES => NEW_HOME_BUNDLE,
-  [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE] => NEW_MENU_BUNDLE
+  [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE] => NEW_MENU_BUNDLE
 }.freeze
 
 ASSET_SOURCE_GROUPS = SUPPORT_ASSET_SOURCES.merge(PRIMARY_ASSET_SOURCES).freeze
@@ -62,6 +66,7 @@ ASSET_RENAMES = ASSET_SOURCE_GROUPS.each_with_object({}) do |(sources, target), 
 end
 ASSET_RENAMES[CURRENT_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES[LAST_STYLESHEET] = NEW_STYLESHEET
+ASSET_RENAMES[CURRENT_V2_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES.freeze
 
 def read_utf8(path)
@@ -146,7 +151,7 @@ end
 
 build_c5_page
 
-update_asset([OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE], NEW_MENU_BUNDLE) do |javascript|
+update_asset([OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE], NEW_MENU_BUNDLE) do |javascript|
   unless javascript.include?('slug:`cforce-c5`')
     anchor = '{slug:`cforce-c4`,name:`CFORCE C4`,type:`Kvadrosikl`,segment:`Utility ATV`,engineClass:`400 cc`,price:12400,image:`/models/cforce-c4.webp`,officialPage:`https://cfmoto.az/cforce-c4`},'
     addition = '{slug:`cforce-c5`,name:`CFORCE C5`,type:`Kvadrosikl`,segment:`Utility ATV`,engineClass:`500 cc`,price:13900,image:`/models/cforce-c5.webp`,officialPage:`https://www.cfmoto.com/global/atv/atv/c5.html`,badge:`Yeni`,vatIncluded:!0},'
@@ -291,7 +296,7 @@ home.gsub!("46<!-- --> aktual model", "47<!-- --> aktual model")
 home.gsub!("46 aktual model", "47 aktual model")
 write_utf8(home_path, home)
 
-stylesheet_source = [CURRENT_STYLESHEET, LAST_STYLESHEET, NEW_STYLESHEET]
+stylesheet_source = [CURRENT_STYLESHEET, LAST_STYLESHEET, CURRENT_V2_STYLESHEET, NEW_STYLESHEET]
   .map { |name| File.join(ASSETS, name) }
   .find { |path| File.file?(path) }
 abort "Missing required stylesheet: #{CURRENT_STYLESHEET}" unless stylesheet_source
@@ -302,6 +307,7 @@ new_stylesheet_path = File.join(ASSETS, NEW_STYLESHEET)
 write_utf8(new_stylesheet_path, stylesheet)
 FileUtils.rm_f(File.join(ASSETS, CURRENT_STYLESHEET)) unless CURRENT_STYLESHEET == NEW_STYLESHEET
 FileUtils.rm_f(File.join(ASSETS, LAST_STYLESHEET)) unless LAST_STYLESHEET == NEW_STYLESHEET
+FileUtils.rm_f(File.join(ASSETS, CURRENT_V2_STYLESHEET)) unless CURRENT_V2_STYLESHEET == NEW_STYLESHEET
 
 u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 u10 = read_utf8(u10_path)
