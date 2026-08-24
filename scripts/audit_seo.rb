@@ -6,7 +6,10 @@ SITE_ORIGIN = "https://cfmoto.az"
 SOURCE_ORIGIN = "https://cfmoto-azerbaijan.dvhqpbbkmw.chatgpt.site"
 
 errors = []
-html_paths = Dir.glob(File.join(ROOT, "**", "*.html")).sort
+html_paths = [
+  File.join(ROOT, "index.html"),
+  *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort
+]
 titles = []
 descriptions = []
 canonicals = []
@@ -76,6 +79,25 @@ elsif !File.read(robots_path, encoding: "UTF-8").include?("Sitemap: #{SITE_ORIGI
 end
 
 errors << "Missing social preview image" unless File.exist?(File.join(ROOT, "official-800mtx-hero.webp"))
+
+not_found_path = File.join(ROOT, "404.html")
+if !File.exist?(not_found_path)
+  errors << "Missing 404.html"
+else
+  not_found = File.read(not_found_path, encoding: "UTF-8")
+  errors << "404.html must be noindex" unless not_found.include?('name="robots" content="noindex,follow"')
+  errors << "404.html must link to the homepage" unless not_found.include?('href="/"')
+end
+
+headers_path = File.join(ROOT, "_headers")
+if !File.exist?(headers_path)
+  errors << "Missing _headers"
+else
+  headers = File.read(headers_path, encoding: "UTF-8")
+  %w[X-Content-Type-Options X-Frame-Options Referrer-Policy Permissions-Policy].each do |header|
+    errors << "_headers is missing #{header}" unless headers.include?(header)
+  end
+end
 
 if errors.empty?
   puts "SEO audit passed: #{html_paths.size} pages, #{canonicals.size} canonicals, valid JSON-LD and sitemap"

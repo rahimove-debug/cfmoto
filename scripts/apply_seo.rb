@@ -71,7 +71,10 @@ HTML
 
 challenge_script = %r{<script>\(function\(\)\{function c\(\)\{.*?/cdn-cgi/challenge-platform/scripts/jsd/main\.js.*?</script>}m
 
-html_paths = Dir.glob(File.join(ROOT, "**", "*.html")).sort
+html_paths = [
+  File.join(ROOT, "index.html"),
+  *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort
+]
 html_paths.each do |path|
   html = File.read(path, encoding: "UTF-8")
   html.gsub!(SOURCE_ORIGIN, SITE_ORIGIN)
@@ -107,7 +110,10 @@ end
 Dir.glob(File.join(ROOT, "assets", "*.js")).each do |page_bundle|
   javascript = File.read(page_bundle, encoding: "UTF-8")
   javascript.gsub!('`Satış mərkəzi`,`.showroom`', '`Satış mərkəzi`,`#showroom`')
-  javascript.gsub!('className:`showroom section`', 'className:`showroom section`,id:`showroom`')
+  javascript.gsub!(
+    /className:`showroom section`(?:,id:`showroom`)*/,
+    'className:`showroom section`,id:`showroom`'
+  )
   javascript.gsub!(
     '(0,c.jsx)(`h1`,{children:`YOLU ÖZÜN SEÇ.`})',
     '(0,c.jsx)(t?`h1`:`p`,{className:`category-hero-title`,children:`YOLU ÖZÜN SEÇ.`})'
