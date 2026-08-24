@@ -5,29 +5,40 @@ ROOT = File.expand_path("..", __dir__)
 ASSETS = File.join(ROOT, "assets")
 
 OLD_RUNTIME = "index-WBfaOMAt.js"
-NEW_RUNTIME = "index-CfmotoAug24.js"
+PREVIOUS_RUNTIME = "index-CfmotoAug24.js"
+NEW_RUNTIME = "index-CfmotoAug24Fix.js"
 OLD_HOME_BUNDLE = "page-DZgbTvch.js"
-NEW_HOME_BUNDLE = "page-CfmotoAug24.js"
+PREVIOUS_HOME_BUNDLE = "page-CfmotoAug24.js"
+NEW_HOME_BUNDLE = "page-CfmotoAug24Fix.js"
 OLD_MENU_BUNDLE = "ProductMegaMenu-Cpx-ytn3.js"
-NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24.js"
+PREVIOUS_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24.js"
+NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24Fix.js"
 
-SUPPORT_ASSET_RENAMES = {
-  "rolldown-runtime-S-ySWqyJ.js" => "rolldown-runtime-CfmotoAug24.js",
-  "framework-CXnKph_e.js" => "framework-CfmotoAug24.js",
-  "layout-segment-context-BqNUFdFf.js" => "layout-segment-context-CfmotoAug24.js",
-  "link-IATORi5E.js" => "link-CfmotoAug24.js",
-  "router-CzKeCzcA.js" => "router-CfmotoAug24.js",
-  "ModelFinance-QyWdpaDg.js" => "ModelFinance-CfmotoAug24.js",
-  "ModelGallery-BT140N7z.js" => "ModelGallery-CfmotoAug24.js",
-  "ModelSpecs-BJB4gaLM.js" => "ModelSpecs-CfmotoAug24.js",
-  "ModelColorSelector-DIxmErfw.js" => "ModelColorSelector-CfmotoAug24.js"
+SERVICE_BASE_COPY = "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir."
+SERVICE_HOURS_COPY = "Bazar ertəsi xaric hər gün 10:00–19:00."
+
+SUPPORT_ASSET_SOURCES = {
+  ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js"] => "rolldown-runtime-CfmotoAug24Fix.js",
+  ["framework-CXnKph_e.js", "framework-CfmotoAug24.js"] => "framework-CfmotoAug24Fix.js",
+  ["layout-segment-context-BqNUFdFf.js", "layout-segment-context-CfmotoAug24.js"] => "layout-segment-context-CfmotoAug24Fix.js",
+  ["link-IATORi5E.js", "link-CfmotoAug24.js"] => "link-CfmotoAug24Fix.js",
+  ["router-CzKeCzcA.js", "router-CfmotoAug24.js"] => "router-CfmotoAug24Fix.js",
+  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js"] => "ModelFinance-CfmotoAug24Fix.js",
+  ["ModelGallery-BT140N7z.js", "ModelGallery-CfmotoAug24.js"] => "ModelGallery-CfmotoAug24Fix.js",
+  ["ModelSpecs-BJB4gaLM.js", "ModelSpecs-CfmotoAug24.js"] => "ModelSpecs-CfmotoAug24Fix.js",
+  ["ModelColorSelector-DIxmErfw.js", "ModelColorSelector-CfmotoAug24.js"] => "ModelColorSelector-CfmotoAug24Fix.js"
 }.freeze
 
-ASSET_RENAMES = SUPPORT_ASSET_RENAMES.merge(
-  OLD_RUNTIME => NEW_RUNTIME,
-  OLD_HOME_BUNDLE => NEW_HOME_BUNDLE,
-  OLD_MENU_BUNDLE => NEW_MENU_BUNDLE
-).freeze
+PRIMARY_ASSET_SOURCES = {
+  [OLD_RUNTIME, PREVIOUS_RUNTIME] => NEW_RUNTIME,
+  [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE] => NEW_HOME_BUNDLE,
+  [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE] => NEW_MENU_BUNDLE
+}.freeze
+
+ASSET_SOURCE_GROUPS = SUPPORT_ASSET_SOURCES.merge(PRIMARY_ASSET_SOURCES).freeze
+ASSET_RENAMES = ASSET_SOURCE_GROUPS.each_with_object({}) do |(sources, target), renames|
+  sources.each { |source| renames[source] = target }
+end.freeze
 
 def read_utf8(path)
   File.read(path, encoding: "UTF-8")
@@ -38,16 +49,27 @@ def write_utf8(path, content)
   File.write(path, content, encoding: "UTF-8")
 end
 
-def update_asset(old_name, new_name)
-  old_path = File.join(ASSETS, old_name)
+def update_asset(source_names, new_name)
+  source_names = Array(source_names)
   new_path = File.join(ASSETS, new_name)
-  source = File.exist?(old_path) ? old_path : new_path
-  abort "Missing required asset: #{old_name} or #{new_name}" unless File.file?(source)
+  source = (source_names + [new_name])
+    .map { |name| File.join(ASSETS, name) }
+    .find { |path| File.file?(path) }
+  abort "Missing required asset: #{(source_names + [new_name]).join(', ')}" unless source
 
   content = read_utf8(source)
   yield content
   write_utf8(new_path, content)
-  FileUtils.rm_f(old_path) unless old_path == new_path
+  source_names.each do |name|
+    path = File.join(ASSETS, name)
+    FileUtils.rm_f(path) unless path == new_path
+  end
+end
+
+def normalize_service_schedule!(content)
+  base = Regexp.escape(SERVICE_BASE_COPY)
+  hours = Regexp.escape(SERVICE_HOURS_COPY)
+  content.gsub!(/#{base}(?: #{hours})*/, "#{SERVICE_BASE_COPY} #{SERVICE_HOURS_COPY}")
 end
 
 def build_c5_page
@@ -74,11 +96,11 @@ def build_c5_page
   html.gsub!("#596c57", "#87a8b2")
   html.gsub!("#777a78", "#e1251b")
   html.gsub!(
-    "https://www.cfmoto.com/content/dam/cfmoto/site/global/product/atv/atv/c5/2026/model1.png",
+    "https://www.cfmoto.com/content/dam/cfmoto/site/global/product/atv/atv/c4/2026/model1.png",
     "/models/cforce-c5.webp"
   )
   html.gsub!(
-    "https://www.cfmoto.com/content/dam/cfmoto/site/global/product/atv/atv/c5/2026/model2.png",
+    "https://www.cfmoto.com/content/dam/cfmoto/site/global/product/atv/atv/c4/2026/model2.png",
     "/models/cforce-c5-red.webp"
   )
   html.gsub!(
@@ -100,7 +122,7 @@ end
 
 build_c5_page
 
-update_asset(OLD_MENU_BUNDLE, NEW_MENU_BUNDLE) do |javascript|
+update_asset([OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE], NEW_MENU_BUNDLE) do |javascript|
   unless javascript.include?('slug:`cforce-c5`')
     anchor = '{slug:`cforce-c4`,name:`CFORCE C4`,type:`Kvadrosikl`,segment:`Utility ATV`,engineClass:`400 cc`,price:12400,image:`/models/cforce-c4.webp`,officialPage:`https://cfmoto.az/cforce-c4`},'
     addition = '{slug:`cforce-c5`,name:`CFORCE C5`,type:`Kvadrosikl`,segment:`Utility ATV`,engineClass:`500 cc`,price:13900,image:`/models/cforce-c5.webp`,officialPage:`https://www.cfmoto.com/global/atv/atv/c5.html`,badge:`Yeni`,vatIncluded:!0},'
@@ -108,26 +130,22 @@ update_asset(OLD_MENU_BUNDLE, NEW_MENU_BUNDLE) do |javascript|
     javascript.sub!(anchor, "#{anchor}#{addition}")
   end
 
-  javascript.gsub!(/U10 PRO(?! HIGHLAND)/, "U10 PRO HIGHLAND")
   javascript.gsub!(
     'e.price===null?`Qiyməti dəqiqləşdirin`:`${l(e.price)} AZN`',
     'e.price===null?`Qiyməti dəqiqləşdirin`:`${l(e.price)} AZN${e.vatIncluded?` · ƏDV daxil`:``}`'
   )
-  javascript.gsub!(OLD_RUNTIME, NEW_RUNTIME)
-  javascript.gsub!(OLD_HOME_BUNDLE, NEW_HOME_BUNDLE)
-  javascript.gsub!(OLD_MENU_BUNDLE, NEW_MENU_BUNDLE)
+  [OLD_RUNTIME, PREVIOUS_RUNTIME].each { |name| javascript.gsub!(name, NEW_RUNTIME) }
+  [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE].each { |name| javascript.gsub!(name, NEW_HOME_BUNDLE) }
+  [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
 end
 
-update_asset(OLD_HOME_BUNDLE, NEW_HOME_BUNDLE) do |javascript|
-  javascript.gsub!(OLD_MENU_BUNDLE, NEW_MENU_BUNDLE)
+update_asset([OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE], NEW_HOME_BUNDLE) do |javascript|
+  [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
   javascript.gsub!(
     "Babək pr. 188 · Hər gün 10:00–19:00 · Bazar ertəsi bağlıdır",
     "Babək pr. 188 · Salon hər gün 10:00–19:00"
   )
-  javascript.gsub!(
-    "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir.",
-    "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir. Bazar ertəsi xaric hər gün 10:00–19:00."
-  )
+  normalize_service_schedule!(javascript)
   javascript.gsub!('children:`Şəhərdaxili`', 'children:`Şəhərdaxili çatdırılma`')
   javascript.gsub!('children:`35 AZN`', 'children:`45 AZN`')
   javascript.gsub!(
@@ -140,13 +158,13 @@ update_asset(OLD_HOME_BUNDLE, NEW_HOME_BUNDLE) do |javascript|
   )
 end
 
-update_asset(OLD_RUNTIME, NEW_RUNTIME) do |javascript|
-  javascript.gsub!(OLD_MENU_BUNDLE, NEW_MENU_BUNDLE)
-  javascript.gsub!(OLD_HOME_BUNDLE, NEW_HOME_BUNDLE)
+update_asset([OLD_RUNTIME, PREVIOUS_RUNTIME], NEW_RUNTIME) do |javascript|
+  [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
+  [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE].each { |name| javascript.gsub!(name, NEW_HOME_BUNDLE) }
 end
 
-SUPPORT_ASSET_RENAMES.each do |old_name, new_name|
-  update_asset(old_name, new_name) { |_javascript| }
+SUPPORT_ASSET_SOURCES.each do |source_names, new_name|
+  update_asset(source_names, new_name) { |_javascript| }
 end
 
 Dir.glob(File.join(ASSETS, "*.js")).each do |path|
@@ -167,8 +185,7 @@ html_paths.each do |path|
     "Babək pr. 188 · Hər gün 10:00–19:00 · Bazar ertəsi bağlıdır",
     "Babək pr. 188 · Salon hər gün 10:00–19:00"
   )
-  html.gsub!(/U10 PRO(?! HIGHLAND)/, "U10 PRO HIGHLAND")
-  html.gsub!(/U10%20PRO(?!%20HIGHLAND)/, "U10%20PRO%20HIGHLAND")
+  normalize_service_schedule!(html)
   html.gsub!(
     '<span>Kvadrosikl</span><small>8<!-- --> model</small>',
     '<span>Kvadrosikl</span><small>9<!-- --> model</small>'
@@ -178,10 +195,7 @@ end
 
 home_path = File.join(ROOT, "index.html")
 home = read_utf8(home_path)
-home.gsub!(
-  "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir.",
-  "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir. Bazar ertəsi xaric hər gün 10:00–19:00."
-)
+normalize_service_schedule!(home)
 home.gsub!('<span>Şəhərdaxili</span><h3>35 AZN</h3>', '<span>Şəhərdaxili çatdırılma</span><h3>45 AZN</h3>')
 home.gsub!(
   '<small>İş saatları</small><strong>10:00–19:00<br/>Bazar ertəsi bağlıdır</strong>',
@@ -204,23 +218,6 @@ write_utf8(home_path, home)
 
 u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 u10 = read_utf8(u10_path)
-u10.gsub!(
-  "U10 PRO HIGHLAND yük, iş və uzun off-road marşrutlarında praktik istifadə üçün hazırlanmış utility modelidir.",
-  "U10 PRO HIGHLAND dörd yerlik kabinəsi ilə yük, iş və uzun off-road marşrutlarında praktik istifadə üçün hazırlanmış utility modelidir."
-)
-u10.gsub!(
-  "Sürücü və sərnişin üçün qorunan, funksional məkan gün boyu istifadəni daha rahat edir.",
-  "Sürücü və üç sərnişin üçün qorunan dörd yerlik kabinə gün boyu istifadəni daha rahat edir."
-)
-u10.gsub!(
-  '<div><span>Rəsmi satış</span><strong>CFMOTO Azerbaijan</strong></div>',
-  '<div><span>Oturacaq sayı</span><strong>4 nəfər</strong></div>'
-)
-u10.gsub!(
-  '\"label\":\"Rəsmi satış\",\"value\":\"CFMOTO Azerbaijan\"',
-  '\"label\":\"Oturacaq sayı\",\"value\":\"4 nəfər\"'
-)
-write_utf8(u10_path, u10)
 
 required_images = %w[
   models/cforce-c5.webp
@@ -230,16 +227,23 @@ required_images = %w[
   gallery/cforce-c5-3.webp
 ]
 missing_images = required_images.reject { |relative| File.file?(File.join(ROOT, relative)) }
-abort "Missing CFORCE C5 images: #{missing_images.join(', ')}" unless missing_images.empty?
+abort "Missing required product images: #{missing_images.join(', ')}" unless missing_images.empty?
 
+c5 = read_utf8(File.join(ROOT, "model", "cforce-c5", "index.html"))
 checks = {
   "home delivery price" => home.include?("45 AZN"),
   "home showroom hours" => home.include?("Salon hər gün açıqdır"),
   "home service hours" => home.include?("Bazar ertəsi xaric hər gün 10:00–19:00"),
+  "home service hours appear once" => home.scan(SERVICE_HOURS_COPY).size == 1,
   "home C5 card" => home.include?('href="/model/cforce-c5"'),
-  "C5 VAT price" => read_utf8(File.join(ROOT, "model", "cforce-c5", "index.html")).include?("13,900 AZN"),
-  "U10 Highland" => u10.include?("U10 PRO HIGHLAND"),
-  "U10 four seats" => u10.include?("4 nəfər"),
+  "C5 VAT price" => c5.include?("13,900 AZN"),
+  "C5 blue color image" => c5.include?("/models/cforce-c5.webp"),
+  "C5 red color image" => c5.include?("/models/cforce-c5-red.webp"),
+  "C5 has no C4 color images" => !c5.include?("/atv/atv/c4/2026/model"),
+  "U10 PRO name" => u10.include?('<h1 class="product-title">U10 PRO</h1>') && !u10.include?("U10 PRO HIGHLAND"),
+  "U10 PRO model image" => u10.include?("/models/u10-pro.webp"),
+  "U10 PRO gallery" => u10.include?("/gallery/u10-pro-1.webp"),
+  "U10 PRO color images" => u10.include?("/sxs/utility/u10-pro/2026/model1.png"),
   "new runtime" => File.file?(File.join(ASSETS, NEW_RUNTIME)),
   "new home bundle" => File.file?(File.join(ASSETS, NEW_HOME_BUNDLE)),
   "new menu bundle" => File.file?(File.join(ASSETS, NEW_MENU_BUNDLE)),
@@ -250,4 +254,4 @@ checks = {
 failures = checks.reject { |_label, passed| passed }.keys
 abort "Site update checks failed: #{failures.join(', ')}" unless failures.empty?
 
-puts "Site updates applied: CFORCE C5, U10 PRO HIGHLAND, delivery price and operating hours"
+puts "Site updates applied: CFORCE C5 colors, U10 PRO preserved, delivery price and operating hours"

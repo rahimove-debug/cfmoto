@@ -89,10 +89,11 @@ home = File.read(home_path, encoding: "UTF-8")
   "service schedule" => "Bazar ertəsi xaric hər gün 10:00–19:00",
   "CFORCE C5 card" => 'href="/model/cforce-c5"',
   "CFORCE C5 VAT note" => "13,900 AZN · ƏDV daxil",
-  "U10 PRO HIGHLAND card" => "U10 PRO HIGHLAND"
+  "U10 PRO card" => "U10 PRO"
 }.each do |label, text|
   errors << "Home is missing #{label}" unless home.include?(text)
 end
+errors << "Home repeats the service schedule" unless home.scan("Bazar ertəsi xaric hər gün 10:00–19:00.").size == 1
 
 c5_path = File.join(ROOT, "model", "cforce-c5", "index.html")
 if !File.file?(c5_path)
@@ -101,15 +102,20 @@ else
   c5 = File.read(c5_path, encoding: "UTF-8")
   errors << "CFORCE C5 page is missing VAT-inclusive price" unless c5.include?("Nağd satış qiyməti · ƏDV daxil") && c5.include?("13,900 AZN")
   errors << "CFORCE C5 page is missing Product schema" unless c5.include?('"@type":"Product"')
+  errors << "CFORCE C5 blue color is not mapped to its image" unless c5.include?('src="/models/cforce-c5.webp"') && c5.include?("Zephyr Blue")
+  errors << "CFORCE C5 red color is not mapped to its image" unless c5.include?("/models/cforce-c5-red.webp") && c5.include?("Magma Red")
+  errors << "CFORCE C5 page still references C4 color imagery" if c5.include?("/atv/atv/c4/2026/model")
 end
 
 u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 if !File.file?(u10_path)
-  errors << "Missing U10 PRO HIGHLAND detail page"
+  errors << "Missing U10 PRO detail page"
 else
   u10 = File.read(u10_path, encoding: "UTF-8")
-  errors << "U10 page is missing HIGHLAND version name" unless u10.include?("U10 PRO HIGHLAND")
-  errors << "U10 PRO HIGHLAND must show four seats" unless u10.include?("4 nəfər") && u10.include?("üç sərnişin")
+  errors << "U10 page is missing its original model name" unless u10.include?('<h1 class="product-title">U10 PRO</h1>') && !u10.include?("U10 PRO HIGHLAND")
+  errors << "U10 PRO must use its original model image" unless u10.include?("/models/u10-pro.webp")
+  errors << "U10 PRO must use its original gallery" unless u10.include?("/gallery/u10-pro-1.webp")
+  errors << "U10 PRO must use its original color imagery" unless u10.include?("/sxs/utility/u10-pro/2026/model1.png")
 end
 
 html_paths.each do |path|
@@ -136,7 +142,7 @@ end
   gallery/cforce-c5-2.webp
   gallery/cforce-c5-3.webp
 ].each do |relative|
-  errors << "Missing CFORCE C5 image: #{relative}" unless File.file?(File.join(ROOT, relative))
+  errors << "Missing required product image: #{relative}" unless File.file?(File.join(ROOT, relative))
 end
 
 not_found_path = File.join(ROOT, "404.html")
