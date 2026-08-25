@@ -364,6 +364,10 @@ module RussianSiteAudit
 
       @errors << "Expected 13 Russian locale assets, found #{russian_assets.size}" unless russian_assets.size == 13
       @errors << "Russian locale asset set does not mirror the 13 source assets" unless russian_assets.sort == expected_russian_assets.sort
+      RussianConfig::LEGACY_RUSSIAN_ASSET_VERSIONS.each do |version|
+        legacy = Dir.glob(File.join(ROOT, "assets", "*#{version}*"))
+        @errors << "Obsolete Russian locale assets remain for #{version}" unless legacy.empty?
+      end
 
       russian_javascript = russian_assets.select { |path| File.extname(path) == ".js" }
       russian_javascript.each do |path|

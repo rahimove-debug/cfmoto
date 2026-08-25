@@ -332,7 +332,9 @@ page_entries = entries
 abort "Expected 56 Azerbaijani source pages, found #{page_entries.size}" unless page_entries.size == 56
 
 FileUtils.rm_rf(RU_ROOT)
-Dir.glob(File.join(ASSETS, "*#{RussianConfig::ASSET_RUSSIAN_VERSION}*")).each { |path| FileUtils.rm_f(path) }
+([RussianConfig::ASSET_RUSSIAN_VERSION] + RussianConfig::LEGACY_RUSSIAN_ASSET_VERSIONS).each do |version|
+  Dir.glob(File.join(ASSETS, "*#{version}*")).each { |path| FileUtils.rm_f(path) }
+end
 
 source_assets = Dir.glob(File.join(ASSETS, "*#{RussianConfig::ASSET_SOURCE_VERSION}*"))
 abort "Expected 13 versioned source assets, found #{source_assets.size}" unless source_assets.size == 13
