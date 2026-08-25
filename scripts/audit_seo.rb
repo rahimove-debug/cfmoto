@@ -70,6 +70,13 @@ html_paths.each do |path|
   errors << "#{relative}: contains copied Cloudflare challenge" if html.include?("cdn-cgi/challenge-platform")
   errors << "#{relative}: contains broken showroom link" if html.include?('href=".showroom"')
 
+  errors << "#{relative}: expected one GA4 analytics block" unless html.scan("<!-- CFMOTO:ANALYTICS:START -->").size == 1 && html.scan("<!-- CFMOTO:ANALYTICS:END -->").size == 1
+  errors << "#{relative}: expected one GA4 loader" unless html.scan("googletagmanager.com/gtag/js?id=#{DomainConfig::GA4_MEASUREMENT_ID}").size == 1
+  errors << "#{relative}: expected one GA4 configuration" unless html.scan("gtag('config','#{DomainConfig::GA4_MEASUREMENT_ID}')").size == 1
+  %w[whatsapp_click phone_click directions_click finance_lead_click].each do |event_name|
+    errors << "#{relative}: missing GA4 event #{event_name}" unless html.include?("'#{event_name}'")
+  end
+
   logo_tags = html.scan(%r{<img\b[^>]*src="/cfmoto-logo-black\.png"[^>]*>})
   errors << "#{relative}: missing CFMOTO logo" if logo_tags.empty?
   logo_tags.each do |tag|
