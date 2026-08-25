@@ -210,7 +210,8 @@ end
 
 card_images = Dir.glob(File.join(ROOT, "models", "cards", "*.webp"))
 errors << "Expected 47 optimized model card images, found #{card_images.size}" unless card_images.size == 47
-errors << "Homepage must use all 47 optimized model card images" unless home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == 47
+homepage_card_sources = home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten
+errors << "Homepage must use all 47 optimized model card images" unless homepage_card_sources.uniq.size == 47
 
 Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.each do |path|
   slug = File.basename(File.dirname(path))
