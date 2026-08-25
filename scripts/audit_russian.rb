@@ -13,6 +13,17 @@ module RussianSiteAudit
   SITE_ORIGIN = DomainConfig::SITE_ORIGIN
   LANGUAGE_START = "<!-- CFMOTO:LANGUAGE:START -->"
   LANGUAGE_END = "<!-- CFMOTO:LANGUAGE:END -->"
+  META_PIXEL_ID = DomainConfig::META_PIXEL_ID
+META_PIXEL_HEAD_START = "<!-- CFMOTO:META-PIXEL:HEAD:START -->"
+META_PIXEL_HEAD_END = "<!-- CFMOTO:META-PIXEL:HEAD:END -->"
+META_PIXEL_BODY_START = "<!-- CFMOTO:META-PIXEL:BODY:START -->"
+META_PIXEL_BODY_END = "<!-- CFMOTO:META-PIXEL:BODY:END -->"
+GTM_HEAD_START = "<!-- CFMOTO:GTM:HEAD:START -->"
+GTM_HEAD_END = "<!-- CFMOTO:GTM:HEAD:END -->"
+GTM_BODY_START = "<!-- CFMOTO:GTM:BODY:START -->"
+GTM_BODY_END = "<!-- CFMOTO:GTM:BODY:END -->"
+GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
+  META_PIXEL_NOSCRIPT = "https://www.facebook.com/tr?id=#{META_PIXEL_ID}&ev=PageView&noscript=1"
   AZERBAIJANI_SPECIAL_LETTERS = /[ƏəĞğİıÖöÜüÇçŞş]/
   AZERBAIJANI_ASCII_FRAGMENTS = [
     "Naviqasiya yolu",
@@ -177,6 +188,7 @@ module RussianSiteAudit
           own_path: entry.az_path,
           counterpart_path: entry.ru_path
         )
+        audit_meta_pixel(entry.az_file, az_html)
         audit_page(
           entry,
           ru_html,
@@ -184,6 +196,7 @@ module RussianSiteAudit
           own_path: entry.ru_path,
           counterpart_path: entry.az_path
         )
+        audit_meta_pixel(entry.ru_file, ru_html)
         audit_react_asset_pair(entry, az_html, ru_html) if react_page?(entry)
         audit_react_metadata_parity(entry, ru_html) if react_page?(entry)
         audit_no_azerbaijani_letters(entry.ru_file, ru_html)
@@ -250,6 +263,28 @@ module RussianSiteAudit
         found << attrs["content"] if attrs[key] == name
       end
       @errors << "#{label}: #{name} must be exactly #{expected}; found #{values.inspect}" unless values == [expected]
+    end
+
+    def audit_meta_pixel(path, html)
+      label = relative(path)
+      normalized = html.gsub("&amp;", "&")
+      body_open = html.index(%r{<body\b[^>]*>}i)
+      body_close = html.index("</body>")
+      body_marker = html.index(META_PIXEL_BODY_START)
+      gtm_body_marker = html.index(GTM_BODY_START)
+
+      @errors << "#{label}: expected one GTM head marker pair" unless html.scan(GTM_HEAD_START).size == 1 && html.scan(GTM_HEAD_END).size == 1
+      @errors << "#{label}: expected one GTM body marker pair" unless html.scan(GTM_BODY_START).size == 1 && html.scan(GTM_BODY_END).size == 1
+      @errors << "#{label}: expected one GTM loader" unless html.scan("googletagmanager.com/gtm.js?id='+i+dl").size == 1 && html.scan("'#{GOOGLE_TAG_MANAGER_ID}'").size == 1
+      @errors << "#{label}: expected one GTM noscript iframe" unless html.scan("googletagmanager.com/ns.html?id=#{GOOGLE_TAG_MANAGER_ID}").size == 1
+      @errors << "#{label}: expected one Meta Pixel head marker pair" unless html.scan(META_PIXEL_HEAD_START).size == 1 && html.scan(META_PIXEL_HEAD_END).size == 1
+      @errors << "#{label}: expected one Meta Pixel body marker pair" unless html.scan(META_PIXEL_BODY_START).size == 1 && html.scan(META_PIXEL_BODY_END).size == 1
+      @errors << "#{label}: expected one Meta Pixel loader" unless html.scan("connect.facebook.net/en_US/fbevents.js").size == 1
+      @errors << "#{label}: expected one Meta Pixel init" unless html.scan("fbq('init','#{META_PIXEL_ID}')").size == 1
+      @errors << "#{label}: expected one Meta Pixel PageView" unless html.scan("fbq('track','PageView')").size == 1
+      @errors << "#{label}: expected one Meta Pixel noscript image" unless normalized.scan(/#{Regexp.escape(META_PIXEL_NOSCRIPT)}/).size == 1
+      @errors << "#{label}: GTM body marker must be inside <body>" unless body_open && body_close && gtm_body_marker && gtm_body_marker > body_open && gtm_body_marker < body_close
+      @errors << "#{label}: Meta Pixel body marker must be inside <body>" unless body_open && body_close && body_marker && body_marker > body_open && body_marker < body_close
     end
 
     def audit_language_switch(html, label, language:, counterpart_path:)

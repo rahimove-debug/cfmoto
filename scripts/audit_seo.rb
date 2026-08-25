@@ -8,6 +8,17 @@ require_relative "russian_config"
 ROOT = File.expand_path("..", __dir__)
 SITE_ORIGIN = DomainConfig::SITE_ORIGIN
 CLEAN_IMAGE_SLUGS = %w[1000mt-x 750sr-s cforce-c4 cforce1000-touring].freeze
+META_PIXEL_ID = DomainConfig::META_PIXEL_ID
+META_PIXEL_HEAD_START = "<!-- CFMOTO:META-PIXEL:HEAD:START -->"
+META_PIXEL_HEAD_END = "<!-- CFMOTO:META-PIXEL:HEAD:END -->"
+META_PIXEL_BODY_START = "<!-- CFMOTO:META-PIXEL:BODY:START -->"
+META_PIXEL_BODY_END = "<!-- CFMOTO:META-PIXEL:BODY:END -->"
+GTM_HEAD_START = "<!-- CFMOTO:GTM:HEAD:START -->"
+GTM_HEAD_END = "<!-- CFMOTO:GTM:HEAD:END -->"
+GTM_BODY_START = "<!-- CFMOTO:GTM:BODY:START -->"
+GTM_BODY_END = "<!-- CFMOTO:GTM:BODY:END -->"
+GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
+META_PIXEL_NOSCRIPT = "https://www.facebook.com/tr?id=#{META_PIXEL_ID}&ev=PageView&noscript=1"
 
 def expected_primary_model_image(slug)
   suffix = CLEAN_IMAGE_SLUGS.include?(slug) ? "-clean" : ""
@@ -117,6 +128,25 @@ html_paths.each do |path|
   errors << "#{relative}: expected one GA4 analytics block" unless html.scan("<!-- CFMOTO:ANALYTICS:START -->").size == 1 && html.scan("<!-- CFMOTO:ANALYTICS:END -->").size == 1
   errors << "#{relative}: expected one GA4 loader" unless html.scan("googletagmanager.com/gtag/js?id=#{DomainConfig::GA4_MEASUREMENT_ID}").size == 1
   errors << "#{relative}: expected one GA4 configuration" unless html.scan("gtag('config','#{DomainConfig::GA4_MEASUREMENT_ID}')").size == 1
+  errors << "#{relative}: expected one GTM head block" unless html.scan(GTM_HEAD_START).size == 1 && html.scan(GTM_HEAD_END).size == 1
+  errors << "#{relative}: expected one GTM body block" unless html.scan(GTM_BODY_START).size == 1 && html.scan(GTM_BODY_END).size == 1
+  errors << "#{relative}: expected one GTM loader" unless html.scan("googletagmanager.com/gtm.js?id='+i+dl").size == 1 && html.scan("'#{GOOGLE_TAG_MANAGER_ID}'").size == 1
+  errors << "#{relative}: expected one GTM noscript iframe" unless html.scan("googletagmanager.com/ns.html?id=#{GOOGLE_TAG_MANAGER_ID}").size == 1
+  normalized_html = html.gsub("&amp;", "&")
+  errors << "#{relative}: expected one Meta Pixel head block" unless html.scan(META_PIXEL_HEAD_START).size == 1 && html.scan(META_PIXEL_HEAD_END).size == 1
+  errors << "#{relative}: expected one Meta Pixel body block" unless html.scan(META_PIXEL_BODY_START).size == 1 && html.scan(META_PIXEL_BODY_END).size == 1
+  errors << "#{relative}: expected one Meta Pixel loader" unless html.scan("connect.facebook.net/en_US/fbevents.js").size == 1
+  errors << "#{relative}: expected one Meta Pixel init" unless html.scan("fbq('init','#{META_PIXEL_ID}')").size == 1
+  errors << "#{relative}: expected one Meta Pixel PageView" unless html.scan("fbq('track','PageView')").size == 1
+  errors << "#{relative}: expected one Meta Pixel noscript image" unless normalized_html.scan(/#{Regexp.escape(META_PIXEL_NOSCRIPT)}/).size == 1
+  body_open_index = html.index(%r{<body\b[^>]*>}i)
+  body_close_index = html.index("</body>")
+  pixel_body_index = html.index(META_PIXEL_BODY_START)
+  gtm_body_index = html.index(GTM_BODY_START)
+  errors << "#{relative}: missing <body> tag" unless body_open_index
+  errors << "#{relative}: missing </body> tag" unless body_close_index
+  errors << "#{relative}: Meta Pixel body block must be inside <body>" unless body_open_index && body_close_index && pixel_body_index && pixel_body_index > body_open_index && pixel_body_index < body_close_index
+  errors << "#{relative}: GTM body block must be inside <body>" unless body_open_index && body_close_index && gtm_body_index && gtm_body_index > body_open_index && gtm_body_index < body_close_index
   %w[whatsapp_click phone_click directions_click finance_lead_click].each do |event_name|
     errors << "#{relative}: missing GA4 event #{event_name}" unless html.include?("'#{event_name}'")
   end
