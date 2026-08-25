@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "cfmoto-site-update-v7-20260825.tar.gz"
+      - "cfmoto-site-update-ru-categories-20260825.tar.gz"
 
 permissions:
   contents: write
@@ -25,12 +25,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          archive="cfmoto-site-update-v7-20260825.tar.gz"
+          archive="cfmoto-site-update-ru-categories-20260825.tar.gz"
           if [[ ! -f "$archive" ]]; then
             echo "Prepared archive is already applied."
             exit 0
           fi
-          echo "94763e24ae42e5fcd3e2875f08ef303ce35c871bbf35f9df75f45cd5a5fd1c75  $archive" | sha256sum -c -
+          echo "638272d0c06abbf16719224e8ccfbe4e01ee0bc75d30a683dd5e7211f774e2bf  $archive" | sha256sum -c -
           tar -xzf "$archive"
           rm -f "$archive"
           find assets -maxdepth 1 -type f -name '*CfmotoAug24Fix.js' -delete
@@ -41,5 +41,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --quiet && exit 0
-          git commit -m "Fix cached mobile bundles and model menu"
+          git commit -m "Deploy Russian site and category pages"
           git push
