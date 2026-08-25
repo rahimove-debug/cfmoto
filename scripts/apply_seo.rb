@@ -5,12 +5,6 @@ require_relative "domain_config"
 ROOT = File.expand_path("..", __dir__)
 SITE_ORIGIN = DomainConfig::SITE_ORIGIN
 SERVICE_PHONE = "+994102414299"
-INSTAGRAM_PROFILE_URL = "https://www.instagram.com/cfmoto_azerbaijan/"
-INSTAGRAM_FOOTER_URL = "https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr"
-LEGACY_INSTAGRAM_URLS = [
-  "https://www.instagram.com/cfmoto.az/",
-  "https://www.instagram.com/cfmoto.az"
-].freeze
 
 HOME_TITLE = "CFMOTO Azerbaijan | Motosiklet, ATV və Buggy"
 HOME_DESCRIPTION = "CFMOTO-nun Azərbaycanda rəsmi nümayəndəsi. Motosiklet, kvadrosikl, buggy, kredit, rəsmi servis və ehtiyat hissələri."
@@ -44,7 +38,7 @@ organization_schema = {
         "addressLocality" => "Bakı",
         "addressCountry" => "AZ"
       },
-      "sameAs" => [INSTAGRAM_PROFILE_URL],
+      "sameAs" => [DomainConfig::INSTAGRAM_URL],
       "openingHoursSpecification" => [
         {
           "@type" => "OpeningHoursSpecification",
@@ -94,12 +88,6 @@ def normalize_site_origins!(content)
   end
 end
 
-def normalize_instagram_url!(content)
-  LEGACY_INSTAGRAM_URLS.each do |url|
-    content.gsub!(url, INSTAGRAM_FOOTER_URL)
-  end
-end
-
 html_paths = [
   File.join(ROOT, "index.html"),
   *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort
@@ -107,7 +95,6 @@ html_paths = [
 html_paths.each do |path|
   html = File.read(path, encoding: "UTF-8")
   normalize_site_origins!(html)
-  normalize_instagram_url!(html)
   html.gsub!(%r{<!-- SEO:START -->.*?<!-- SEO:END -->}m, "")
   html.gsub!(%r{<meta name="codex-preview" content="development"\s*/>}, "")
   html.gsub!(%r{,\[\\"\$\\",\\"meta\\",\\"\d+\\",\{\\"name\\":\\"codex-preview\\",\\"content\\":\\"development\\"\}\]}, "")
@@ -140,7 +127,6 @@ end
 Dir.glob(File.join(ROOT, "assets", "*.js")).each do |page_bundle|
   javascript = File.read(page_bundle, encoding: "UTF-8")
   normalize_site_origins!(javascript)
-  normalize_instagram_url!(javascript)
   javascript.gsub!('`Satış mərkəzi`,`.showroom`', '`Satış mərkəzi`,`#showroom`')
   javascript.gsub!(
     /className:`showroom section`(?:,id:`showroom`)*/,
