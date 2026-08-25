@@ -72,3 +72,6 @@ abort "Site updates failed" unless system(RbConfig.ruby, updates_script)
 
 seo_script = File.join(__dir__, "apply_seo.rb")
 abort "SEO processing failed" unless system(RbConfig.ruby, seo_script)
+
+analytics_script = File.join(__dir__, "apply_analytics.rb")
+abort "Analytics processing failed" unless system(RbConfig.ruby, analytics_script)
