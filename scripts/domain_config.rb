@@ -2,6 +2,7 @@
 
 module DomainConfig
   SITE_ORIGIN = "https://cfmoto.az"
+  GA4_MEASUREMENT_ID = "G-L0W0HLDNLK"
   INSTAGRAM_URL = "https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr"
   LEGACY_INSTAGRAM_URLS = %w[
     https://www.instagram.com/cfmoto.az/
