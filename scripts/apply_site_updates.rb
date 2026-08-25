@@ -89,6 +89,10 @@ MOBILE_CATEGORY_CSS = <<~CSS.strip
   #{MOBILE_CATEGORY_CSS_MARKER}
   @media (width<=860px){.category-panel.motorcycles{background-image:url(/official-800mtx-hero-mobile.jpg)}.category-panel.offroad{background-image:url(/models/z10-4-mobile.jpg)}}
 CSS
+MOBILE_CATEGORY_IMAGES = %w[
+  official-800mtx-hero-mobile.jpg
+  models/z10-4-mobile.jpg
+].freeze
 
 SUPPORT_ASSET_SOURCES = {
   ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js", "rolldown-runtime-CfmotoAug24Fix.js", "rolldown-runtime-CfmotoMobileFixV3.js", "rolldown-runtime-CfmotoMobilePerfV4.js", "rolldown-runtime-CfmotoPolicyFixV5.js"] => "rolldown-runtime-CfmotoPolicyFixV6.js",
@@ -658,7 +662,12 @@ abort "Missing required stylesheet: #{CURRENT_STYLESHEET}" unless stylesheet_sou
 stylesheet = read_utf8(stylesheet_source)
 stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CREDIT_CSS}\n" unless stylesheet.include?(MOBILE_CREDIT_CSS_MARKER)
 stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_PERFORMANCE_CSS}\n" unless stylesheet.include?(MOBILE_PERFORMANCE_CSS_MARKER)
-stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CATEGORY_CSS}\n" unless stylesheet.include?(MOBILE_CATEGORY_CSS_MARKER)
+mobile_category_images_available = MOBILE_CATEGORY_IMAGES.all? { |relative| File.file?(File.join(ROOT, relative)) }
+if mobile_category_images_available
+  stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CATEGORY_CSS}\n" unless stylesheet.include?(MOBILE_CATEGORY_CSS_MARKER)
+else
+  stylesheet.gsub!(%r{\n?#{Regexp.escape(MOBILE_CATEGORY_CSS_MARKER)}\n@media \(width<=860px\)\{\.category-panel\.motorcycles\{background-image:url\(/official-800mtx-hero-mobile\.jpg\)\}\.category-panel\.offroad\{background-image:url\(/models/z10-4-mobile\.jpg\)\}\}\n?}, "\n")
+end
 new_stylesheet_path = File.join(ASSETS, NEW_STYLESHEET)
 write_utf8(new_stylesheet_path, stylesheet)
 FileUtils.rm_f(File.join(ASSETS, CURRENT_STYLESHEET)) unless CURRENT_STYLESHEET == NEW_STYLESHEET
@@ -672,8 +681,6 @@ u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 u10 = read_utf8(u10_path)
 
 required_images = %w[
-  official-800mtx-hero-mobile.jpg
-  models/z10-4-mobile.jpg
   models/cforce-c5.webp
   models/cforce-c5-red.webp
   gallery/cforce-c5-1.webp
@@ -726,7 +733,7 @@ checks = {
   "home active hero preload" => home.include?(hero_preload),
   "mobile calculator CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_CREDIT_CSS_MARKER),
   "mobile hero image deferral CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_PERFORMANCE_CSS_MARKER),
-  "mobile category backgrounds" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?('/official-800mtx-hero-mobile.jpg') && read_utf8(new_stylesheet_path).include?('/models/z10-4-mobile.jpg'),
+  "mobile category backgrounds" => !mobile_category_images_available || (File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?('/official-800mtx-hero-mobile.jpg') && read_utf8(new_stylesheet_path).include?('/models/z10-4-mobile.jpg')),
   "correct Instagram profile" => [home, home_bundle].all? { |content| content.include?(INSTAGRAM_URL) } && DomainConfig::LEGACY_INSTAGRAM_URLS.none? { |url| [home, home_bundle].any? { |content| content.include?(url) } },
   "logo dimensions in prerendered HTML" => html_paths.all? do |path|
     tags = read_utf8(path).scan(%r{<img\b[^>]*src="/cfmoto-logo-black\.png"[^>]*>})
