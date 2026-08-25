@@ -1,0 +1,45 @@
+name: Apply prepared CFMOTO site update
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "cfmoto-site-update-20260825.tar.gz"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cfmoto-site-update
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify, apply and audit prepared update
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="cfmoto-site-update-20260825.tar.gz"
+          if [[ ! -f "$archive" ]]; then
+            echo "Prepared archive is already applied."
+            exit 0
+          fi
+          echo "5db9ac68239f29350a77613d8a8a751b05730b676d1b6cf2e810093d132384ed  $archive" | sha256sum -c -
+          tar -xzf "$archive"
+          rm -f "$archive"
+          find assets -maxdepth 1 -type f -name '*CfmotoAug24Fix.js' -delete
+          rm -f assets/index-DiLMqMiY.css
+          ruby scripts/build_cloudflare.rb
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m "Improve mobile performance and expand SEO content"
+          git push
