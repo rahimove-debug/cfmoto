@@ -4,6 +4,12 @@ require_relative "domain_config"
 
 ROOT = File.expand_path("..", __dir__)
 SITE_ORIGIN = DomainConfig::SITE_ORIGIN
+INSTAGRAM_PROFILE_URL = "https://www.instagram.com/cfmoto_azerbaijan/"
+INSTAGRAM_FOOTER_URL = "https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr"
+LEGACY_INSTAGRAM_URLS = [
+  "https://www.instagram.com/cfmoto.az/",
+  "https://www.instagram.com/cfmoto.az"
+].freeze
 
 errors = []
 html_paths = [
@@ -107,6 +113,8 @@ home = File.read(home_path, encoding: "UTF-8")
   errors << "Home is missing #{label}" unless home.include?(text)
 end
 errors << "Home repeats the service schedule" unless home.scan("Bazar ertəsi xaric hər gün 10:00–19:00.").size == 1
+errors << "Home Instagram footer link is incorrect" unless home.include?(%(href="#{INSTAGRAM_FOOTER_URL}"))
+errors << "Home JSON-LD Instagram profile is incorrect" unless home.include?(%("sameAs":["#{INSTAGRAM_PROFILE_URL}"]))
 
 c5_path = File.join(ROOT, "model", "cforce-c5", "index.html")
 if !File.file?(c5_path)
@@ -158,6 +166,9 @@ public_text_paths = [
 public_text_paths.each do |path|
   content = File.read(path, encoding: "UTF-8")
   errors << "#{path.delete_prefix("#{ROOT}/")}: contains a pages.dev origin" if content.match?(DomainConfig::PAGES_SITE_ORIGIN_PATTERN)
+  LEGACY_INSTAGRAM_URLS.each do |url|
+    errors << "#{path.delete_prefix("#{ROOT}/")}: contains legacy Instagram URL #{url}" if content.include?(url)
+  end
   DomainConfig::NON_CANONICAL_SITE_ORIGINS.each do |origin|
     errors << "#{path.delete_prefix("#{ROOT}/")}: contains non-canonical origin #{origin}" if content.include?(origin)
   end
