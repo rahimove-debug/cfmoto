@@ -27,15 +27,18 @@ jobs:
         run: |
           set -euo pipefail
           archive="cfmoto-site-update-ru-categories-20260825.tar.gz"
-          workflow_file=".github/workflows/apply-site-update.yml"
+          apply_workflow=".github/workflows/apply-site-update.yml"
+          import_workflow=".github/workflows/import-site.yml"
           if [[ ! -f "$archive" ]]; then
             echo "Prepared archive is already applied."
             exit 0
           fi
           echo "638272d0c06abbf16719224e8ccfbe4e01ee0bc75d30a683dd5e7211f774e2bf  $archive" | sha256sum -c -
-          cp "$workflow_file" /tmp/apply-site-update.yml
+          cp "$apply_workflow" /tmp/apply-site-update.yml
+          cp "$import_workflow" /tmp/import-site.yml
           tar -xzf "$archive"
-          cp /tmp/apply-site-update.yml "$workflow_file"
+          cp /tmp/apply-site-update.yml "$apply_workflow"
+          cp /tmp/import-site.yml "$import_workflow"
           find . -type f -name '._*' -delete
           rm -f "$archive"
           find assets -maxdepth 1 -type f -name '*CfmotoAug24Fix.js' -delete
