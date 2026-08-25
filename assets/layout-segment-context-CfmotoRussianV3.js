@@ -1,1 +1,0 @@
-import{r as e}from"./rolldown-runtime-CfmotoRussianV3.js";import{i as t}from"./framework-CfmotoRussianV3.js";import{r as n}from"./index-CfmotoRussianV3.js";var r=e(t(),1);function i({segmentMap:e,children:t}){let i=n();return i?(0,r.createElement)(i.Provider,{value:e},t):t}export{i as LayoutСегментProvider};

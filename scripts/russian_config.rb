@@ -7,9 +7,9 @@ require_relative "russian_ui_translations"
 
 module RussianConfig
   RU_PREFIX = "/ru"
-  ASSET_SOURCE_VERSION = "CfmotoPolicyFixV9"
-  ASSET_RUSSIAN_VERSION = "CfmotoRussianV3"
-  LEGACY_RUSSIAN_ASSET_VERSIONS = %w[CfmotoRussianV1 CfmotoRussianV2].freeze
+  ASSET_SOURCE_VERSION = "CfmotoPolicyFixV10"
+  ASSET_RUSSIAN_VERSION = "CfmotoRussianV4"
+  LEGACY_RUSSIAN_ASSET_VERSIONS = %w[CfmotoRussianV1 CfmotoRussianV2 CfmotoRussianV3].freeze
 
   CONTENT_ROUTES = {
     "kredit" => "kredit",

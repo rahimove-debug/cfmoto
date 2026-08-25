@@ -16,7 +16,8 @@ CURRENT_V5_RUNTIME = "index-CfmotoPolicyFixV5.js"
 CURRENT_V6_RUNTIME = "index-CfmotoPolicyFixV6.js"
 CURRENT_V7_RUNTIME = "index-CfmotoPolicyFixV7.js"
 CURRENT_V8_RUNTIME = "index-CfmotoPolicyFixV8.js"
-NEW_RUNTIME = "index-CfmotoPolicyFixV9.js"
+CURRENT_V9_RUNTIME = "index-CfmotoPolicyFixV9.js"
+NEW_RUNTIME = "index-CfmotoPolicyFixV10.js"
 OLD_HOME_BUNDLE = "page-DZgbTvch.js"
 PREVIOUS_HOME_BUNDLE = "page-CfmotoAug24.js"
 CURRENT_HOME_BUNDLE = "page-CfmotoAug24Fix.js"
@@ -28,7 +29,8 @@ CURRENT_V5_HOME_BUNDLE = "page-CfmotoPolicyFixV5.js"
 CURRENT_V6_HOME_BUNDLE = "page-CfmotoPolicyFixV6.js"
 CURRENT_V7_HOME_BUNDLE = "page-CfmotoPolicyFixV7.js"
 CURRENT_V8_HOME_BUNDLE = "page-CfmotoPolicyFixV8.js"
-NEW_HOME_BUNDLE = "page-CfmotoPolicyFixV9.js"
+CURRENT_V9_HOME_BUNDLE = "page-CfmotoPolicyFixV9.js"
+NEW_HOME_BUNDLE = "page-CfmotoPolicyFixV10.js"
 OLD_MENU_BUNDLE = "ProductMegaMenu-Cpx-ytn3.js"
 PREVIOUS_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24.js"
 CURRENT_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24Fix.js"
@@ -38,7 +40,8 @@ CURRENT_V5_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV5.js"
 CURRENT_V6_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV6.js"
 CURRENT_V7_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV7.js"
 CURRENT_V8_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV8.js"
-NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV9.js"
+CURRENT_V9_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV9.js"
+NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV10.js"
 CURRENT_STYLESHEET = "index-DiLMqMiY.css"
 LAST_STYLESHEET = "index-CfmotoMobileFix.css"
 CURRENT_V2_STYLESHEET = "index-CfmotoMobileFixV2.css"
@@ -48,16 +51,20 @@ CURRENT_V5_STYLESHEET = "index-CfmotoPolicyFixV5.css"
 CURRENT_V6_STYLESHEET = "index-CfmotoPolicyFixV6.css"
 CURRENT_V7_STYLESHEET = "index-CfmotoPolicyFixV7.css"
 CURRENT_V8_STYLESHEET = "index-CfmotoPolicyFixV8.css"
-NEW_STYLESHEET = "index-CfmotoPolicyFixV9.css"
-NEW_LINK_BUNDLE = "link-CfmotoPolicyFixV9.js"
-NEW_MODEL_COLOR_BUNDLE = "ModelColorSelector-CfmotoPolicyFixV9.js"
-NEW_MODEL_FINANCE_BUNDLE = "ModelFinance-CfmotoPolicyFixV9.js"
+CURRENT_V9_STYLESHEET = "index-CfmotoPolicyFixV9.css"
+NEW_STYLESHEET = "index-CfmotoPolicyFixV10.css"
+NEW_LINK_BUNDLE = "link-CfmotoPolicyFixV10.js"
+NEW_MODEL_COLOR_BUNDLE = "ModelColorSelector-CfmotoPolicyFixV10.js"
+NEW_MODEL_FINANCE_BUNDLE = "ModelFinance-CfmotoPolicyFixV10.js"
 
-RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME, LAST_RUNTIME, CURRENT_V2_RUNTIME, CURRENT_V3_RUNTIME, CURRENT_V4_RUNTIME, CURRENT_V5_RUNTIME, CURRENT_V6_RUNTIME, CURRENT_V7_RUNTIME, CURRENT_V8_RUNTIME].freeze
-HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE, CURRENT_V2_HOME_BUNDLE, CURRENT_V3_HOME_BUNDLE, CURRENT_V4_HOME_BUNDLE, CURRENT_V5_HOME_BUNDLE, CURRENT_V6_HOME_BUNDLE, CURRENT_V7_HOME_BUNDLE, CURRENT_V8_HOME_BUNDLE].freeze
-MENU_BUNDLE_SOURCES = [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE, CURRENT_V3_MENU_BUNDLE, CURRENT_V4_MENU_BUNDLE, CURRENT_V5_MENU_BUNDLE, CURRENT_V6_MENU_BUNDLE, CURRENT_V7_MENU_BUNDLE, CURRENT_V8_MENU_BUNDLE].freeze
+RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME, LAST_RUNTIME, CURRENT_V2_RUNTIME, CURRENT_V3_RUNTIME, CURRENT_V4_RUNTIME, CURRENT_V5_RUNTIME, CURRENT_V6_RUNTIME, CURRENT_V7_RUNTIME, CURRENT_V8_RUNTIME, CURRENT_V9_RUNTIME].freeze
+HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE, CURRENT_V2_HOME_BUNDLE, CURRENT_V3_HOME_BUNDLE, CURRENT_V4_HOME_BUNDLE, CURRENT_V5_HOME_BUNDLE, CURRENT_V6_HOME_BUNDLE, CURRENT_V7_HOME_BUNDLE, CURRENT_V8_HOME_BUNDLE, CURRENT_V9_HOME_BUNDLE].freeze
+MENU_BUNDLE_SOURCES = [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE, CURRENT_V3_MENU_BUNDLE, CURRENT_V4_MENU_BUNDLE, CURRENT_V5_MENU_BUNDLE, CURRENT_V6_MENU_BUNDLE, CURRENT_V7_MENU_BUNDLE, CURRENT_V8_MENU_BUNDLE, CURRENT_V9_MENU_BUNDLE].freeze
 
 CLEAN_IMAGE_SLUGS = %w[1000mt-x 750sr-s cforce-c4 cforce1000-touring].freeze
+PRODUCT_BADGE_HTML = '<span class="product-badge">Yeni</span>'
+PRODUCT_BADGE_RSC_UNSET = %q{\"className\":\"product-image-wrap\",\"children\":[\"$undefined\",[}
+PRODUCT_BADGE_RSC_NEW = %q{\"className\":\"product-image-wrap\",\"children\":[[\"$\",\"span\",null,{\"className\":\"product-badge\",\"children\":\"Yeni\"}],[}
 DIRECTORY_CONTENT_PATHS = %w[kredit servis zemanet ehtiyat-hisseleri model-muqayisesi].freeze
 
 INTERNAL_20_SLUGS = %w[
@@ -121,15 +128,15 @@ MOBILE_CATEGORY_IMAGES = %w[
 ].freeze
 
 SUPPORT_ASSET_SOURCES = {
-  ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js", "rolldown-runtime-CfmotoAug24Fix.js", "rolldown-runtime-CfmotoMobileFixV3.js", "rolldown-runtime-CfmotoMobilePerfV4.js", "rolldown-runtime-CfmotoPolicyFixV5.js", "rolldown-runtime-CfmotoPolicyFixV6.js", "rolldown-runtime-CfmotoPolicyFixV7.js", "rolldown-runtime-CfmotoPolicyFixV8.js"] => "rolldown-runtime-CfmotoPolicyFixV9.js",
-  ["framework-CXnKph_e.js", "framework-CfmotoAug24.js", "framework-CfmotoAug24Fix.js", "framework-CfmotoMobileFixV3.js", "framework-CfmotoMobilePerfV4.js", "framework-CfmotoPolicyFixV5.js", "framework-CfmotoPolicyFixV6.js", "framework-CfmotoPolicyFixV7.js", "framework-CfmotoPolicyFixV8.js"] => "framework-CfmotoPolicyFixV9.js",
-  ["layout-segment-context-BqNUFdFf.js", "layout-segment-context-CfmotoAug24.js", "layout-segment-context-CfmotoAug24Fix.js", "layout-segment-context-CfmotoMobileFixV3.js", "layout-segment-context-CfmotoMobilePerfV4.js", "layout-segment-context-CfmotoPolicyFixV5.js", "layout-segment-context-CfmotoPolicyFixV6.js", "layout-segment-context-CfmotoPolicyFixV7.js", "layout-segment-context-CfmotoPolicyFixV8.js"] => "layout-segment-context-CfmotoPolicyFixV9.js",
-  ["link-IATORi5E.js", "link-CfmotoAug24.js", "link-CfmotoAug24Fix.js", "link-CfmotoMobileFixV3.js", "link-CfmotoMobilePerfV4.js", "link-CfmotoPolicyFixV5.js", "link-CfmotoPolicyFixV6.js", "link-CfmotoPolicyFixV7.js", "link-CfmotoPolicyFixV8.js"] => NEW_LINK_BUNDLE,
-  ["router-CzKeCzcA.js", "router-CfmotoAug24.js", "router-CfmotoAug24Fix.js", "router-CfmotoMobileFixV3.js", "router-CfmotoMobilePerfV4.js", "router-CfmotoPolicyFixV5.js", "router-CfmotoPolicyFixV6.js", "router-CfmotoPolicyFixV7.js", "router-CfmotoPolicyFixV8.js"] => "router-CfmotoPolicyFixV9.js",
-  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js", "ModelFinance-CfmotoAug24Fix.js", "ModelFinance-CfmotoMobileFixV3.js", "ModelFinance-CfmotoMobilePerfV4.js", "ModelFinance-CfmotoPolicyFixV5.js", "ModelFinance-CfmotoPolicyFixV6.js", "ModelFinance-CfmotoPolicyFixV7.js", "ModelFinance-CfmotoPolicyFixV8.js"] => NEW_MODEL_FINANCE_BUNDLE,
-  ["ModelGallery-BT140N7z.js", "ModelGallery-CfmotoAug24.js", "ModelGallery-CfmotoAug24Fix.js", "ModelGallery-CfmotoMobileFixV3.js", "ModelGallery-CfmotoMobilePerfV4.js", "ModelGallery-CfmotoPolicyFixV5.js", "ModelGallery-CfmotoPolicyFixV6.js", "ModelGallery-CfmotoPolicyFixV7.js", "ModelGallery-CfmotoPolicyFixV8.js"] => "ModelGallery-CfmotoPolicyFixV9.js",
-  ["ModelSpecs-BJB4gaLM.js", "ModelSpecs-CfmotoAug24.js", "ModelSpecs-CfmotoAug24Fix.js", "ModelSpecs-CfmotoMobileFixV3.js", "ModelSpecs-CfmotoMobilePerfV4.js", "ModelSpecs-CfmotoPolicyFixV5.js", "ModelSpecs-CfmotoPolicyFixV6.js", "ModelSpecs-CfmotoPolicyFixV7.js", "ModelSpecs-CfmotoPolicyFixV8.js"] => "ModelSpecs-CfmotoPolicyFixV9.js",
-  ["ModelColorSelector-DIxmErfw.js", "ModelColorSelector-CfmotoAug24.js", "ModelColorSelector-CfmotoAug24Fix.js", "ModelColorSelector-CfmotoMobileFixV3.js", "ModelColorSelector-CfmotoMobilePerfV4.js", "ModelColorSelector-CfmotoPolicyFixV5.js", "ModelColorSelector-CfmotoPolicyFixV6.js", "ModelColorSelector-CfmotoPolicyFixV7.js", "ModelColorSelector-CfmotoPolicyFixV8.js"] => NEW_MODEL_COLOR_BUNDLE
+  ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js", "rolldown-runtime-CfmotoAug24Fix.js", "rolldown-runtime-CfmotoMobileFixV3.js", "rolldown-runtime-CfmotoMobilePerfV4.js", "rolldown-runtime-CfmotoPolicyFixV5.js", "rolldown-runtime-CfmotoPolicyFixV6.js", "rolldown-runtime-CfmotoPolicyFixV7.js", "rolldown-runtime-CfmotoPolicyFixV8.js", "rolldown-runtime-CfmotoPolicyFixV9.js"] => "rolldown-runtime-CfmotoPolicyFixV10.js",
+  ["framework-CXnKph_e.js", "framework-CfmotoAug24.js", "framework-CfmotoAug24Fix.js", "framework-CfmotoMobileFixV3.js", "framework-CfmotoMobilePerfV4.js", "framework-CfmotoPolicyFixV5.js", "framework-CfmotoPolicyFixV6.js", "framework-CfmotoPolicyFixV7.js", "framework-CfmotoPolicyFixV8.js", "framework-CfmotoPolicyFixV9.js"] => "framework-CfmotoPolicyFixV10.js",
+  ["layout-segment-context-BqNUFdFf.js", "layout-segment-context-CfmotoAug24.js", "layout-segment-context-CfmotoAug24Fix.js", "layout-segment-context-CfmotoMobileFixV3.js", "layout-segment-context-CfmotoMobilePerfV4.js", "layout-segment-context-CfmotoPolicyFixV5.js", "layout-segment-context-CfmotoPolicyFixV6.js", "layout-segment-context-CfmotoPolicyFixV7.js", "layout-segment-context-CfmotoPolicyFixV8.js", "layout-segment-context-CfmotoPolicyFixV9.js"] => "layout-segment-context-CfmotoPolicyFixV10.js",
+  ["link-IATORi5E.js", "link-CfmotoAug24.js", "link-CfmotoAug24Fix.js", "link-CfmotoMobileFixV3.js", "link-CfmotoMobilePerfV4.js", "link-CfmotoPolicyFixV5.js", "link-CfmotoPolicyFixV6.js", "link-CfmotoPolicyFixV7.js", "link-CfmotoPolicyFixV8.js", "link-CfmotoPolicyFixV9.js"] => NEW_LINK_BUNDLE,
+  ["router-CzKeCzcA.js", "router-CfmotoAug24.js", "router-CfmotoAug24Fix.js", "router-CfmotoMobileFixV3.js", "router-CfmotoMobilePerfV4.js", "router-CfmotoPolicyFixV5.js", "router-CfmotoPolicyFixV6.js", "router-CfmotoPolicyFixV7.js", "router-CfmotoPolicyFixV8.js", "router-CfmotoPolicyFixV9.js"] => "router-CfmotoPolicyFixV10.js",
+  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js", "ModelFinance-CfmotoAug24Fix.js", "ModelFinance-CfmotoMobileFixV3.js", "ModelFinance-CfmotoMobilePerfV4.js", "ModelFinance-CfmotoPolicyFixV5.js", "ModelFinance-CfmotoPolicyFixV6.js", "ModelFinance-CfmotoPolicyFixV7.js", "ModelFinance-CfmotoPolicyFixV8.js", "ModelFinance-CfmotoPolicyFixV9.js"] => NEW_MODEL_FINANCE_BUNDLE,
+  ["ModelGallery-BT140N7z.js", "ModelGallery-CfmotoAug24.js", "ModelGallery-CfmotoAug24Fix.js", "ModelGallery-CfmotoMobileFixV3.js", "ModelGallery-CfmotoMobilePerfV4.js", "ModelGallery-CfmotoPolicyFixV5.js", "ModelGallery-CfmotoPolicyFixV6.js", "ModelGallery-CfmotoPolicyFixV7.js", "ModelGallery-CfmotoPolicyFixV8.js", "ModelGallery-CfmotoPolicyFixV9.js"] => "ModelGallery-CfmotoPolicyFixV10.js",
+  ["ModelSpecs-BJB4gaLM.js", "ModelSpecs-CfmotoAug24.js", "ModelSpecs-CfmotoAug24Fix.js", "ModelSpecs-CfmotoMobileFixV3.js", "ModelSpecs-CfmotoMobilePerfV4.js", "ModelSpecs-CfmotoPolicyFixV5.js", "ModelSpecs-CfmotoPolicyFixV6.js", "ModelSpecs-CfmotoPolicyFixV7.js", "ModelSpecs-CfmotoPolicyFixV8.js", "ModelSpecs-CfmotoPolicyFixV9.js"] => "ModelSpecs-CfmotoPolicyFixV10.js",
+  ["ModelColorSelector-DIxmErfw.js", "ModelColorSelector-CfmotoAug24.js", "ModelColorSelector-CfmotoAug24Fix.js", "ModelColorSelector-CfmotoMobileFixV3.js", "ModelColorSelector-CfmotoMobilePerfV4.js", "ModelColorSelector-CfmotoPolicyFixV5.js", "ModelColorSelector-CfmotoPolicyFixV6.js", "ModelColorSelector-CfmotoPolicyFixV7.js", "ModelColorSelector-CfmotoPolicyFixV8.js", "ModelColorSelector-CfmotoPolicyFixV9.js"] => NEW_MODEL_COLOR_BUNDLE
 }.freeze
 
 PRIMARY_ASSET_SOURCES = {
@@ -151,6 +158,7 @@ ASSET_RENAMES[CURRENT_V5_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES[CURRENT_V6_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES[CURRENT_V7_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES[CURRENT_V8_STYLESHEET] = NEW_STYLESHEET
+ASSET_RENAMES[CURRENT_V9_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES.freeze
 
 def read_utf8(path)
@@ -206,10 +214,17 @@ def use_clean_model_data_images!(content)
   CLEAN_IMAGE_SLUGS.each do |slug|
     original = "image:`/models/#{slug}.webp`"
     cleaned = "image:`#{primary_model_image_source(slug)}`"
-    next if content.include?(cleaned)
+    unless content.include?(cleaned)
+      abort "#{slug}: model data image anchor not found" unless content.include?(original)
+      content.gsub!(original, cleaned)
+    end
 
-    abort "#{slug}: model data image anchor not found" unless content.include?(original)
-    content.gsub!(original, cleaned)
+    entry_pattern = %r!\{slug:`#{Regexp.escape(slug)}`,[^{}]+\}!
+    entries = content.scan(entry_pattern)
+    abort "#{slug}: model data badge anchor not found" if entries.empty?
+    content.gsub!(entry_pattern) do |entry|
+      entry.include?('badge:`Yeni`') ? entry : entry.sub(/\}\z/, ',badge:`Yeni`}')
+    end
   end
 end
 
@@ -250,6 +265,21 @@ def localize_primary_model_image!(content, slug)
   content.gsub!(source, local_source)
 end
 
+def ensure_clean_model_product_badge!(content, slug)
+  return unless CLEAN_IMAGE_SLUGS.include?(slug)
+
+  product_wrap = '<div class="product-image-wrap">'
+  unless content.include?("#{product_wrap}#{PRODUCT_BADGE_HTML}")
+    abort "#{slug}: product image wrapper not found for Yeni badge" unless content.include?(product_wrap)
+    content.sub!(product_wrap, "#{product_wrap}#{PRODUCT_BADGE_HTML}")
+  end
+
+  unless content.include?(PRODUCT_BADGE_RSC_NEW)
+    abort "#{slug}: embedded product badge anchor not found" unless content.include?(PRODUCT_BADGE_RSC_UNSET)
+    content.sub!(PRODUCT_BADGE_RSC_UNSET, PRODUCT_BADGE_RSC_NEW)
+  end
+end
+
 def use_home_card_images!(content)
   content.gsub!(%r{<article class="model-card">.*?</article>}m) do |card|
     slug = card[%r{href="/model/([^"/]+)/?"}, 1]
@@ -260,6 +290,9 @@ def use_home_card_images!(content)
     optimized = card.sub(%r{src="/models/[^"]+\.webp"}, %(src="#{card_source}"))
     optimized.gsub!(%r{\s+(?:decoding="async"|fetchpriority="low")}, "")
     optimized.sub!('loading="lazy"', 'loading="lazy" decoding="async" fetchpriority="low"')
+    if CLEAN_IMAGE_SLUGS.include?(slug) && !optimized.include?('<span class="badge">Yeni</span>')
+      optimized.sub!(%r{(<img\b[^>]+/>)}, '\1<span class="badge">Yeni</span>')
+    end
     optimized
   end
 end
@@ -272,6 +305,14 @@ def use_optimized_mega_menu_images!(content)
     abort "#{slug}: missing optimized mega-menu image" unless File.file?(File.join(ROOT, card_source.delete_prefix("/")))
 
     %(<img src="#{card_source}" alt="#{alt}" loading="lazy" decoding="async" fetchpriority="low"/>)
+  end
+
+  content.gsub!(%r{<a\b[^>]*href="/model/([^"/]+)/?"[^>]*class="mega-model"[^>]*>.*?</a>}m) do |item|
+    slug = Regexp.last_match(1)
+    next item unless CLEAN_IMAGE_SLUGS.include?(slug)
+    next item if item.include?("<em>Yeni</em>")
+
+    item.sub(%r{(<img\b[^>]+/>)}, '\1<em>Yeni</em>')
   end
 end
 
@@ -435,6 +476,8 @@ def build_c5_page
   abort "Missing CFORCE C4 template" unless File.file?(template_path)
 
   html = read_utf8(template_path)
+  html.gsub!(PRODUCT_BADGE_HTML, "")
+  html.gsub!(PRODUCT_BADGE_RSC_NEW, PRODUCT_BADGE_RSC_UNSET)
   html.gsub!("cforce-c4", "cforce-c5")
   html.gsub!("/models/cforce-c5-clean.webp", "/models/cforce-c5.webp")
   html.gsub!("CFORCE%20C4", "CFORCE%20C5")
@@ -753,6 +796,7 @@ html_paths.each do |path|
   unless path == File.join(ROOT, "index.html")
     slug = File.basename(File.dirname(path))
     localize_primary_model_image!(html, slug)
+    ensure_clean_model_product_badge!(html, slug)
     apply_model_finance_policy!(html, slug)
     normalize_model_finance_calculator!(html, slug)
   end
@@ -835,7 +879,7 @@ home.gsub!("46 aktual model", "47 aktual model")
 apply_home_finance_policy!(home)
 write_utf8(home_path, home)
 
-stylesheet_source = [CURRENT_STYLESHEET, LAST_STYLESHEET, CURRENT_V2_STYLESHEET, CURRENT_V3_STYLESHEET, CURRENT_V4_STYLESHEET, CURRENT_V5_STYLESHEET, CURRENT_V6_STYLESHEET, CURRENT_V7_STYLESHEET, CURRENT_V8_STYLESHEET, NEW_STYLESHEET]
+stylesheet_source = [CURRENT_STYLESHEET, LAST_STYLESHEET, CURRENT_V2_STYLESHEET, CURRENT_V3_STYLESHEET, CURRENT_V4_STYLESHEET, CURRENT_V5_STYLESHEET, CURRENT_V6_STYLESHEET, CURRENT_V7_STYLESHEET, CURRENT_V8_STYLESHEET, CURRENT_V9_STYLESHEET, NEW_STYLESHEET]
   .map { |name| File.join(ASSETS, name) }
   .find { |path| File.file?(path) }
 abort "Missing required stylesheet: #{CURRENT_STYLESHEET}" unless stylesheet_source
@@ -861,6 +905,7 @@ FileUtils.rm_f(File.join(ASSETS, CURRENT_V5_STYLESHEET)) unless CURRENT_V5_STYLE
 FileUtils.rm_f(File.join(ASSETS, CURRENT_V6_STYLESHEET)) unless CURRENT_V6_STYLESHEET == NEW_STYLESHEET
 FileUtils.rm_f(File.join(ASSETS, CURRENT_V7_STYLESHEET)) unless CURRENT_V7_STYLESHEET == NEW_STYLESHEET
 FileUtils.rm_f(File.join(ASSETS, CURRENT_V8_STYLESHEET)) unless CURRENT_V8_STYLESHEET == NEW_STYLESHEET
+FileUtils.rm_f(File.join(ASSETS, CURRENT_V9_STYLESHEET)) unless CURRENT_V9_STYLESHEET == NEW_STYLESHEET
 
 u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 u10 = read_utf8(u10_path)
@@ -977,16 +1022,17 @@ checks = {
   "new runtime" => File.file?(File.join(ASSETS, NEW_RUNTIME)),
   "new home bundle" => File.file?(File.join(ASSETS, NEW_HOME_BUNDLE)),
   "new menu bundle" => File.file?(File.join(ASSETS, NEW_MENU_BUNDLE)),
-  "all 13 V9 assets" => versioned_targets.size == 13 && versioned_targets.all? { |name| name.include?("CfmotoPolicyFixV9") && File.file?(File.join(ASSETS, name)) },
+  "all 13 V10 assets" => versioned_targets.size == 13 && versioned_targets.all? { |name| name.include?("CfmotoPolicyFixV10") && File.file?(File.join(ASSETS, name)) },
   "no obsolete V4 assets" => Dir.glob(File.join(ASSETS, "*CfmotoMobilePerfV4*")).empty?,
   "no obsolete V5 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV5*")).empty?,
   "no obsolete V6 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV6*")).empty?,
   "no obsolete V7 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV7*")).empty?,
   "no obsolete V8 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV8*")).empty?,
+  "no obsolete V9 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV9*")).empty?,
   "no stale asset references" => Dir.glob(File.join(ROOT, "{index.html,model/*/index.html,assets/*.js}"))
     .none? { |path| ASSET_RENAMES.keys.any? { |old_name| read_utf8(path).include?(old_name) } }
 }
 failures = checks.reject { |_label, passed| passed }.keys
 abort "Site update checks failed: #{failures.join(', ')}" unless failures.empty?
 
-puts "Site updates applied: V9 cache-safe clean model imagery, mobile performance, credit policy and unified service contacts"
+puts "Site updates applied: V10 unified orange Yeni badges, cache-safe clean model imagery, canonical URLs and mobile performance"

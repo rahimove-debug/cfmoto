@@ -316,6 +316,19 @@ end
 CLEAN_IMAGE_SLUGS.each do |slug|
   clean_card = "/models/cards/#{slug}-clean.webp"
   errors << "Homepage must use clean card image #{clean_card}" unless homepage_card_sources.include?(clean_card)
+  card = home[%r{<article class="model-card"><a href="/model/#{Regexp.escape(slug)}/".*?</article>}m]
+  errors << "Homepage clean model #{slug} must use the orange Yeni badge" unless card&.include?('<span class="badge">Yeni</span>')
+end
+
+menu_bundle = Dir.glob(File.join(ROOT, "assets", "ProductMegaMenu-CfmotoPolicyFixV*.js")).max
+if menu_bundle.nil?
+  errors << "Missing product mega-menu bundle"
+else
+  menu_javascript = File.read(menu_bundle, encoding: "UTF-8")
+  CLEAN_IMAGE_SLUGS.each do |slug|
+    entry = menu_javascript[%r!\{slug:`#{Regexp.escape(slug)}`,[^{}]+\}!]
+    errors << "Mega-menu clean model #{slug} must use the orange Yeni badge" unless entry&.include?('badge:`Yeni`')
+  end
 end
 
 Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.each do |path|
