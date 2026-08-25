@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require "fileutils"
+require_relative "domain_config"
 
 ROOT = File.expand_path("..", __dir__)
 ASSETS = File.join(ROOT, "assets")
@@ -67,6 +68,9 @@ SERVICE_HOURS_COPY = "Bazar ertəsi xaric hər gün 10:00–19:00."
 SERVICE_PHONE = "+994102414299"
 SERVICE_PHONE_DISPLAY = "+994 10 241 42 99"
 SHOWROOM_MAP_URL = "https://maps.app.goo.gl/onFPjWTaXRN92rDfA"
+INSTAGRAM_URL = DomainConfig::INSTAGRAM_URL
+LOGO_WIDTH = 159
+LOGO_HEIGHT = 34
 MOBILE_CREDIT_ID = "kredit-kalkulyator"
 MOBILE_CREDIT_CSS_MARKER = "/* CFMOTO:MOBILE-CREDIT */"
 MOBILE_CREDIT_CSS = <<~CSS.strip
@@ -80,6 +84,12 @@ MOBILE_PERFORMANCE_CSS = <<~CSS.strip
   #{MOBILE_PERFORMANCE_CSS_MARKER}
   @media (width<=860px){.category-hero-panel:not(.active){background-image:none!important}}
 CSS
+MOBILE_CATEGORY_CSS_MARKER = "/* CFMOTO:MOBILE-CATEGORY-BACKGROUNDS */"
+MOBILE_CATEGORY_CSS = <<~CSS.strip
+  #{MOBILE_CATEGORY_CSS_MARKER}
+  @media (width<=860px){.category-panel.motorcycles{background-image:url(/official-800mtx-hero-mobile.jpg)}.category-panel.offroad{background-image:url(/models/z10-4-mobile.jpg)}}
+CSS
+
 SUPPORT_ASSET_SOURCES = {
   ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js", "rolldown-runtime-CfmotoAug24Fix.js", "rolldown-runtime-CfmotoMobileFixV3.js", "rolldown-runtime-CfmotoMobilePerfV4.js", "rolldown-runtime-CfmotoPolicyFixV5.js"] => "rolldown-runtime-CfmotoPolicyFixV6.js",
   ["framework-CXnKph_e.js", "framework-CfmotoAug24.js", "framework-CfmotoAug24Fix.js", "framework-CfmotoMobileFixV3.js", "framework-CfmotoMobilePerfV4.js", "framework-CfmotoPolicyFixV5.js"] => "framework-CfmotoPolicyFixV6.js",
@@ -530,6 +540,11 @@ end
 Dir.glob(File.join(ASSETS, "*.js")).each do |path|
   javascript = read_utf8(path)
   ASSET_RENAMES.each { |old_name, new_name| javascript.gsub!(old_name, new_name) }
+  DomainConfig::LEGACY_INSTAGRAM_URLS.each { |url| javascript.gsub!(url, INSTAGRAM_URL) }
+  javascript.gsub!(
+    %r{src:`/cfmoto-logo-black\.png`,alt:`CFMOTO`(?:,width:\d+,height:\d+)*},
+    "src:`/cfmoto-logo-black.png`,alt:`CFMOTO`,width:#{LOGO_WIDTH},height:#{LOGO_HEIGHT}"
+  )
   write_utf8(path, javascript)
 end
 
@@ -541,6 +556,10 @@ html_paths = [
 html_paths.each do |path|
   html = read_utf8(path)
   ASSET_RENAMES.each { |old_name, new_name| html.gsub!(old_name, new_name) }
+  DomainConfig::LEGACY_INSTAGRAM_URLS.each { |url| html.gsub!(url, INSTAGRAM_URL) }
+  html.gsub!(
+    '<img src="/cfmoto-logo-black.png" alt="CFMOTO"/>',
+    %(<img src="/cfmoto-logo-black.png" alt="CFMOTO" width="#{LOGO_WIDTH}" height="#{LOGO_HEIGHT}"/>))
   html.gsub!(%(<link rel="modulepreload" href="/assets/#{NEW_RUNTIME}" />\n), "")
   remove_unused_font_preloads!(html)
   html.gsub!(
@@ -639,6 +658,7 @@ abort "Missing required stylesheet: #{CURRENT_STYLESHEET}" unless stylesheet_sou
 stylesheet = read_utf8(stylesheet_source)
 stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CREDIT_CSS}\n" unless stylesheet.include?(MOBILE_CREDIT_CSS_MARKER)
 stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_PERFORMANCE_CSS}\n" unless stylesheet.include?(MOBILE_PERFORMANCE_CSS_MARKER)
+stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CATEGORY_CSS}\n" unless stylesheet.include?(MOBILE_CATEGORY_CSS_MARKER)
 new_stylesheet_path = File.join(ASSETS, NEW_STYLESHEET)
 write_utf8(new_stylesheet_path, stylesheet)
 FileUtils.rm_f(File.join(ASSETS, CURRENT_STYLESHEET)) unless CURRENT_STYLESHEET == NEW_STYLESHEET
@@ -652,6 +672,8 @@ u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 u10 = read_utf8(u10_path)
 
 required_images = %w[
+  official-800mtx-hero-mobile.jpg
+  models/z10-4-mobile.jpg
   models/cforce-c5.webp
   models/cforce-c5-red.webp
   gallery/cforce-c5-1.webp
@@ -704,6 +726,17 @@ checks = {
   "home active hero preload" => home.include?(hero_preload),
   "mobile calculator CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_CREDIT_CSS_MARKER),
   "mobile hero image deferral CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_PERFORMANCE_CSS_MARKER),
+  "mobile category backgrounds" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?('/official-800mtx-hero-mobile.jpg') && read_utf8(new_stylesheet_path).include?('/models/z10-4-mobile.jpg'),
+  "correct Instagram profile" => [home, home_bundle].all? { |content| content.include?(INSTAGRAM_URL) } && DomainConfig::LEGACY_INSTAGRAM_URLS.none? { |url| [home, home_bundle].any? { |content| content.include?(url) } },
+  "logo dimensions in prerendered HTML" => html_paths.all? do |path|
+    tags = read_utf8(path).scan(%r{<img\b[^>]*src="/cfmoto-logo-black\.png"[^>]*>})
+    !tags.empty? && tags.all? { |tag| tag.include?(%(width="#{LOGO_WIDTH}")) && tag.include?(%(height="#{LOGO_HEIGHT}")) }
+  end,
+  "logo dimensions in client bundles" => Dir.glob(File.join(ASSETS, "*.js")).all? do |path|
+    content = read_utf8(path)
+    !content.include?('src:`/cfmoto-logo-black.png`,alt:`CFMOTO`') ||
+      content.include?("src:`/cfmoto-logo-black.png`,alt:`CFMOTO`,width:#{LOGO_WIDTH},height:#{LOGO_HEIGHT}")
+  end,
   "unused font preloads removed" => html_paths.none? { |path| read_utf8(path).include?('<link rel="preload" href="/assets/_vinext_fonts/') },
   "single runtime module preload" => html_paths.all? { |path| read_utf8(path).scan(%r{<link rel="modulepreload" href="/assets/#{Regexp.escape(NEW_RUNTIME)}"[^>]*>}).size == 1 },
   "static links use native navigation" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('ref:A,href:C,onClick:c,onMouseEnter:l,onTouchStart:u,...I,children:a'),
