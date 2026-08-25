@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require "json"
 require_relative "content_config"
+require_relative "category_config"
 require_relative "domain_config"
 
 ROOT = File.expand_path("..", __dir__)
@@ -92,7 +93,8 @@ end
 html_paths = [
   File.join(ROOT, "index.html"),
   *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort,
-  *ContentConfig.html_paths(ROOT)
+  *ContentConfig.html_paths(ROOT),
+  *CategoryConfig.html_paths(ROOT)
 ]
 html_paths.each do |path|
   html = File.read(path, encoding: "UTF-8")
@@ -153,7 +155,8 @@ model_urls = Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.map do |
 end
 
 content_urls = ContentConfig.urls(SITE_ORIGIN)
-sitemap_urls = ["#{SITE_ORIGIN}/", *model_urls, *content_urls]
+category_urls = CategoryConfig::SLUGS.map { |slug| "#{SITE_ORIGIN}/#{slug}/" }
+sitemap_urls = ["#{SITE_ORIGIN}/", *model_urls, *content_urls, *category_urls]
 sitemap = [
   %(<?xml version="1.0" encoding="UTF-8"?>),
   %(<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">),

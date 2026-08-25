@@ -73,8 +73,14 @@ abort "Site updates failed" unless system(RbConfig.ruby, updates_script)
 content_script = File.join(__dir__, "apply_content_pages.rb")
 abort "SEO content generation failed" unless system(RbConfig.ruby, content_script)
 
+category_script = File.join(__dir__, "apply_category_pages.rb")
+abort "Category page generation failed" unless system(RbConfig.ruby, category_script)
+
 seo_script = File.join(__dir__, "apply_seo.rb")
 abort "SEO processing failed" unless system(RbConfig.ruby, seo_script)
 
 analytics_script = File.join(__dir__, "apply_analytics.rb")
 abort "Analytics processing failed" unless system(RbConfig.ruby, analytics_script)
+
+russian_script = File.join(__dir__, "apply_russian.rb")
+abort "Russian localization failed" unless system(RbConfig.ruby, russian_script)

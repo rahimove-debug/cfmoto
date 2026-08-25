@@ -1,9 +1,9 @@
 # Former cfmoto.az paths; host-level redirects are configured separately in Cloudflare Rules.
 /cfmoto / 301
-/motosiklet /#modeller 301
-/motosi%CC%87klet /#modeller 301
-/kvadrosikl /#modeller 301
-/buggy /#modeller 301
+/motosiklet /motosiklet/ 301
+/motosi%CC%87klet /motosiklet/ 301
+/kvadrosikl /kvadrosikl/ 301
+/buggy /buggy/ 301
 /cflitemodelleri /#modeller 301
 /800mt-explore-1 /model/800mt-explore 301
 /800mt-x-2 /model/800mt-x 301

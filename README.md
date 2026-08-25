@@ -19,7 +19,17 @@ Build zamanı beş yüngül SEO məlumat səhifəsi də yaradılır:
 - `/ehtiyat-hisseleri`
 - `/model-muqayisesi`
 
-Sayt ümumilikdə 53 canonical səhifə və `404.html` ilə birlikdə 54 HTML faylı yayımlayır. Ana səhifənin model kartları və model mega-menyusu üçün `models/cards/` daxilində 680 px WebP variantları istifadə olunur; model səhifələrinin ilkin məhsul şəkilləri isə üçüncü tərəf hostu əvəzinə yerli `models/` fayllarından yüklənir. Dəyişən JavaScript və CSS assetləri keşlənmiş köhnə kodla qarışmaması üçün versiyalı URL-lərlə yayımlanır.
+Məhsulları, qiymətləri, izahlı mətni və FAQ bölməsini ehtiva edən ayrıca kateqoriya səhifələri yaradılır:
+
+- `/motosiklet/` — 29 motosiklet
+- `/kvadrosikl/` — 9 ATV
+- `/buggy/` — 9 buggy/UTV
+
+Köhnə `/motosi%CC%87klet` yolu `301` statusu ilə `/motosiklet/` səhifəsinə yönləndirilir. Kateqoriya URL-ləri ana səhifəyə yönləndirilmir.
+
+Saytın tam rus dili versiyası `/ru/` altında yaradılır. Buraya 47 model, beş məlumat səhifəsi və üç kateqoriya daxildir. Hər AZ/RU cütü öz canonical URL-inə, qarşılıqlı `hreflang="az"`, `hreflang="ru"` və `x-default` işarələrinə malikdir. Sitemap 112 canonical URL saxlayır.
+
+Sayt `404.html` daxil olmaqla 113 HTML faylı yayımlayır. Ana səhifənin model kartları və model mega-menyusu üçün `models/cards/` daxilində 680 px WebP variantları istifadə olunur; model səhifələrinin ilkin məhsul şəkilləri isə üçüncü tərəf hostu əvəzinə yerli `models/` fayllarından yüklənir. Dəyişən JavaScript və CSS assetləri keşlənmiş köhnə kodla qarışmaması üçün versiyalı URL-lərlə yayımlanır; rus səhifələri hidratasiya uyğunluğu üçün ayrı rus dili asset paketlərindən istifadə edir.
 
 Əsas domen `https://cfmoto.az` olaraq build mənbəyində sabitlənib. Build zamanı
 köhnə `cfmoto.com.az`, `www` və preview originləri canonical, Open Graph,

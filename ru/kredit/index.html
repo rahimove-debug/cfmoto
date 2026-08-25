@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head><!-- CFMOTO:ANALYTICS:START -->
+<script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=G-L0W0HLDNLK"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
+window.gtag('js',new Date());
+window.gtag('config','G-L0W0HLDNLK');
+document.addEventListener('click',function(event){
+  var target=event.target;
+  if(!(target instanceof Element))return;
+  var link=target.closest('a[href]');
+  if(!link)return;
+  var href=link.getAttribute('href')||'';
+  var text=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
+  var normalizedHref=href.toLowerCase();
+  var params={link_text:text,page_path:window.location.pathname};
+  var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
+  if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
+    var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
+    var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
+    send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
+    if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
+    return;
+  }
+  if(normalizedHref.startsWith('tel:')){
+    var normalizedText=text.toLowerCase();
+    var serviceContact=['сервис','запчаст','доставк'].some(function(term){return normalizedText.includes(term)});
+    send('phone_click',{contact_area:serviceContact?'service':'sales'});
+    return;
+  }
+  if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){
+    send('directions_click',{destination:'showroom'});
+  }
+},true);
+</script>
+<!-- CFMOTO:ANALYTICS:END -->
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Кредит и рассрочка CFMOTO | Азербайджан</title>
+  <meta name="description" content="Условия кредита и рассрочки на мотоциклы, квадроциклы и багги CFMOTO: первоначальный взнос, сроки и предварительный расчёт."/>
+  <link rel="canonical" href="https://cfmoto.az/ru/kredit"/><link rel="alternate" hreflang="az" href="https://cfmoto.az/kredit"/><link rel="alternate" hreflang="ru" href="https://cfmoto.az/ru/kredit"/><link rel="alternate" hreflang="x-default" href="https://cfmoto.az/kredit"/>
+  <meta property="og:title" content="Кредит и рассрочка CFMOTO | Азербайджан"/>
+  <meta property="og:description" content="Условия кредита и рассрочки на мотоциклы, квадроциклы и багги CFMOTO: первоначальный взнос, сроки и предварительный расчёт."/>
+  <meta property="og:url" content="https://cfmoto.az/ru/kredit"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://cfmoto.az/official-800mtx-hero.webp"/>
+  <meta property="og:image:alt" content="CFMOTO Азербайджан"/>
+  <meta property="og:locale" content="ru_RU"/><meta property="og:locale:alternate" content="az_AZ"/>
+  <meta property="og:site_name" content="CFMOTO Азербайджан"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Кредит и рассрочка CFMOTO | Азербайджан"/>
+  <meta name="twitter:description" content="Условия кредита и рассрочки на мотоциклы, квадроциклы и багги CFMOTO: первоначальный взнос, сроки и предварительный расчёт."/>
+  <meta name="twitter:image" content="https://cfmoto.az/official-800mtx-hero.webp"/>
+  <meta name="twitter:image:alt" content="CFMOTO Азербайджан"/>
+  <link rel="icon" href="/favicon.svg"/>
+  <link rel="stylesheet" href="/assets/content.css"/>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://cfmoto.az/ru/kredit/#webpage","url":"https://cfmoto.az/ru/kredit","name":"Кредит и рассрочка CFMOTO | Азербайджан","description":"Условия кредита и рассрочки на мотоциклы, квадроциклы и багги CFMOTO: первоначальный взнос, сроки и предварительный расчёт.","inLanguage":"ru","isPartOf":{"@id":"https://cfmoto.az/#website"},"about":{"@id":"https://cfmoto.az/#organization"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://cfmoto.az/ru/"},{"@type":"ListItem","position":2,"name":"Условия кредита","item":"https://cfmoto.az/ru/kredit"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Для каких мотоциклов первоначальный взнос составляет 20%?","acceptedAnswer":{"@type":"Answer","text":"Для мотоциклов с объёмом двигателя до 300 см³ включительно и, в порядке исключения, для 450SR минимальный первоначальный взнос составляет 20%."}},{"@type":"Question","name":"Какой первоначальный взнос установлен для остальных мотоциклов?","acceptedAnswer":{"@type":"Answer","text":"Для остальных мотоциклов с объёмом двигателя более 300 см³ минимальный первоначальный взнос составляет 40%."}},{"@type":"Question","name":"Каковы условия для ATV и багги?","acceptedAnswer":{"@type":"Answer","text":"Для ATV и багги минимальный первоначальный взнос по рассрочке составляет 50%, максимальный срок — 12 месяцев."}},{"@type":"Question","name":"На какой срок доступен банковский кредит?","acceptedAnswer":{"@type":"Answer","text":"Банковский кредит можно рассчитать с первоначальным взносом от 10% на срок до 35 месяцев. Итоговые условия банка подтверждаются отдельно."}}]}]}</script>
+<link rel="stylesheet" href="/assets/language.css"/></head>
+<body>
+  <div class="topline">Официальный представитель CFMOTO в Азербайджане</div>
+  <header class="content-header">
+    <a class="brand" href="/ru/" aria-label="CFMOTO Азербайджан главная страница"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"/><b>АЗЕРБАЙДЖАН</b></a>
+    <nav class="content-nav" aria-label="Основное меню">
+      <a href="/ru/#modeller">Модели</a><a href="/ru/kredit">Кредит</a><a href="/ru/servis">Сервис</a><a href="/ru/garantiya">Гарантия</a><a href="/ru/sravnenie-modeley">Сравнение</a>
+    </nav>
+    <a class="nav-cta" href="https://wa.me/994512332484?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21+%D0%A5%D0%BE%D1%87%D1%83+%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C+%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D1%8E+%D0%BE+CFMOTO." target="_blank" rel="noreferrer">Контакты</a>
+  </header>
+  <main>
+    <section class="content-hero">
+      <nav class="breadcrumbs" aria-label="Навигация"><a href="/ru/">Главная</a><span>›</span><span>Условия кредита</span></nav>
+      <p class="eyebrow">Финансирование</p>
+      <h1>Кредит и рассрочка CFMOTO</h1>
+      <p>Узнайте первоначальные взносы, сроки и порядок расчёта для мотоциклов, ATV и багги.</p>
+    </section>
+    <div class="content-main"><div class="content-wrap"><p class="lead">Заранее сравните минимальный первоначальный взнос и максимальный срок для выбранной категории. Калькулятор на сайте предназначен для предварительного планирования.</p>
+<div class="info-grid">
+  <article class="info-card"><span>≤ 300 см³ и 450SR</span><h2>Мотоциклы</h2><strong>20% · до 18 мес.</strong><p>Минимальный первоначальный взнос и максимальный срок рассрочки.</p></article>
+  <article class="info-card"><span>Остальные мотоциклы</span><h2>Более 300 см³</h2><strong>40% · до 18 мес.</strong><p>Для остальных моделей мотоциклов, кроме 450SR.</p></article>
+  <article class="info-card"><span>Внедорожная техника</span><h2>ATV и багги</h2><strong>50% · до 12 мес.</strong><p>Рассрочка для квадроциклов и багги.</p></article>
+</div>
+<section class="prose"><h2>Банковский кредит</h2><p>Банковский кредит доступен с первоначальным взносом от 10% на срок до 35 месяцев. Процент, комиссия, документы и итоговое решение определяются условиями банка.</p><div class="notice">Расчёт носит информационный характер; банковские проценты и комиссии не учтены. Итоговые условия могут отличаться.</div></section>
+<div class="cta-box"><div><h2>Рассчитайте выбранную модель</h2><p>На главной странице выберите модель, первоначальный взнос и срок, чтобы увидеть ориентировочный ежемесячный платёж.</p></div><div class="cta-actions"><a class="button primary" href="/ru/#kredit-kalkulyator">Открыть калькулятор</a><a class="button ghost" data-contact-area="finance" href="https://wa.me/994512332484?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21+%D0%A5%D0%BE%D1%87%D1%83+%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C+%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D1%8E+%D0%BE+CFMOTO." target="_blank" rel="noreferrer">Получить предложение</a></div></div>
+<section class="faq"><h2>Часто задаваемые вопросы</h2><details><summary>Для каких мотоциклов первоначальный взнос составляет 20%?</summary><p>Для мотоциклов с объёмом двигателя до 300 см³ включительно и, в порядке исключения, для 450SR минимальный первоначальный взнос составляет 20%.</p></details><details><summary>Какой первоначальный взнос установлен для остальных мотоциклов?</summary><p>Для остальных мотоциклов с объёмом двигателя более 300 см³ минимальный первоначальный взнос составляет 40%.</p></details><details><summary>Каковы условия для ATV и багги?</summary><p>Для ATV и багги минимальный первоначальный взнос по рассрочке составляет 50%, максимальный срок — 12 месяцев.</p></details><details><summary>На какой срок доступен банковский кредит?</summary><p>Банковский кредит можно рассчитать с первоначальным взносом от 10% на срок до 35 месяцев. Итоговые условия банка подтверждаются отдельно.</p></details></section>
+</div></div>
+  </main>
+  <aside class="content-links" aria-label="Полезная информация"><div><a href="/ru/motocikly/">Мотоциклы →</a><a href="/ru/kvadrocikly/">Квадроциклы →</a><a href="/ru/buggy/">Багги и UTV →</a><a href="/ru/kredit" aria-current="page">Условия кредита →</a><a href="/ru/servis">Официальный сервис →</a><a href="/ru/garantiya">Гарантия →</a><a href="/ru/zapchasti">Запчасти →</a><a href="/ru/sravnenie-modeley">Сравнение моделей →</a></div></aside>
+  <footer class="content-footer">
+    <a class="brand" href="/ru/"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"/><b>АЗЕРБАЙДЖАН</b></a>
+    <div><a href="/ru/motocikly/">Мотоциклы</a><a href="/ru/kvadrocikly/">Квадроциклы</a><a href="/ru/buggy/">Багги и UTV</a><a href="/ru/kredit">Кредит</a><a href="/ru/servis">Сервис</a><a href="/ru/zapchasti">Запчасти</a><a href="https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a></div>
+    <small>© 2026 CFMOTO Азербайджан · SAZMOTO MMC. Все права защищены.</small>
+  </footer>
+<!-- CFMOTO:LANGUAGE:START --><nav class="language-switcher" aria-label="Выбор языка"><a href="/kredit" lang="az" hreflang="az">AZ</a><span aria-current="page">RU</span></nav><!-- CFMOTO:LANGUAGE:END --></body>
+</html>

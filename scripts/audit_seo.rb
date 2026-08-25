@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 require "json"
+require_relative "category_config"
 require_relative "content_config"
 require_relative "domain_config"
+require_relative "russian_config"
 
 ROOT = File.expand_path("..", __dir__)
 SITE_ORIGIN = DomainConfig::SITE_ORIGIN
@@ -10,13 +12,14 @@ errors = []
 html_paths = [
   File.join(ROOT, "index.html"),
   *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort,
-  *ContentConfig.html_paths(ROOT)
+  *ContentConfig.html_paths(ROOT),
+  *CategoryConfig.html_paths(ROOT)
 ]
 titles = []
 descriptions = []
 canonicals = []
 
-expected_page_count = 1 + Dir.glob(File.join(ROOT, "model", "*", "index.html")).size + ContentConfig::SLUGS.size
+expected_page_count = 1 + Dir.glob(File.join(ROOT, "model", "*", "index.html")).size + ContentConfig::SLUGS.size + CategoryConfig::SLUGS.size
 errors << "Expected #{expected_page_count} HTML pages, found #{html_paths.size}" unless html_paths.size == expected_page_count
 
 html_paths.each do |path|
@@ -33,6 +36,8 @@ html_paths.each do |path|
     "#{SITE_ORIGIN}/"
   elsif relative.start_with?("model/")
     "#{SITE_ORIGIN}/model/#{File.basename(File.dirname(path))}"
+  elsif CategoryConfig::SLUGS.include?(File.basename(File.dirname(path)))
+    "#{SITE_ORIGIN}/#{File.basename(File.dirname(path))}/"
   else
     "#{SITE_ORIGIN}/#{File.basename(File.dirname(path))}"
   end
@@ -96,8 +101,23 @@ errors << "Canonicals are not unique" unless canonicals.uniq.size == html_paths.
 sitemap_path = File.join(ROOT, "sitemap.xml")
 if File.exist?(sitemap_path)
   sitemap_urls = File.read(sitemap_path, encoding: "UTF-8").scan(%r{<loc>(.*?)</loc>}).flatten
-  errors << "Sitemap URL count does not match canonicals" unless sitemap_urls.size == canonicals.size
-  errors << "Sitemap and canonical URLs differ" unless sitemap_urls == canonicals
+  russian_canonicals = html_paths.map do |path|
+    relative = path.delete_prefix("#{ROOT}/")
+    if relative == "index.html"
+      "#{SITE_ORIGIN}/ru/"
+    elsif relative.start_with?("model/")
+      "#{SITE_ORIGIN}/ru/model/#{File.basename(File.dirname(path))}"
+    elsif ContentConfig::SLUGS.include?(File.basename(File.dirname(path)))
+      "#{SITE_ORIGIN}/ru/#{RussianConfig.ru_content_slug(File.basename(File.dirname(path)))}"
+    else
+      "#{SITE_ORIGIN}/ru/#{RussianConfig.ru_category_slug(File.basename(File.dirname(path)))}/"
+    end
+  end
+  expected_sitemap_urls = canonicals.zip(russian_canonicals).flat_map { |pair| pair }
+  errors << "Sitemap must contain #{expected_sitemap_urls.size} Azerbaijani and Russian URLs" unless sitemap_urls.size == expected_sitemap_urls.size
+  errors << "Sitemap and bilingual canonical URLs differ" unless sitemap_urls == expected_sitemap_urls
+  sitemap = File.read(sitemap_path, encoding: "UTF-8")
+  errors << "Sitemap is missing the XHTML namespace" unless sitemap.include?('xmlns:xhtml="http://www.w3.org/1999/xhtml"')
 else
   errors << "Missing sitemap.xml"
 end
@@ -185,6 +205,9 @@ public_text_paths.each do |path|
 end
 
 errors << "Home is missing the confirmed Instagram profile" unless home.include?(DomainConfig::INSTAGRAM_URL)
+CategoryConfig::SLUGS.each do |slug|
+  errors << "Home is missing internal category link /#{slug}/" unless home.include?(%(href="/#{slug}/"))
+end
 
 content_expectations = {
   "kredit" => ["20% · 18 ayadək", "40% · 18 ayadək", "50% · 12 ayadək", '"@type":"FAQPage"'],
@@ -205,6 +228,47 @@ content_expectations.each do |slug, expected_texts|
   end
   ContentConfig::SLUGS.each do |linked_slug|
     errors << "/#{slug} is missing internal link /#{linked_slug}" unless content.include?(%(href="/#{linked_slug}"))
+  end
+end
+
+category_expectations = {
+  "motosiklet" => {
+    title: "Motosiklet Satışı və Qiymətləri | CFMOTO Azerbaijan",
+    count: 29,
+    required: ["CFMOTO motosiklet satışı və qiymətləri", "Maliyyələşmə şərtləri", "20%", "40%"]
+  },
+  "kvadrosikl" => {
+    title: "Kvadrosikl (ATV) Satışı və Qiymətləri | CFMOTO Azerbaijan",
+    count: 9,
+    required: ["CFMOTO kvadrosikl və ATV qiymətləri", "Maliyyələşmə şərtləri", "50%"]
+  },
+  "buggy" => {
+    title: "Buggy və UTV Modelləri | CFMOTO Azerbaijan",
+    count: 9,
+    required: ["CFMOTO buggy, SSV və UTV modelləri", "Maliyyələşmə şərtləri", "50%"]
+  }
+}
+category_expectations.each do |slug, expectation|
+  path = File.join(ROOT, slug, "index.html")
+  if !File.file?(path)
+    errors << "Missing category page /#{slug}/"
+    next
+  end
+
+  category = File.read(path, encoding: "UTF-8")
+  errors << "/#{slug}/ has the wrong requested title" unless category.include?("<title>#{expectation.fetch(:title)}</title>")
+  card_count = category.scan('class="category-model-card"').size
+  errors << "/#{slug}/ expected #{expectation.fetch(:count)} product cards, found #{card_count}" unless card_count == expectation.fetch(:count)
+  price_count = category.scan(%r{<strong>[\d,]+ AZN(?: · ƏDV daxil)?</strong>}).size
+  errors << "/#{slug}/ expected a price for every product" unless price_count == card_count
+  expectation.fetch(:required).each do |text|
+    errors << "/#{slug}/ is missing required content: #{text}" unless category.include?(text)
+  end
+  errors << "/#{slug}/ is missing FAQ structured data" unless category.include?('"@type":"FAQPage"')
+  errors << "/#{slug}/ is missing collection structured data" unless category.include?('"@type":"CollectionPage"')
+  errors << "/#{slug}/ is missing visible FAQ content" unless category.scan("<details>").size >= 4
+  CategoryConfig::SLUGS.each do |linked_slug|
+    errors << "/#{slug}/ is missing internal link /#{linked_slug}/" unless category.include?(%(href="/#{linked_slug}/"))
   end
 end
 

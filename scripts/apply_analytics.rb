@@ -3,6 +3,7 @@
 
 require_relative "domain_config"
 require_relative "content_config"
+require_relative "category_config"
 
 ROOT = File.expand_path("..", __dir__)
 MEASUREMENT_ID = DomainConfig::GA4_MEASUREMENT_ID
@@ -53,7 +54,8 @@ HTML
 html_paths = [
   File.join(ROOT, "index.html"),
   *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort,
-  *ContentConfig.html_paths(ROOT)
+  *ContentConfig.html_paths(ROOT),
+  *CategoryConfig.html_paths(ROOT)
 ]
 
 html_paths.each do |path|

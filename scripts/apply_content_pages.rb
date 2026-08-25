@@ -4,6 +4,7 @@
 require "cgi"
 require "fileutils"
 require "json"
+require_relative "category_config"
 require_relative "content_config"
 require_relative "domain_config"
 
@@ -107,6 +108,9 @@ def page_html(slug:, title:, description:, eyebrow:, heading:, intro:, body:, sc
     current = item == slug ? %( aria-current="page") : ""
     %(<a href="/#{item}"#{current}>#{ContentConfig::LABELS.fetch(item)} →</a>)
   end.join
+  category_links = CategoryConfig::SLUGS.map do |item|
+    %(<a href="/#{item}/">#{CategoryConfig::LABELS.fetch(item)} →</a>)
+  end.join
 
   <<~HTML
     <!doctype html>
@@ -152,10 +156,10 @@ def page_html(slug:, title:, description:, eyebrow:, heading:, intro:, body:, sc
         </section>
         <div class="content-main"><div class="content-wrap">#{body}</div></div>
       </main>
-      <aside class="content-links" aria-label="Faydalı məlumatlar"><div>#{content_links}</div></aside>
+      <aside class="content-links" aria-label="Faydalı məlumatlar"><div>#{category_links}#{content_links}</div></aside>
       <footer class="content-footer">
         <a class="brand" href="/"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"/><b>AZƏRBAYCAN</b></a>
-        <div><a href="/#modeller">Modellər</a><a href="/kredit">Kredit</a><a href="/servis">Servis</a><a href="/ehtiyat-hisseleri">Ehtiyat hissələri</a><a href="#{DomainConfig::INSTAGRAM_URL}" target="_blank" rel="noreferrer">Instagram</a></div>
+        <div><a href="/motosiklet/">Motosikletlər</a><a href="/kvadrosikl/">Kvadrosikllər</a><a href="/buggy/">Buggy və UTV</a><a href="/kredit">Kredit</a><a href="/servis">Servis</a><a href="/ehtiyat-hisseleri">Ehtiyat hissələri</a><a href="#{DomainConfig::INSTAGRAM_URL}" target="_blank" rel="noreferrer">Instagram</a></div>
         <small>© 2026 CFMOTO Azerbaijan · SAZMOTO MMC. Bütün hüquqlar qorunur.</small>
       </footer>
     </body>

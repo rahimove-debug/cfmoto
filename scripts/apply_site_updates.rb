@@ -66,6 +66,11 @@ INTERNAL_40_MOTORCYCLE_SLUGS = %w[
 ORIGINAL_FINANCE_POLICY_COPY = "Motosikletlər üçün daxili hissəli ödəniş 20% ilkin ödənişlə 18 ayadək, ATV və buggy üçün 50% ilkin ödənişlə 12 ayadək. Bank krediti 10%-dən başlayır və 35 ayadək mümkündür."
 PREVIOUS_FINANCE_POLICY_COPY = "Mühərrik həcmi 300 cc-dək olan motosikletlər və 450SR üçün daxili hissəli ödəniş 20% ilkin ödənişlə, digər motosikletlər üçün 50% ilkin ödənişlə 18 ayadək. ATV və buggy üçün 50% ilkin ödənişlə 12 ayadək. Bank krediti 10%-dən başlayır və 35 ayadək mümkündür."
 NEW_FINANCE_POLICY_COPY = "Mühərrik həcmi 300 cc-dək olan motosikletlər və 450SR üçün daxili hissəli ödəniş 20% ilkin ödənişlə, digər motosikletlər üçün 40% ilkin ödənişlə 18 ayadək. ATV və buggy üçün 50% ilkin ödənişlə 12 ayadək. Bank krediti 10%-dən başlayır və 35 ayadək mümkündür."
+FINANCE_POLICY_COPIES = [
+  ORIGINAL_FINANCE_POLICY_COPY,
+  PREVIOUS_FINANCE_POLICY_COPY,
+  NEW_FINANCE_POLICY_COPY
+].freeze
 
 SERVICE_BASE_COPY = "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir."
 SERVICE_HOURS_COPY = "Bazar ertəsi xaric hər gün 10:00–19:00."
@@ -219,10 +224,21 @@ def normalize_footer_links!(content)
 
   links = footer[%r{<div>.*?</div>}m]
   abort "Footer link group not found" unless links
-  replacement = %(<div><a href="/#modeller">Modellər</a><a href="/kredit">Kredit</a><a href="/servis">Servis</a><a href="/zemanet">Zəmanət</a><a href="/ehtiyat-hisseleri">Ehtiyat hissələri</a><a href="/model-muqayisesi">Müqayisə</a><a href="#{INSTAGRAM_URL}" target="_blank" rel="noreferrer">Instagram</a></div>)
+  replacement = %(<div><a href="/motosiklet/">Motosikletlər</a><a href="/kvadrosikl/">Kvadrosikllər</a><a href="/buggy/">Buggy və UTV</a><a href="/kredit">Kredit</a><a href="/servis">Servis</a><a href="/zemanet">Zəmanət</a><a href="/ehtiyat-hisseleri">Ehtiyat hissələri</a><a href="/model-muqayisesi">Müqayisə</a><a href="#{INSTAGRAM_URL}" target="_blank" rel="noreferrer">Instagram</a></div>)
   return if links == replacement
 
   content.sub!(footer, footer.sub(links, replacement))
+end
+
+def normalize_embedded_footer_links!(content)
+  source = %q{[\"$\",\"div\",null,{\"children\":[[\"$\",\"$L6\",null,{\"href\":\"/#modeller\",\"children\":\"Modellər\"}],[\"$\",\"$L6\",null,{\"href\":\"/#kredit\",\"children\":\"Kredit\"}],[\"$\",\"$L6\",null,{\"href\":\"/#servis\",\"children\":\"Servis\"}]]}]}
+  previous = %q{[\"$\",\"div\",null,{\"children\":[[\"$\",\"$L6\",null,{\"href\":\"/motosiklet/\",\"children\":\"Motosikletlər\"}],[\"$\",\"$L6\",null,{\"href\":\"/kvadrosikl/\",\"children\":\"Kvadrosikllər\"}],[\"$\",\"$L6\",null,{\"href\":\"/buggy/\",\"children\":\"Buggy və UTV\"}],[\"$\",\"$L6\",null,{\"href\":\"/kredit\",\"children\":\"Kredit\"}],[\"$\",\"$L6\",null,{\"href\":\"/servis\",\"children\":\"Servis\"}],[\"$\",\"$L6\",null,{\"href\":\"/zemanet\",\"children\":\"Zəmanət\"}],[\"$\",\"$L6\",null,{\"href\":\"/ehtiyat-hisseleri\",\"children\":\"Ehtiyat hissələri\"}],[\"$\",\"$L6\",null,{\"href\":\"/model-muqayisesi\",\"children\":\"Müqayisə\"}]]}]}
+  replacement = %q{[\"$\",\"div\",null,{\"children\":[[\"$\",\"$L6\",null,{\"href\":\"/motosiklet/\",\"children\":\"Motosikletlər\"}],[\"$\",\"$L6\",null,{\"href\":\"/kvadrosikl/\",\"children\":\"Kvadrosikllər\"}],[\"$\",\"$L6\",null,{\"href\":\"/buggy/\",\"children\":\"Buggy və UTV\"}],[\"$\",\"$L6\",null,{\"href\":\"/kredit\",\"children\":\"Kredit\"}],[\"$\",\"$L6\",null,{\"href\":\"/servis\",\"children\":\"Servis\"}],[\"$\",\"$L6\",null,{\"href\":\"/zemanet\",\"children\":\"Zəmanət\"}],[\"$\",\"$L6\",null,{\"href\":\"/ehtiyat-hisseleri\",\"children\":\"Ehtiyat hissələri\"}],[\"$\",\"$L6\",null,{\"href\":\"/model-muqayisesi\",\"children\":\"Müqayisə\"}],[\"$\",\"a\",null,{\"href\":\"__INSTAGRAM_URL__\",\"target\":\"_blank\",\"rel\":\"noreferrer\",\"children\":\"Instagram\"}]]}]}.sub("__INSTAGRAM_URL__", INSTAGRAM_URL)
+  return if content.include?(replacement)
+  anchor = [previous, source].find { |candidate| content.include?(candidate) }
+  return unless anchor
+
+  content.gsub!(anchor, replacement)
 end
 
 def replace_required_once!(content, source, replacement, label)
@@ -248,9 +264,11 @@ def format_amount(value)
   value.to_i.to_s.reverse.scan(/.{1,3}/).join(",").reverse
 end
 
-def normalize_finance_policy_copy!(content)
-  [ORIGINAL_FINANCE_POLICY_COPY, PREVIOUS_FINANCE_POLICY_COPY].each do |copy|
-    content.gsub!(copy, NEW_FINANCE_POLICY_COPY)
+def remove_home_finance_policy_copy!(content)
+  FINANCE_POLICY_COPIES.each do |copy|
+    content.gsub!(%(<p>#{copy}</p>), "")
+    content.gsub!(%((0,c.jsx)(`p`,{children:`#{copy}`}),), "")
+    abort "Home finance policy copy wrapper not found" if content.include?(copy)
   end
 end
 
@@ -480,7 +498,7 @@ update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
     'function I(e){let t=a.find(t=>t.name===e);if(g(e),_===`Daxili hissəli`){let e=t?.type!==`Motosiklet`;b(q(t)?20:e?50:40),S(e?12:18)}}',
     "Home model-change finance rule"
   )
-  normalize_finance_policy_copy!(javascript)
+  remove_home_finance_policy_copy!(javascript)
   card_image_source = '(0,c.jsx)(`img`,{src:e.image,alt:`${e.name} rəsmi model fotosu`,loading:`lazy`})'
   card_image_replacement = '(0,c.jsx)(`img`,{src:`/models/cards/${e.slug}.webp`,alt:`${e.name} rəsmi model fotosu`,loading:`lazy`,decoding:`async`,fetchPriority:`low`})'
   unless javascript.include?(card_image_replacement)
@@ -489,11 +507,9 @@ update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
   end
 
   footer_links_source = '(0,c.jsx)(`a`,{href:`#modeller`,children:`Modellər`}),(0,c.jsx)(`a`,{href:`#kredit-kalkulyator`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`#servis`,children:`Servis`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
-  footer_links_replacement = '(0,c.jsx)(`a`,{href:`/#modeller`,children:`Modellər`}),(0,c.jsx)(`a`,{href:`/kredit`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`/servis`,children:`Servis`}),(0,c.jsx)(`a`,{href:`/zemanet`,children:`Zəmanət`}),(0,c.jsx)(`a`,{href:`/ehtiyat-hisseleri`,children:`Ehtiyat hissələri`}),(0,c.jsx)(`a`,{href:`/model-muqayisesi`,children:`Müqayisə`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
-  unless javascript.include?(footer_links_replacement)
-    abort "Homepage footer links anchor not found" unless javascript.include?(footer_links_source)
-    javascript.sub!(footer_links_source, footer_links_replacement)
-  end
+  footer_links_previous = '(0,c.jsx)(`a`,{href:`/#modeller`,children:`Modellər`}),(0,c.jsx)(`a`,{href:`/kredit`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`/servis`,children:`Servis`}),(0,c.jsx)(`a`,{href:`/zemanet`,children:`Zəmanət`}),(0,c.jsx)(`a`,{href:`/ehtiyat-hisseleri`,children:`Ehtiyat hissələri`}),(0,c.jsx)(`a`,{href:`/model-muqayisesi`,children:`Müqayisə`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
+  footer_links_replacement = '(0,c.jsx)(`a`,{href:`/motosiklet/`,children:`Motosikletlər`}),(0,c.jsx)(`a`,{href:`/kvadrosikl/`,children:`Kvadrosikllər`}),(0,c.jsx)(`a`,{href:`/buggy/`,children:`Buggy və UTV`}),(0,c.jsx)(`a`,{href:`/kredit`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`/servis`,children:`Servis`}),(0,c.jsx)(`a`,{href:`/zemanet`,children:`Zəmanət`}),(0,c.jsx)(`a`,{href:`/ehtiyat-hisseleri`,children:`Ehtiyat hissələri`}),(0,c.jsx)(`a`,{href:`/model-muqayisesi`,children:`Müqayisə`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
+  replace_required_variant!(javascript, [footer_links_previous, footer_links_source], footer_links_replacement, "Homepage footer links")
   javascript.gsub!("https://maps.google.com/?q=Babek+Avenue+188+Baku", SHOWROOM_MAP_URL)
   javascript.gsub!('`Kredit`,`#kredit`', "`Kredit`,`##{MOBILE_CREDIT_ID}`")
   javascript.gsub!('href:`#kredit`', "href:`##{MOBILE_CREDIT_ID}`")
@@ -671,6 +687,7 @@ html_paths.each do |path|
     normalize_model_finance_calculator!(html, slug)
   end
   normalize_footer_links!(html)
+  normalize_embedded_footer_links!(html)
   write_utf8(path, html)
 end
 
@@ -684,7 +701,7 @@ unless home.include?(hero_preload)
   home.sub!(logo_preload, "#{logo_preload}#{hero_preload}")
 end
 normalize_service_schedule!(home)
-normalize_finance_policy_copy!(home)
+remove_home_finance_policy_copy!(home)
 home.gsub!("https://maps.google.com/?q=Babek+Avenue+188+Baku", SHOWROOM_MAP_URL)
 home.gsub!('href="#kredit"', %(href="##{MOBILE_CREDIT_ID}"))
 home.gsub!(
@@ -814,7 +831,7 @@ checks = {
   "home map link" => home.include?(SHOWROOM_MAP_URL),
   "home mobile calculator target" => home.include?(%(id="#{MOBILE_CREDIT_ID}")) && home.include?(%(href="##{MOBILE_CREDIT_ID}")),
   "home calculator top link" => home.include?('class="calc-top-link"'),
-  "home finance policy copy" => home.include?(NEW_FINANCE_POLICY_COPY) && home_bundle.include?(NEW_FINANCE_POLICY_COPY),
+  "home finance policy copy removed" => FINANCE_POLICY_COPIES.none? { |copy| home.include?(copy) || home_bundle.include?(copy) },
   "home finance policy predicate" => home_bundle.include?('const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300)'),
   "home ineligible default calculator" => home.include?('<strong>40<!-- -->% · <!-- -->4,796<!-- --> AZN</strong>') && home.include?('id="down" type="range" min="40" max="80" step="5" value="40"') && home.include?('<strong>400<!-- --> <small>AZN / ay</small></strong>') && home.include?('Maliyyələşdirilən məbləğ: <!-- -->7,194<!-- --> AZN'),
   "model finance policy allowlist" => INTERNAL_20_MODEL_NAMES.all? { |model| model_finance_bundle.include?("`#{model}`") } && model_finance_bundle.include?('x=s&&q.has(e)') && model_finance_bundle.include?('[f,p]=(0,r.useState)(x?20:s?40:50)'),
@@ -848,7 +865,7 @@ checks = {
       html.include?(%(<link rel="preload" as="image" href="/models/#{slug}.webp"))
   end,
   "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 47 && home.scan(%r{class="model-card"}).size == 47 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('/models/cards/${e.slug}.webp') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('/models/cards/${e.slug}.webp'),
-  "SEO content footer links" => html_paths.all? { |path| read_utf8(path).include?('href="/model-muqayisesi"') && read_utf8(path).include?('href="/zemanet"') } && home_bundle.include?('href:`/model-muqayisesi`'),
+  "SEO and category footer links" => html_paths.all? { |path| read_utf8(path).include?('href="/motosiklet/"') && read_utf8(path).include?('href="/kvadrosikl/"') && read_utf8(path).include?('href="/buggy/"') && read_utf8(path).include?('href="/model-muqayisesi"') && read_utf8(path).include?('href="/zemanet"') } && home_bundle.include?('href:`/motosiklet/`') && home_bundle.include?('href:`/kvadrosikl/`') && home_bundle.include?('href:`/buggy/`') && home_bundle.include?('href:`/model-muqayisesi`'),
   "single runtime module preload" => html_paths.all? { |path| read_utf8(path).scan(%r{<link rel="modulepreload" href="/assets/#{Regexp.escape(NEW_RUNTIME)}"[^>]*>}).size == 1 },
   "static links use native navigation" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('ref:A,href:C,onClick:c,onMouseEnter:l,onTouchStart:u,...I,children:a'),
   "static links skip RSC prefetch" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('function re(e){return!1}'),

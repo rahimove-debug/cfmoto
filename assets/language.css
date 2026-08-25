@@ -1,0 +1,5 @@
+.language-switcher{position:fixed;right:14px;bottom:14px;z-index:10000;display:flex;align-items:center;gap:2px;padding:4px;border:1px solid #dfe4e7;border-radius:999px;background:#fff;box-shadow:0 8px 28px #07111324;font:700 12px/1 Arial,Helvetica,sans-serif;letter-spacing:.04em}
+.language-switcher a,.language-switcher span{min-width:38px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;color:#16191b;text-decoration:none}
+.language-switcher [aria-current="page"]{background:#009bb4;color:#fff}
+.language-switcher a:hover,.language-switcher a:focus-visible{background:#eaf8fa;outline:2px solid transparent}
+@media (max-width:580px){.language-switcher{right:10px;bottom:78px}.language-switcher a,.language-switcher span{min-width:36px;height:32px}}

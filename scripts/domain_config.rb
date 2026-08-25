@@ -30,10 +30,10 @@ module DomainConfig
   # a generic wildcard cannot safely translate aliases such as /nk800.
   LEGACY_PATH_REDIRECTS = {
     "/cfmoto" => "/",
-    "/motosiklet" => "/#modeller",
-    "/motosi%CC%87klet" => "/#modeller",
-    "/kvadrosikl" => "/#modeller",
-    "/buggy" => "/#modeller",
+    "/motosiklet" => "/motosiklet/",
+    "/motosi%CC%87klet" => "/motosiklet/",
+    "/kvadrosikl" => "/kvadrosikl/",
+    "/buggy" => "/buggy/",
     "/cflitemodelleri" => "/#modeller",
     "/800mt-explore-1" => "/model/800mt-explore",
     "/800mt-x-2" => "/model/800mt-x",
