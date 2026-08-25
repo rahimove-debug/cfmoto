@@ -7,6 +7,22 @@ require_relative "russian_config"
 
 ROOT = File.expand_path("..", __dir__)
 SITE_ORIGIN = DomainConfig::SITE_ORIGIN
+CLEAN_IMAGE_SLUGS = %w[1000mt-x 750sr-s cforce-c4 cforce1000-touring].freeze
+
+def expected_primary_model_image(slug)
+  suffix = CLEAN_IMAGE_SLUGS.include?(slug) ? "-clean" : ""
+  "/models/#{slug}#{suffix}.webp"
+end
+
+def walk_json(value, &block)
+  yield value
+  case value
+  when Hash
+    value.each_value { |nested| walk_json(nested, &block) }
+  when Array
+    value.each { |nested| walk_json(nested, &block) }
+  end
+end
 
 errors = []
 html_paths = [
@@ -32,15 +48,7 @@ html_paths.each do |path|
   og_url = html[/<meta property="og:url" content="([^"]+)"\s*\/>/, 1]
   og_image = html[/<meta property="og:image" content="([^"]+)"\s*\/>/, 1]
   twitter_image = html[/<meta name="twitter:image" content="([^"]+)"\s*\/>/, 1]
-  expected_canonical = if relative == "index.html"
-    "#{SITE_ORIGIN}/"
-  elsif relative.start_with?("model/")
-    "#{SITE_ORIGIN}/model/#{File.basename(File.dirname(path))}"
-  elsif CategoryConfig::SLUGS.include?(File.basename(File.dirname(path)))
-    "#{SITE_ORIGIN}/#{File.basename(File.dirname(path))}/"
-  else
-    "#{SITE_ORIGIN}/#{File.basename(File.dirname(path))}"
-  end
+  expected_canonical = relative == "index.html" ? "#{SITE_ORIGIN}/" : "#{SITE_ORIGIN}/#{relative.delete_suffix("/index.html")}/"
 
   errors << "#{relative}: missing title" unless title
   errors << "#{relative}: missing meta description" unless description
@@ -65,12 +73,38 @@ html_paths.each do |path|
   headings = html.scan(/<h1\b/i).size
   errors << "#{relative}: expected one H1, found #{headings}" unless headings == 1
 
+  if relative != "index.html"
+    slashless_canonical = expected_canonical.delete_suffix("/")
+    slashless_pattern = %r!#{Regexp.escape(slashless_canonical)}(?=["\\#?<\s,}\]]|\z)!
+    errors << "#{relative}: contains slashless self URL #{slashless_canonical}" if html.match?(slashless_pattern)
+  end
+
   schemas = html.scan(%r{<script type="application/ld\+json">(.*?)</script>}m).flatten
   errors << "#{relative}: missing JSON-LD" if schemas.empty?
+  parsed_schemas = []
   schemas.each do |schema|
-    JSON.parse(schema)
+    parsed_schemas << JSON.parse(schema)
   rescue JSON::ParserError => error
     errors << "#{relative}: invalid JSON-LD (#{error.message})"
+  end
+  parsed_schemas.each do |schema|
+    walk_json(schema) do |value|
+      if value.is_a?(String) && value.start_with?("#{SITE_ORIGIN}/")
+        suffix = value.delete_prefix(SITE_ORIGIN)
+        slashless_route = suffix.match?(%r{\A/model/[a-z0-9-]+\z}i) || ContentConfig::SLUGS.any? { |slug| suffix == "/#{slug}" }
+        errors << "#{relative}: JSON-LD route URL must end with a slash: #{value}" if slashless_route
+      end
+      next unless value.is_a?(Hash)
+
+      types = Array(value["@type"])
+      if types.include?("WebPage") && value["url"]
+        errors << "#{relative}: WebPage URL must match canonical" unless value["url"] == expected_canonical
+      end
+      if relative.start_with?("model/") && types.include?("Product")
+        offer_url = value.dig("offers", "url")
+        errors << "#{relative}: Product offer URL must match canonical" unless offer_url == expected_canonical
+      end
+    end
   end
 
   DomainConfig::NON_CANONICAL_SITE_ORIGINS.each do |origin|
@@ -106,9 +140,9 @@ if File.exist?(sitemap_path)
     if relative == "index.html"
       "#{SITE_ORIGIN}/ru/"
     elsif relative.start_with?("model/")
-      "#{SITE_ORIGIN}/ru/model/#{File.basename(File.dirname(path))}"
+      "#{SITE_ORIGIN}/ru/model/#{File.basename(File.dirname(path))}/"
     elsif ContentConfig::SLUGS.include?(File.basename(File.dirname(path)))
-      "#{SITE_ORIGIN}/ru/#{RussianConfig.ru_content_slug(File.basename(File.dirname(path)))}"
+      "#{SITE_ORIGIN}/ru/#{RussianConfig.ru_content_slug(File.basename(File.dirname(path)))}/"
     else
       "#{SITE_ORIGIN}/ru/#{RussianConfig.ru_category_slug(File.basename(File.dirname(path)))}/"
     end
@@ -138,7 +172,7 @@ home = File.read(home_path, encoding: "UTF-8")
   "delivery label" => "Şəhərdaxili çatdırılma",
   "showroom schedule" => "Salon hər gün açıqdır",
   "service schedule" => "Bazar ertəsi xaric hər gün 10:00–19:00",
-  "CFORCE C5 card" => 'href="/model/cforce-c5"',
+  "CFORCE C5 card" => 'href="/model/cforce-c5/"',
   "CFORCE C5 VAT note" => "13,900 AZN · ƏDV daxil",
   "U10 PRO card" => "U10 PRO"
 }.each do |label, text|
@@ -227,7 +261,7 @@ content_expectations.each do |slug, expected_texts|
     errors << "/#{slug} is missing required content: #{text}" unless content.include?(text)
   end
   ContentConfig::SLUGS.each do |linked_slug|
-    errors << "/#{slug} is missing internal link /#{linked_slug}" unless content.include?(%(href="/#{linked_slug}"))
+    errors << "/#{slug}/ is missing internal link /#{linked_slug}/" unless content.include?(%(href="/#{linked_slug}/"))
   end
 end
 
@@ -273,15 +307,35 @@ category_expectations.each do |slug, expectation|
 end
 
 card_images = Dir.glob(File.join(ROOT, "models", "cards", "*.webp"))
-errors << "Expected 47 optimized model card images, found #{card_images.size}" unless card_images.size == 47
+errors << "Expected 47 base and 4 clean optimized model card images, found #{card_images.size}" unless card_images.size == 51
 homepage_card_sources = home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten
 errors << "Homepage must use all 47 optimized model card images" unless homepage_card_sources.uniq.size == 47
+homepage_card_sources.uniq.each do |source|
+  errors << "Homepage card image is missing: #{source}" unless File.file?(File.join(ROOT, source.delete_prefix("/")))
+end
+CLEAN_IMAGE_SLUGS.each do |slug|
+  clean_card = "/models/cards/#{slug}-clean.webp"
+  errors << "Homepage must use clean card image #{clean_card}" unless homepage_card_sources.include?(clean_card)
+end
 
 Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.each do |path|
   slug = File.basename(File.dirname(path))
   content = File.read(path, encoding: "UTF-8")
-  errors << "#{slug}: primary model image is not local" unless content.include?(%(<img class="model-color-image" src="/models/#{slug}.webp"))
-  errors << "#{slug}: primary model preload is not local" unless content.include?(%(<link rel="preload" as="image" href="/models/#{slug}.webp"))
+  primary = expected_primary_model_image(slug)
+  errors << "#{slug}: primary model image is not local" unless content.include?(%(<img class="model-color-image" src="#{primary}"))
+  errors << "#{slug}: primary model preload is not local" unless content.include?(%(<link rel="preload" as="image" href="#{primary}"))
+end
+
+public_code_paths = [
+  *Dir.glob(File.join(ROOT, "**", "*.html")),
+  *Dir.glob(File.join(ROOT, "assets", "*.js"))
+].reject { |path| path.start_with?("#{ROOT}/dist/") }
+CLEAN_IMAGE_SLUGS.each do |slug|
+  original_sources = ["/models/#{slug}.webp", "/models/cards/#{slug}.webp"]
+  original_sources.each do |source|
+    referenced_by = public_code_paths.find { |path| File.read(path, encoding: "UTF-8").include?(source) }
+    errors << "Red-label original remains referenced: #{source} in #{referenced_by.delete_prefix("#{ROOT}/")}" if referenced_by
+  end
 end
 
 errors << "Unused Vinext font CSS remains in public HTML" if html_paths.any? { |path| File.read(path, encoding: "UTF-8").include?("<style data-vinext-fonts>") }
@@ -289,6 +343,11 @@ errors << "GA4 loader must have low fetch priority" if html_paths.any? { |path| 
 
 redirects_path = File.join(ROOT, "_redirects")
 redirects = {}
+DomainConfig::LEGACY_PATH_REDIRECTS.each do |source, destination|
+  next unless destination.start_with?("/model/")
+
+  errors << "Legacy redirect #{source} model target must end with a slash" unless destination.end_with?("/")
+end
 if !File.file?(redirects_path)
   errors << "Missing _redirects"
 else
@@ -309,7 +368,7 @@ else
   expected_redirects = DomainConfig::LEGACY_PATH_REDIRECTS.dup
   Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.each do |path|
     slug = File.basename(File.dirname(path))
-    expected_redirects["/#{slug}"] ||= "/model/#{slug}"
+    expected_redirects["/#{slug}"] ||= "/model/#{slug}/"
   end
   missing_redirects = expected_redirects.reject { |source, destination| redirects[source] == destination }
   unexpected_redirects = redirects.reject { |source, destination| expected_redirects[source] == destination }

@@ -106,8 +106,8 @@ module RussianSiteAudit
         entries << Entry.new(
           kind: :model,
           slug: slug,
-          az_path: "/model/#{slug}",
-          ru_path: "/ru/model/#{slug}",
+          az_path: "/model/#{slug}/",
+          ru_path: "/ru/model/#{slug}/",
           az_file: az_file,
           ru_file: File.join(ROOT, "ru", "model", slug, "index.html")
         )
@@ -118,8 +118,8 @@ module RussianSiteAudit
         entries << Entry.new(
           kind: :content,
           slug: az_slug,
-          az_path: "/#{az_slug}",
-          ru_path: "/ru/#{ru_slug}",
+          az_path: "/#{az_slug}/",
+          ru_path: "/ru/#{ru_slug}/",
           az_file: File.join(ROOT, az_slug, "index.html"),
           ru_file: File.join(ROOT, "ru", ru_slug, "index.html")
         )
@@ -157,10 +157,9 @@ module RussianSiteAudit
       unexpected_ru.each { |path| @errors << "Unexpected Russian page #{relative(path)}" }
       absent_ru.each { |path| @errors << "Expected Russian page is absent: #{relative(path)}" }
 
-      category_entries = @entries.select { |entry| entry.kind == :category }
-      category_entries.each do |entry|
-        @errors << "Category route must end with a slash: #{entry.az_path}" unless entry.az_path.end_with?("/")
-        @errors << "Russian category route must end with a slash: #{entry.ru_path}" unless entry.ru_path.end_with?("/")
+      @entries.reject { |entry| entry.kind == :home }.each do |entry|
+        @errors << "Azerbaijani route must end with a slash: #{entry.az_path}" unless entry.az_path.end_with?("/")
+        @errors << "Russian route must end with a slash: #{entry.ru_path}" unless entry.ru_path.end_with?("/")
       end
     end
 
@@ -209,6 +208,11 @@ module RussianSiteAudit
         values << attrs["href"] if attrs["rel"] == "canonical"
       end
       @errors << "#{label}: self-canonical must be exactly #{own_url}; found #{canonicals.inspect}" unless canonicals == [own_url]
+      if own_path != "/"
+        slashless_url = own_url.delete_suffix("/")
+        slashless_pattern = %r!#{Regexp.escape(slashless_url)}(?=["\\#?<\s,}\]]|\z)!
+        @errors << "#{label}: contains slashless self URL #{slashless_url}" if html.match?(slashless_pattern)
+      end
 
       expected_hreflang = {
         "az" => az_url,
@@ -308,6 +312,10 @@ module RussianSiteAudit
         next unless value.is_a?(String) && value.start_with?("#{SITE_ORIGIN}/")
 
         suffix = value.delete_prefix(SITE_ORIGIN)
+        slashless_route = suffix.match?(%r{\A/(?:ru/)?model/[a-z0-9-]+\z}i) ||
+          ContentConfig::SLUGS.any? { |slug| suffix == "/#{slug}" } ||
+          RussianConfig::CONTENT_ROUTES.values.any? { |slug| suffix == "/ru/#{slug}" }
+        @errors << "#{label}: JSON-LD route URL must end with a slash: #{value}" if slashless_route
         next if suffix == "/" || suffix.start_with?("/#organization", "/#website")
         next if suffix.start_with?("/ru/")
         next if static_public_path?(suffix)

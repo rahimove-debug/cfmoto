@@ -24,6 +24,6 @@ module ContentConfig
   end
 
   def urls(origin)
-    SLUGS.map { |slug| "#{origin}/#{slug}" }
+    SLUGS.map { |slug| "#{origin}/#{slug}/" }
   end
 end

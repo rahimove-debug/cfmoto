@@ -90,6 +90,11 @@ def normalize_site_origins!(content)
   end
 end
 
+def normalize_directory_page_url!(content, page_url)
+  pattern = %r!#{Regexp.escape(page_url)}/*(?=["\\#?<\s,}\]]|\z)!
+  content.gsub!(pattern, "#{page_url}/")
+end
+
 html_paths = [
   File.join(ROOT, "index.html"),
   *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort,
@@ -99,6 +104,10 @@ html_paths = [
 html_paths.each do |path|
   html = File.read(path, encoding: "UTF-8")
   normalize_site_origins!(html)
+  unless path == File.join(ROOT, "index.html")
+    relative = path.delete_prefix("#{ROOT}/").delete_suffix("/index.html")
+    normalize_directory_page_url!(html, "#{SITE_ORIGIN}/#{relative}")
+  end
   html.gsub!(%r{<!-- SEO:START -->.*?<!-- SEO:END -->}m, "")
   html.gsub!(%r{<meta name="codex-preview" content="development"\s*/>}, "")
   html.gsub!(%r{,\[\\"\$\\",\\"meta\\",\\"\d+\\",\{\\"name\\":\\"codex-preview\\",\\"content\\":\\"development\\"\}\]}, "")
@@ -151,7 +160,7 @@ end
 
 model_urls = Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.map do |path|
   slug = File.basename(File.dirname(path))
-  "#{SITE_ORIGIN}/model/#{slug}"
+  "#{SITE_ORIGIN}/model/#{slug}/"
 end
 
 content_urls = ContentConfig.urls(SITE_ORIGIN)
@@ -170,8 +179,8 @@ File.write(File.join(ROOT, "robots.txt"), "User-agent: *\nAllow: /\nSitemap: #{S
 
 redirects = DomainConfig::LEGACY_PATH_REDIRECTS.dup
 model_urls.each do |url|
-  slug = File.basename(url)
-  redirects["/#{slug}"] ||= "/model/#{slug}"
+  slug = url.split("/").reject(&:empty?).last
+  redirects["/#{slug}"] ||= "/model/#{slug}/"
 end
 redirect_file = [
   "# Former cfmoto.az paths; host-level redirects are configured separately in Cloudflare Rules.",

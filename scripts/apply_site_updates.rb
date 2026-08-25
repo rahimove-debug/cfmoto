@@ -15,7 +15,8 @@ CURRENT_V4_RUNTIME = "index-CfmotoMobilePerfV4.js"
 CURRENT_V5_RUNTIME = "index-CfmotoPolicyFixV5.js"
 CURRENT_V6_RUNTIME = "index-CfmotoPolicyFixV6.js"
 CURRENT_V7_RUNTIME = "index-CfmotoPolicyFixV7.js"
-NEW_RUNTIME = "index-CfmotoPolicyFixV8.js"
+CURRENT_V8_RUNTIME = "index-CfmotoPolicyFixV8.js"
+NEW_RUNTIME = "index-CfmotoPolicyFixV9.js"
 OLD_HOME_BUNDLE = "page-DZgbTvch.js"
 PREVIOUS_HOME_BUNDLE = "page-CfmotoAug24.js"
 CURRENT_HOME_BUNDLE = "page-CfmotoAug24Fix.js"
@@ -26,7 +27,8 @@ CURRENT_V4_HOME_BUNDLE = "page-CfmotoMobilePerfV4.js"
 CURRENT_V5_HOME_BUNDLE = "page-CfmotoPolicyFixV5.js"
 CURRENT_V6_HOME_BUNDLE = "page-CfmotoPolicyFixV6.js"
 CURRENT_V7_HOME_BUNDLE = "page-CfmotoPolicyFixV7.js"
-NEW_HOME_BUNDLE = "page-CfmotoPolicyFixV8.js"
+CURRENT_V8_HOME_BUNDLE = "page-CfmotoPolicyFixV8.js"
+NEW_HOME_BUNDLE = "page-CfmotoPolicyFixV9.js"
 OLD_MENU_BUNDLE = "ProductMegaMenu-Cpx-ytn3.js"
 PREVIOUS_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24.js"
 CURRENT_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24Fix.js"
@@ -35,7 +37,8 @@ CURRENT_V4_MENU_BUNDLE = "ProductMegaMenu-CfmotoMobilePerfV4.js"
 CURRENT_V5_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV5.js"
 CURRENT_V6_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV6.js"
 CURRENT_V7_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV7.js"
-NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV8.js"
+CURRENT_V8_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV8.js"
+NEW_MENU_BUNDLE = "ProductMegaMenu-CfmotoPolicyFixV9.js"
 CURRENT_STYLESHEET = "index-DiLMqMiY.css"
 LAST_STYLESHEET = "index-CfmotoMobileFix.css"
 CURRENT_V2_STYLESHEET = "index-CfmotoMobileFixV2.css"
@@ -44,14 +47,18 @@ CURRENT_V4_STYLESHEET = "index-CfmotoMobilePerfV4.css"
 CURRENT_V5_STYLESHEET = "index-CfmotoPolicyFixV5.css"
 CURRENT_V6_STYLESHEET = "index-CfmotoPolicyFixV6.css"
 CURRENT_V7_STYLESHEET = "index-CfmotoPolicyFixV7.css"
-NEW_STYLESHEET = "index-CfmotoPolicyFixV8.css"
-NEW_LINK_BUNDLE = "link-CfmotoPolicyFixV8.js"
-NEW_MODEL_COLOR_BUNDLE = "ModelColorSelector-CfmotoPolicyFixV8.js"
-NEW_MODEL_FINANCE_BUNDLE = "ModelFinance-CfmotoPolicyFixV8.js"
+CURRENT_V8_STYLESHEET = "index-CfmotoPolicyFixV8.css"
+NEW_STYLESHEET = "index-CfmotoPolicyFixV9.css"
+NEW_LINK_BUNDLE = "link-CfmotoPolicyFixV9.js"
+NEW_MODEL_COLOR_BUNDLE = "ModelColorSelector-CfmotoPolicyFixV9.js"
+NEW_MODEL_FINANCE_BUNDLE = "ModelFinance-CfmotoPolicyFixV9.js"
 
-RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME, LAST_RUNTIME, CURRENT_V2_RUNTIME, CURRENT_V3_RUNTIME, CURRENT_V4_RUNTIME, CURRENT_V5_RUNTIME, CURRENT_V6_RUNTIME, CURRENT_V7_RUNTIME].freeze
-HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE, CURRENT_V2_HOME_BUNDLE, CURRENT_V3_HOME_BUNDLE, CURRENT_V4_HOME_BUNDLE, CURRENT_V5_HOME_BUNDLE, CURRENT_V6_HOME_BUNDLE, CURRENT_V7_HOME_BUNDLE].freeze
-MENU_BUNDLE_SOURCES = [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE, CURRENT_V3_MENU_BUNDLE, CURRENT_V4_MENU_BUNDLE, CURRENT_V5_MENU_BUNDLE, CURRENT_V6_MENU_BUNDLE, CURRENT_V7_MENU_BUNDLE].freeze
+RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME, LAST_RUNTIME, CURRENT_V2_RUNTIME, CURRENT_V3_RUNTIME, CURRENT_V4_RUNTIME, CURRENT_V5_RUNTIME, CURRENT_V6_RUNTIME, CURRENT_V7_RUNTIME, CURRENT_V8_RUNTIME].freeze
+HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE, CURRENT_V2_HOME_BUNDLE, CURRENT_V3_HOME_BUNDLE, CURRENT_V4_HOME_BUNDLE, CURRENT_V5_HOME_BUNDLE, CURRENT_V6_HOME_BUNDLE, CURRENT_V7_HOME_BUNDLE, CURRENT_V8_HOME_BUNDLE].freeze
+MENU_BUNDLE_SOURCES = [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE, CURRENT_V3_MENU_BUNDLE, CURRENT_V4_MENU_BUNDLE, CURRENT_V5_MENU_BUNDLE, CURRENT_V6_MENU_BUNDLE, CURRENT_V7_MENU_BUNDLE, CURRENT_V8_MENU_BUNDLE].freeze
+
+CLEAN_IMAGE_SLUGS = %w[1000mt-x 750sr-s cforce-c4 cforce1000-touring].freeze
+DIRECTORY_CONTENT_PATHS = %w[kredit servis zemanet ehtiyat-hisseleri model-muqayisesi].freeze
 
 INTERNAL_20_SLUGS = %w[
   125nk 150sc 250cl-c 250dual 250nk 250sr-fun 300nk 300sr aura-150
@@ -114,15 +121,15 @@ MOBILE_CATEGORY_IMAGES = %w[
 ].freeze
 
 SUPPORT_ASSET_SOURCES = {
-  ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js", "rolldown-runtime-CfmotoAug24Fix.js", "rolldown-runtime-CfmotoMobileFixV3.js", "rolldown-runtime-CfmotoMobilePerfV4.js", "rolldown-runtime-CfmotoPolicyFixV5.js", "rolldown-runtime-CfmotoPolicyFixV6.js", "rolldown-runtime-CfmotoPolicyFixV7.js"] => "rolldown-runtime-CfmotoPolicyFixV8.js",
-  ["framework-CXnKph_e.js", "framework-CfmotoAug24.js", "framework-CfmotoAug24Fix.js", "framework-CfmotoMobileFixV3.js", "framework-CfmotoMobilePerfV4.js", "framework-CfmotoPolicyFixV5.js", "framework-CfmotoPolicyFixV6.js", "framework-CfmotoPolicyFixV7.js"] => "framework-CfmotoPolicyFixV8.js",
-  ["layout-segment-context-BqNUFdFf.js", "layout-segment-context-CfmotoAug24.js", "layout-segment-context-CfmotoAug24Fix.js", "layout-segment-context-CfmotoMobileFixV3.js", "layout-segment-context-CfmotoMobilePerfV4.js", "layout-segment-context-CfmotoPolicyFixV5.js", "layout-segment-context-CfmotoPolicyFixV6.js", "layout-segment-context-CfmotoPolicyFixV7.js"] => "layout-segment-context-CfmotoPolicyFixV8.js",
-  ["link-IATORi5E.js", "link-CfmotoAug24.js", "link-CfmotoAug24Fix.js", "link-CfmotoMobileFixV3.js", "link-CfmotoMobilePerfV4.js", "link-CfmotoPolicyFixV5.js", "link-CfmotoPolicyFixV6.js", "link-CfmotoPolicyFixV7.js"] => NEW_LINK_BUNDLE,
-  ["router-CzKeCzcA.js", "router-CfmotoAug24.js", "router-CfmotoAug24Fix.js", "router-CfmotoMobileFixV3.js", "router-CfmotoMobilePerfV4.js", "router-CfmotoPolicyFixV5.js", "router-CfmotoPolicyFixV6.js", "router-CfmotoPolicyFixV7.js"] => "router-CfmotoPolicyFixV8.js",
-  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js", "ModelFinance-CfmotoAug24Fix.js", "ModelFinance-CfmotoMobileFixV3.js", "ModelFinance-CfmotoMobilePerfV4.js", "ModelFinance-CfmotoPolicyFixV5.js", "ModelFinance-CfmotoPolicyFixV6.js", "ModelFinance-CfmotoPolicyFixV7.js"] => NEW_MODEL_FINANCE_BUNDLE,
-  ["ModelGallery-BT140N7z.js", "ModelGallery-CfmotoAug24.js", "ModelGallery-CfmotoAug24Fix.js", "ModelGallery-CfmotoMobileFixV3.js", "ModelGallery-CfmotoMobilePerfV4.js", "ModelGallery-CfmotoPolicyFixV5.js", "ModelGallery-CfmotoPolicyFixV6.js", "ModelGallery-CfmotoPolicyFixV7.js"] => "ModelGallery-CfmotoPolicyFixV8.js",
-  ["ModelSpecs-BJB4gaLM.js", "ModelSpecs-CfmotoAug24.js", "ModelSpecs-CfmotoAug24Fix.js", "ModelSpecs-CfmotoMobileFixV3.js", "ModelSpecs-CfmotoMobilePerfV4.js", "ModelSpecs-CfmotoPolicyFixV5.js", "ModelSpecs-CfmotoPolicyFixV6.js", "ModelSpecs-CfmotoPolicyFixV7.js"] => "ModelSpecs-CfmotoPolicyFixV8.js",
-  ["ModelColorSelector-DIxmErfw.js", "ModelColorSelector-CfmotoAug24.js", "ModelColorSelector-CfmotoAug24Fix.js", "ModelColorSelector-CfmotoMobileFixV3.js", "ModelColorSelector-CfmotoMobilePerfV4.js", "ModelColorSelector-CfmotoPolicyFixV5.js", "ModelColorSelector-CfmotoPolicyFixV6.js", "ModelColorSelector-CfmotoPolicyFixV7.js"] => NEW_MODEL_COLOR_BUNDLE
+  ["rolldown-runtime-S-ySWqyJ.js", "rolldown-runtime-CfmotoAug24.js", "rolldown-runtime-CfmotoAug24Fix.js", "rolldown-runtime-CfmotoMobileFixV3.js", "rolldown-runtime-CfmotoMobilePerfV4.js", "rolldown-runtime-CfmotoPolicyFixV5.js", "rolldown-runtime-CfmotoPolicyFixV6.js", "rolldown-runtime-CfmotoPolicyFixV7.js", "rolldown-runtime-CfmotoPolicyFixV8.js"] => "rolldown-runtime-CfmotoPolicyFixV9.js",
+  ["framework-CXnKph_e.js", "framework-CfmotoAug24.js", "framework-CfmotoAug24Fix.js", "framework-CfmotoMobileFixV3.js", "framework-CfmotoMobilePerfV4.js", "framework-CfmotoPolicyFixV5.js", "framework-CfmotoPolicyFixV6.js", "framework-CfmotoPolicyFixV7.js", "framework-CfmotoPolicyFixV8.js"] => "framework-CfmotoPolicyFixV9.js",
+  ["layout-segment-context-BqNUFdFf.js", "layout-segment-context-CfmotoAug24.js", "layout-segment-context-CfmotoAug24Fix.js", "layout-segment-context-CfmotoMobileFixV3.js", "layout-segment-context-CfmotoMobilePerfV4.js", "layout-segment-context-CfmotoPolicyFixV5.js", "layout-segment-context-CfmotoPolicyFixV6.js", "layout-segment-context-CfmotoPolicyFixV7.js", "layout-segment-context-CfmotoPolicyFixV8.js"] => "layout-segment-context-CfmotoPolicyFixV9.js",
+  ["link-IATORi5E.js", "link-CfmotoAug24.js", "link-CfmotoAug24Fix.js", "link-CfmotoMobileFixV3.js", "link-CfmotoMobilePerfV4.js", "link-CfmotoPolicyFixV5.js", "link-CfmotoPolicyFixV6.js", "link-CfmotoPolicyFixV7.js", "link-CfmotoPolicyFixV8.js"] => NEW_LINK_BUNDLE,
+  ["router-CzKeCzcA.js", "router-CfmotoAug24.js", "router-CfmotoAug24Fix.js", "router-CfmotoMobileFixV3.js", "router-CfmotoMobilePerfV4.js", "router-CfmotoPolicyFixV5.js", "router-CfmotoPolicyFixV6.js", "router-CfmotoPolicyFixV7.js", "router-CfmotoPolicyFixV8.js"] => "router-CfmotoPolicyFixV9.js",
+  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js", "ModelFinance-CfmotoAug24Fix.js", "ModelFinance-CfmotoMobileFixV3.js", "ModelFinance-CfmotoMobilePerfV4.js", "ModelFinance-CfmotoPolicyFixV5.js", "ModelFinance-CfmotoPolicyFixV6.js", "ModelFinance-CfmotoPolicyFixV7.js", "ModelFinance-CfmotoPolicyFixV8.js"] => NEW_MODEL_FINANCE_BUNDLE,
+  ["ModelGallery-BT140N7z.js", "ModelGallery-CfmotoAug24.js", "ModelGallery-CfmotoAug24Fix.js", "ModelGallery-CfmotoMobileFixV3.js", "ModelGallery-CfmotoMobilePerfV4.js", "ModelGallery-CfmotoPolicyFixV5.js", "ModelGallery-CfmotoPolicyFixV6.js", "ModelGallery-CfmotoPolicyFixV7.js", "ModelGallery-CfmotoPolicyFixV8.js"] => "ModelGallery-CfmotoPolicyFixV9.js",
+  ["ModelSpecs-BJB4gaLM.js", "ModelSpecs-CfmotoAug24.js", "ModelSpecs-CfmotoAug24Fix.js", "ModelSpecs-CfmotoMobileFixV3.js", "ModelSpecs-CfmotoMobilePerfV4.js", "ModelSpecs-CfmotoPolicyFixV5.js", "ModelSpecs-CfmotoPolicyFixV6.js", "ModelSpecs-CfmotoPolicyFixV7.js", "ModelSpecs-CfmotoPolicyFixV8.js"] => "ModelSpecs-CfmotoPolicyFixV9.js",
+  ["ModelColorSelector-DIxmErfw.js", "ModelColorSelector-CfmotoAug24.js", "ModelColorSelector-CfmotoAug24Fix.js", "ModelColorSelector-CfmotoMobileFixV3.js", "ModelColorSelector-CfmotoMobilePerfV4.js", "ModelColorSelector-CfmotoPolicyFixV5.js", "ModelColorSelector-CfmotoPolicyFixV6.js", "ModelColorSelector-CfmotoPolicyFixV7.js", "ModelColorSelector-CfmotoPolicyFixV8.js"] => NEW_MODEL_COLOR_BUNDLE
 }.freeze
 
 PRIMARY_ASSET_SOURCES = {
@@ -143,6 +150,7 @@ ASSET_RENAMES[CURRENT_V4_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES[CURRENT_V5_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES[CURRENT_V6_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES[CURRENT_V7_STYLESHEET] = NEW_STYLESHEET
+ASSET_RENAMES[CURRENT_V8_STYLESHEET] = NEW_STYLESHEET
 ASSET_RENAMES.freeze
 
 def read_utf8(path)
@@ -185,24 +193,68 @@ def remove_unused_vinext_font_css!(content)
   content.gsub!(%r{<style\s+data-vinext-fonts>.*?</style>}m, "")
 end
 
+def primary_model_image_source(slug)
+  suffix = CLEAN_IMAGE_SLUGS.include?(slug) ? "-clean" : ""
+  "/models/#{slug}#{suffix}.webp"
+end
+
+def card_model_image_source(slug)
+  primary_model_image_source(slug).sub("/models/", "/models/cards/")
+end
+
+def use_clean_model_data_images!(content)
+  CLEAN_IMAGE_SLUGS.each do |slug|
+    original = "image:`/models/#{slug}.webp`"
+    cleaned = "image:`#{primary_model_image_source(slug)}`"
+    next if content.include?(cleaned)
+
+    abort "#{slug}: model data image anchor not found" unless content.include?(original)
+    content.gsub!(original, cleaned)
+  end
+end
+
+def use_clean_model_image_paths!(content)
+  CLEAN_IMAGE_SLUGS.each do |slug|
+    content.gsub!("/models/#{slug}.webp", primary_model_image_source(slug))
+  end
+end
+
+def normalize_internal_directory_links!(content)
+  content.gsub!(%r{href="/model/([^"/?#]+)/?"}) do
+    %(href="/model/#{Regexp.last_match(1)}/")
+  end
+  content.gsub!('href:`/model/${e.slug}`', 'href:`/model/${e.slug}/`')
+
+  DIRECTORY_CONTENT_PATHS.each do |path|
+    content.gsub!(%(href="/#{path}"), %(href="/#{path}/"))
+    content.gsub!(%(href:`/#{path}`), %(href:`/#{path}/`))
+    content.gsub!(%Q{\\"href\\":\\"/#{path}\\"}, %Q{\\"href\\":\\"/#{path}/\\"})
+  end
+end
+
 def localize_primary_model_image!(content, slug)
   source = content[/<img\s+class="model-color-image"\s+src="([^"]+)"/, 1]
   return unless source
-  return if source.start_with?("/models/")
 
-  local_source = "/models/#{slug}.webp"
+  local_source = primary_model_image_source(slug)
+  return if source == local_source
+
   abort "#{slug}: missing local primary model image" unless File.file?(File.join(ROOT, local_source.delete_prefix("/")))
   occurrences = content.scan(source).size
-  abort "#{slug}: expected 3 primary image references, found #{occurrences}" unless occurrences == 3
+  if CLEAN_IMAGE_SLUGS.include?(slug)
+    abort "#{slug}: expected at least 3 primary/model-data image references, found #{occurrences}" unless occurrences >= 3
+  else
+    abort "#{slug}: expected 3 primary image references, found #{occurrences}" unless occurrences == 3
+  end
 
   content.gsub!(source, local_source)
 end
 
 def use_home_card_images!(content)
   content.gsub!(%r{<article class="model-card">.*?</article>}m) do |card|
-    slug = card[%r{href="/model/([^"]+)"}, 1]
+    slug = card[%r{href="/model/([^"/]+)/?"}, 1]
     abort "Homepage model card is missing a slug" unless slug
-    card_source = "/models/cards/#{slug}.webp"
+    card_source = card_model_image_source(slug)
     abort "#{slug}: missing optimized card image" unless File.file?(File.join(ROOT, card_source.delete_prefix("/")))
 
     optimized = card.sub(%r{src="/models/[^"]+\.webp"}, %(src="#{card_source}"))
@@ -213,10 +265,10 @@ def use_home_card_images!(content)
 end
 
 def use_optimized_mega_menu_images!(content)
-  content.gsub!(%r{<img src="/models/([^"/]+)\.webp" alt="([^"]+ rəsmi foto)" loading="lazy"(?: decoding="async" fetchpriority="low")?/>}) do
-    slug = Regexp.last_match(1)
+  content.gsub!(%r{<img src="/models/(?:cards/)?([^"/]+)\.webp" alt="([^"]+ rəsmi foto)" loading="lazy"(?: decoding="async" fetchpriority="low")?/>}) do
+    slug = Regexp.last_match(1).delete_suffix("-clean")
     alt = Regexp.last_match(2)
-    card_source = "/models/cards/#{slug}.webp"
+    card_source = card_model_image_source(slug)
     abort "#{slug}: missing optimized mega-menu image" unless File.file?(File.join(ROOT, card_source.delete_prefix("/")))
 
     %(<img src="#{card_source}" alt="#{alt}" loading="lazy" decoding="async" fetchpriority="low"/>)
@@ -229,7 +281,7 @@ def normalize_footer_links!(content)
 
   links = footer[%r{<div>.*?</div>}m]
   abort "Footer link group not found" unless links
-  replacement = %(<div><a href="/motosiklet/">Motosikletlər</a><a href="/kvadrosikl/">Kvadrosikllər</a><a href="/buggy/">Buggy və UTV</a><a href="/kredit">Kredit</a><a href="/servis">Servis</a><a href="/zemanet">Zəmanət</a><a href="/ehtiyat-hisseleri">Ehtiyat hissələri</a><a href="/model-muqayisesi">Müqayisə</a><a href="#{INSTAGRAM_URL}" target="_blank" rel="noreferrer">Instagram</a></div>)
+  replacement = %(<div><a href="/motosiklet/">Motosikletlər</a><a href="/kvadrosikl/">Kvadrosikllər</a><a href="/buggy/">Buggy və UTV</a><a href="/kredit/">Kredit</a><a href="/servis/">Servis</a><a href="/zemanet/">Zəmanət</a><a href="/ehtiyat-hisseleri/">Ehtiyat hissələri</a><a href="/model-muqayisesi/">Müqayisə</a><a href="#{INSTAGRAM_URL}" target="_blank" rel="noreferrer">Instagram</a></div>)
   return if links == replacement
 
   content.sub!(footer, footer.sub(links, replacement))
@@ -238,7 +290,7 @@ end
 def normalize_embedded_footer_links!(content)
   source = %q{[\"$\",\"div\",null,{\"children\":[[\"$\",\"$L6\",null,{\"href\":\"/#modeller\",\"children\":\"Modellər\"}],[\"$\",\"$L6\",null,{\"href\":\"/#kredit\",\"children\":\"Kredit\"}],[\"$\",\"$L6\",null,{\"href\":\"/#servis\",\"children\":\"Servis\"}]]}]}
   previous = %q{[\"$\",\"div\",null,{\"children\":[[\"$\",\"$L6\",null,{\"href\":\"/motosiklet/\",\"children\":\"Motosikletlər\"}],[\"$\",\"$L6\",null,{\"href\":\"/kvadrosikl/\",\"children\":\"Kvadrosikllər\"}],[\"$\",\"$L6\",null,{\"href\":\"/buggy/\",\"children\":\"Buggy və UTV\"}],[\"$\",\"$L6\",null,{\"href\":\"/kredit\",\"children\":\"Kredit\"}],[\"$\",\"$L6\",null,{\"href\":\"/servis\",\"children\":\"Servis\"}],[\"$\",\"$L6\",null,{\"href\":\"/zemanet\",\"children\":\"Zəmanət\"}],[\"$\",\"$L6\",null,{\"href\":\"/ehtiyat-hisseleri\",\"children\":\"Ehtiyat hissələri\"}],[\"$\",\"$L6\",null,{\"href\":\"/model-muqayisesi\",\"children\":\"Müqayisə\"}]]}]}
-  replacement = %q{[\"$\",\"div\",null,{\"children\":[[\"$\",\"$L6\",null,{\"href\":\"/motosiklet/\",\"children\":\"Motosikletlər\"}],[\"$\",\"$L6\",null,{\"href\":\"/kvadrosikl/\",\"children\":\"Kvadrosikllər\"}],[\"$\",\"$L6\",null,{\"href\":\"/buggy/\",\"children\":\"Buggy və UTV\"}],[\"$\",\"$L6\",null,{\"href\":\"/kredit\",\"children\":\"Kredit\"}],[\"$\",\"$L6\",null,{\"href\":\"/servis\",\"children\":\"Servis\"}],[\"$\",\"$L6\",null,{\"href\":\"/zemanet\",\"children\":\"Zəmanət\"}],[\"$\",\"$L6\",null,{\"href\":\"/ehtiyat-hisseleri\",\"children\":\"Ehtiyat hissələri\"}],[\"$\",\"$L6\",null,{\"href\":\"/model-muqayisesi\",\"children\":\"Müqayisə\"}],[\"$\",\"a\",null,{\"href\":\"__INSTAGRAM_URL__\",\"target\":\"_blank\",\"rel\":\"noreferrer\",\"children\":\"Instagram\"}]]}]}.sub("__INSTAGRAM_URL__", INSTAGRAM_URL)
+  replacement = %q{[\"$\",\"div\",null,{\"children\":[[\"$\",\"$L6\",null,{\"href\":\"/motosiklet/\",\"children\":\"Motosikletlər\"}],[\"$\",\"$L6\",null,{\"href\":\"/kvadrosikl/\",\"children\":\"Kvadrosikllər\"}],[\"$\",\"$L6\",null,{\"href\":\"/buggy/\",\"children\":\"Buggy və UTV\"}],[\"$\",\"$L6\",null,{\"href\":\"/kredit/\",\"children\":\"Kredit\"}],[\"$\",\"$L6\",null,{\"href\":\"/servis/\",\"children\":\"Servis\"}],[\"$\",\"$L6\",null,{\"href\":\"/zemanet/\",\"children\":\"Zəmanət\"}],[\"$\",\"$L6\",null,{\"href\":\"/ehtiyat-hisseleri/\",\"children\":\"Ehtiyat hissələri\"}],[\"$\",\"$L6\",null,{\"href\":\"/model-muqayisesi/\",\"children\":\"Müqayisə\"}],[\"$\",\"a\",null,{\"href\":\"__INSTAGRAM_URL__\",\"target\":\"_blank\",\"rel\":\"noreferrer\",\"children\":\"Instagram\"}]]}]}.sub("__INSTAGRAM_URL__", INSTAGRAM_URL)
   return if content.include?(replacement)
   anchor = [previous, source].find { |candidate| content.include?(candidate) }
   return unless anchor
@@ -384,6 +436,7 @@ def build_c5_page
 
   html = read_utf8(template_path)
   html.gsub!("cforce-c4", "cforce-c5")
+  html.gsub!("/models/cforce-c5-clean.webp", "/models/cforce-c5.webp")
   html.gsub!("CFORCE%20C4", "CFORCE%20C5")
   html.gsub!("CFORCE C4", "CFORCE C5")
   html.gsub!("12,400", "13,900")
@@ -436,16 +489,21 @@ update_asset(MENU_BUNDLE_SOURCES, NEW_MENU_BUNDLE) do |javascript|
     abort "CFORCE C4 model anchor not found" unless javascript.include?(anchor)
     javascript.sub!(anchor, "#{anchor}#{addition}")
   end
+  use_clean_model_data_images!(javascript)
 
   javascript.gsub!(
     'e.price===null?`Qiyməti dəqiqləşdirin`:`${l(e.price)} AZN`',
     'e.price===null?`Qiyməti dəqiqləşdirin`:`${l(e.price)} AZN${e.vatIncluded?` · ƏDV daxil`:``}`'
   )
   javascript.gsub!('new Intl.NumberFormat(`az-AZ`,{maximumFractionDigits:0})', 'new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0})')
-  menu_image_source = '(0,u.jsx)(`img`,{src:e.image,alt:`${e.name} rəsmi foto`,loading:`lazy`})'
-  menu_image_replacement = '(0,u.jsx)(`img`,{src:`/models/cards/${e.slug}.webp`,alt:`${e.name} rəsmi foto`,loading:`lazy`,decoding:`async`,fetchPriority:`low`})'
+  menu_image_sources = [
+    '(0,u.jsx)(`img`,{src:e.image,alt:`${e.name} rəsmi foto`,loading:`lazy`})',
+    '(0,u.jsx)(`img`,{src:`/models/cards/${e.slug}.webp`,alt:`${e.name} rəsmi foto`,loading:`lazy`,decoding:`async`,fetchPriority:`low`})'
+  ]
+  menu_image_replacement = '(0,u.jsx)(`img`,{src:e.image.replace(`/models/`,`/models/cards/`),alt:`${e.name} rəsmi foto`,loading:`lazy`,decoding:`async`,fetchPriority:`low`})'
   unless javascript.include?(menu_image_replacement)
-    abort "Mega-menu image anchor not found" unless javascript.include?(menu_image_source)
+    menu_image_source = menu_image_sources.find { |source| javascript.include?(source) }
+    abort "Mega-menu image anchor not found" unless menu_image_source
     javascript.sub!(menu_image_source, menu_image_replacement)
   end
   menu_click_only = 'className:`products-menu`,children'
@@ -504,17 +562,22 @@ update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
     "Home model-change finance rule"
   )
   remove_home_finance_policy_copy!(javascript)
-  card_image_source = '(0,c.jsx)(`img`,{src:e.image,alt:`${e.name} rəsmi model fotosu`,loading:`lazy`})'
-  card_image_replacement = '(0,c.jsx)(`img`,{src:`/models/cards/${e.slug}.webp`,alt:`${e.name} rəsmi model fotosu`,loading:`lazy`,decoding:`async`,fetchPriority:`low`})'
+  card_image_sources = [
+    '(0,c.jsx)(`img`,{src:e.image,alt:`${e.name} rəsmi model fotosu`,loading:`lazy`})',
+    '(0,c.jsx)(`img`,{src:`/models/cards/${e.slug}.webp`,alt:`${e.name} rəsmi model fotosu`,loading:`lazy`,decoding:`async`,fetchPriority:`low`})'
+  ]
+  card_image_replacement = '(0,c.jsx)(`img`,{src:e.image.replace(`/models/`,`/models/cards/`),alt:`${e.name} rəsmi model fotosu`,loading:`lazy`,decoding:`async`,fetchPriority:`low`})'
   unless javascript.include?(card_image_replacement)
-    abort "Homepage card image anchor not found" unless javascript.include?(card_image_source)
+    card_image_source = card_image_sources.find { |source| javascript.include?(source) }
+    abort "Homepage card image anchor not found" unless card_image_source
     javascript.sub!(card_image_source, card_image_replacement)
   end
 
   footer_links_source = '(0,c.jsx)(`a`,{href:`#modeller`,children:`Modellər`}),(0,c.jsx)(`a`,{href:`#kredit-kalkulyator`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`#servis`,children:`Servis`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
   footer_links_previous = '(0,c.jsx)(`a`,{href:`/#modeller`,children:`Modellər`}),(0,c.jsx)(`a`,{href:`/kredit`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`/servis`,children:`Servis`}),(0,c.jsx)(`a`,{href:`/zemanet`,children:`Zəmanət`}),(0,c.jsx)(`a`,{href:`/ehtiyat-hisseleri`,children:`Ehtiyat hissələri`}),(0,c.jsx)(`a`,{href:`/model-muqayisesi`,children:`Müqayisə`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
-  footer_links_replacement = '(0,c.jsx)(`a`,{href:`/motosiklet/`,children:`Motosikletlər`}),(0,c.jsx)(`a`,{href:`/kvadrosikl/`,children:`Kvadrosikllər`}),(0,c.jsx)(`a`,{href:`/buggy/`,children:`Buggy və UTV`}),(0,c.jsx)(`a`,{href:`/kredit`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`/servis`,children:`Servis`}),(0,c.jsx)(`a`,{href:`/zemanet`,children:`Zəmanət`}),(0,c.jsx)(`a`,{href:`/ehtiyat-hisseleri`,children:`Ehtiyat hissələri`}),(0,c.jsx)(`a`,{href:`/model-muqayisesi`,children:`Müqayisə`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
-  replace_required_variant!(javascript, [footer_links_previous, footer_links_source], footer_links_replacement, "Homepage footer links")
+  footer_links_current = '(0,c.jsx)(`a`,{href:`/motosiklet/`,children:`Motosikletlər`}),(0,c.jsx)(`a`,{href:`/kvadrosikl/`,children:`Kvadrosikllər`}),(0,c.jsx)(`a`,{href:`/buggy/`,children:`Buggy və UTV`}),(0,c.jsx)(`a`,{href:`/kredit`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`/servis`,children:`Servis`}),(0,c.jsx)(`a`,{href:`/zemanet`,children:`Zəmanət`}),(0,c.jsx)(`a`,{href:`/ehtiyat-hisseleri`,children:`Ehtiyat hissələri`}),(0,c.jsx)(`a`,{href:`/model-muqayisesi`,children:`Müqayisə`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
+  footer_links_replacement = '(0,c.jsx)(`a`,{href:`/motosiklet/`,children:`Motosikletlər`}),(0,c.jsx)(`a`,{href:`/kvadrosikl/`,children:`Kvadrosikllər`}),(0,c.jsx)(`a`,{href:`/buggy/`,children:`Buggy və UTV`}),(0,c.jsx)(`a`,{href:`/kredit/`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`/servis/`,children:`Servis`}),(0,c.jsx)(`a`,{href:`/zemanet/`,children:`Zəmanət`}),(0,c.jsx)(`a`,{href:`/ehtiyat-hisseleri/`,children:`Ehtiyat hissələri`}),(0,c.jsx)(`a`,{href:`/model-muqayisesi/`,children:`Müqayisə`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
+  replace_required_variant!(javascript, [footer_links_current, footer_links_previous, footer_links_source], footer_links_replacement, "Homepage footer links")
   javascript.gsub!("https://maps.google.com/?q=Babek+Avenue+188+Baku", SHOWROOM_MAP_URL)
   javascript.gsub!('`Kredit`,`#kredit`', "`Kredit`,`##{MOBILE_CREDIT_ID}`")
   javascript.gsub!('href:`#kredit`', "href:`##{MOBILE_CREDIT_ID}`")
@@ -657,6 +720,8 @@ Dir.glob(File.join(ASSETS, "*.js")).each do |path|
     %r{src:`/cfmoto-logo-black\.png`,alt:`CFMOTO`(?:,width:\d+,height:\d+)*},
     "src:`/cfmoto-logo-black.png`,alt:`CFMOTO`,width:#{LOGO_WIDTH},height:#{LOGO_HEIGHT}"
   )
+  use_clean_model_image_paths!(javascript)
+  normalize_internal_directory_links!(javascript)
   write_utf8(path, javascript)
 end
 
@@ -693,6 +758,8 @@ html_paths.each do |path|
   end
   normalize_footer_links!(html)
   normalize_embedded_footer_links!(html)
+  use_clean_model_image_paths!(html)
+  normalize_internal_directory_links!(html)
   write_utf8(path, html)
 end
 
@@ -739,8 +806,8 @@ home.gsub!(
   '<small>İş saatları</small><strong>Hər gün 10:00–19:00<br/>Salon hər gün açıqdır</strong>'
 )
 
-unless home.include?('href="/model/cforce-c5"')
-  card_pattern = %r{<article class="model-card"><a href="/model/cforce-c4".*?</article>}m
+unless home.include?('href="/model/cforce-c5/"')
+  card_pattern = %r{<article class="model-card"><a href="/model/cforce-c4/?".*?</article>}m
   c4_card = home[card_pattern]
   abort "CFORCE C4 home card not found" unless c4_card
   c5_card = c4_card.dup
@@ -768,7 +835,7 @@ home.gsub!("46 aktual model", "47 aktual model")
 apply_home_finance_policy!(home)
 write_utf8(home_path, home)
 
-stylesheet_source = [CURRENT_STYLESHEET, LAST_STYLESHEET, CURRENT_V2_STYLESHEET, CURRENT_V3_STYLESHEET, CURRENT_V4_STYLESHEET, CURRENT_V5_STYLESHEET, CURRENT_V6_STYLESHEET, CURRENT_V7_STYLESHEET, NEW_STYLESHEET]
+stylesheet_source = [CURRENT_STYLESHEET, LAST_STYLESHEET, CURRENT_V2_STYLESHEET, CURRENT_V3_STYLESHEET, CURRENT_V4_STYLESHEET, CURRENT_V5_STYLESHEET, CURRENT_V6_STYLESHEET, CURRENT_V7_STYLESHEET, CURRENT_V8_STYLESHEET, NEW_STYLESHEET]
   .map { |name| File.join(ASSETS, name) }
   .find { |path| File.file?(path) }
 abort "Missing required stylesheet: #{CURRENT_STYLESHEET}" unless stylesheet_source
@@ -793,6 +860,7 @@ FileUtils.rm_f(File.join(ASSETS, CURRENT_V4_STYLESHEET)) unless CURRENT_V4_STYLE
 FileUtils.rm_f(File.join(ASSETS, CURRENT_V5_STYLESHEET)) unless CURRENT_V5_STYLESHEET == NEW_STYLESHEET
 FileUtils.rm_f(File.join(ASSETS, CURRENT_V6_STYLESHEET)) unless CURRENT_V6_STYLESHEET == NEW_STYLESHEET
 FileUtils.rm_f(File.join(ASSETS, CURRENT_V7_STYLESHEET)) unless CURRENT_V7_STYLESHEET == NEW_STYLESHEET
+FileUtils.rm_f(File.join(ASSETS, CURRENT_V8_STYLESHEET)) unless CURRENT_V8_STYLESHEET == NEW_STYLESHEET
 
 u10_path = File.join(ROOT, "model", "u10-pro", "index.html")
 u10 = read_utf8(u10_path)
@@ -867,11 +935,22 @@ checks = {
   "local primary model images" => html_paths.reject { |path| path == File.join(ROOT, "index.html") }.all? do |path|
     slug = File.basename(File.dirname(path))
     html = read_utf8(path)
-    html.include?(%(<img class="model-color-image" src="/models/#{slug}.webp")) &&
-      html.include?(%(<link rel="preload" as="image" href="/models/#{slug}.webp"))
+    source = primary_model_image_source(slug)
+    html.include?(%(<img class="model-color-image" src="#{source}")) &&
+      html.include?(%(<link rel="preload" as="image" href="#{source}"))
   end,
-  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 47 && home.scan(%r{class="model-card"}).size == 47 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('/models/cards/${e.slug}.webp') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('/models/cards/${e.slug}.webp'),
-  "SEO and category footer links" => html_paths.all? { |path| read_utf8(path).include?('href="/motosiklet/"') && read_utf8(path).include?('href="/kvadrosikl/"') && read_utf8(path).include?('href="/buggy/"') && read_utf8(path).include?('href="/model-muqayisesi"') && read_utf8(path).include?('href="/zemanet"') } && home_bundle.include?('href:`/motosiklet/`') && home_bundle.include?('href:`/kvadrosikl/`') && home_bundle.include?('href:`/buggy/`') && home_bundle.include?('href:`/model-muqayisesi`'),
+  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 51 && home.scan(%r{class="model-card"}).size == 47 && home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten.uniq.size == 47 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
+  "clean model images replace red-label originals" => CLEAN_IMAGE_SLUGS.all? do |slug|
+    primary = primary_model_image_source(slug)
+    card = card_model_image_source(slug)
+    model_html = read_utf8(File.join(ROOT, "model", slug, "index.html"))
+    File.file?(File.join(ROOT, primary.delete_prefix("/"))) &&
+      File.file?(File.join(ROOT, card.delete_prefix("/"))) &&
+      model_html.include?(primary) && home.include?(card) &&
+      read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?(primary)
+  end,
+  "SEO and category footer links" => html_paths.all? { |path| read_utf8(path).include?('href="/motosiklet/"') && read_utf8(path).include?('href="/kvadrosikl/"') && read_utf8(path).include?('href="/buggy/"') && read_utf8(path).include?('href="/model-muqayisesi/"') && read_utf8(path).include?('href="/zemanet/"') } && home_bundle.include?('href:`/motosiklet/`') && home_bundle.include?('href:`/kvadrosikl/`') && home_bundle.include?('href:`/buggy/`') && home_bundle.include?('href:`/model-muqayisesi/`'),
+  "internal directory links avoid redirect hops" => html_paths.all? { |path| !read_utf8(path).match?(%r{href="/(?:model/[^"/?#]+|kredit|servis|zemanet|ehtiyat-hisseleri|model-muqayisesi)"}) } && [home_bundle, read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE))].all? { |content| !content.match?(%r{href:`/(?:model/\$\{e\.slug\}|kredit|servis|zemanet|ehtiyat-hisseleri|model-muqayisesi)`}) },
   "single runtime module preload" => html_paths.all? { |path| read_utf8(path).scan(%r{<link rel="modulepreload" href="/assets/#{Regexp.escape(NEW_RUNTIME)}"[^>]*>}).size == 1 },
   "static links use native navigation" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('ref:A,href:C,onClick:c,onMouseEnter:l,onTouchStart:u,...I,children:a'),
   "static links skip RSC prefetch" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('function re(e){return!1}'),
@@ -881,7 +960,7 @@ checks = {
   "static runtime skips RSC popstate" => read_utf8(File.join(ASSETS, NEW_RUNTIME)).include?('/* CFMOTO:STATIC-HISTORY */void 0'),
   "product menu uses consistent click interaction" => read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('className:`products-menu`,children') && !read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('onPointerEnter:e=>e.pointerType===`mouse`&&n(!0)'),
   "mobile menu has dynamic label" => read_utf8(File.join(ASSETS, NEW_HOME_BUNDLE)).include?('"aria-label":e?`Menyunu bağla`:`Menyunu aç`'),
-  "home C5 card" => home.include?('href="/model/cforce-c5"'),
+  "home C5 card" => home.include?('href="/model/cforce-c5/"'),
   "home C5 engine class" => home.include?('CFORCE C5</h3><p>Kvadrosikl<!-- --> · <!-- -->500 cc</p>'),
   "home C5 calculator option" => home.include?('value="CFORCE C5"'),
   "home catalog count" => home.include?("47<!-- --> aktual model") || home.include?("47 aktual model"),
@@ -898,15 +977,16 @@ checks = {
   "new runtime" => File.file?(File.join(ASSETS, NEW_RUNTIME)),
   "new home bundle" => File.file?(File.join(ASSETS, NEW_HOME_BUNDLE)),
   "new menu bundle" => File.file?(File.join(ASSETS, NEW_MENU_BUNDLE)),
-  "all 13 V8 assets" => versioned_targets.size == 13 && versioned_targets.all? { |name| name.include?("CfmotoPolicyFixV8") && File.file?(File.join(ASSETS, name)) },
+  "all 13 V9 assets" => versioned_targets.size == 13 && versioned_targets.all? { |name| name.include?("CfmotoPolicyFixV9") && File.file?(File.join(ASSETS, name)) },
   "no obsolete V4 assets" => Dir.glob(File.join(ASSETS, "*CfmotoMobilePerfV4*")).empty?,
   "no obsolete V5 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV5*")).empty?,
   "no obsolete V6 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV6*")).empty?,
   "no obsolete V7 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV7*")).empty?,
+  "no obsolete V8 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV8*")).empty?,
   "no stale asset references" => Dir.glob(File.join(ROOT, "{index.html,model/*/index.html,assets/*.js}"))
     .none? { |path| ASSET_RENAMES.keys.any? { |old_name| read_utf8(path).include?(old_name) } }
 }
 failures = checks.reject { |_label, passed| passed }.keys
 abort "Site update checks failed: #{failures.join(', ')}" unless failures.empty?
 
-puts "Site updates applied: V8 cache-safe homepage content, mobile performance, credit policy and unified service contacts"
+puts "Site updates applied: V9 cache-safe clean model imagery, mobile performance, credit policy and unified service contacts"

@@ -89,8 +89,8 @@ def entries
       slug: slug,
       source: source,
       target: File.join(RU_ROOT, "model", slug, "index.html"),
-      az_path: "/model/#{slug}",
-      ru_path: "/ru/model/#{slug}"
+      az_path: "/model/#{slug}/",
+      ru_path: "/ru/model/#{slug}/"
     }
   end
 
@@ -102,8 +102,8 @@ def entries
       ru_slug: ru_slug,
       source: File.join(ROOT, az_slug, "index.html"),
       target: File.join(RU_ROOT, ru_slug, "index.html"),
-      az_path: "/#{az_slug}",
-      ru_path: "/ru/#{ru_slug}"
+      az_path: "/#{az_slug}/",
+      ru_path: "/ru/#{ru_slug}/"
     }
   end
 
