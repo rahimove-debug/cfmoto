@@ -84,3 +84,6 @@ abort "Analytics processing failed" unless system(RbConfig.ruby, analytics_scrip
 
 russian_script = File.join(__dir__, "apply_russian.rb")
 abort "Russian localization failed" unless system(RbConfig.ruby, russian_script)
+
+typography_script = File.join(__dir__, "apply_typography.rb")
+abort "Corporate typography processing failed" unless system(RbConfig.ruby, typography_script)

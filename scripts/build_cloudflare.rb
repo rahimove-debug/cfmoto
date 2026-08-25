@@ -39,6 +39,9 @@ abort "Analytics processing failed" unless system(RbConfig.ruby, analytics)
 russian = File.join(__dir__, "apply_russian.rb")
 abort "Russian localization failed" unless system(RbConfig.ruby, russian)
 
+typography = File.join(__dir__, "apply_typography.rb")
+abort "Corporate typography processing failed" unless system(RbConfig.ruby, typography)
+
 audit = File.join(__dir__, "audit_seo.rb")
 abort "SEO audit failed" unless system(RbConfig.ruby, audit)
 
