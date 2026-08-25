@@ -10,6 +10,21 @@
 /model/*
   Cache-Control: public, max-age=0, must-revalidate
 
+/kredit*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/servis*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/zemanet*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ehtiyat-hisseleri*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/model-muqayisesi*
+  Cache-Control: public, max-age=0, must-revalidate
+
 /404.html
   Cache-Control: public, max-age=0, must-revalidate
 
@@ -26,6 +41,9 @@
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
 
 /models/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+/official-800mtx-hero-mobile.jpg
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
 
 /*.png

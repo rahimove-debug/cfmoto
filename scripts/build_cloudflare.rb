@@ -1,11 +1,12 @@
 #!/usr/bin/env ruby
 require "fileutils"
 require "rbconfig"
+require_relative "content_config"
 
 ROOT = File.expand_path("..", __dir__)
 DIST = File.join(ROOT, "dist")
 
-directories = %w[assets gallery model models]
+directories = %w[assets gallery model models] + ContentConfig::SLUGS
 files = %w[
   index.html
   404.html
@@ -21,6 +22,9 @@ files = %w[
 
 updates = File.join(__dir__, "apply_site_updates.rb")
 abort "Site updates failed" unless system(RbConfig.ruby, updates)
+
+content = File.join(__dir__, "apply_content_pages.rb")
+abort "SEO content generation failed" unless system(RbConfig.ruby, content)
 
 seo = File.join(__dir__, "apply_seo.rb")
 abort "SEO processing failed" unless system(RbConfig.ruby, seo)
@@ -47,7 +51,8 @@ files.each do |file|
 end
 
 html_count = Dir.glob(File.join(DIST, "**", "*.html")).size
-abort "Expected 49 HTML files in dist, found #{html_count}" unless html_count == 49
+expected_html_count = 2 + Dir.glob(File.join(ROOT, "model", "*", "index.html")).size + ContentConfig::SLUGS.size
+abort "Expected #{expected_html_count} HTML files in dist, found #{html_count}" unless html_count == expected_html_count
 
 forbidden = %w[README.md .github cloudflare scripts]
 leaked = forbidden.select { |path| File.exist?(File.join(DIST, path)) }

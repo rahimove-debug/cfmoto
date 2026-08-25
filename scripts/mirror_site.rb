@@ -70,6 +70,9 @@ puts "Imported #{seen.size} discovered URLs"
 updates_script = File.join(__dir__, "apply_site_updates.rb")
 abort "Site updates failed" unless system(RbConfig.ruby, updates_script)
 
+content_script = File.join(__dir__, "apply_content_pages.rb")
+abort "SEO content generation failed" unless system(RbConfig.ruby, content_script)
+
 seo_script = File.join(__dir__, "apply_seo.rb")
 abort "SEO processing failed" unless system(RbConfig.ruby, seo_script)
 

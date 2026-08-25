@@ -84,6 +84,12 @@ MOBILE_PERFORMANCE_CSS = <<~CSS.strip
   #{MOBILE_PERFORMANCE_CSS_MARKER}
   @media (width<=860px){.category-hero-panel:not(.active){background-image:none!important}}
 CSS
+MOBILE_DOM_CSS_MARKER = "/* CFMOTO:MOBILE-DOM-PERFORMANCE */"
+MOBILE_DOM_CSS = <<~CSS.strip
+  #{MOBILE_DOM_CSS_MARKER}
+  .mega-menu:not(.open){display:none}.mega-menu.open{display:block}
+  @media (width<=580px){.site-header,.category-hero-featured{-webkit-backdrop-filter:none;backdrop-filter:none}.model-card{content-visibility:auto;contain-intrinsic-size:auto 430px}}
+CSS
 MOBILE_CATEGORY_CSS_MARKER = "/* CFMOTO:MOBILE-CATEGORY-BACKGROUNDS */"
 MOBILE_CATEGORY_CSS = <<~CSS.strip
   #{MOBILE_CATEGORY_CSS_MARKER}
@@ -158,6 +164,49 @@ end
 
 def remove_unused_font_preloads!(content)
   content.gsub!(%r{<link\s+rel="preload"\s+href="/assets/_vinext_fonts/[^"]+"\s+as="font"\s+type="font/woff2"\s+crossorigin\s*/>\s*}i, "")
+end
+
+def remove_unused_vinext_font_css!(content)
+  content.gsub!(%r{<style\s+data-vinext-fonts>.*?</style>}m, "")
+end
+
+def localize_primary_model_image!(content, slug)
+  source = content[/<img\s+class="model-color-image"\s+src="([^"]+)"/, 1]
+  return unless source
+  return if source.start_with?("/models/")
+
+  local_source = "/models/#{slug}.webp"
+  abort "#{slug}: missing local primary model image" unless File.file?(File.join(ROOT, local_source.delete_prefix("/")))
+  occurrences = content.scan(source).size
+  abort "#{slug}: expected 3 primary image references, found #{occurrences}" unless occurrences == 3
+
+  content.gsub!(source, local_source)
+end
+
+def use_home_card_images!(content)
+  content.gsub!(%r{<article class="model-card">.*?</article>}m) do |card|
+    slug = card[%r{href="/model/([^"]+)"}, 1]
+    abort "Homepage model card is missing a slug" unless slug
+    card_source = "/models/cards/#{slug}.webp"
+    abort "#{slug}: missing optimized card image" unless File.file?(File.join(ROOT, card_source.delete_prefix("/")))
+
+    optimized = card.sub(%r{src="/models/[^"]+\.webp"}, %(src="#{card_source}"))
+    optimized.gsub!(%r{\s+(?:decoding="async"|fetchpriority="low")}, "")
+    optimized.sub!('loading="lazy"', 'loading="lazy" decoding="async" fetchpriority="low"')
+    optimized
+  end
+end
+
+def normalize_footer_links!(content)
+  footer = content[%r{<footer>.*?</footer>}m]
+  return unless footer
+
+  links = footer[%r{<div>.*?</div>}m]
+  abort "Footer link group not found" unless links
+  replacement = %(<div><a href="/#modeller">Modellər</a><a href="/kredit">Kredit</a><a href="/servis">Servis</a><a href="/zemanet">Zəmanət</a><a href="/ehtiyat-hisseleri">Ehtiyat hissələri</a><a href="/model-muqayisesi">Müqayisə</a><a href="#{INSTAGRAM_URL}" target="_blank" rel="noreferrer">Instagram</a></div>)
+  return if links == replacement
+
+  content.sub!(footer, footer.sub(links, replacement))
 end
 
 def replace_required_once!(content, source, replacement, label)
@@ -407,6 +456,19 @@ update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
     "Home model-change finance rule"
   )
   normalize_finance_policy_copy!(javascript)
+  card_image_source = '(0,c.jsx)(`img`,{src:e.image,alt:`${e.name} rəsmi model fotosu`,loading:`lazy`})'
+  card_image_replacement = '(0,c.jsx)(`img`,{src:`/models/cards/${e.slug}.webp`,alt:`${e.name} rəsmi model fotosu`,loading:`lazy`,decoding:`async`,fetchPriority:`low`})'
+  unless javascript.include?(card_image_replacement)
+    abort "Homepage card image anchor not found" unless javascript.include?(card_image_source)
+    javascript.sub!(card_image_source, card_image_replacement)
+  end
+
+  footer_links_source = '(0,c.jsx)(`a`,{href:`#modeller`,children:`Modellər`}),(0,c.jsx)(`a`,{href:`#kredit-kalkulyator`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`#servis`,children:`Servis`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
+  footer_links_replacement = '(0,c.jsx)(`a`,{href:`/#modeller`,children:`Modellər`}),(0,c.jsx)(`a`,{href:`/kredit`,children:`Kredit`}),(0,c.jsx)(`a`,{href:`/servis`,children:`Servis`}),(0,c.jsx)(`a`,{href:`/zemanet`,children:`Zəmanət`}),(0,c.jsx)(`a`,{href:`/ehtiyat-hisseleri`,children:`Ehtiyat hissələri`}),(0,c.jsx)(`a`,{href:`/model-muqayisesi`,children:`Müqayisə`}),(0,c.jsx)(`a`,{href:`https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr`,target:`_blank`,rel:`noreferrer`,children:`Instagram`})'
+  unless javascript.include?(footer_links_replacement)
+    abort "Homepage footer links anchor not found" unless javascript.include?(footer_links_source)
+    javascript.sub!(footer_links_source, footer_links_replacement)
+  end
   javascript.gsub!("https://maps.google.com/?q=Babek+Avenue+188+Baku", SHOWROOM_MAP_URL)
   javascript.gsub!('`Kredit`,`#kredit`', "`Kredit`,`##{MOBILE_CREDIT_ID}`")
   javascript.gsub!('href:`#kredit`', "href:`##{MOBILE_CREDIT_ID}`")
@@ -566,6 +628,7 @@ html_paths.each do |path|
     %(<img src="/cfmoto-logo-black.png" alt="CFMOTO" width="#{LOGO_WIDTH}" height="#{LOGO_HEIGHT}"/>))
   html.gsub!(%(<link rel="modulepreload" href="/assets/#{NEW_RUNTIME}" />\n), "")
   remove_unused_font_preloads!(html)
+  remove_unused_vinext_font_css!(html)
   html.gsub!(
     "Babək pr. 188 · Hər gün 10:00–19:00 · Bazar ertəsi bağlıdır",
     "Babək pr. 188 · Salon hər gün 10:00–19:00"
@@ -577,14 +640,17 @@ html_paths.each do |path|
   )
   unless path == File.join(ROOT, "index.html")
     slug = File.basename(File.dirname(path))
+    localize_primary_model_image!(html, slug)
     apply_model_finance_policy!(html, slug)
     normalize_model_finance_calculator!(html, slug)
   end
+  normalize_footer_links!(html)
   write_utf8(path, html)
 end
 
 home_path = File.join(ROOT, "index.html")
 home = read_utf8(home_path)
+use_home_card_images!(home)
 hero_preload = '<link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high"/>'
 unless home.include?(hero_preload)
   logo_preload = '<link rel="preload" as="image" href="/cfmoto-logo-black.png"/>'
@@ -662,6 +728,7 @@ abort "Missing required stylesheet: #{CURRENT_STYLESHEET}" unless stylesheet_sou
 stylesheet = read_utf8(stylesheet_source)
 stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CREDIT_CSS}\n" unless stylesheet.include?(MOBILE_CREDIT_CSS_MARKER)
 stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_PERFORMANCE_CSS}\n" unless stylesheet.include?(MOBILE_PERFORMANCE_CSS_MARKER)
+stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_DOM_CSS}\n" unless stylesheet.include?(MOBILE_DOM_CSS_MARKER)
 mobile_category_images_available = MOBILE_CATEGORY_IMAGES.all? { |relative| File.file?(File.join(ROOT, relative)) }
 if mobile_category_images_available
   stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CATEGORY_CSS}\n" unless stylesheet.include?(MOBILE_CATEGORY_CSS_MARKER)
@@ -733,6 +800,7 @@ checks = {
   "home active hero preload" => home.include?(hero_preload),
   "mobile calculator CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_CREDIT_CSS_MARKER),
   "mobile hero image deferral CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_PERFORMANCE_CSS_MARKER),
+  "mobile DOM performance CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_DOM_CSS_MARKER),
   "mobile category backgrounds" => !mobile_category_images_available || (File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?('/official-800mtx-hero-mobile.jpg') && read_utf8(new_stylesheet_path).include?('/models/z10-4-mobile.jpg')),
   "correct Instagram profile" => [home, home_bundle].all? { |content| content.include?(INSTAGRAM_URL) } && DomainConfig::LEGACY_INSTAGRAM_URLS.none? { |url| [home, home_bundle].any? { |content| content.include?(url) } },
   "logo dimensions in prerendered HTML" => html_paths.all? do |path|
@@ -745,6 +813,15 @@ checks = {
       content.include?("src:`/cfmoto-logo-black.png`,alt:`CFMOTO`,width:#{LOGO_WIDTH},height:#{LOGO_HEIGHT}")
   end,
   "unused font preloads removed" => html_paths.none? { |path| read_utf8(path).include?('<link rel="preload" href="/assets/_vinext_fonts/') },
+  "unused inline font CSS removed" => html_paths.none? { |path| read_utf8(path).include?('<style data-vinext-fonts>') },
+  "local primary model images" => html_paths.reject { |path| path == File.join(ROOT, "index.html") }.all? do |path|
+    slug = File.basename(File.dirname(path))
+    html = read_utf8(path)
+    html.include?(%(<img class="model-color-image" src="/models/#{slug}.webp")) &&
+      html.include?(%(<link rel="preload" as="image" href="/models/#{slug}.webp"))
+  end,
+  "optimized homepage card images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 47 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == 47 && home_bundle.include?('/models/cards/${e.slug}.webp'),
+  "SEO content footer links" => html_paths.all? { |path| read_utf8(path).include?('href="/model-muqayisesi"') && read_utf8(path).include?('href="/zemanet"') } && home_bundle.include?('href:`/model-muqayisesi`'),
   "single runtime module preload" => html_paths.all? { |path| read_utf8(path).scan(%r{<link rel="modulepreload" href="/assets/#{Regexp.escape(NEW_RUNTIME)}"[^>]*>}).size == 1 },
   "static links use native navigation" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('ref:A,href:C,onClick:c,onMouseEnter:l,onTouchStart:u,...I,children:a'),
   "static links skip RSC prefetch" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('function re(e){return!1}'),
@@ -767,7 +844,7 @@ checks = {
   "U10 PRO name" => u10.include?('<h1 class="product-title">U10 PRO</h1>') && !u10.include?("U10 PRO HIGHLAND"),
   "U10 PRO model image" => u10.include?("/models/u10-pro.webp"),
   "U10 PRO gallery" => u10.include?("/gallery/u10-pro-1.webp"),
-  "U10 PRO color images" => u10.include?("/sxs/utility/u10-pro/2026/model1.png"),
+  "U10 PRO color images" => u10.include?('/models/u10-pro.webp') && u10.include?("/sxs/utility/u10-pro/2026/model2.png") && u10.include?("/sxs/utility/u10-pro/2026/model3.png"),
   "new runtime" => File.file?(File.join(ASSETS, NEW_RUNTIME)),
   "new home bundle" => File.file?(File.join(ASSETS, NEW_HOME_BUNDLE)),
   "new menu bundle" => File.file?(File.join(ASSETS, NEW_MENU_BUNDLE)),

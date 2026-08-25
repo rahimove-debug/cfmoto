@@ -4,3 +4,10 @@
 .calc-top-link{display:none}
 @media (width<=860px){html{scroll-behavior:auto}#kredit-kalkulyator{scroll-margin-top:18px}}
 @media (width<=580px){.finance{gap:24px}.finance>.calculator{order:-1}.calculator{padding:20px 16px}.calc-title{margin-bottom:14px}.calc-title span{font-size:20px}.mode-switch{margin-bottom:14px}.mode-switch button{min-height:36px;font-size:12px}.calculator>label{margin-bottom:12px}.calculator select{padding:10px 12px}.range-line{margin:11px 0 4px}.calc-result{margin:14px 0 10px;padding:15px}.calc-result strong{font-size:32px}.calc-top-link{border:1px solid var(--line);min-height:40px;color:var(--copy);justify-content:center;align-items:center;margin-top:12px;font-size:12px;display:flex}}
+/* CFMOTO:MOBILE-PERFORMANCE */
+@media (width<=860px){.category-hero-panel:not(.active){background-image:none!important}}
+/* CFMOTO:MOBILE-CATEGORY-BACKGROUNDS */
+@media (width<=860px){.category-panel.motorcycles{background-image:url(/official-800mtx-hero-mobile.jpg)}.category-panel.offroad{background-image:url(/models/z10-4-mobile.jpg)}}
+/* CFMOTO:MOBILE-DOM-PERFORMANCE */
+.mega-menu:not(.open){display:none}.mega-menu.open{display:block}
+@media (width<=580px){.site-header,.category-hero-featured{-webkit-backdrop-filter:none;backdrop-filter:none}.model-card{content-visibility:auto;contain-intrinsic-size:auto 430px}}

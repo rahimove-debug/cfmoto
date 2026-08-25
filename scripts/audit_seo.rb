@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require "json"
+require_relative "content_config"
 require_relative "domain_config"
 
 ROOT = File.expand_path("..", __dir__)
@@ -8,13 +9,15 @@ SITE_ORIGIN = DomainConfig::SITE_ORIGIN
 errors = []
 html_paths = [
   File.join(ROOT, "index.html"),
-  *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort
+  *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort,
+  *ContentConfig.html_paths(ROOT)
 ]
 titles = []
 descriptions = []
 canonicals = []
 
-errors << "Expected 48 HTML pages, found #{html_paths.size}" unless html_paths.size == 48
+expected_page_count = 1 + Dir.glob(File.join(ROOT, "model", "*", "index.html")).size + ContentConfig::SLUGS.size
+errors << "Expected #{expected_page_count} HTML pages, found #{html_paths.size}" unless html_paths.size == expected_page_count
 
 html_paths.each do |path|
   relative = path.delete_prefix("#{ROOT}/")
@@ -28,8 +31,10 @@ html_paths.each do |path|
   twitter_image = html[/<meta name="twitter:image" content="([^"]+)"\s*\/>/, 1]
   expected_canonical = if relative == "index.html"
     "#{SITE_ORIGIN}/"
-  else
+  elsif relative.start_with?("model/")
     "#{SITE_ORIGIN}/model/#{File.basename(File.dirname(path))}"
+  else
+    "#{SITE_ORIGIN}/#{File.basename(File.dirname(path))}"
   end
 
   errors << "#{relative}: missing title" unless title
@@ -141,7 +146,7 @@ else
   errors << "U10 page is missing its original model name" unless u10.include?('<h1 class="product-title">U10 PRO</h1>') && !u10.include?("U10 PRO HIGHLAND")
   errors << "U10 PRO must use its original model image" unless u10.include?("/models/u10-pro.webp")
   errors << "U10 PRO must use its original gallery" unless u10.include?("/gallery/u10-pro-1.webp")
-  errors << "U10 PRO must use its original color imagery" unless u10.include?("/sxs/utility/u10-pro/2026/model1.png")
+  errors << "U10 PRO must use a local primary and retain alternate color imagery" unless u10.include?('/models/u10-pro.webp') && u10.include?("/sxs/utility/u10-pro/2026/model2.png") && u10.include?("/sxs/utility/u10-pro/2026/model3.png")
 end
 
 html_paths.each do |path|
@@ -180,6 +185,42 @@ public_text_paths.each do |path|
 end
 
 errors << "Home is missing the confirmed Instagram profile" unless home.include?(DomainConfig::INSTAGRAM_URL)
+
+content_expectations = {
+  "kredit" => ["20% · 18 ayadək", "40% · 18 ayadək", "50% · 12 ayadək", '"@type":"FAQPage"'],
+  "servis" => ["Bazar ertəsi istisna olmaqla", "+994 10 241 42 99", "45 AZN", '"@type":"Service"'],
+  "zemanet" => ["2 il / 24.000 km", "model və istifadə rejiminə görə", "ümumi məlumat verir"],
+  "ehtiyat-hisseleri" => ["orijinal ehtiyat hissələri", "yağlar və aksesuarlar", "mövcudluq telefon sorğusu"],
+  "model-muqayisesi" => ["47 aktual modeli", "Minimum ilkin ödəniş", '"numberOfItems":47']
+}
+content_expectations.each do |slug, expected_texts|
+  path = File.join(ROOT, slug, "index.html")
+  if !File.file?(path)
+    errors << "Missing SEO content page /#{slug}"
+    next
+  end
+  content = File.read(path, encoding: "UTF-8")
+  expected_texts.each do |text|
+    errors << "/#{slug} is missing required content: #{text}" unless content.include?(text)
+  end
+  ContentConfig::SLUGS.each do |linked_slug|
+    errors << "/#{slug} is missing internal link /#{linked_slug}" unless content.include?(%(href="/#{linked_slug}"))
+  end
+end
+
+card_images = Dir.glob(File.join(ROOT, "models", "cards", "*.webp"))
+errors << "Expected 47 optimized model card images, found #{card_images.size}" unless card_images.size == 47
+errors << "Homepage must use all 47 optimized model card images" unless home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == 47
+
+Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.each do |path|
+  slug = File.basename(File.dirname(path))
+  content = File.read(path, encoding: "UTF-8")
+  errors << "#{slug}: primary model image is not local" unless content.include?(%(<img class="model-color-image" src="/models/#{slug}.webp"))
+  errors << "#{slug}: primary model preload is not local" unless content.include?(%(<link rel="preload" as="image" href="/models/#{slug}.webp"))
+end
+
+errors << "Unused Vinext font CSS remains in public HTML" if html_paths.any? { |path| File.read(path, encoding: "UTF-8").include?("<style data-vinext-fonts>") }
+errors << "GA4 loader must have low fetch priority" if html_paths.any? { |path| !File.read(path, encoding: "UTF-8").include?('<script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js') }
 
 redirects_path = File.join(ROOT, "_redirects")
 redirects = {}

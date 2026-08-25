@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="az">
+<head><!-- CFMOTO:ANALYTICS:START -->
+<script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=G-L0W0HLDNLK"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
+window.gtag('js',new Date());
+window.gtag('config','G-L0W0HLDNLK');
+document.addEventListener('click',function(event){
+  var target=event.target;
+  if(!(target instanceof Element))return;
+  var link=target.closest('a[href]');
+  if(!link)return;
+  var href=link.getAttribute('href')||'';
+  var text=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
+  var normalizedHref=href.toLowerCase();
+  var params={link_text:text,page_path:window.location.pathname};
+  var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
+  if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
+    var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
+    var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
+    send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
+    if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
+    return;
+  }
+  if(normalizedHref.startsWith('tel:')){
+    var normalizedText=text.toLowerCase();
+    var serviceContact=['servis','ehtiyat','çatdırılma'].some(function(term){return normalizedText.includes(term)});
+    send('phone_click',{contact_area:serviceContact?'service':'sales'});
+    return;
+  }
+  if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){
+    send('directions_click',{destination:'showroom'});
+  }
+},true);
+</script>
+<!-- CFMOTO:ANALYTICS:END -->
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CFMOTO Rəsmi Servis Bakı | Texniki Qulluq və Təmir</title>
+  <meta name="description" content="CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir. Servis: +994 10 241 42 99; bazar ertəsi xaric hər gün 10:00–19:00."/>
+  <link rel="canonical" href="https://cfmoto.az/servis"/>
+  <meta property="og:title" content="CFMOTO Rəsmi Servis Bakı | Texniki Qulluq və Təmir"/>
+  <meta property="og:description" content="CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir. Servis: +994 10 241 42 99; bazar ertəsi xaric hər gün 10:00–19:00."/>
+  <meta property="og:url" content="https://cfmoto.az/servis"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://cfmoto.az/official-800mtx-hero.webp"/>
+  <meta property="og:image:alt" content="CFMOTO Azerbaijan"/>
+  <meta property="og:locale" content="az_AZ"/>
+  <meta property="og:site_name" content="CFMOTO Azerbaijan"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="CFMOTO Rəsmi Servis Bakı | Texniki Qulluq və Təmir"/>
+  <meta name="twitter:description" content="CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir. Servis: +994 10 241 42 99; bazar ertəsi xaric hər gün 10:00–19:00."/>
+  <meta name="twitter:image" content="https://cfmoto.az/official-800mtx-hero.webp"/>
+  <meta name="twitter:image:alt" content="CFMOTO Azerbaijan"/>
+  <link rel="icon" href="/favicon.svg"/>
+  <link rel="stylesheet" href="/assets/content.css"/>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://cfmoto.az/servis/#webpage","url":"https://cfmoto.az/servis","name":"CFMOTO Rəsmi Servis Bakı | Texniki Qulluq və Təmir","description":"CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir. Servis: +994 10 241 42 99; bazar ertəsi xaric hər gün 10:00–19:00.","inLanguage":"az","isPartOf":{"@id":"https://cfmoto.az/#website"},"about":{"@id":"https://cfmoto.az/#organization"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana səhifə","item":"https://cfmoto.az/"},{"@type":"ListItem","position":2,"name":"Rəsmi servis","item":"https://cfmoto.az/servis"}]},{"@type":"Service","@id":"https://cfmoto.az/servis/#service","name":"CFMOTO rəsmi servis xidməti","serviceType":["Diaqnostika","Texniki qulluq","Təmir"],"provider":{"@id":"https://cfmoto.az/#organization"},"areaServed":{"@type":"Country","name":"Azərbaycan"},"telephone":"+994102414299"}]}</script>
+</head>
+<body>
+  <div class="topline">CFMOTO-nun Azərbaycanda rəsmi nümayəndəsi</div>
+  <header class="content-header">
+    <a class="brand" href="/" aria-label="CFMOTO Azerbaijan ana səhifə"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"/><b>AZƏRBAYCAN</b></a>
+    <nav class="content-nav" aria-label="Əsas menyu">
+      <a href="/#modeller">Modellər</a><a href="/kredit">Kredit</a><a href="/servis">Servis</a><a href="/zemanet">Zəmanət</a><a href="/model-muqayisesi">Müqayisə</a>
+    </nav>
+    <a class="nav-cta" href="https://wa.me/994512332484?text=Salam%2C%20CFMOTO%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m" target="_blank" rel="noreferrer">Əlaqə</a>
+  </header>
+  <main>
+    <section class="content-hero">
+      <nav class="breadcrumbs" aria-label="Naviqasiya yolu"><a href="/">Ana səhifə</a><span>›</span><span>Rəsmi servis</span></nav>
+      <p class="eyebrow">Rəsmi texniki xidmət</p>
+      <h1>CFMOTO servis, texniki qulluq və təmir</h1>
+      <p>Diaqnostikadan planlı qulluğa qədər CFMOTO texnikanız üçün rəsmi servis dəstəyi.</p>
+    </section>
+    <div class="content-main"><div class="content-wrap"><p class="lead">CFMOTO standartlarına uyğun diaqnostika, planlı texniki qulluq və təmir üçün rəsmi servis komandası ilə əlaqə saxlayın.</p>
+<div class="info-grid"><article class="info-card"><span>01</span><h2>Diaqnostika</h2><p>Modelin texniki vəziyyətinin yoxlanması və tələb olunan işlərin dəqiqləşdirilməsi.</p></article><article class="info-card"><span>02</span><h2>Texniki qulluq</h2><p>Model və istifadə şəraitinə uyğun planlı servis əməliyyatları.</p></article><article class="info-card"><span>03</span><h2>Təmir</h2><p>CFMOTO texnikası üçün peşəkar texniki xidmət və təmir.</p></article></div>
+<section class="prose"><h2>İş saatları və əlaqə</h2><p>Bazar ertəsi istisna olmaqla servis hər gün saat 10:00–19:00 arasında fəaliyyət göstərir. Qəbul vaxtını və lazım olan xidməti əvvəlcədən dəqiqləşdirmək üçün <a href="tel:+994102414299" data-contact-area="service"><strong>+994 10 241 42 99</strong></a> nömrəsinə zəng edin.</p><h2>Şəhərdaxili aparıb-gətirmə</h2><p>Motosikletin servisə aparılması və geri qaytarılması xidməti şəhər daxilində 45 AZN-dir.</p><div class="notice">Servis ünvanını, qəbul vaxtını və ehtiyac duyulan işi telefonla əvvəlcədən dəqiqləşdirin.</div></section>
+<div class="cta-box"><div><h2>Servis qəbulu üçün əlaqə</h2><p>Bazar ertəsi xaric hər gün 10:00–19:00.</p></div><div class="cta-actions"><a class="button primary" href="tel:+994102414299" data-contact-area="service">+994 10 241 42 99</a><a class="button ghost" href="/ehtiyat-hisseleri">Ehtiyat hissələri</a></div></div>
+</div></div>
+  </main>
+  <aside class="content-links" aria-label="Faydalı məlumatlar"><div><a href="/kredit">Kredit şərtləri →</a><a href="/servis" aria-current="page">Rəsmi servis →</a><a href="/zemanet">Zəmanət →</a><a href="/ehtiyat-hisseleri">Ehtiyat hissələri →</a><a href="/model-muqayisesi">Model müqayisəsi →</a></div></aside>
+  <footer class="content-footer">
+    <a class="brand" href="/"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"/><b>AZƏRBAYCAN</b></a>
+    <div><a href="/#modeller">Modellər</a><a href="/kredit">Kredit</a><a href="/servis">Servis</a><a href="/ehtiyat-hisseleri">Ehtiyat hissələri</a><a href="https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a></div>
+    <small>© 2026 CFMOTO Azerbaijan · SAZMOTO MMC. Bütün hüquqlar qorunur.</small>
+  </footer>
+</body>
+</html>

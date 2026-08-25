@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require_relative "domain_config"
+require_relative "content_config"
 
 ROOT = File.expand_path("..", __dir__)
 MEASUREMENT_ID = DomainConfig::GA4_MEASUREMENT_ID
@@ -12,7 +13,7 @@ abort "Invalid GA4 Measurement ID" unless MEASUREMENT_ID.match?(/\AG-[A-Z0-9]+\z
 
 analytics = <<~HTML
   #{ANALYTICS_START}
-  <script async src="https://www.googletagmanager.com/gtag/js?id=#{MEASUREMENT_ID}"></script>
+  <script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=#{MEASUREMENT_ID}"></script>
   <script>
   window.dataLayer=window.dataLayer||[];
   window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
@@ -24,20 +25,24 @@ analytics = <<~HTML
     var link=target.closest('a[href]');
     if(!link)return;
     var href=link.getAttribute('href')||'';
-    var text=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
+    var text=(link.textContent||'').trim().replace(/\\s+/g,' ').slice(0,100);
+    var normalizedHref=href.toLowerCase();
     var params={link_text:text,page_path:window.location.pathname};
     var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
-    if(/^https:\/\/(?:api\.)?wa\.me\//i.test(href)){
-      var finance=!!link.closest('.calculator,.model-calculator');
-      send('whatsapp_click',{contact_area:finance?'finance':'sales'});
+    if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
+      var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
+      var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
+      send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
       if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
       return;
     }
-    if(/^tel:/i.test(href)){
-      send('phone_click',{contact_area:/servis|ehtiyat|çatdırılma/i.test(text)?'service':'sales'});
+    if(normalizedHref.startsWith('tel:')){
+      var normalizedText=text.toLowerCase();
+      var serviceContact=['servis','ehtiyat','çatdırılma'].some(function(term){return normalizedText.includes(term)});
+      send('phone_click',{contact_area:serviceContact?'service':'sales'});
       return;
     }
-    if(/(?:maps\.app\.goo\.gl|google\.[^/]+\/maps|maps\.google)/i.test(href)){
+    if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){
       send('directions_click',{destination:'showroom'});
     }
   },true);
@@ -47,7 +52,8 @@ HTML
 
 html_paths = [
   File.join(ROOT, "index.html"),
-  *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort
+  *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort,
+  *ContentConfig.html_paths(ROOT)
 ]
 
 html_paths.each do |path|
