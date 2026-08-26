@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - "cfmoto-site-update-v11-gtm-pixel-20260826.tar.gz"
+      - "cfmoto-site-update-v12-finance-20260826.tar.gz"
 
 permissions:
   contents: write
@@ -26,14 +26,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          archive="cfmoto-site-update-v11-gtm-pixel-20260826.tar.gz"
+          archive="cfmoto-site-update-v12-finance-20260826.tar.gz"
           apply_workflow=".github/workflows/apply-site-update.yml"
           import_workflow=".github/workflows/import-site.yml"
           if [[ ! -f "$archive" ]]; then
             echo "Prepared archive is already applied."
             exit 0
           fi
-          echo "96857143eb267487fbd2942a85c9bbe4aba64f5c6b5e4eb559c7b90e51dad78b  $archive" | sha256sum -c -
+          echo "130ae6d651c607fdd7062790d4186e1b7472ab3fb174e10e210eadc43ee175d9  $archive" | sha256sum -c -
           cp "$apply_workflow" /tmp/apply-site-update.yml
           cp "$import_workflow" /tmp/import-site.yml
           tar -xzf "$archive"
@@ -49,5 +49,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --quiet && exit 0
-          git commit -m "Add GTM and Meta Pixel tracking"
+          git commit -m "Fix installment calculator interest"
           git push
