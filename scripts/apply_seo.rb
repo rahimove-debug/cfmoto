@@ -118,6 +118,15 @@ html_paths.each do |path|
     abort "Home description meta tag not found" unless html.include?(description_tag)
     html.sub!(description_tag, "#{description_tag}#{home_seo}")
 
+    # Keep the homepage canonical in Vinext's hydrated head, not only in the
+    # server-rendered SEO block. Without this RSC entry, hydration removes it.
+    canonical_rsc = %([\\"$\\",\\"link\\",\\"canonical\\",{\\"rel\\":\\"canonical\\",\\"href\\":\\"#{SITE_ORIGIN}/\\"}])
+    favicon_rsc = %([\\"$\\",\\"link\\",\\"2\\",{\\"rel\\":\\"shortcut icon\\")
+    unless html.include?(canonical_rsc)
+      abort "Home RSC favicon metadata not found" unless html.include?(favicon_rsc)
+      html.sub!(favicon_rsc, "#{canonical_rsc},#{favicon_rsc}")
+    end
+
     html.gsub!(%(href=".showroom"), %(href="#showroom"))
     html.gsub!(%(<section class="showroom section">), %(<section class="showroom section" id="showroom">))
 
