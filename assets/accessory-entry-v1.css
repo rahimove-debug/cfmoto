@@ -1,0 +1,165 @@
+.accessory-hero-button {
+  border-color: transparent;
+  background: linear-gradient(105deg, var(--cf-blue), var(--cf-aqua));
+  color: #071113;
+  box-shadow: 0 12px 30px rgba(0, 197, 209, .28);
+  font-weight: 700;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.accessory-hero-button:hover {
+  color: #071113;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(0, 197, 209, .38);
+}
+
+.accessory-model-cta {
+  border-color: transparent;
+  background: linear-gradient(105deg, var(--cf-blue), var(--cf-aqua));
+  color: #071113;
+  box-shadow: 0 12px 30px rgba(0, 155, 180, .22);
+  font-weight: 600;
+}
+
+.accessory-model-cta:hover {
+  color: #071113;
+  transform: translateY(-1px);
+  box-shadow: 0 16px 34px rgba(0, 155, 180, .3);
+}
+
+.accessory-model-cta span {
+  color: #071113;
+}
+
+.accessory-promo {
+  background:
+    radial-gradient(circle at 82% 18%, rgba(0, 239, 209, .2), transparent 30%),
+    linear-gradient(115deg, #070c0f 0%, #10191e 62%, #073e48 100%);
+  color: var(--white);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr);
+  align-items: center;
+  gap: clamp(44px, 7vw, 120px);
+  overflow: hidden;
+  position: relative;
+}
+
+.accessory-promo::after {
+  content: "CFMOTO";
+  color: rgba(255, 255, 255, .035);
+  font-size: clamp(92px, 16vw, 260px);
+  font-weight: 900;
+  letter-spacing: -.08em;
+  line-height: .8;
+  pointer-events: none;
+  position: absolute;
+  right: -2vw;
+  bottom: -1vw;
+}
+
+.accessory-promo-copy,
+.accessory-promo-steps {
+  position: relative;
+  z-index: 1;
+}
+
+.accessory-promo .eyebrow {
+  color: rgba(255, 255, 255, .68);
+}
+
+.accessory-promo h2 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(48px, 5vw, 84px);
+  font-weight: 800;
+  letter-spacing: -.055em;
+  line-height: .96;
+  text-transform: uppercase;
+}
+
+.accessory-promo-copy > p:not(.eyebrow) {
+  max-width: 640px;
+  margin: 26px 0 30px;
+  color: rgba(255, 255, 255, .7);
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.accessory-promo .button.primary {
+  background: linear-gradient(105deg, var(--cf-blue), var(--cf-aqua));
+  color: #071113;
+  font-weight: 600;
+}
+
+.accessory-promo .button.primary span {
+  color: #071113;
+}
+
+.accessory-promo-steps {
+  border: 1px solid rgba(255, 255, 255, .17);
+  background: rgba(7, 12, 15, .56);
+  backdrop-filter: blur(12px);
+}
+
+.accessory-promo-steps > div {
+  min-height: 102px;
+  display: grid;
+  grid-template-columns: 54px 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, .13);
+}
+
+.accessory-promo-steps > div:last-child {
+  border-bottom: 0;
+}
+
+.accessory-promo-steps small {
+  color: var(--cf-aqua);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+}
+
+.accessory-promo-steps strong {
+  font-size: clamp(18px, 1.5vw, 24px);
+  font-weight: 600;
+}
+
+.accessory-promo-steps span {
+  color: rgba(255, 255, 255, .42);
+  font-size: 22px;
+}
+
+@media (width <= 860px) {
+  .accessory-promo {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (width <= 580px) {
+  .product-copy .hero-actions .accessory-model-cta {
+    grid-column: 1 / -1;
+    min-height: 46px;
+  }
+
+  .accessory-promo {
+    gap: 34px;
+  }
+
+  .accessory-promo h2 {
+    font-size: 46px;
+  }
+
+  .accessory-promo-copy > p:not(.eyebrow) {
+    font-size: 15px;
+  }
+
+  .accessory-promo-steps > div {
+    min-height: 82px;
+    grid-template-columns: 38px 1fr auto;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+}

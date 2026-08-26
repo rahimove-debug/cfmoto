@@ -37,7 +37,8 @@ html_paths.each do |path|
   abort "Missing </head> in #{path.delete_prefix("#{ROOT}/")}" unless html.include?("</head>")
 
   html.sub!("</head>", "#{LINK}</head>")
-  abort "Typography link was not applied exactly once" unless html.scan(STYLESHEET).size == 1
+  applied_links = html.scan(%r{<link\s+rel="stylesheet"\s+href="#{Regexp.escape(STYLESHEET)}"\s*/?>}).size
+  abort "Typography link was not applied exactly once" unless applied_links == 1
   File.write(path, html, encoding: "UTF-8")
 end
 
