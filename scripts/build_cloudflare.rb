@@ -18,6 +18,14 @@ if Dir.exist?(deploy_parts)
 
   root = File.expand_path("..", __dir__)
   abort "Accessory deployment extraction failed" unless system("tar", "-xzf", archive, "-C", root)
+  overlay = File.expand_path("../deploy-overlay/v14.tar.gz", __dir__)
+  if File.file?(overlay)
+    overlay_expected = "fdfc7689be49fd89bbe22c084e3670c8dc8aad233bce5b4796060d9b21b89213"
+    overlay_actual = Digest::SHA256.file(overlay).hexdigest
+    abort "Accessory CTA overlay checksum mismatch" unless overlay_actual == overlay_expected
+    abort "Accessory CTA overlay extraction failed" unless system("tar", "-xzf", overlay, "-C", root)
+  end
+
   exec(RbConfig.ruby, File.join(root, "scripts", "build_cloudflare.rb"))
 end
 
