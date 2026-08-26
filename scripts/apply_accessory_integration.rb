@@ -6,6 +6,18 @@ ACCESSORY_URL = "/aksesuar-konfiquratoru/"
 ACCESSORY_CANONICAL = "https://cfmoto.az#{ACCESSORY_URL}"
 STYLESHEET = "/assets/accessory-entry-v1.css"
 PRESELECT_SCRIPT = "/assets/accessory-model-preselect-v1.js"
+HOME_BUNDLE_SOURCE = "/assets/page-CfmotoFinanceFixV11.js"
+HOME_BUNDLE_PUBLIC = "/assets/page-CfmotoAccessoryV14.js"
+APP_LOADER_SOURCE = "/assets/index-CfmotoPolicyFixV10.js"
+APP_LOADER_PUBLIC = "/assets/index-CfmotoAccessoryV14.js"
+LAYOUT_SOURCE = "/assets/layout-segment-context-CfmotoPolicyFixV10.js"
+LAYOUT_PUBLIC = "/assets/layout-segment-context-CfmotoAccessoryV14.js"
+LINK_SOURCE = "/assets/link-CfmotoPolicyFixV10.js"
+LINK_PUBLIC = "/assets/link-CfmotoAccessoryV14.js"
+ROUTER_SOURCE = "/assets/router-CfmotoPolicyFixV10.js"
+ROUTER_PUBLIC = "/assets/router-CfmotoAccessoryV14.js"
+MEGA_MENU_SOURCE = "/assets/ProductMegaMenu-CfmotoPolicyFixV10.js"
+MEGA_MENU_PUBLIC = "/assets/ProductMegaMenu-CfmotoAccessoryV14.js"
 
 AZ_PROMO_HTML = <<~HTML.strip
   <section class="accessory-promo section" id="aksesuarlar"><div class="accessory-promo-copy"><p class="eyebrow"><span></span> CFMOTO AKSESUAR KONFİQURATORU</p><h2>Motosikletini özünə uyğun qur.</h2><p>Modelini seç, uyğun orijinal aksesuarları müqayisə et, şəxsi paketini hazırla və təklifi birbaşa WhatsApp ilə göndər.</p><a class="button primary" href="#{ACCESSORY_URL}">Konfiquratoru aç <span>↗︎</span></a></div><div class="accessory-promo-steps" aria-label="Konfiqurator addımları"><div><small>01</small><strong>Modeli seç</strong><span>→</span></div><div><small>02</small><strong>Aksesuarları əlavə et</strong><span>→</span></div><div><small>03</small><strong>Paketi göndər</strong><span>↗︎</span></div></div></section>
@@ -43,8 +55,20 @@ def add_script!(html, source)
   html.sub("</body>", "#{tag}</body>")
 end
 
-home_bundle_path = File.join(ROOT, "assets", "page-CfmotoFinanceFixV11.js")
-home_bundle = read(home_bundle_path)
+def create_cache_variant!(source_url, public_url, replacements)
+  source_path = File.join(ROOT, source_url.delete_prefix("/"))
+  public_path = File.join(ROOT, public_url.delete_prefix("/"))
+  content = read(source_path)
+  replacements.each do |source, replacement|
+    abort "#{public_url}: dependency #{source} not found" unless content.include?(source)
+    content.gsub!(source, replacement)
+  end
+  write(public_path, content)
+end
+
+home_bundle_source_path = File.join(ROOT, HOME_BUNDLE_SOURCE.delete_prefix("/"))
+home_bundle_public_path = File.join(ROOT, HOME_BUNDLE_PUBLIC.delete_prefix("/"))
+home_bundle = read(home_bundle_source_path)
 home_bundle = require_replace!(
   home_bundle,
   'l=[[`Kredit`,`#kredit-kalkulyator`],[`Servis`,`#servis`],[`Satış mərkəzi`,`#showroom`]]',
@@ -68,10 +92,53 @@ home_bundle = require_replace!(
   '(0,c.jsx)(`a`,{href:`/aksesuar-konfiquratoru/`,children:`Aksesuarlar`}),(0,c.jsx)(`a`,{href:`/ehtiyat-hisseleri/`,children:`Ehtiyat hissələri`})',
   "AZ footer"
 )
-write(home_bundle_path, home_bundle)
+[LINK_SOURCE, MEGA_MENU_SOURCE].zip([LINK_PUBLIC, MEGA_MENU_PUBLIC]).each do |source, public_path|
+  source_name = File.basename(source)
+  public_name = File.basename(public_path)
+  abort "AZ cache-busted home dependency #{source_name} not found" unless home_bundle.include?(source_name)
+  home_bundle.gsub!(source_name, public_name)
+end
+write(home_bundle_public_path, home_bundle)
+
+create_cache_variant!(APP_LOADER_SOURCE, APP_LOADER_PUBLIC, {
+  File.basename(HOME_BUNDLE_SOURCE) => File.basename(HOME_BUNDLE_PUBLIC),
+  File.basename(LAYOUT_SOURCE) => File.basename(LAYOUT_PUBLIC),
+  File.basename(LINK_SOURCE) => File.basename(LINK_PUBLIC),
+  File.basename(MEGA_MENU_SOURCE) => File.basename(MEGA_MENU_PUBLIC)
+})
+create_cache_variant!(LAYOUT_SOURCE, LAYOUT_PUBLIC, {
+  File.basename(APP_LOADER_SOURCE) => File.basename(APP_LOADER_PUBLIC)
+})
+create_cache_variant!(LINK_SOURCE, LINK_PUBLIC, {
+  File.basename(APP_LOADER_SOURCE) => File.basename(APP_LOADER_PUBLIC),
+  File.basename(ROUTER_SOURCE) => File.basename(ROUTER_PUBLIC)
+})
+create_cache_variant!(ROUTER_SOURCE, ROUTER_PUBLIC, {
+  File.basename(APP_LOADER_SOURCE) => File.basename(APP_LOADER_PUBLIC),
+  File.basename(LINK_SOURCE) => File.basename(LINK_PUBLIC)
+})
+create_cache_variant!(MEGA_MENU_SOURCE, MEGA_MENU_PUBLIC, {
+  File.basename(LINK_SOURCE) => File.basename(LINK_PUBLIC)
+})
 
 home_path = File.join(ROOT, "index.html")
 home = add_stylesheet!(read(home_path))
+[
+  [APP_LOADER_SOURCE, APP_LOADER_PUBLIC],
+  [LAYOUT_SOURCE, LAYOUT_PUBLIC],
+  [LINK_SOURCE, LINK_PUBLIC],
+  [MEGA_MENU_SOURCE, MEGA_MENU_PUBLIC]
+].each do |source, public_path|
+  next if home.include?(public_path)
+  abort "AZ cache-busted dependency #{source}: source URL not found" unless home.include?(source)
+  home.gsub!(source, public_path)
+end
+home = require_replace!(
+  home,
+  %(<link rel="modulepreload" href="#{HOME_BUNDLE_SOURCE}" crossorigin=""/>),
+  %(<link rel="modulepreload" href="#{HOME_BUNDLE_PUBLIC}" crossorigin=""/>),
+  "AZ cache-busted home bundle"
+)
 home = require_replace!(
   home,
   '<a href="#kredit-kalkulyator">Kredit</a>',

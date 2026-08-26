@@ -37,14 +37,30 @@ errors << "AZ homepage promo is missing" unless home.include?('class="accessory-
 errors << "AZ homepage sales hero CTA is missing" unless home.include?('class="button accessory-hero-button"')
 errors << "AZ homepage configurator link is missing" unless home.scan('href="/aksesuar-konfiquratoru/"').size >= 3
 errors << "AZ homepage accessory stylesheet is missing" unless home.include?('/assets/accessory-entry-v1.css')
+errors << "AZ homepage cache-busted bundle is missing" unless home.include?('/assets/page-CfmotoAccessoryV14.js')
+errors << "AZ homepage cache-busted app loader is missing" unless home.scan('/assets/index-CfmotoAccessoryV14.js').size >= 2
 
 ru_home = read(File.join(ROOT, "ru", "index.html"))
 errors << "RU homepage configurator link is missing" unless ru_home.scan('href="/aksesuar-konfiquratoru/"').size >= 2
 
-home_bundle = read(File.join(ROOT, "assets", "page-CfmotoFinanceFixV11.js"))
+home_bundle = read(File.join(ROOT, "assets", "page-CfmotoAccessoryV14.js"))
+app_loader = read(File.join(ROOT, "assets", "index-CfmotoAccessoryV14.js"))
 errors << "AZ hydrated promo is missing" unless home_bundle.include?('className:`accessory-promo section`')
 errors << "AZ hydrated sales hero CTA is missing" unless home_bundle.include?('button accessory-hero-button')
 errors << "AZ hydrated navigation link is missing" unless home_bundle.include?('[`Aksesuarlar`,`/aksesuar-konfiquratoru/`]')
+errors << "AZ app loader does not load cache-busted home bundle" unless app_loader.include?('assets/page-CfmotoAccessoryV14.js')
+errors << "AZ app loader still references stale home bundle" if app_loader.include?('page-CfmotoFinanceFixV11.js')
+%w[
+  layout-segment-context-CfmotoAccessoryV14.js
+  link-CfmotoAccessoryV14.js
+  router-CfmotoAccessoryV14.js
+  ProductMegaMenu-CfmotoAccessoryV14.js
+].each do |asset|
+  errors << "Missing cache-busted dependency: #{asset}" unless File.file?(File.join(ROOT, "assets", asset))
+end
+errors << "AZ app loader still references stale layout" if app_loader.include?('layout-segment-context-CfmotoPolicyFixV10.js')
+errors << "AZ app loader still references stale link" if app_loader.include?('link-CfmotoPolicyFixV10.js')
+errors << "AZ app loader still references stale mega menu" if app_loader.include?('ProductMegaMenu-CfmotoPolicyFixV10.js')
 
 ru_bundle_path = Dir.glob(File.join(ROOT, "assets", "page-CfmotoRussianV*.js")).max
 errors << "Russian home bundle is missing" unless ru_bundle_path
