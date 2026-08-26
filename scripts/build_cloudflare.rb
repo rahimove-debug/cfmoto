@@ -4,7 +4,7 @@ require "rbconfig"
 require "base64"
 require "digest"
 
-deploy_parts = File.expand_path("../deploy-parts/v13", __dir__)
+deploy_parts = File.expand_path("../deploy-parts/v13b", __dir__)
 if Dir.exist?(deploy_parts)
   archive = "/tmp/cfmoto-site-update-v13-accessories-20260826.tar.gz"
   parts = Dir.glob(File.join(deploy_parts, "part-*")).sort
