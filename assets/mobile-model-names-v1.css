@@ -1,0 +1,63 @@
+/* Keep catalog and model names readable on narrow screens. */
+@media (max-width: 1180px) {
+  .model-choice,
+  .model-choice.unavailable {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+}
+
+@media (max-width: 580px) {
+  .mega-categories > button {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    row-gap: 4px;
+  }
+
+  .mega-categories > button span,
+  .mega-categories > button small {
+    grid-column: 1;
+    min-width: 0;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: normal;
+    word-break: normal;
+    line-height: 1.15;
+  }
+
+  .mega-model h3 {
+    min-height: 2.3em;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: normal;
+    word-break: normal;
+    line-height: 1.15;
+  }
+
+  .model-info {
+    align-items: flex-start;
+  }
+
+  .model-info > div:first-child {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .model-info h3,
+  .category-model-copy h2,
+  .related-card h3,
+  .model-title strong {
+    max-width: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: normal;
+    word-break: normal;
+    line-height: 1.15;
+  }
+
+  .model-price {
+    flex: 0 0 auto;
+  }
+}

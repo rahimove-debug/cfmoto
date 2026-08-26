@@ -57,6 +57,12 @@ abort "Accessory integration failed" unless system(RbConfig.ruby, accessory_inte
 accessory_audit = File.join(__dir__, "audit_accessory_integration.rb")
 abort "Accessory integration audit failed" unless system(RbConfig.ruby, accessory_audit)
 
+mobile_model_names = File.join(__dir__, "apply_mobile_model_names.rb")
+abort "Mobile model-name processing failed" unless system(RbConfig.ruby, mobile_model_names)
+
+mobile_model_names_audit = File.join(__dir__, "audit_mobile_model_names.rb")
+abort "Mobile model-name audit failed" unless system(RbConfig.ruby, mobile_model_names_audit)
+
 FileUtils.rm_rf(DIST)
 FileUtils.mkdir_p(DIST)
 
