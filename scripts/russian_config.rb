@@ -7,9 +7,9 @@ require_relative "russian_ui_translations"
 
 module RussianConfig
   RU_PREFIX = "/ru"
-  ASSET_SOURCE_VERSION = "CfmotoPolicyFixV10"
-  ASSET_RUSSIAN_VERSION = "CfmotoRussianV4"
-  LEGACY_RUSSIAN_ASSET_VERSIONS = %w[CfmotoRussianV1 CfmotoRussianV2 CfmotoRussianV3].freeze
+  ASSET_SOURCE_VERSIONS = %w[CfmotoPolicyFixV10 CfmotoFinanceFixV11].freeze
+  ASSET_RUSSIAN_VERSION = "CfmotoRussianV5"
+  LEGACY_RUSSIAN_ASSET_VERSIONS = %w[CfmotoRussianV1 CfmotoRussianV2 CfmotoRussianV3 CfmotoRussianV4].freeze
 
   CONTENT_ROUTES = {
     "kredit" => "kredit",
@@ -43,6 +43,10 @@ module RussianConfig
     "CFMOTO Azerbaijan məhsul səhifəsindən seçilmiş rəsmi model və sürüş fotoları." => "Официальные фотографии модели и поездок, отобранные для страницы CFMOTO Азербайджан.",
     "Hər detal CFMOTO-nun müasir dizayn yanaşmasını, gündəlik funksionallığı və seçilən segmentin xarakterini göstərir." => "Каждая деталь отражает современный подход CFMOTO к дизайну, повседневную функциональность и характер выбранного сегмента.",
     "Hesablama məlumat xarakterlidir; bank faizi və komissiyalar daxil deyil. Yekun şərtlər fərqlənə bilər." => "Расчёт носит информационный характер; банковские проценты и комиссии не учтены. Итоговые условия могут отличаться.",
+    "Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Bank şərtləri ayrıca hesablanır." => "Проценты по рассрочке: 6 месяцев — 8%, 12 месяцев — 15%, 18 месяцев — 23%. Банковские условия рассчитываются отдельно.",
+    "Daxili ödəniş faizi:" => "Процент по рассрочке:",
+    "Faiz daxil borc:" => "Долг с учётом процентов:",
+    "Faiz daxil borc" => "Долг с учётом процентов",
     "47 aktual modeli kateqoriya, mühərrik sinfi, nağd qiymət və daxili hissəli ödənişin minimum şərtlərinə görə bir cədvəldə müqayisə edin." => "Сравните 47 актуальных моделей в одной таблице по категории, объёму двигателя, цене и минимальным условиям рассрочки.",
     "Bank faizi və komissiyalar cədvələ daxil deyil. Yekun qiymət və maliyyələşmə şərtləri satış mütəxəssisi tərəfindən dəqiqləşdirilir." => "Банковские проценты и комиссии не включены в таблицу. Итоговую цену и условия финансирования уточняет специалист по продажам.",
     "Model kateqoriyasına uyğun minimum ilkin ödənişi və maksimal müddəti əvvəlcədən müqayisə edin. Saytdakı kalkulyator ilkin planlama üçündür." => "Заранее сравните минимальный первоначальный взнос и максимальный срок для выбранной категории. Калькулятор на сайте предназначен для предварительного планирования.",

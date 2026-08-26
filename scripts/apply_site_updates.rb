@@ -30,7 +30,8 @@ CURRENT_V6_HOME_BUNDLE = "page-CfmotoPolicyFixV6.js"
 CURRENT_V7_HOME_BUNDLE = "page-CfmotoPolicyFixV7.js"
 CURRENT_V8_HOME_BUNDLE = "page-CfmotoPolicyFixV8.js"
 CURRENT_V9_HOME_BUNDLE = "page-CfmotoPolicyFixV9.js"
-NEW_HOME_BUNDLE = "page-CfmotoPolicyFixV10.js"
+CURRENT_V10_HOME_BUNDLE = "page-CfmotoPolicyFixV10.js"
+NEW_HOME_BUNDLE = "page-CfmotoFinanceFixV11.js"
 OLD_MENU_BUNDLE = "ProductMegaMenu-Cpx-ytn3.js"
 PREVIOUS_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24.js"
 CURRENT_MENU_BUNDLE = "ProductMegaMenu-CfmotoAug24Fix.js"
@@ -55,10 +56,11 @@ CURRENT_V9_STYLESHEET = "index-CfmotoPolicyFixV9.css"
 NEW_STYLESHEET = "index-CfmotoPolicyFixV10.css"
 NEW_LINK_BUNDLE = "link-CfmotoPolicyFixV10.js"
 NEW_MODEL_COLOR_BUNDLE = "ModelColorSelector-CfmotoPolicyFixV10.js"
-NEW_MODEL_FINANCE_BUNDLE = "ModelFinance-CfmotoPolicyFixV10.js"
+CURRENT_V10_MODEL_FINANCE_BUNDLE = "ModelFinance-CfmotoPolicyFixV10.js"
+NEW_MODEL_FINANCE_BUNDLE = "ModelFinance-CfmotoFinanceFixV11.js"
 
 RUNTIME_SOURCES = [OLD_RUNTIME, PREVIOUS_RUNTIME, CURRENT_RUNTIME, LAST_RUNTIME, CURRENT_V2_RUNTIME, CURRENT_V3_RUNTIME, CURRENT_V4_RUNTIME, CURRENT_V5_RUNTIME, CURRENT_V6_RUNTIME, CURRENT_V7_RUNTIME, CURRENT_V8_RUNTIME, CURRENT_V9_RUNTIME].freeze
-HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE, CURRENT_V2_HOME_BUNDLE, CURRENT_V3_HOME_BUNDLE, CURRENT_V4_HOME_BUNDLE, CURRENT_V5_HOME_BUNDLE, CURRENT_V6_HOME_BUNDLE, CURRENT_V7_HOME_BUNDLE, CURRENT_V8_HOME_BUNDLE, CURRENT_V9_HOME_BUNDLE].freeze
+HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDLE, LAST_HOME_BUNDLE, CURRENT_V2_HOME_BUNDLE, CURRENT_V3_HOME_BUNDLE, CURRENT_V4_HOME_BUNDLE, CURRENT_V5_HOME_BUNDLE, CURRENT_V6_HOME_BUNDLE, CURRENT_V7_HOME_BUNDLE, CURRENT_V8_HOME_BUNDLE, CURRENT_V9_HOME_BUNDLE, CURRENT_V10_HOME_BUNDLE].freeze
 MENU_BUNDLE_SOURCES = [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE, CURRENT_V3_MENU_BUNDLE, CURRENT_V4_MENU_BUNDLE, CURRENT_V5_MENU_BUNDLE, CURRENT_V6_MENU_BUNDLE, CURRENT_V7_MENU_BUNDLE, CURRENT_V8_MENU_BUNDLE, CURRENT_V9_MENU_BUNDLE].freeze
 
 CLEAN_IMAGE_SLUGS = %w[1000mt-x 750sr-s cforce-c4 cforce1000-touring].freeze
@@ -80,6 +82,16 @@ INTERNAL_40_MOTORCYCLE_SLUGS = %w[
   700cl-x-sport 700mt 675sr-r 675nk 500sr-voom 450cl-c-bobber 450cl-c
   450cl-c-amt 450sr-s 450mt 450nk
 ].freeze
+
+INSTALLMENT_INTEREST_RATES = {
+  6 => 0.08,
+  12 => 0.15,
+  18 => 0.23
+}.freeze
+HOME_CALCULATOR_NOTE = "Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Bank şərtləri ayrıca hesablanır."
+OLD_HOME_CALCULATOR_NOTE = "Hesablama məlumat xarakterlidir; bank faizi və komissiyalar daxil deyil. Yekun şərtlər fərqlənə bilər."
+MODEL_CALCULATOR_NOTE = "Daxili ödəniş faizi: 6 ay 8%, 12 ay 15%, 18 ay 23%. Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir."
+OLD_MODEL_CALCULATOR_NOTE = "Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir."
 
 ORIGINAL_FINANCE_POLICY_COPY = "Motosikletlər üçün daxili hissəli ödəniş 20% ilkin ödənişlə 18 ayadək, ATV və buggy üçün 50% ilkin ödənişlə 12 ayadək. Bank krediti 10%-dən başlayır və 35 ayadək mümkündür."
 PREVIOUS_FINANCE_POLICY_COPY = "Mühərrik həcmi 300 cc-dək olan motosikletlər və 450SR üçün daxili hissəli ödəniş 20% ilkin ödənişlə, digər motosikletlər üçün 50% ilkin ödənişlə 18 ayadək. ATV və buggy üçün 50% ilkin ödənişlə 12 ayadək. Bank krediti 10%-dən başlayır və 35 ayadək mümkündür."
@@ -133,7 +145,7 @@ SUPPORT_ASSET_SOURCES = {
   ["layout-segment-context-BqNUFdFf.js", "layout-segment-context-CfmotoAug24.js", "layout-segment-context-CfmotoAug24Fix.js", "layout-segment-context-CfmotoMobileFixV3.js", "layout-segment-context-CfmotoMobilePerfV4.js", "layout-segment-context-CfmotoPolicyFixV5.js", "layout-segment-context-CfmotoPolicyFixV6.js", "layout-segment-context-CfmotoPolicyFixV7.js", "layout-segment-context-CfmotoPolicyFixV8.js", "layout-segment-context-CfmotoPolicyFixV9.js"] => "layout-segment-context-CfmotoPolicyFixV10.js",
   ["link-IATORi5E.js", "link-CfmotoAug24.js", "link-CfmotoAug24Fix.js", "link-CfmotoMobileFixV3.js", "link-CfmotoMobilePerfV4.js", "link-CfmotoPolicyFixV5.js", "link-CfmotoPolicyFixV6.js", "link-CfmotoPolicyFixV7.js", "link-CfmotoPolicyFixV8.js", "link-CfmotoPolicyFixV9.js"] => NEW_LINK_BUNDLE,
   ["router-CzKeCzcA.js", "router-CfmotoAug24.js", "router-CfmotoAug24Fix.js", "router-CfmotoMobileFixV3.js", "router-CfmotoMobilePerfV4.js", "router-CfmotoPolicyFixV5.js", "router-CfmotoPolicyFixV6.js", "router-CfmotoPolicyFixV7.js", "router-CfmotoPolicyFixV8.js", "router-CfmotoPolicyFixV9.js"] => "router-CfmotoPolicyFixV10.js",
-  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js", "ModelFinance-CfmotoAug24Fix.js", "ModelFinance-CfmotoMobileFixV3.js", "ModelFinance-CfmotoMobilePerfV4.js", "ModelFinance-CfmotoPolicyFixV5.js", "ModelFinance-CfmotoPolicyFixV6.js", "ModelFinance-CfmotoPolicyFixV7.js", "ModelFinance-CfmotoPolicyFixV8.js", "ModelFinance-CfmotoPolicyFixV9.js"] => NEW_MODEL_FINANCE_BUNDLE,
+  ["ModelFinance-QyWdpaDg.js", "ModelFinance-CfmotoAug24.js", "ModelFinance-CfmotoAug24Fix.js", "ModelFinance-CfmotoMobileFixV3.js", "ModelFinance-CfmotoMobilePerfV4.js", "ModelFinance-CfmotoPolicyFixV5.js", "ModelFinance-CfmotoPolicyFixV6.js", "ModelFinance-CfmotoPolicyFixV7.js", "ModelFinance-CfmotoPolicyFixV8.js", "ModelFinance-CfmotoPolicyFixV9.js", CURRENT_V10_MODEL_FINANCE_BUNDLE] => NEW_MODEL_FINANCE_BUNDLE,
   ["ModelGallery-BT140N7z.js", "ModelGallery-CfmotoAug24.js", "ModelGallery-CfmotoAug24Fix.js", "ModelGallery-CfmotoMobileFixV3.js", "ModelGallery-CfmotoMobilePerfV4.js", "ModelGallery-CfmotoPolicyFixV5.js", "ModelGallery-CfmotoPolicyFixV6.js", "ModelGallery-CfmotoPolicyFixV7.js", "ModelGallery-CfmotoPolicyFixV8.js", "ModelGallery-CfmotoPolicyFixV9.js"] => "ModelGallery-CfmotoPolicyFixV10.js",
   ["ModelSpecs-BJB4gaLM.js", "ModelSpecs-CfmotoAug24.js", "ModelSpecs-CfmotoAug24Fix.js", "ModelSpecs-CfmotoMobileFixV3.js", "ModelSpecs-CfmotoMobilePerfV4.js", "ModelSpecs-CfmotoPolicyFixV5.js", "ModelSpecs-CfmotoPolicyFixV6.js", "ModelSpecs-CfmotoPolicyFixV7.js", "ModelSpecs-CfmotoPolicyFixV8.js", "ModelSpecs-CfmotoPolicyFixV9.js"] => "ModelSpecs-CfmotoPolicyFixV10.js",
   ["ModelColorSelector-DIxmErfw.js", "ModelColorSelector-CfmotoAug24.js", "ModelColorSelector-CfmotoAug24Fix.js", "ModelColorSelector-CfmotoMobileFixV3.js", "ModelColorSelector-CfmotoMobilePerfV4.js", "ModelColorSelector-CfmotoPolicyFixV5.js", "ModelColorSelector-CfmotoPolicyFixV6.js", "ModelColorSelector-CfmotoPolicyFixV7.js", "ModelColorSelector-CfmotoPolicyFixV8.js", "ModelColorSelector-CfmotoPolicyFixV9.js"] => NEW_MODEL_COLOR_BUNDLE
@@ -362,6 +374,11 @@ def format_amount(value)
   value.to_i.to_s.reverse.scan(/.{1,3}/).join(",").reverse
 end
 
+def installment_total(principal, months)
+  rate = INSTALLMENT_INTEREST_RATES.fetch(months)
+  principal * (1 + rate)
+end
+
 def remove_home_finance_policy_copy!(content)
   FINANCE_POLICY_COPIES.each do |copy|
     content.gsub!(%(<p>#{copy}</p>), "")
@@ -378,13 +395,17 @@ def apply_home_finance_policy!(home)
   price = 11_990
   percent = 40
   down = format_amount(rounded_amount(price * percent / 100.0))
-  financed = format_amount(rounded_amount(price * (100 - percent) / 100.0))
-  monthly = format_amount(rounded_amount(price * (100 - percent) / 100.0 / 18))
+  principal = price * (100 - percent) / 100.0
+  financed = format_amount(rounded_amount(installment_total(principal, 18)))
+  monthly = format_amount(rounded_amount(installment_total(principal, 18) / 18))
+  calculator.gsub!("Maliyyələşdirilən məbləğ", "Faiz daxil borc")
+  calculator.gsub!(OLD_HOME_CALCULATOR_NOTE, HOME_CALCULATOR_NOTE)
   patterns = {
     "down-payment heading" => %r{(<div class="range-line"><label for="down">İlkin ödəniş</label><strong>)\d+(<!-- -->% · <!-- -->)[\d,]+(<!-- --> AZN</strong></div>)},
     "down-payment range" => %r{<input id="down" type="range" min="\d+" max="80" step="5" value="\d+"/>},
+    "term range" => %r{<input id="term" type="range" min="\d+" max="18" step="\d+" value="18"/>},
     "monthly result" => %r{(<div class="calc-result"><span>Təxmini aylıq ödəniş</span><strong>)[\d,]+(<!-- --> <small>AZN / ay</small></strong>)},
-    "financed result" => %r{(<p>Maliyyələşdirilən məbləğ: <!-- -->)[\d,]+(<!-- --> AZN</p>)}
+    "financed result" => %r{(<p>Faiz daxil borc: <!-- -->)[\d,]+(<!-- --> AZN</p>)}
   }
   patterns.each do |label, pattern|
     abort "Home #{label} normalization anchor not found" unless calculator.match?(pattern)
@@ -395,6 +416,7 @@ def apply_home_finance_policy!(home)
   calculator.sub!(
     patterns.fetch("down-payment range"),
     %(<input id="down" type="range" min="#{percent}" max="80" step="5" value="#{percent}"/>))
+  calculator.sub!(patterns.fetch("term range"), '<input id="term" type="range" min="6" max="18" step="6" value="18"/>')
   calculator.sub!(patterns.fetch("monthly result")) do
     "#{Regexp.last_match(1)}#{monthly}#{Regexp.last_match(2)}"
   end
@@ -432,8 +454,12 @@ def normalize_model_finance_calculator!(html, slug)
     50
   end
   down = format_amount(rounded_amount(price * percent / 100.0))
-  financed = format_amount(rounded_amount(price * (100 - percent) / 100.0))
-  monthly = format_amount(rounded_amount(price * (100 - percent) / 100.0 / 12))
+  principal = price * (100 - percent) / 100.0
+  financed = format_amount(rounded_amount(installment_total(principal, 12)))
+  monthly = format_amount(rounded_amount(installment_total(principal, 12) / 12))
+  calculator.gsub!('<button type="button" class="">3<!-- --> ay</button>', "")
+  calculator.gsub!("Maliyyələşən məbləğ", "Faiz daxil borc")
+  calculator.gsub!(OLD_MODEL_CALCULATOR_NOTE, MODEL_CALCULATOR_NOTE)
 
   patterns = {
     "down-payment heading" => %r{(<div class="model-calc-label"><span>İlkin ödəniş</span><strong>)\d+(<!-- -->% · <!-- -->)[\d,]+(<!-- --> AZN</strong></div>)},
@@ -441,7 +467,7 @@ def normalize_model_finance_calculator!(html, slug)
     "down-payment scale" => %r{<span>minimum <!-- -->\d+<!-- -->%</span>},
     "monthly result" => %r{(<div class="model-calc-result"><span>Aylıq ödəniş</span><strong>)[\d,]+(<!-- --> <small>AZN / ay</small></strong>)},
     "down-payment summary" => %r{(<div><small>İlkin ödəniş</small><strong>)[\d,]+(<!-- --> AZN</strong></div>)},
-    "financed summary" => %r{(<div><small>Maliyyələşən məbləğ</small><strong>)[\d,]+(<!-- --> AZN</strong></div>)},
+    "financed summary" => %r{(<div><small>Faiz daxil borc</small><strong>)[\d,]+(<!-- --> AZN</strong></div>)},
     "offer link" => %r{%C4%B0lkin%20%C3%B6d%C9%99ni%C5%9F%3A%20(?:\d|%2C)+%20AZN%20\(\d+%25\)}
   }
   patterns.each do |label, pattern|
@@ -565,11 +591,14 @@ end
 
 update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
   [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
-  replace_required_once!(
+  replace_required_variant!(
     javascript,
-    '];function f(){',
-    '];const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300);function f(){',
-    "Home finance eligibility helper"
+    [
+      '];function f(){',
+      '];const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300);function f(){'
+    ],
+    '];const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300),INTEREST_RATES={6:.08,12:.15,18:.23};function f(){',
+    "Home finance eligibility and interest rates"
   )
   replace_required_variant!(
     javascript,
@@ -604,6 +633,20 @@ update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
     'function I(e){let t=a.find(t=>t.name===e);if(g(e),_===`Daxili hissəli`){let e=t?.type!==`Motosiklet`;b(q(t)?20:e?50:40),S(e?12:18)}}',
     "Home model-change finance rule"
   )
+  replace_required_once!(
+    javascript,
+    'M=E*A/100,N=E-M,P=N/j;',
+    'M=E*A/100,N=E-M,interestRate=_===`Daxili hissəli`?INTEREST_RATES[j]??0:0,financedWithInterest=N*(1+interestRate),P=financedWithInterest/j;',
+    "Home installment interest calculation"
+  )
+  replace_required_once!(
+    javascript,
+    '(0,c.jsx)(`input`,{id:`term`,type:`range`,min:`3`,max:k,step:`1`,value:j,onChange:e=>S(Number(e.target.value))})',
+    '(0,c.jsx)(`input`,{id:`term`,type:`range`,min:_===`Bank krediti`?3:6,max:k,step:_===`Bank krediti`?1:6,value:j,onChange:e=>S(Number(e.target.value))})',
+    "Home installment term steps"
+  )
+  javascript.gsub!('`Maliyyələşdirilən məbləğ: `,o(N)', '`Faiz daxil borc: `,o(financedWithInterest)')
+  javascript.gsub!(OLD_HOME_CALCULATOR_NOTE, HOME_CALCULATOR_NOTE)
   remove_home_finance_policy_copy!(javascript)
   card_image_sources = [
     '(0,c.jsx)(`img`,{src:e.image,alt:`${e.name} rəsmi model fotosu`,loading:`lazy`})',
@@ -700,11 +743,14 @@ SUPPORT_ASSET_SOURCES.each do |source_names, new_name|
     if new_name == NEW_MODEL_FINANCE_BUNDLE
       javascript.gsub!('new Intl.NumberFormat(`az-AZ`,{maximumFractionDigits:0})', 'new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0})')
       eligible_models = INTERNAL_20_MODEL_NAMES.map { |model| "`#{model}`" }.join(",")
-      replace_required_once!(
+      replace_required_variant!(
         javascript,
-        'var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e));function o',
-        "var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e)),q=new Set([#{eligible_models}]);function o",
-        "Model finance eligibility set"
+        [
+          'var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e));function o',
+          "var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e)),q=new Set([#{eligible_models}]);function o"
+        ],
+        "var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e)),q=new Set([#{eligible_models}]),INTEREST_RATES={6:.08,12:.15,18:.23};function o",
+        "Model finance eligibility and interest rates"
       )
       replace_required_once!(
         javascript,
@@ -730,6 +776,23 @@ SUPPORT_ASSET_SOURCES.each do |source_names, new_name|
         'n=e===`internal`?x?20:s?40:50:10',
         "Model finance payment-mode rule"
       )
+      replace_required_once!(
+        javascript,
+        'm=s?[3,6,12,18]:[3,6,12]',
+        'm=s?[6,12,18]:[6,12]',
+        "Model installment term options"
+      )
+      replace_required_once!(
+        javascript,
+        'y=(0,r.useMemo)(()=>{let e=f/100*t,n=Math.max(0,t-e);return{downPayment:e,financed:n,monthly:n/u}},[f,u,t])',
+        'y=(0,r.useMemo)(()=>{let e=f/100*t,n=Math.max(0,t-e),interestRate=c===`internal`?INTEREST_RATES[u]??0:0,financed=n*(1+interestRate);return{downPayment:e,financed,monthly:financed/u,interestRate}},[f,u,t,c])',
+        "Model installment interest calculation"
+      )
+      javascript.gsub!(
+        'c===`bank`?`Bank faizi və komissiyası daxil edilməyib.`:`Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir.`',
+        'c===`bank`?`Bank faizi və komissiyası daxil edilməyib.`:`Daxili ödəniş faizi: ${Math.round(y.interestRate*100)}%. Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir.`'
+      )
+      javascript.gsub!('children:`Maliyyələşən məbləğ`', 'children:`Faiz daxil borc`')
     end
 
     next unless new_name == NEW_LINK_BUNDLE
@@ -952,13 +1015,15 @@ checks = {
   "home calculator top link" => home.include?('class="calc-top-link"'),
   "home finance policy copy removed" => FINANCE_POLICY_COPIES.none? { |copy| home.include?(copy) || home_bundle.include?(copy) },
   "home finance policy predicate" => home_bundle.include?('const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300)'),
-  "home ineligible default calculator" => home.include?('<strong>40<!-- -->% · <!-- -->4,796<!-- --> AZN</strong>') && home.include?('id="down" type="range" min="40" max="80" step="5" value="40"') && home.include?('<strong>400<!-- --> <small>AZN / ay</small></strong>') && home.include?('Maliyyələşdirilən məbləğ: <!-- -->7,194<!-- --> AZN'),
+  "home ineligible default calculator" => home.include?('<strong>40<!-- -->% · <!-- -->4,796<!-- --> AZN</strong>') && home.include?('id="down" type="range" min="40" max="80" step="5" value="40"') && home.include?('id="term" type="range" min="6" max="18" step="6" value="18"') && home.include?('<strong>492<!-- --> <small>AZN / ay</small></strong>') && home.include?('Faiz daxil borc: <!-- -->8,849<!-- --> AZN'),
+  "home installment interest formula" => home_bundle.include?('INTEREST_RATES={6:.08,12:.15,18:.23}') && home_bundle.include?('financedWithInterest=N*(1+interestRate),P=financedWithInterest/j') && home_bundle.include?(HOME_CALCULATOR_NOTE),
   "model finance policy allowlist" => INTERNAL_20_MODEL_NAMES.all? { |model| model_finance_bundle.include?("`#{model}`") } && model_finance_bundle.include?('x=s&&q.has(e)') && model_finance_bundle.include?('[f,p]=(0,r.useState)(x?20:s?40:50)'),
   "motorcycle finance policy partitions all models" => INTERNAL_20_SLUGS.size == 12 && INTERNAL_40_MOTORCYCLE_SLUGS.size == 17 && (INTERNAL_20_SLUGS & INTERNAL_40_MOTORCYCLE_SLUGS).empty?,
   "eligible motorcycle calculators retain 20 percent" => eligible_finance_pages.all? { |_slug, page| page.include?('min="20" max="80" step="5" value="20"') && page.include?("Daxili ödəniş: 20%-dən başlayan ilkin ödəniş") },
   "other motorcycle calculators require 40 percent" => ineligible_finance_pages.all? { |_slug, page| page.include?('min="40" max="80" step="5" value="40"') && page.include?("Daxili ödəniş: 40%-dən başlayan ilkin ödəniş") && !page.include?("Daxili ödəniş: 20%-dən başlayan ilkin ödəniş") && !page.include?("Daxili ödəniş: 50%-dən başlayan ilkin ödəniş") },
   "offroad calculators retain 50 percent" => offroad_finance_pages.size == 18 && offroad_finance_pages.all? { |_slug, page| page.include?('min="50" max="80" step="5" value="50"') && page.include?("Daxili ödəniş: 50%-dən başlayan ilkin ödəniş") },
-  "450MT calculator matches 40 percent SSR" => ineligible_finance_pages.fetch("450mt").include?('<strong>40<!-- -->% · <!-- -->4,796<!-- --> AZN</strong>') && ineligible_finance_pages.fetch("450mt").include?('<strong>600<!-- --> <small>AZN / ay</small></strong>') && ineligible_finance_pages.fetch("450mt").include?('4%2C796%20AZN%20(40%25)'),
+  "450MT calculator matches interest-bearing SSR" => ineligible_finance_pages.fetch("450mt").include?('<strong>40<!-- -->% · <!-- -->4,796<!-- --> AZN</strong>') && ineligible_finance_pages.fetch("450mt").include?('<strong>689<!-- --> <small>AZN / ay</small></strong>') && ineligible_finance_pages.fetch("450mt").include?('<small>Faiz daxil borc</small><strong>8,273<!-- --> AZN</strong>') && ineligible_finance_pages.fetch("450mt").include?('4%2C796%20AZN%20(40%25)'),
+  "model installment interest formula" => model_finance_bundle.include?('INTEREST_RATES={6:.08,12:.15,18:.23}') && model_finance_bundle.include?('m=s?[6,12,18]:[6,12]') && model_finance_bundle.include?('monthly:financed/u,interestRate'),
   "450SR exception retains 20 percent" => eligible_finance_pages.fetch("450sr").include?('<strong>20<!-- -->% · <!-- -->2,098<!-- --> AZN</strong>'),
   "home active hero preload" => home.include?(hero_preload),
   "mobile calculator CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_CREDIT_CSS_MARKER),
@@ -1010,7 +1075,7 @@ checks = {
   "home C5 calculator option" => home.include?('value="CFORCE C5"'),
   "home catalog count" => home.include?("47<!-- --> aktual model") || home.include?("47 aktual model"),
   "C5 VAT price" => c5.include?("13,900 AZN"),
-  "C5 calculator matches VAT price" => c5.include?('<strong>50<!-- -->% · <!-- -->6,950<!-- --> AZN</strong>') && c5.include?('<strong>579<!-- --> <small>AZN / ay</small></strong>') && c5.include?('6%2C950%20AZN%20(50%25)'),
+  "C5 calculator matches VAT price" => c5.include?('<strong>50<!-- -->% · <!-- -->6,950<!-- --> AZN</strong>') && c5.include?('<strong>666<!-- --> <small>AZN / ay</small></strong>') && c5.include?('6%2C950%20AZN%20(50%25)'),
   "C5 chassis tab matches RSC data" => c5.include?(">Şassi və yük</button>") && !c5.include?(">Şassi</button>"),
   "C5 blue color image" => c5.include?("/models/cforce-c5.webp"),
   "C5 red color image" => c5.include?("/models/cforce-c5-red.webp"),
@@ -1022,7 +1087,7 @@ checks = {
   "new runtime" => File.file?(File.join(ASSETS, NEW_RUNTIME)),
   "new home bundle" => File.file?(File.join(ASSETS, NEW_HOME_BUNDLE)),
   "new menu bundle" => File.file?(File.join(ASSETS, NEW_MENU_BUNDLE)),
-  "all 13 V10 assets" => versioned_targets.size == 13 && versioned_targets.all? { |name| name.include?("CfmotoPolicyFixV10") && File.file?(File.join(ASSETS, name)) },
+  "all 13 versioned assets" => versioned_targets.size == 13 && versioned_targets.all? { |name| (name.include?("CfmotoPolicyFixV10") || name.include?("CfmotoFinanceFixV11")) && File.file?(File.join(ASSETS, name)) },
   "no obsolete V4 assets" => Dir.glob(File.join(ASSETS, "*CfmotoMobilePerfV4*")).empty?,
   "no obsolete V5 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV5*")).empty?,
   "no obsolete V6 assets" => Dir.glob(File.join(ASSETS, "*CfmotoPolicyFixV6*")).empty?,

@@ -366,12 +366,15 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       az_refs = versioned_asset_refs(az_html)
       ru_refs = versioned_asset_refs(ru_html)
       expected_ru_refs = az_refs.map do |path|
-        path.sub(RussianConfig::ASSET_SOURCE_VERSION, RussianConfig::ASSET_RUSSIAN_VERSION)
+        source_version = RussianConfig::ASSET_SOURCE_VERSIONS.find { |version| path.include?(version) }
+        source_version ? path.sub(source_version, RussianConfig::ASSET_RUSSIAN_VERSION) : path
       end
 
       @errors << "#{label}: React page does not reference versioned locale assets" if ru_refs.empty?
       @errors << "#{label}: Russian React asset references do not mirror the Azerbaijani page" unless ru_refs.sort == expected_ru_refs.sort
-      @errors << "#{label}: contains Azerbaijani React asset version #{RussianConfig::ASSET_SOURCE_VERSION}" if ru_html.include?(RussianConfig::ASSET_SOURCE_VERSION)
+      if RussianConfig::ASSET_SOURCE_VERSIONS.any? { |version| ru_html.include?(version) }
+        @errors << "#{label}: contains Azerbaijani React asset version"
+      end
       @errors << "#{label}: embedded React root language must be ru" unless ru_html.include?('\\"lang\\":\\"ru\\"')
       @errors << "#{label}: embedded React root still declares Azerbaijani" if ru_html.include?('\\"lang\\":\\"az\\"')
 
@@ -399,10 +402,13 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     end
 
     def audit_russian_assets
-      source_assets = Dir.glob(File.join(ROOT, "assets", "*#{RussianConfig::ASSET_SOURCE_VERSION}*"))
+      source_assets = RussianConfig::ASSET_SOURCE_VERSIONS.flat_map do |version|
+        Dir.glob(File.join(ROOT, "assets", "*#{version}*"))
+      end.uniq
       russian_assets = Dir.glob(File.join(ROOT, "assets", "*#{RussianConfig::ASSET_RUSSIAN_VERSION}*"))
       expected_russian_assets = source_assets.map do |path|
-        path.sub(RussianConfig::ASSET_SOURCE_VERSION, RussianConfig::ASSET_RUSSIAN_VERSION)
+        source_version = RussianConfig::ASSET_SOURCE_VERSIONS.find { |version| path.include?(version) }
+        path.sub(source_version, RussianConfig::ASSET_RUSSIAN_VERSION)
       end
 
       @errors << "Expected 13 Russian locale assets, found #{russian_assets.size}" unless russian_assets.size == 13
@@ -419,7 +425,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
         audit_no_untranslated_units(path, javascript)
         audit_no_corrupted_external_urls(path, javascript)
         audit_unprefixed_route_tokens(path, javascript)
-        @errors << "#{relative(path)}: imports Azerbaijani locale assets" if javascript.include?(RussianConfig::ASSET_SOURCE_VERSION)
+        @errors << "#{relative(path)}: imports Azerbaijani locale assets" if RussianConfig::ASSET_SOURCE_VERSIONS.any? { |version| javascript.include?(version) }
       end
 
       menu_asset = russian_javascript.find { |path| File.basename(path).start_with?("ProductMegaMenu-") }

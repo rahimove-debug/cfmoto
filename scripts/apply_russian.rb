@@ -220,7 +220,9 @@ end
 
 def localize_internal_paths!(content)
   localized = content.dup
-  localized.gsub!(RussianConfig::ASSET_SOURCE_VERSION, RussianConfig::ASSET_RUSSIAN_VERSION)
+  RussianConfig::ASSET_SOURCE_VERSIONS.each do |version|
+    localized.gsub!(version, RussianConfig::ASSET_RUSSIAN_VERSION)
+  end
   localized.gsub!(%r{(?<=["'`])/model/}, "/ru/model/")
   localized.gsub!("#{SITE_ORIGIN}/model/", "#{SITE_ORIGIN}/ru/model/")
   localized.gsub!("route:/model/", "route:/ru/model/")
@@ -336,10 +338,14 @@ FileUtils.rm_rf(RU_ROOT)
   Dir.glob(File.join(ASSETS, "*#{version}*")).each { |path| FileUtils.rm_f(path) }
 end
 
-source_assets = Dir.glob(File.join(ASSETS, "*#{RussianConfig::ASSET_SOURCE_VERSION}*"))
+source_assets = RussianConfig::ASSET_SOURCE_VERSIONS.flat_map do |version|
+  Dir.glob(File.join(ASSETS, "*#{version}*"))
+end.uniq
 abort "Expected 13 versioned source assets, found #{source_assets.size}" unless source_assets.size == 13
 source_assets.each do |source|
-  target = source.sub(RussianConfig::ASSET_SOURCE_VERSION, RussianConfig::ASSET_RUSSIAN_VERSION)
+  source_version = RussianConfig::ASSET_SOURCE_VERSIONS.find { |version| source.include?(version) }
+  abort "Unknown source asset version: #{source}" unless source_version
+  target = source.sub(source_version, RussianConfig::ASSET_RUSSIAN_VERSION)
   content = read_utf8(source)
   content = RussianConfig.translate(content) if File.extname(source) == ".js"
   content = localize_internal_paths!(content)
