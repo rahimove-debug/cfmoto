@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: cfmoto-site-update
+  group: cfmoto-site-update-v14
   cancel-in-progress: false
 
 jobs:
