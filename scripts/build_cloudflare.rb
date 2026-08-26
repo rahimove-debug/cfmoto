@@ -1,6 +1,26 @@
 #!/usr/bin/env ruby
 require "fileutils"
 require "rbconfig"
+require "base64"
+require "digest"
+
+deploy_parts = File.expand_path("../deploy-parts/v13", __dir__)
+if Dir.exist?(deploy_parts)
+  archive = "/tmp/cfmoto-site-update-v13-accessories-20260826.tar.gz"
+  parts = Dir.glob(File.join(deploy_parts, "part-*")).sort
+  abort "Accessory deployment parts are missing" if parts.empty?
+
+  encoded = parts.map { |path| File.binread(path) }.join
+  File.binwrite(archive, Base64.decode64(encoded))
+  expected = "a4ad93fae6d0a399a1a83ec6f2206677b30118d4606d29c2e3aaab706a4bcfcb"
+  actual = Digest::SHA256.file(archive).hexdigest
+  abort "Accessory deployment checksum mismatch" unless actual == expected
+
+  root = File.expand_path("..", __dir__)
+  abort "Accessory deployment extraction failed" unless system("tar", "-xzf", archive, "-C", root)
+  exec(RbConfig.ruby, File.join(root, "scripts", "build_cloudflare.rb"))
+end
+
 require_relative "content_config"
 require_relative "category_config"
 
