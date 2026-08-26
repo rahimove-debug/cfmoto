@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - "deploy-parts/v13/**"
+      - "deploy-parts/v13b/**"
 
 permissions:
   contents: write
@@ -26,7 +26,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          parts_dir="deploy-parts/v13"
+          parts_dir="deploy-parts/v13b"
           archive="/tmp/cfmoto-site-update-v13-accessories-20260826.tar.gz"
           apply_workflow=".github/workflows/apply-site-update.yml"
           import_workflow=".github/workflows/import-site.yml"
@@ -42,7 +42,7 @@ jobs:
           cp /tmp/apply-site-update.yml "$apply_workflow"
           cp /tmp/import-site.yml "$import_workflow"
           find . -type f -name '._*' -delete
-          rm -rf "$parts_dir"
+          rm -rf "$parts_dir" "deploy-parts/v13"
           find assets -maxdepth 1 -type f -name '*CfmotoAug24Fix.js' -delete
           rm -f assets/index-DiLMqMiY.css
           ruby scripts/build_cloudflare.rb
