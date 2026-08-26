@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - "cfmoto-site-update-v12-finance-20260826.tar.gz"
+      - "deploy-parts/v13/**"
 
 permissions:
   contents: write
@@ -26,21 +26,23 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          archive="cfmoto-site-update-v12-finance-20260826.tar.gz"
+          parts_dir="deploy-parts/v13"
+          archive="/tmp/cfmoto-site-update-v13-accessories-20260826.tar.gz"
           apply_workflow=".github/workflows/apply-site-update.yml"
           import_workflow=".github/workflows/import-site.yml"
-          if [[ ! -f "$archive" ]]; then
+          if [[ ! -d "$parts_dir" ]]; then
             echo "Prepared archive is already applied."
             exit 0
           fi
-          echo "130ae6d651c607fdd7062790d4186e1b7472ab3fb174e10e210eadc43ee175d9  $archive" | sha256sum -c -
+          cat "$parts_dir"/part-* | base64 --decode > "$archive"
+          echo "a4ad93fae6d0a399a1a83ec6f2206677b30118d4606d29c2e3aaab706a4bcfcb  $archive" | sha256sum -c -
           cp "$apply_workflow" /tmp/apply-site-update.yml
           cp "$import_workflow" /tmp/import-site.yml
           tar -xzf "$archive"
           cp /tmp/apply-site-update.yml "$apply_workflow"
           cp /tmp/import-site.yml "$import_workflow"
           find . -type f -name '._*' -delete
-          rm -f "$archive"
+          rm -rf "$parts_dir"
           find assets -maxdepth 1 -type f -name '*CfmotoAug24Fix.js' -delete
           rm -f assets/index-DiLMqMiY.css
           ruby scripts/build_cloudflare.rb
@@ -49,5 +51,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --quiet && exit 0
-          git commit -m "Fix installment calculator interest"
+          git commit -m "Add accessory configurator"
           git push
