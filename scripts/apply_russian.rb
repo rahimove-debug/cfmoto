@@ -130,7 +130,7 @@ end
 
 def remove_localization!(html)
   html.gsub!(%r{#{Regexp.escape(LANGUAGE_START)}.*?#{Regexp.escape(LANGUAGE_END)}\s*}m, "")
-  html.gsub!(%r{<link rel="stylesheet" href="/assets/language\.css"\s*/>}, "")
+  html.gsub!(%r{<link rel="stylesheet" href="/assets/language(?:-v2)?\.css"\s*/>}, "")
   html.gsub!(%r{<script\b[^>]*src="/assets/language-switcher-v(?:1|2)\.js"[^>]*></script>}, "")
   html.gsub!(%r{<link rel="alternate" hreflang="(?:az|ru|x-default)" href="[^"]+"\s*/>}, "")
   html.gsub!(%r{<meta property="og:locale:alternate" content="[^"]+"\s*/>}, "")
@@ -156,7 +156,7 @@ def inject_localization!(html, language:, az_url:, ru_url:, counterpart_path:)
     <script defer src="/assets/language-switcher-v2.js" data-language="#{language}" data-counterpart="#{CGI.escapeHTML(counterpart_path)}"></script>
     #{LANGUAGE_END}
   HTML
-  html.sub!("</head>", %(<link rel="stylesheet" href="/assets/language.css"/>#{runtime}</head>))
+  html.sub!("</head>", %(<link rel="stylesheet" href="/assets/language-v2.css"/>#{runtime}</head>))
 end
 
 def set_tag!(html, pattern, replacement, label)

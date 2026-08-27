@@ -295,7 +295,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       block = html[%r{#{Regexp.escape(LANGUAGE_START)}(.*?)#{Regexp.escape(LANGUAGE_END)}}m, 1]
       return unless block
 
-      @errors << "#{label}: missing language.css" unless html.scan(%r{<link\b[^>]*href="/assets/language\.css"[^>]*>}i).size == 1
+      @errors << "#{label}: missing language-v2.css" unless html.scan(%r{<link\b[^>]*href="/assets/language-v2\.css"[^>]*>}i).size == 1
 
       runtime_tags = block.scan(%r{<script\b[^>]*src="/assets/language-switcher-v2\.js"[^>]*></script>}i)
       runtime_attrs = runtime_tags.empty? ? {} : attributes(runtime_tags.first)
