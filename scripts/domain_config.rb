@@ -2,7 +2,7 @@
 
 module DomainConfig
   SITE_ORIGIN = "https://cfmoto.az"
-  GA4_MEASUREMENT_ID = "G-L0W0HLDNLK"
+  GA4_MEASUREMENT_ID = "G-X0Y85BJ9ST"
   GOOGLE_TAG_MANAGER_ID = "GTM-W9877TBG"
   META_PIXEL_ID = "1395135232664282"
   INSTAGRAM_URL = "https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr"
