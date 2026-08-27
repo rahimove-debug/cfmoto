@@ -131,6 +131,7 @@ end
 def remove_localization!(html)
   html.gsub!(%r{#{Regexp.escape(LANGUAGE_START)}.*?#{Regexp.escape(LANGUAGE_END)}\s*}m, "")
   html.gsub!(%r{<link rel="stylesheet" href="/assets/language\.css"\s*/>}, "")
+  html.gsub!(%r{<script\b[^>]*src="/assets/language-switcher-v(?:1|2)\.js"[^>]*></script>}, "")
   html.gsub!(%r{<link rel="alternate" hreflang="(?:az|ru|x-default)" href="[^"]+"\s*/>}, "")
   html.gsub!(%r{<meta property="og:locale:alternate" content="[^"]+"\s*/>}, "")
 end
@@ -150,23 +151,12 @@ def inject_localization!(html, language:, az_url:, ru_url:, counterpart_path:)
   locale = language == "ru" ? "ru_RU" : "az_AZ"
   alternate_locale = language == "ru" ? "az_AZ" : "ru_RU"
   html.gsub!(%r{<meta property="og:locale" content="[^"]+"\s*/>}, %(<meta property="og:locale" content="#{locale}"/><meta property="og:locale:alternate" content="#{alternate_locale}"/>))
-  html.sub!("</head>", %(<link rel="stylesheet" href="/assets/language.css"/></head>))
-
-  switcher = if language == "ru"
-    <<~HTML.delete("\n")
-      #{LANGUAGE_START}
-      <nav class="language-switcher" aria-label="Выбор языка"><a href="#{counterpart_path}" lang="az" hreflang="az">AZ</a><span aria-current="page">RU</span></nav>
-      #{LANGUAGE_END}
-    HTML
-  else
-    <<~HTML.delete("\n")
-      #{LANGUAGE_START}
-      <nav class="language-switcher" aria-label="Dil seçimi"><span aria-current="page">AZ</span><a href="#{counterpart_path}" lang="ru" hreflang="ru">RU</a></nav>
-      #{LANGUAGE_END}
-    HTML
-  end
-  abort "Missing body while adding language switcher" unless html.include?("</body>")
-  html.sub!("</body>", "#{switcher}</body>")
+  runtime = <<~HTML.delete("\n")
+    #{LANGUAGE_START}
+    <script defer src="/assets/language-switcher-v2.js" data-language="#{language}" data-counterpart="#{CGI.escapeHTML(counterpart_path)}"></script>
+    #{LANGUAGE_END}
+  HTML
+  html.sub!("</head>", %(<link rel="stylesheet" href="/assets/language.css"/>#{runtime}</head>))
 end
 
 def set_tag!(html, pattern, replacement, label)

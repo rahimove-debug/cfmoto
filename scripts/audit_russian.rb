@@ -295,19 +295,12 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       block = html[%r{#{Regexp.escape(LANGUAGE_START)}(.*?)#{Regexp.escape(LANGUAGE_END)}}m, 1]
       return unless block
 
-      anchors = block.scan(/<a\b[^>]*>/i).map { |tag| attributes(tag) }
-      expected_link_language = language == "ru" ? "az" : "ru"
-      expected_anchor = anchors.select do |attrs|
-        attrs["href"] == counterpart_path &&
-          attrs["lang"] == expected_link_language &&
-          attrs["hreflang"] == expected_link_language
-      end
-      @errors << "#{label}: language switch must link exactly to #{counterpart_path}" unless anchors.size == 1 && expected_anchor.size == 1
-
-      active_language = language.upcase
-      active_spans = block.scan(%r{<span\b[^>]*aria-current="page"[^>]*>(.*?)</span>}mi).flatten.map { |text| strip_tags(text).strip }
-      @errors << "#{label}: language switch must mark #{active_language} as current" unless active_spans == [active_language]
       @errors << "#{label}: missing language.css" unless html.scan(%r{<link\b[^>]*href="/assets/language\.css"[^>]*>}i).size == 1
+
+      runtime_tags = block.scan(%r{<script\b[^>]*src="/assets/language-switcher-v2\.js"[^>]*></script>}i)
+      runtime_attrs = runtime_tags.empty? ? {} : attributes(runtime_tags.first)
+      @errors << "#{label}: expected one language switcher runtime" unless runtime_tags.size == 1
+      @errors << "#{label}: language switcher runtime must target #{counterpart_path}" unless runtime_attrs["data-language"] == language && runtime_attrs["data-counterpart"] == counterpart_path
     end
 
     def audit_schema(html, label, language:, own_url:)
@@ -478,6 +471,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     def audit_russian_navigation(entry, html)
       scrubbed = html.dup
       scrubbed.gsub!(%r{#{Regexp.escape(LANGUAGE_START)}.*?#{Regexp.escape(LANGUAGE_END)}}m, "")
+      scrubbed.gsub!(%r{<script\b[^>]*src="/assets/language-switcher-v(?:1|2)\.js"[^>]*></script>}i, "")
       scrubbed.gsub!(%r{<link\b[^>]*rel="alternate"[^>]*>}mi, "")
       scrubbed.gsub!(%r{<script\b[^>]*type="application/ld\+json"[^>]*>.*?</script>}mi, "")
 
