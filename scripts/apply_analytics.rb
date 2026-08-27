@@ -129,4 +129,15 @@ html_paths.each do |path|
   File.write(path, html, encoding: "UTF-8")
 end
 
-puts "GA4 and Meta Pixel analytics applied to #{html_paths.size} HTML pages (#{MEASUREMENT_ID}, #{META_PIXEL_ID})"
+accessory_path = File.join(ROOT, "aksesuar-konfiquratoru", "index.html")
+abort "Missing accessory configurator page: #{accessory_path}" unless File.file?(accessory_path)
+
+# The standalone configurator already ships its own GTM and Meta Pixel tags.
+# Add only GA4 here so those existing tags are not duplicated.
+accessory_html = File.read(accessory_path, encoding: "UTF-8")
+accessory_html.gsub!(%r{#{Regexp.escape(ANALYTICS_START)}.*?#{Regexp.escape(ANALYTICS_END)}\s*}m, "")
+abort "#{accessory_path}: missing <head> element" unless accessory_html.include?("<head>")
+accessory_html.sub!("<head>", "<head>#{analytics}")
+File.write(accessory_path, accessory_html, encoding: "UTF-8")
+
+puts "GA4 applied to #{html_paths.size + 1} HTML pages; GTM and Meta Pixel applied to #{html_paths.size} generated pages (#{MEASUREMENT_ID}, #{META_PIXEL_ID})"

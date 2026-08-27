@@ -1,8 +1,13 @@
 #!/usr/bin/env ruby
 
+require_relative "domain_config"
+
 ROOT = File.expand_path("..", __dir__)
 PAGE = File.join(ROOT, "aksesuar-konfiquratoru", "index.html")
 CANONICAL = "https://cfmoto.az/aksesuar-konfiquratoru/"
+GA4_MEASUREMENT_ID = DomainConfig::GA4_MEASUREMENT_ID
+ANALYTICS_START = "<!-- CFMOTO:ANALYTICS:START -->"
+ANALYTICS_END = "<!-- CFMOTO:ANALYTICS:END -->"
 errors = []
 
 def read(path)
@@ -18,6 +23,11 @@ if File.file?(PAGE)
   errors << "Configurator az-AZ hreflang is missing" unless page.include?(%(hrefLang="az-AZ" href="#{CANONICAL}"))
   errors << "Configurator x-default hreflang is missing" unless page.include?(%(hrefLang="x-default" href="#{CANONICAL}"))
   errors << "Configurator title is missing" unless page.include?("CFMOTO Aksesuar Konfiquratoru | CFMOTO Azerbaijan")
+  errors << "Configurator must contain one GA4 analytics block" unless page.scan(ANALYTICS_START).size == 1 && page.scan(ANALYTICS_END).size == 1
+  ga4_loader_ids = page.scan(%r{googletagmanager\.com/gtag/js\?id=(G-[A-Z0-9]+)}).flatten
+  ga4_config_ids = page.scan(/gtag\('config','(G-[A-Z0-9]+)'\)/).flatten
+  errors << "Configurator GA4 loader must use only #{GA4_MEASUREMENT_ID}" unless ga4_loader_ids == [GA4_MEASUREMENT_ID]
+  errors << "Configurator GA4 configuration must use only #{GA4_MEASUREMENT_ID}" unless ga4_config_ids == [GA4_MEASUREMENT_ID]
   errors << "GTM is missing from configurator" unless page.include?("GTM-W9877TBG")
   errors << "Meta Pixel is missing from configurator" unless page.include?("1395135232664282")
   errors << "Model preselection script is missing from configurator" unless page.include?("/assets/accessory-model-preselect-v1.js")
