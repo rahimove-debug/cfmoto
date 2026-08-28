@@ -11,9 +11,9 @@ SCRIPT_URL = "/assets/mobile-menu-accessibility-v2.js"
 MARKER_START = "<!-- CFMOTO:UX-ACCESSIBILITY:START -->"
 MARKER_END = "<!-- CFMOTO:UX-ACCESSIBILITY:END -->"
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-partsazn-v2.js"
-CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-partsazn-v2.css"
-CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-partsazn-v2.js"
+CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-partsazn-v3.js"
+CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-partsazn-v3.css"
+CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-partsazn-v3.js"
 
 def read(path)
   File.read(path, encoding: "UTF-8")
@@ -135,8 +135,8 @@ css_source_name = File.basename(css_source_path)
 configurator_css = read(css_source_path)
 badge_css = '.simple-bike-image>.simple-model-new-badge{left:18px;top:18px;z-index:3;padding:10px 12px;background:var(--brand-orange);color:#fff;font-size:10px;font-weight:900;letter-spacing:.12em;line-height:1;text-transform:uppercase}'
 configurator_css = "#{configurator_css.rstrip}\n#{badge_css}\n" unless configurator_css.include?("simple-model-new-badge")
-mobile_accessory_name_css = '/* cfmoto-mobile-accessory-name-v1 */@media (max-width:720px){.accessory-copy strong{display:block;overflow:visible;white-space:normal;text-overflow:clip;line-height:1.3}.accessory-item{height:auto;min-height:118px}}'
-configurator_css = "#{configurator_css.rstrip}\n#{mobile_accessory_name_css}\n" unless configurator_css.include?("cfmoto-mobile-accessory-name-v1")
+mobile_accessory_name_css = '/* cfmoto-mobile-accessory-name-v2 */@media (max-width:720px){.accessory-panel .accessory-copy strong{display:block!important;overflow:visible!important;white-space:normal!important;text-overflow:clip!important;line-height:1.3}.accessory-panel .accessory-item{height:auto;min-height:118px}}'
+configurator_css = "#{configurator_css.rstrip}\n#{mobile_accessory_name_css}\n" unless configurator_css.include?("cfmoto-mobile-accessory-name-v2")
 write(css_target_path, configurator_css)
 
 # The imported Next.js export deliberately falls back to client rendering for

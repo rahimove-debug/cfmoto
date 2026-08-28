@@ -70,9 +70,9 @@ if File.file?(configurator_path)
   end
 end
 
-configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v2.js")
-configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-partsazn-v2.css")
-configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-partsazn-v2.js")
+configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v3.js")
+configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-partsazn-v3.css")
+configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-partsazn-v3.js")
 if File.file?(configurator_bundle_path)
   bundle = read(configurator_bundle_path)
   forbidden = [
@@ -122,9 +122,9 @@ else
 end
 if File.file?(configurator_css_path)
   configurator_css = read(configurator_css_path)
-  errors << "Mobile accessory names still truncate" unless configurator_css.include?("cfmoto-mobile-accessory-name-v1") &&
-    configurator_css.include?("white-space:normal") &&
-    configurator_css.include?("text-overflow:clip")
+  errors << "Mobile accessory names still truncate" unless configurator_css.include?("cfmoto-mobile-accessory-name-v2") &&
+    configurator_css.include?("white-space:normal!important") &&
+    configurator_css.include?("text-overflow:clip!important")
 else
   errors << "Cache-busted configurator stylesheet is missing"
 end
