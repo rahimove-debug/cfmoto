@@ -70,9 +70,9 @@ if File.file?(configurator_path)
   end
 end
 
-configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-v3.js")
-configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-v3.css")
-configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-v3.js")
+configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-v4.js")
+configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-v4.css")
+configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-v4.js")
 if File.file?(configurator_bundle_path)
   bundle = read(configurator_bundle_path)
   forbidden = [
@@ -97,8 +97,17 @@ if File.file?(configurator_bundle_path)
   errors << "Adventure/Touring UI grouping is missing" unless bundle.include?("Adventure / Touring")
   errors << "750SR-S Azerbaijani accessory copy is missing" unless bundle.include?("Radiator qoruyucusu") && bundle.include?("Qızdırılan sükan tutacaqları")
   errors << "CFMOTO USA off-road source label is missing" unless bundle.include?("CFMOTO USA 2027 Off-Road Accessories")
-  errors << "Off-road MSRP-as-AZN disclosure is missing" unless bundle.include?("valyuta çevrilmədən 1:1 AZN") || bundle.include?('valyuta \\xe7evrilmədən 1:1 AZN')
-  errors << "ZFORCE 950 Sport-4 USA fitment/price is missing" unless bundle.include?("5BYV-804300-6000") && bundle.include?("149.99")
+  errors << "CFMoto USA Parts price source is missing" unless bundle.include?("CFMoto USA Parts")
+  errors << "Official USD/AZN conversion disclosure is missing" unless bundle.include?("1 USD = 1.7000 AZN")
+  errors << "USD/AZN conversion rate data is missing" unless bundle.include?('"D7":1.7')
+  errors << "ZFORCE 950 Sport-4 shop price/source is missing" unless bundle.include?("5BYV-804300-6000") &&
+    bundle.include?("159.99") &&
+    bundle.include?("cfmotousaparts.com/product/sport-a-arm-guard-cfmoto-oem-5byv-804300-6000")
+  errors << "Query-only fallback is missing" unless bundle.include?("5BYV-809100-8000") &&
+    bundle.include?("cfmotousaparts.com/?s=5BYV-809100-8000&post_type=product") &&
+    (bundle.include?("Sorğu ilə") || bundle.include?('Sor\u011fu il\u0259'))
+  errors << "Legacy 1:1 MSRP pricing remains" if bundle.include?("valyuta çevrilmədən 1:1 AZN") ||
+    bundle.include?('valyuta \\xe7evrilmədən 1:1 AZN')
   {
     "5DYV-809600-1001" => "lighted-whip mounting bracket",
     "5HYV-800100-1000" => "Work Orb Light",
