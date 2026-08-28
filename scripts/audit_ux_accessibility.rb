@@ -70,9 +70,9 @@ if File.file?(configurator_path)
   end
 end
 
-configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v1.js")
-configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-partsazn-v1.css")
-configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-partsazn-v1.js")
+configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v2.js")
+configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-partsazn-v2.css")
+configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-partsazn-v2.js")
 if File.file?(configurator_bundle_path)
   bundle = read(configurator_bundle_path)
   forbidden = [
@@ -120,7 +120,14 @@ if File.file?(configurator_bundle_path)
 else
   errors << "Cache-busted configurator page bundle is missing"
 end
-errors << "Cache-busted configurator stylesheet is missing" unless File.file?(configurator_css_path)
+if File.file?(configurator_css_path)
+  configurator_css = read(configurator_css_path)
+  errors << "Mobile accessory names still truncate" unless configurator_css.include?("cfmoto-mobile-accessory-name-v1") &&
+    configurator_css.include?("white-space:normal") &&
+    configurator_css.include?("text-overflow:clip")
+else
+  errors << "Cache-busted configurator stylesheet is missing"
+end
 if File.file?(configurator_runtime_path)
   runtime = read(configurator_runtime_path)
   errors << "Configurator CSR hydration filter is missing" unless runtime.include?("Minified React error #418|Hydration failed")
