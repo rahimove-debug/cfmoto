@@ -71,6 +71,12 @@ Dir.glob(File.join(ROOT, "model", "*", "index.html")).each do |path|
   slug = File.basename(File.dirname(path))
   configurator_url = "/aksesuar-konfiquratoru/?model=#{slug}#models"
   html = read(path)
+  %w[V15 V14].each do |version|
+    html.gsub!("/assets/index-CfmotoAccessory#{version}.js", "/assets/index-CfmotoPolicyFixV10.js")
+    html.gsub!("/assets/layout-segment-context-CfmotoAccessory#{version}.js", "/assets/layout-segment-context-CfmotoPolicyFixV10.js")
+    html.gsub!("/assets/link-CfmotoAccessory#{version}.js", "/assets/link-CfmotoPolicyFixV10.js")
+    html.gsub!("/assets/ProductMegaMenu-CfmotoAccessory#{version}.js", "/assets/ProductMegaMenu-CfmotoPolicyFixV10.js")
+  end
   html.gsub!(%(<link rel="stylesheet" href="/assets/accessory-entry-v1.css"/>), "")
   html.gsub!(%r{<a class="button accessory-model-cta" href="#{Regexp.escape(configurator_url)}">.*?</a>}m, "")
   html.gsub!(

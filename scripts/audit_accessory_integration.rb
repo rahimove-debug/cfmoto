@@ -104,6 +104,11 @@ motorcycle_pages.each do |path|
   errors << "#{slug}: desktop accessory CTA is missing" unless html.include?(%(class="button accessory-model-cta" href="#{deep_link}"))
   errors << "#{slug}: mobile accessory CTA is missing" unless html.include?(%(<div class="model-mobile-cta"><a href="#{deep_link}">Aksesuar seç</a>))
   errors << "#{slug}: accessory stylesheet is missing" unless html.include?('/assets/accessory-entry-v1.css')
+  errors << "#{slug}: cache-busted app loader is missing" unless html.scan('/assets/index-CfmotoAccessoryV15.js').size >= 2
+  errors << "#{slug}: stale immutable app loader remains" if html.include?('/assets/index-CfmotoPolicyFixV10.js')
+  errors << "#{slug}: cache-busted layout is missing" unless html.include?('/assets/layout-segment-context-CfmotoAccessoryV15.js')
+  errors << "#{slug}: cache-busted link module is missing" unless html.include?('/assets/link-CfmotoAccessoryV15.js')
+  errors << "#{slug}: cache-busted mega menu is missing" unless html.include?('/assets/ProductMegaMenu-CfmotoAccessoryV15.js')
 end
 errors << "Broken legacy 450SR gallery reference remains" if Dir.glob(File.join(ROOT, "aksesuar-konfiquratoru", "_next", "**", "*.js")).any? { |path| read(path).include?("/gallery/450sr-s.webp") }
 

@@ -210,6 +210,21 @@ motorcycle_pages.each do |path|
   configurator_url = "#{ACCESSORY_URL}?model=#{slug}#models"
   html = add_stylesheet!(read(path))
 
+  # Model pages must use the same cache-busted application graph as the
+  # homepage. The base loader is served with a one-year immutable cache and
+  # changing it in place leaves returning visitors on the previous finance
+  # component even when the HTML preloads the new bundle.
+  [
+    [APP_LOADER_SOURCE, APP_LOADER_PUBLIC],
+    [LAYOUT_SOURCE, LAYOUT_PUBLIC],
+    [LINK_SOURCE, LINK_PUBLIC],
+    [MEGA_MENU_SOURCE, MEGA_MENU_PUBLIC]
+  ].each do |source, public_path|
+    next if html.include?(public_path)
+    abort "#{slug}: cache-busted dependency #{source} not found" unless html.include?(source)
+    html.gsub!(source, public_path)
+  end
+
   unless html.include?(%(class="button accessory-model-cta" href="#{configurator_url}"))
     visible_anchor = '<a class="button ghost" href="#odenis">Ödənişi hesabla</a></div>'
     visible_cta = %(<a class="button accessory-model-cta" href="#{configurator_url}">Aksesuar paketini qur <span>↗︎</span></a>)
