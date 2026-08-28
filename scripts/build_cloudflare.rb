@@ -45,6 +45,9 @@ abort "Russian localization failed" unless system(RbConfig.ruby, russian)
 typography = File.join(__dir__, "apply_typography.rb")
 abort "Corporate typography processing failed" unless system(RbConfig.ruby, typography)
 
+ux_accessibility = File.join(__dir__, "apply_ux_accessibility.rb")
+abort "UX/accessibility processing failed" unless system(RbConfig.ruby, ux_accessibility)
+
 audit = File.join(__dir__, "audit_seo.rb")
 abort "SEO audit failed" unless system(RbConfig.ruby, audit)
 
@@ -63,6 +66,9 @@ abort "Mobile model-name processing failed" unless system(RbConfig.ruby, mobile_
 mobile_model_names_audit = File.join(__dir__, "audit_mobile_model_names.rb")
 abort "Mobile model-name audit failed" unless system(RbConfig.ruby, mobile_model_names_audit)
 
+ux_accessibility_audit = File.join(__dir__, "audit_ux_accessibility.rb")
+abort "UX/accessibility audit failed" unless system(RbConfig.ruby, ux_accessibility_audit)
+
 FileUtils.rm_rf(DIST)
 FileUtils.mkdir_p(DIST)
 
@@ -79,7 +85,8 @@ files.each do |file|
 end
 
 html_count = Dir.glob(File.join(DIST, "**", "*.html")).size
-expected_html_count = 3 + Dir.glob(File.join(ROOT, "model", "*", "index.html")).size + ContentConfig::SLUGS.size + CategoryConfig::SLUGS.size + Dir.glob(File.join(ROOT, "ru", "**", "index.html")).size
+accessory_html_count = Dir.glob(File.join(ROOT, "aksesuar-konfiquratoru", "**", "*.html")).size
+expected_html_count = 2 + accessory_html_count + Dir.glob(File.join(ROOT, "model", "*", "index.html")).size + ContentConfig::SLUGS.size + CategoryConfig::SLUGS.size + Dir.glob(File.join(ROOT, "ru", "**", "index.html")).size
 abort "Expected #{expected_html_count} HTML files in dist, found #{html_count}" unless html_count == expected_html_count
 
 forbidden = %w[README.md .github cloudflare scripts]

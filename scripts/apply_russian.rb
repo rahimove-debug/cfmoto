@@ -15,6 +15,8 @@ ASSETS = File.join(ROOT, "assets")
 SITE_ORIGIN = DomainConfig::SITE_ORIGIN
 LANGUAGE_START = "<!-- CFMOTO:LANGUAGE:START -->"
 LANGUAGE_END = "<!-- CFMOTO:LANGUAGE:END -->"
+RSC_CANONICAL_LINK = %r{\[\\"\$\\",\\"link\\",\\"[^\\"]+\\",\{\\"rel\\":\\"canonical\\",\\"href\\":\\"[^\\"]+\\"\}\]}
+RSC_LOCALIZED_ALTERNATE = %r{,\[\\"\$\\",\\"link\\",\\"cfmoto-hreflang-(?:az|ru|x-default)\\",\{\\"rel\\":\\"alternate\\",\\"hrefLang\\":\\"(?:az|ru|x-default)\\",\\"href\\":\\"[^\\"]+\\"\}\]}
 
 RU_CONTENT_META = {
   "kredit" => {
@@ -130,14 +132,38 @@ end
 
 def remove_localization!(html)
   html.gsub!(%r{#{Regexp.escape(LANGUAGE_START)}.*?#{Regexp.escape(LANGUAGE_END)}\s*}m, "")
-  html.gsub!(%r{<link rel="stylesheet" href="/assets/language(?:-v2)?\.css"\s*/>}, "")
-  html.gsub!(%r{<script\b[^>]*src="/assets/language-switcher-v(?:1|2)\.js"[^>]*></script>}, "")
+  html.gsub!(%r{<link rel="stylesheet" href="/assets/language(?:-v[23])?\.css"\s*/>}, "")
+  html.gsub!(%r{<script\b[^>]*src="/assets/language-switcher-v(?:1|2|3)\.js"[^>]*></script>}, "")
   html.gsub!(%r{<link rel="alternate" hreflang="(?:az|ru|x-default)" href="[^"]+"\s*/>}, "")
   html.gsub!(%r{<meta property="og:locale:alternate" content="[^"]+"\s*/>}, "")
+  html.gsub!(RSC_LOCALIZED_ALTERNATE, "")
+end
+
+def rsc_alternate_link(key, hreflang, href)
+  %([\\"$\\",\\"link\\",\\"cfmoto-hreflang-#{key}\\",{\\"rel\\":\\"alternate\\",\\"hrefLang\\":\\"#{hreflang}\\",\\"href\\":\\"#{href}\\"}])
+end
+
+def inject_rsc_localization!(html, own_url:, az_url:, ru_url:)
+  # Content/category pages are plain HTML. Vinext home/model pages, however,
+  # reconcile <head> from this embedded RSC metadata during hydration.
+  return unless html.include?("__VINEXT_RSC_")
+
+  canonical_links = html.scan(RSC_CANONICAL_LINK)
+  abort "Expected one embedded RSC canonical, found #{canonical_links.size}" unless canonical_links.size == 1
+
+  current = canonical_links.first
+  canonical = current.sub(%r{\\"href\\":\\"[^\\"]+\\"}, %(\\"href\\":\\"#{own_url}\\"))
+  alternates = [
+    rsc_alternate_link("az", "az", az_url),
+    rsc_alternate_link("ru", "ru", ru_url),
+    rsc_alternate_link("x-default", "x-default", az_url)
+  ]
+  html.sub!(current, ([canonical] + alternates).join(","))
 end
 
 def inject_localization!(html, language:, az_url:, ru_url:, counterpart_path:)
   remove_localization!(html)
+  own_url = language == "ru" ? ru_url : az_url
 
   alternates = [
     %(<link rel="alternate" hreflang="az" href="#{az_url}"/>),
@@ -151,12 +177,13 @@ def inject_localization!(html, language:, az_url:, ru_url:, counterpart_path:)
   locale = language == "ru" ? "ru_RU" : "az_AZ"
   alternate_locale = language == "ru" ? "az_AZ" : "ru_RU"
   html.gsub!(%r{<meta property="og:locale" content="[^"]+"\s*/>}, %(<meta property="og:locale" content="#{locale}"/><meta property="og:locale:alternate" content="#{alternate_locale}"/>))
+  inject_rsc_localization!(html, own_url: own_url, az_url: az_url, ru_url: ru_url)
   runtime = <<~HTML.delete("\n")
     #{LANGUAGE_START}
-    <script defer src="/assets/language-switcher-v2.js" data-language="#{language}" data-counterpart="#{CGI.escapeHTML(counterpart_path)}"></script>
+    <script defer src="/assets/language-switcher-v4.js" data-language="#{language}" data-counterpart="#{CGI.escapeHTML(counterpart_path)}" data-canonical="#{CGI.escapeHTML(own_url)}" data-az="#{CGI.escapeHTML(az_url)}" data-ru="#{CGI.escapeHTML(ru_url)}" data-default="#{CGI.escapeHTML(az_url)}"></script>
     #{LANGUAGE_END}
   HTML
-  html.sub!("</head>", %(<link rel="stylesheet" href="/assets/language-v2.css"/>#{runtime}</head>))
+  html.sub!("</head>", %(<link rel="stylesheet" href="/assets/language-v3.css"/>#{runtime}</head>))
 end
 
 def set_tag!(html, pattern, replacement, label)

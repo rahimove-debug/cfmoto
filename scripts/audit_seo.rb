@@ -129,24 +129,33 @@ html_paths.each do |path|
   errors << "#{relative}: expected one GA4 loader" unless html.scan("googletagmanager.com/gtag/js?id=#{DomainConfig::GA4_MEASUREMENT_ID}").size == 1
   errors << "#{relative}: expected one GA4 configuration" unless html.scan("gtag('config','#{DomainConfig::GA4_MEASUREMENT_ID}')").size == 1
   errors << "#{relative}: expected one GTM head block" unless html.scan(GTM_HEAD_START).size == 1 && html.scan(GTM_HEAD_END).size == 1
-  errors << "#{relative}: expected one GTM body block" unless html.scan(GTM_BODY_START).size == 1 && html.scan(GTM_BODY_END).size == 1
+  errors << "#{relative}: legacy GTM body block can trigger hydration mismatch" unless html.scan(GTM_BODY_START).empty? && html.scan(GTM_BODY_END).empty?
   errors << "#{relative}: expected one GTM loader" unless html.scan("googletagmanager.com/gtm.js?id='+i+dl").size == 1 && html.scan("'#{GOOGLE_TAG_MANAGER_ID}'").size == 1
-  errors << "#{relative}: expected one GTM noscript iframe" unless html.scan("googletagmanager.com/ns.html?id=#{GOOGLE_TAG_MANAGER_ID}").size == 1
+  errors << "#{relative}: GTM noscript iframe must not sit outside the hydrated React tree" unless html.scan("googletagmanager.com/ns.html?id=#{GOOGLE_TAG_MANAGER_ID}").empty?
   normalized_html = html.gsub("&amp;", "&")
-  errors << "#{relative}: expected one Meta Pixel head block" unless html.scan(META_PIXEL_HEAD_START).size == 1 && html.scan(META_PIXEL_HEAD_END).size == 1
-  errors << "#{relative}: expected one Meta Pixel body block" unless html.scan(META_PIXEL_BODY_START).size == 1 && html.scan(META_PIXEL_BODY_END).size == 1
-  errors << "#{relative}: expected one Meta Pixel loader" unless html.scan("connect.facebook.net/en_US/fbevents.js").size == 1
-  errors << "#{relative}: expected one Meta Pixel init" unless html.scan("fbq('init','#{META_PIXEL_ID}')").size == 1
-  errors << "#{relative}: expected one Meta Pixel PageView" unless html.scan("fbq('track','PageView')").size == 1
-  errors << "#{relative}: expected one Meta Pixel noscript image" unless normalized_html.scan(/#{Regexp.escape(META_PIXEL_NOSCRIPT)}/).size == 1
+  errors << "#{relative}: Meta Pixel must be owned only by GTM (head marker found)" unless html.scan(META_PIXEL_HEAD_START).empty? && html.scan(META_PIXEL_HEAD_END).empty?
+  errors << "#{relative}: Meta Pixel must be owned only by GTM (body marker found)" unless html.scan(META_PIXEL_BODY_START).empty? && html.scan(META_PIXEL_BODY_END).empty?
+  errors << "#{relative}: duplicate direct Meta Pixel loader remains" unless html.scan("connect.facebook.net/en_US/fbevents.js").empty?
+  errors << "#{relative}: duplicate direct Meta Pixel init remains" unless html.scan("fbq('init','#{META_PIXEL_ID}')").empty?
+  errors << "#{relative}: duplicate direct Meta Pixel PageView remains" unless html.scan("fbq('track','PageView')").empty?
+  errors << "#{relative}: duplicate direct Meta Pixel noscript remains" unless normalized_html.scan(/#{Regexp.escape(META_PIXEL_NOSCRIPT)}/).empty?
   body_open_index = html.index(%r{<body\b[^>]*>}i)
   body_close_index = html.index("</body>")
-  pixel_body_index = html.index(META_PIXEL_BODY_START)
-  gtm_body_index = html.index(GTM_BODY_START)
   errors << "#{relative}: missing <body> tag" unless body_open_index
   errors << "#{relative}: missing </body> tag" unless body_close_index
-  errors << "#{relative}: Meta Pixel body block must be inside <body>" unless body_open_index && body_close_index && pixel_body_index && pixel_body_index > body_open_index && pixel_body_index < body_close_index
-  errors << "#{relative}: GTM body block must be inside <body>" unless body_open_index && body_close_index && gtm_body_index && gtm_body_index > body_open_index && gtm_body_index < body_close_index
+
+  if html.include?("__VINEXT_RSC_")
+    rsc_canonicals = html.scan(%r{\\"rel\\":\\"canonical\\",\\"href\\":\\"([^\\"]+)\\"}).flatten
+    errors << "#{relative}: hydrated canonical must be exactly #{expected_canonical}; found #{rsc_canonicals.inspect}" unless rsc_canonicals == [expected_canonical]
+    rsc_alternates = html.scan(%r{\\"rel\\":\\"alternate\\",\\"hrefLang\\":\\"(az|ru|x-default)\\",\\"href\\":\\"([^\\"]+)\\"})
+    expected_ru = relative == "index.html" ? "#{SITE_ORIGIN}/ru/" : "#{SITE_ORIGIN}/ru/model/#{File.basename(File.dirname(path))}/"
+    expected_rsc_alternates = {
+      "az" => expected_canonical,
+      "ru" => expected_ru,
+      "x-default" => expected_canonical
+    }
+    errors << "#{relative}: hydrated hreflang set must be #{expected_rsc_alternates.inspect}; found #{rsc_alternates.inspect}" unless rsc_alternates.size == 3 && rsc_alternates.to_h == expected_rsc_alternates
+  end
   %w[whatsapp_click phone_click directions_click finance_lead_click].each do |event_name|
     errors << "#{relative}: missing GA4 event #{event_name}" unless html.include?("'#{event_name}'")
   end

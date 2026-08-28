@@ -19,6 +19,7 @@ META_PIXEL_HEAD_START = "<!-- CFMOTO:META-PIXEL:HEAD:START -->"
 META_PIXEL_HEAD_END = "<!-- CFMOTO:META-PIXEL:HEAD:END -->"
 META_PIXEL_BODY_START = "<!-- CFMOTO:META-PIXEL:BODY:START -->"
 META_PIXEL_BODY_END = "<!-- CFMOTO:META-PIXEL:BODY:END -->"
+META_PIXEL_GTM_COMMENT = "/* Meta Pixel managed by #{GOOGLE_TAG_MANAGER_ID} */"
 
 abort "Invalid GA4 Measurement ID" unless MEASUREMENT_ID.match?(/\AG-[A-Z0-9]+\z/)
 abort "Invalid Google Tag Manager ID" unless GOOGLE_TAG_MANAGER_ID.match?(/\AGTM-[A-Z0-9]+\z/)
@@ -82,28 +83,19 @@ analytics = <<~HTML
   #{ANALYTICS_END}
 HTML
 
-meta_pixel_head = <<~HTML
-  #{META_PIXEL_HEAD_START}
-  <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window,document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init','#{META_PIXEL_ID}');
-  fbq('track','PageView');
-  </script>
-  #{META_PIXEL_HEAD_END}
-HTML
+def strip_direct_meta_pixel!(content)
+  content.gsub!(%r{#{Regexp.escape(META_PIXEL_HEAD_START)}.*?#{Regexp.escape(META_PIXEL_HEAD_END)}\s*}m, "")
+  content.gsub!(%r{#{Regexp.escape(META_PIXEL_BODY_START)}.*?#{Regexp.escape(META_PIXEL_BODY_END)}\s*}m, "")
 
-meta_pixel_body = <<~HTML
-  #{META_PIXEL_BODY_START}
-  <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=#{META_PIXEL_ID}&amp;ev=PageView&amp;noscript=1"></noscript>
-  #{META_PIXEL_BODY_END}
-HTML
+  # The GTM container is the single Meta Pixel owner. The configurator export
+  # stores the same inline Pixel source both as HTML and inside Next RSC text;
+  # replacing the script body preserves SSR/RSC parity while disabling the
+  # duplicate direct initialization.
+  pixel_loader = %r{!function\(f,b,e,v,n,t,s\)\{if\(f\.fbq\)return;.*?fbq\('track','PageView'\);}m
+  content.gsub!(pixel_loader, META_PIXEL_GTM_COMMENT)
+  pixel_noscript = %r{https://www\.facebook\.com/tr\?id=#{Regexp.escape(META_PIXEL_ID)}(?:&amp;|&|\\u0026)ev=PageView(?:&amp;|&|\\u0026)noscript=1}
+  content.gsub!(pixel_noscript, "about:blank")
+end
 
 html_paths = [
   File.join(ROOT, "index.html"),
@@ -117,27 +109,32 @@ html_paths.each do |path|
   html.gsub!(%r{#{Regexp.escape(ANALYTICS_START)}.*?#{Regexp.escape(ANALYTICS_END)}\s*}m, "")
   html.gsub!(%r{#{Regexp.escape(GTM_HEAD_START)}.*?#{Regexp.escape(GTM_HEAD_END)}\s*}m, "")
   html.gsub!(%r{#{Regexp.escape(GTM_BODY_START)}.*?#{Regexp.escape(GTM_BODY_END)}\s*}m, "")
-  html.gsub!(%r{#{Regexp.escape(META_PIXEL_HEAD_START)}.*?#{Regexp.escape(META_PIXEL_HEAD_END)}\s*}m, "")
-  html.gsub!(%r{#{Regexp.escape(META_PIXEL_BODY_START)}.*?#{Regexp.escape(META_PIXEL_BODY_END)}\s*}m, "")
+  strip_direct_meta_pixel!(html)
 
   abort "#{path}: missing <head> element" unless html.include?("<head>")
   body_match = html.match(%r{<body\b[^>]*>}i)
   abort "#{path}: missing <body> element" unless body_match
 
-  html.sub!("<head>", "<head>#{gtm_head}#{analytics}#{meta_pixel_head}")
-  html.sub!(body_match[0], "#{body_match[0]}#{gtm_body}#{meta_pixel_body}")
+  html.sub!("<head>", "<head>#{gtm_head}#{analytics}")
   File.write(path, html, encoding: "UTF-8")
 end
 
 accessory_path = File.join(ROOT, "aksesuar-konfiquratoru", "index.html")
 abort "Missing accessory configurator page: #{accessory_path}" unless File.file?(accessory_path)
 
-# The standalone configurator already ships its own GTM and Meta Pixel tags.
-# Add only GA4 here so those existing tags are not duplicated.
+# The standalone configurator ships its own GTM. Keep GTM as the single Meta
+# Pixel owner, strip its direct Pixel copy from every HTML/RSC export, and add
+# GA4 to the public page.
+Dir.glob(File.join(ROOT, "aksesuar-konfiquratoru", "**", "*.{html,txt}"), File::FNM_EXTGLOB).each do |path|
+  content = File.read(path, encoding: "UTF-8")
+  strip_direct_meta_pixel!(content)
+  File.write(path, content, encoding: "UTF-8")
+end
+
 accessory_html = File.read(accessory_path, encoding: "UTF-8")
 accessory_html.gsub!(%r{#{Regexp.escape(ANALYTICS_START)}.*?#{Regexp.escape(ANALYTICS_END)}\s*}m, "")
 abort "#{accessory_path}: missing <head> element" unless accessory_html.include?("<head>")
 accessory_html.sub!("<head>", "<head>#{analytics}")
 File.write(accessory_path, accessory_html, encoding: "UTF-8")
 
-puts "GA4 applied to #{html_paths.size + 1} HTML pages; GTM and Meta Pixel applied to #{html_paths.size} generated pages (#{MEASUREMENT_ID}, #{META_PIXEL_ID})"
+puts "GA4 applied to #{html_paths.size + 1} HTML pages; GTM is the single Meta Pixel source via #{GOOGLE_TAG_MANAGER_ID} (#{MEASUREMENT_ID}, #{META_PIXEL_ID})"

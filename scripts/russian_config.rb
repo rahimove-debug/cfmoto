@@ -7,9 +7,9 @@ require_relative "russian_ui_translations"
 
 module RussianConfig
   RU_PREFIX = "/ru"
-  ASSET_SOURCE_VERSIONS = %w[CfmotoPolicyFixV10 CfmotoFinanceFixV11].freeze
-  ASSET_RUSSIAN_VERSION = "CfmotoRussianV5"
-  LEGACY_RUSSIAN_ASSET_VERSIONS = %w[CfmotoRussianV1 CfmotoRussianV2 CfmotoRussianV3 CfmotoRussianV4].freeze
+  ASSET_SOURCE_VERSIONS = %w[CfmotoPolicyFixV10 CfmotoFinanceFixV12].freeze
+  ASSET_RUSSIAN_VERSION = "CfmotoRussianV6"
+  LEGACY_RUSSIAN_ASSET_VERSIONS = %w[CfmotoRussianV1 CfmotoRussianV2 CfmotoRussianV3 CfmotoRussianV4 CfmotoRussianV5].freeze
 
   CONTENT_ROUTES = {
     "kredit" => "kredit",
@@ -44,6 +44,9 @@ module RussianConfig
     "Hər detal CFMOTO-nun müasir dizayn yanaşmasını, gündəlik funksionallığı və seçilən segmentin xarakterini göstərir." => "Каждая деталь отражает современный подход CFMOTO к дизайну, повседневную функциональность и характер выбранного сегмента.",
     "Hesablama məlumat xarakterlidir; bank faizi və komissiyalar daxil deyil. Yekun şərtlər fərqlənə bilər." => "Расчёт носит информационный характер; банковские проценты и комиссии не учтены. Итоговые условия могут отличаться.",
     "Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Bank şərtləri ayrıca hesablanır." => "Проценты по рассрочке: 6 месяцев — 8%, 12 месяцев — 15%, 18 месяцев — 23%. Банковские условия рассчитываются отдельно.",
+    "Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir." => "Проценты по рассрочке: 6 месяцев — 8%, 12 месяцев — 15%, 18 месяцев — 23%. Итоговые условия подтверждает специалист по продажам.",
+    "Bank faizi və komissiyası daxil deyil. Yekun aylıq ödəniş bank tərəfindən hesablanır." => "Банковский процент и комиссия не включены. Итоговый ежемесячный платёж рассчитывается банком.",
+    "Əsas borc · bank faizi və komissiyası daxil deyil" => "Основной долг · без банковского процента и комиссии",
     "Daxili ödəniş faizi:" => "Процент по рассрочке:",
     "Faiz daxil borc:" => "Долг с учётом процентов:",
     "Faiz daxil borc" => "Долг с учётом процентов",

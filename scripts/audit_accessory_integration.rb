@@ -29,7 +29,10 @@ if File.file?(PAGE)
   errors << "Configurator GA4 loader must use only #{GA4_MEASUREMENT_ID}" unless ga4_loader_ids == [GA4_MEASUREMENT_ID]
   errors << "Configurator GA4 configuration must use only #{GA4_MEASUREMENT_ID}" unless ga4_config_ids == [GA4_MEASUREMENT_ID]
   errors << "GTM is missing from configurator" unless page.include?("GTM-W9877TBG")
-  errors << "Meta Pixel is missing from configurator" unless page.include?("1395135232664282")
+  errors << "Configurator still contains a duplicate direct Meta Pixel loader" if page.include?("connect.facebook.net/en_US/fbevents.js")
+  errors << "Configurator still contains a duplicate direct Meta Pixel init" if page.include?("fbq('init','1395135232664282')")
+  errors << "Configurator still contains a duplicate direct Meta Pixel PageView" if page.include?("fbq('track','PageView')")
+  errors << "Configurator still contains a duplicate Meta Pixel noscript request" if page.include?("facebook.com/tr?id=1395135232664282")
   errors << "Model preselection script is missing from configurator" unless page.include?("/assets/accessory-model-preselect-v1.js")
   errors << "Legacy ChatGPT site origin leaked" if page.include?("cfmoto-azerbaycan-aksesuar.dvhqpbbkmw.chatgpt.site")
 
@@ -37,6 +40,11 @@ if File.file?(PAGE)
     local = File.join(ROOT, url.delete_prefix("/"))
     errors << "Missing configurator bundle: #{url}" unless File.file?(local)
   end
+end
+
+Dir.glob(File.join(ROOT, "aksesuar-konfiquratoru", "**", "*.{html,txt}"), File::FNM_EXTGLOB).each do |path|
+  content = read(path)
+  errors << "#{path.delete_prefix("#{ROOT}/")}: direct Meta Pixel source remains outside GTM" if content.match?(/connect\.facebook\.net\/en_US\/fbevents\.js|fbq\('(?:init|track)'|facebook\.com\/tr\?id=1395135232664282/)
 end
 
 accessory_images = Dir.glob(File.join(ROOT, "accessories", "**", "*")).count { |path| File.file?(path) }
@@ -47,24 +55,24 @@ errors << "AZ homepage promo is missing" unless home.include?('class="accessory-
 errors << "AZ homepage sales hero CTA is missing" unless home.include?('class="button accessory-hero-button"')
 errors << "AZ homepage configurator link is missing" unless home.scan('href="/aksesuar-konfiquratoru/"').size >= 3
 errors << "AZ homepage accessory stylesheet is missing" unless home.include?('/assets/accessory-entry-v1.css')
-errors << "AZ homepage cache-busted bundle is missing" unless home.include?('/assets/page-CfmotoAccessoryV14.js')
-errors << "AZ homepage cache-busted app loader is missing" unless home.scan('/assets/index-CfmotoAccessoryV14.js').size >= 2
+errors << "AZ homepage cache-busted bundle is missing" unless home.include?('/assets/page-CfmotoAccessoryV15.js')
+errors << "AZ homepage cache-busted app loader is missing" unless home.scan('/assets/index-CfmotoAccessoryV15.js').size >= 2
 
 ru_home = read(File.join(ROOT, "ru", "index.html"))
 errors << "RU homepage configurator link is missing" unless ru_home.scan('href="/aksesuar-konfiquratoru/"').size >= 2
 
-home_bundle = read(File.join(ROOT, "assets", "page-CfmotoAccessoryV14.js"))
-app_loader = read(File.join(ROOT, "assets", "index-CfmotoAccessoryV14.js"))
+home_bundle = read(File.join(ROOT, "assets", "page-CfmotoAccessoryV15.js"))
+app_loader = read(File.join(ROOT, "assets", "index-CfmotoAccessoryV15.js"))
 errors << "AZ hydrated promo is missing" unless home_bundle.include?('className:`accessory-promo section`')
 errors << "AZ hydrated sales hero CTA is missing" unless home_bundle.include?('button accessory-hero-button')
 errors << "AZ hydrated navigation link is missing" unless home_bundle.include?('[`Aksesuarlar`,`/aksesuar-konfiquratoru/`]')
-errors << "AZ app loader does not load cache-busted home bundle" unless app_loader.include?('assets/page-CfmotoAccessoryV14.js')
-errors << "AZ app loader still references stale home bundle" if app_loader.include?('page-CfmotoFinanceFixV11.js')
+errors << "AZ app loader does not load cache-busted home bundle" unless app_loader.include?('assets/page-CfmotoAccessoryV15.js')
+errors << "AZ app loader still references stale home bundle" if app_loader.include?('page-CfmotoFinanceFixV12.js')
 %w[
-  layout-segment-context-CfmotoAccessoryV14.js
-  link-CfmotoAccessoryV14.js
-  router-CfmotoAccessoryV14.js
-  ProductMegaMenu-CfmotoAccessoryV14.js
+  layout-segment-context-CfmotoAccessoryV15.js
+  link-CfmotoAccessoryV15.js
+  router-CfmotoAccessoryV15.js
+  ProductMegaMenu-CfmotoAccessoryV15.js
 ].each do |asset|
   errors << "Missing cache-busted dependency: #{asset}" unless File.file?(File.join(ROOT, "assets", asset))
 end

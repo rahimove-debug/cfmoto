@@ -1,0 +1,133 @@
+/* CFMOTO corporate typography — WOFF2-optimized Visual Identity fonts. */
+@font-face {
+  font-family: "Supreme LL";
+  src: url("/assets/fonts/supreme-ll-light.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-family: "Supreme LL";
+  src: url("/assets/fonts/supreme-ll-light-italic.woff2") format("woff2");
+  font-display: swap;
+  font-style: italic;
+  font-weight: 300;
+}
+@font-face {
+  font-family: "Supreme LL";
+  src: url("/assets/fonts/supreme-ll-regular.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Supreme LL";
+  src: url("/assets/fonts/supreme-ll-italic.woff2") format("woff2");
+  font-display: swap;
+  font-style: italic;
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Supreme LL";
+  src: url("/assets/fonts/supreme-ll-medium.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Supreme LL";
+  src: url("/assets/fonts/supreme-ll-bold.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Supreme LL";
+  src: url("/assets/fonts/supreme-ll-bold-flat.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 710;
+}
+@font-face {
+  font-family: "Supreme LL";
+  src: url("/assets/fonts/supreme-ll-bold-flat-italic.woff2") format("woff2");
+  font-display: swap;
+  font-style: italic;
+  font-weight: 710;
+}
+@font-face {
+  font-family: "Supreme LL";
+  src: url("/assets/fonts/supreme-ll-black.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 900;
+}
+@font-face {
+  font-family: "Supreme LL";
+  src: url("/assets/fonts/supreme-ll-black-italic.woff2") format("woff2");
+  font-display: swap;
+  font-style: italic;
+  font-weight: 900;
+}
+
+:root {
+  --cf-font-corporate: "Supreme LL", Arial, Helvetica, sans-serif;
+}
+
+body,
+button,
+select,
+input,
+textarea {
+  font-family: var(--cf-font-corporate);
+}
+
+body { font-weight: 300; }
+h2, h3 { font-weight: 500; }
+strong, b { font-weight: 700; }
+
+/* Dynamic brand headlines use Bold Flat Italic. */
+.category-hero-content .category-hero-title,
+.hero h1,
+.content-hero h1 {
+  font-family: var(--cf-font-corporate);
+  font-stretch: normal;
+  font-style: italic;
+  font-weight: 710;
+}
+
+/* Product names use the guideline's Black Italic treatment. */
+.product-title {
+  font-style: italic;
+  font-weight: 900;
+}
+
+/* Editorial and section headlines use Supreme LL Medium. */
+.section-head h2,
+.finance-intro h2,
+.showroom h2,
+.info-card h2,
+.info-card h3,
+.prose h2,
+.prose h3,
+.faq h2,
+.cta-box h2,
+.category-model-copy h2 {
+  font-weight: 500;
+}
+
+/* The supplied corporate package is Latin-only; keep Russian copy consistent. */
+html[lang="ru"] body,
+html[lang="ru"] button,
+html[lang="ru"] select,
+html[lang="ru"] input,
+html[lang="ru"] textarea {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html[lang="ru"] .category-hero-content .category-hero-title,
+html[lang="ru"] .hero h1,
+html[lang="ru"] .content-hero h1,
+html[lang="ru"] .product-title {
+  font-family: Arial, Helvetica, sans-serif;
+}

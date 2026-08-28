@@ -188,7 +188,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
           own_path: entry.az_path,
           counterpart_path: entry.ru_path
         )
-        audit_meta_pixel(entry.az_file, az_html)
+        audit_analytics(entry.az_file, az_html)
         audit_page(
           entry,
           ru_html,
@@ -196,7 +196,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
           own_path: entry.ru_path,
           counterpart_path: entry.az_path
         )
-        audit_meta_pixel(entry.ru_file, ru_html)
+        audit_analytics(entry.ru_file, ru_html)
         audit_react_asset_pair(entry, az_html, ru_html) if react_page?(entry)
         audit_react_metadata_parity(entry, ru_html) if react_page?(entry)
         audit_no_azerbaijani_letters(entry.ru_file, ru_html)
@@ -252,8 +252,12 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
         html,
         label,
         language: language,
-        counterpart_path: counterpart_path
+        counterpart_path: counterpart_path,
+        own_url: own_url,
+        az_url: az_url,
+        ru_url: ru_url
       )
+      audit_react_seo(html, label, own_url: own_url, az_url: az_url, ru_url: ru_url) if html.include?("__VINEXT_RSC_")
       audit_schema(html, label, language: language, own_url: own_url)
     end
 
@@ -265,29 +269,23 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       @errors << "#{label}: #{name} must be exactly #{expected}; found #{values.inspect}" unless values == [expected]
     end
 
-    def audit_meta_pixel(path, html)
+    def audit_analytics(path, html)
       label = relative(path)
       normalized = html.gsub("&amp;", "&")
-      body_open = html.index(%r{<body\b[^>]*>}i)
-      body_close = html.index("</body>")
-      body_marker = html.index(META_PIXEL_BODY_START)
-      gtm_body_marker = html.index(GTM_BODY_START)
 
       @errors << "#{label}: expected one GTM head marker pair" unless html.scan(GTM_HEAD_START).size == 1 && html.scan(GTM_HEAD_END).size == 1
-      @errors << "#{label}: expected one GTM body marker pair" unless html.scan(GTM_BODY_START).size == 1 && html.scan(GTM_BODY_END).size == 1
+      @errors << "#{label}: GTM body marker can trigger hydration mismatch" unless html.scan(GTM_BODY_START).empty? && html.scan(GTM_BODY_END).empty?
       @errors << "#{label}: expected one GTM loader" unless html.scan("googletagmanager.com/gtm.js?id='+i+dl").size == 1 && html.scan("'#{GOOGLE_TAG_MANAGER_ID}'").size == 1
-      @errors << "#{label}: expected one GTM noscript iframe" unless html.scan("googletagmanager.com/ns.html?id=#{GOOGLE_TAG_MANAGER_ID}").size == 1
-      @errors << "#{label}: expected one Meta Pixel head marker pair" unless html.scan(META_PIXEL_HEAD_START).size == 1 && html.scan(META_PIXEL_HEAD_END).size == 1
-      @errors << "#{label}: expected one Meta Pixel body marker pair" unless html.scan(META_PIXEL_BODY_START).size == 1 && html.scan(META_PIXEL_BODY_END).size == 1
-      @errors << "#{label}: expected one Meta Pixel loader" unless html.scan("connect.facebook.net/en_US/fbevents.js").size == 1
-      @errors << "#{label}: expected one Meta Pixel init" unless html.scan("fbq('init','#{META_PIXEL_ID}')").size == 1
-      @errors << "#{label}: expected one Meta Pixel PageView" unless html.scan("fbq('track','PageView')").size == 1
-      @errors << "#{label}: expected one Meta Pixel noscript image" unless normalized.scan(/#{Regexp.escape(META_PIXEL_NOSCRIPT)}/).size == 1
-      @errors << "#{label}: GTM body marker must be inside <body>" unless body_open && body_close && gtm_body_marker && gtm_body_marker > body_open && gtm_body_marker < body_close
-      @errors << "#{label}: Meta Pixel body marker must be inside <body>" unless body_open && body_close && body_marker && body_marker > body_open && body_marker < body_close
+      @errors << "#{label}: GTM noscript iframe must not sit outside the hydrated tree" unless html.scan("googletagmanager.com/ns.html?id=#{GOOGLE_TAG_MANAGER_ID}").empty?
+      @errors << "#{label}: Meta Pixel must be owned only by GTM (head marker found)" unless html.scan(META_PIXEL_HEAD_START).empty? && html.scan(META_PIXEL_HEAD_END).empty?
+      @errors << "#{label}: Meta Pixel must be owned only by GTM (body marker found)" unless html.scan(META_PIXEL_BODY_START).empty? && html.scan(META_PIXEL_BODY_END).empty?
+      @errors << "#{label}: duplicate direct Meta Pixel loader remains" unless html.scan("connect.facebook.net/en_US/fbevents.js").empty?
+      @errors << "#{label}: duplicate direct Meta Pixel init remains" unless html.scan("fbq('init','#{META_PIXEL_ID}')").empty?
+      @errors << "#{label}: duplicate direct Meta Pixel PageView remains" unless html.scan("fbq('track','PageView')").empty?
+      @errors << "#{label}: duplicate direct Meta Pixel noscript remains" unless normalized.scan(/#{Regexp.escape(META_PIXEL_NOSCRIPT)}/).empty?
     end
 
-    def audit_language_switch(html, label, language:, counterpart_path:)
+    def audit_language_switch(html, label, language:, counterpart_path:, own_url:, az_url:, ru_url:)
       starts = html.scan(Regexp.new(Regexp.escape(LANGUAGE_START))).size
       ends = html.scan(Regexp.new(Regexp.escape(LANGUAGE_END))).size
       @errors << "#{label}: expected one language-switcher marker pair, found #{starts} starts and #{ends} ends" unless starts == 1 && ends == 1
@@ -295,12 +293,34 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       block = html[%r{#{Regexp.escape(LANGUAGE_START)}(.*?)#{Regexp.escape(LANGUAGE_END)}}m, 1]
       return unless block
 
-      @errors << "#{label}: missing language-v2.css" unless html.scan(%r{<link\b[^>]*href="/assets/language-v2\.css"[^>]*>}i).size == 1
+      @errors << "#{label}: missing language-v3.css" unless html.scan(%r{<link\b[^>]*href="/assets/language-v3\.css"[^>]*>}i).size == 1
 
-      runtime_tags = block.scan(%r{<script\b[^>]*src="/assets/language-switcher-v2\.js"[^>]*></script>}i)
+      runtime_tags = block.scan(%r{<script\b[^>]*src="/assets/language-switcher-v4\.js"[^>]*></script>}i)
       runtime_attrs = runtime_tags.empty? ? {} : attributes(runtime_tags.first)
       @errors << "#{label}: expected one language switcher runtime" unless runtime_tags.size == 1
       @errors << "#{label}: language switcher runtime must target #{counterpart_path}" unless runtime_attrs["data-language"] == language && runtime_attrs["data-counterpart"] == counterpart_path
+      expected_runtime_seo = {
+        "data-canonical" => own_url,
+        "data-az" => az_url,
+        "data-ru" => ru_url,
+        "data-default" => az_url
+      }
+      actual_runtime_seo = expected_runtime_seo.keys.to_h { |key| [key, runtime_attrs[key]] }
+      @errors << "#{label}: language runtime SEO data must be #{expected_runtime_seo.inspect}; found #{actual_runtime_seo.inspect}" unless actual_runtime_seo == expected_runtime_seo
+    end
+
+    def audit_react_seo(html, label, own_url:, az_url:, ru_url:)
+      canonicals = html.scan(%r{\\"rel\\":\\"canonical\\",\\"href\\":\\"([^\\"]+)\\"}).flatten
+      @errors << "#{label}: hydrated canonical must be exactly #{own_url}; found #{canonicals.inspect}" unless canonicals == [own_url]
+
+      alternates = html.scan(%r{\\"rel\\":\\"alternate\\",\\"hrefLang\\":\\"(az|ru|x-default)\\",\\"href\\":\\"([^\\"]+)\\"})
+      expected = {
+        "az" => az_url,
+        "ru" => ru_url,
+        "x-default" => az_url
+      }
+      exact = alternates.size == 3 && alternates.map(&:first).uniq.size == 3 && alternates.to_h == expected
+      @errors << "#{label}: hydrated hreflang set must be #{expected.inspect}; found #{alternates.inspect}" unless exact
     end
 
     def audit_schema(html, label, language:, own_url:)
@@ -433,12 +453,20 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
         finance_javascript = read(finance_asset)
         @errors << "#{relative(finance_asset)}: client duration label still uses ay instead of мес." if finance_javascript.include?("` ay`")
         @errors << "#{relative(finance_asset)}: client slider label still contains Azerbaijani faizi" if finance_javascript.include?(" faizi")
+        @errors << "#{relative(finance_asset)}: internal 3-month option is still present" if finance_javascript.include?('m=s?[3,6,12,18]:[3,6,12]')
+        @errors << "#{relative(finance_asset)}: installment rates are incomplete" unless finance_javascript.include?('INTEREST_RATES={6:.08,12:.15,18:.23}')
+        @errors << "#{relative(finance_asset)}: bank exclusion note is missing" unless finance_javascript.include?("Банковский процент и комиссия не включены. Итоговый ежемесячный платёж рассчитывается банком.")
+        @errors << "#{relative(finance_asset)}: bank debt label is missing" unless finance_javascript.include?("Основной долг · без банковского процента и комиссии")
       end
 
       home_asset = russian_javascript.find { |path| File.basename(path).start_with?("page-") }
       if home_asset
         home_javascript = read(home_asset)
         @errors << "#{relative(home_asset)}: home calculator label is not translated to Модель" unless home_javascript.include?("children:[`Модель`,")
+        @errors << "#{relative(home_asset)}: installment rates are incomplete" unless home_javascript.include?('INTEREST_RATES={6:.08,12:.15,18:.23}')
+        @errors << "#{relative(home_asset)}: internal term still starts at 3 months" unless home_javascript.include?('min:_===`Банковский кредит`?3:6')
+        @errors << "#{relative(home_asset)}: bank exclusion note is missing" unless home_javascript.include?("Банковский процент и комиссия не включены. Итоговый ежемесячный платёж рассчитывается банком.")
+        @errors << "#{relative(home_asset)}: bank debt label is missing" unless home_javascript.include?("Основной долг · без банковского процента и комиссии")
       end
     end
 
@@ -471,9 +499,12 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     def audit_russian_navigation(entry, html)
       scrubbed = html.dup
       scrubbed.gsub!(%r{#{Regexp.escape(LANGUAGE_START)}.*?#{Regexp.escape(LANGUAGE_END)}}m, "")
-      scrubbed.gsub!(%r{<script\b[^>]*src="/assets/language-switcher-v(?:1|2)\.js"[^>]*></script>}i, "")
+      scrubbed.gsub!(%r{<script\b[^>]*src="/assets/language-switcher-v(?:1|2|3)\.js"[^>]*></script>}i, "")
       scrubbed.gsub!(%r{<link\b[^>]*rel="alternate"[^>]*>}mi, "")
       scrubbed.gsub!(%r{<script\b[^>]*type="application/ld\+json"[^>]*>.*?</script>}mi, "")
+      # Azerbaijani URLs are expected inside the already-audited hydrated
+      # hreflang set; they are SEO metadata, not Russian navigation targets.
+      scrubbed.gsub!(%r{,\[\\"\$\\",\\"link\\",\\"cfmoto-hreflang-(?:az|ru|x-default)\\",\{\\"rel\\":\\"alternate\\",\\"hrefLang\\":\\"(?:az|ru|x-default)\\",\\"href\\":\\"[^\\"]+\\"\}\]}, "")
 
       scrubbed.scan(%r{<a\b[^>]*\bhref=(?:"([^"]*)"|'([^']*)')[^>]*>}mi).each do |captures|
         href = captures.compact.first

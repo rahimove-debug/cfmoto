@@ -1,0 +1,10 @@
+/* Only resolve hero image URLs when the panel can display them. */
+.category-hero-panel {
+  background-image: var(--hero-image);
+}
+
+@media (width <= 860px) {
+  .category-hero-panel:not(.active) {
+    background-image: none !important;
+  }
+}

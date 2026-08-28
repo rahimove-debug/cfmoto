@@ -13,11 +13,14 @@ end
 
 home_path = File.join(ROOT, "index.html")
 home = read(home_path)
-home.gsub!("/assets/index-CfmotoAccessoryV14.js", "/assets/index-CfmotoPolicyFixV10.js")
+home.gsub!("/assets/page-CfmotoAccessoryV15.js", "/assets/page-CfmotoFinanceFixV12.js")
 home.gsub!("/assets/page-CfmotoAccessoryV14.js", "/assets/page-CfmotoFinanceFixV11.js")
-home.gsub!("/assets/layout-segment-context-CfmotoAccessoryV14.js", "/assets/layout-segment-context-CfmotoPolicyFixV10.js")
-home.gsub!("/assets/link-CfmotoAccessoryV14.js", "/assets/link-CfmotoPolicyFixV10.js")
-home.gsub!("/assets/ProductMegaMenu-CfmotoAccessoryV14.js", "/assets/ProductMegaMenu-CfmotoPolicyFixV10.js")
+%w[V15 V14].each do |version|
+  home.gsub!("/assets/index-CfmotoAccessory#{version}.js", "/assets/index-CfmotoPolicyFixV10.js")
+  home.gsub!("/assets/layout-segment-context-CfmotoAccessory#{version}.js", "/assets/layout-segment-context-CfmotoPolicyFixV10.js")
+  home.gsub!("/assets/link-CfmotoAccessory#{version}.js", "/assets/link-CfmotoPolicyFixV10.js")
+  home.gsub!("/assets/ProductMegaMenu-CfmotoAccessory#{version}.js", "/assets/ProductMegaMenu-CfmotoPolicyFixV10.js")
+end
 home.gsub!(%(<link rel="stylesheet" href="/assets/accessory-entry-v1.css"/>), "")
 home.gsub!(%(<a href="/aksesuar-konfiquratoru/">Aksesuarlar</a>), "")
 home.gsub!(%r{<a class="accessory-hero-link" href="/aksesuar-konfiquratoru/">.*?</a>}m, "")
@@ -31,7 +34,11 @@ home.sub!(
 )
 write(home_path, home)
 
-bundle_path = File.join(ROOT, "assets", "page-CfmotoFinanceFixV11.js")
+bundle_name = %w[page-CfmotoFinanceFixV12.js page-CfmotoFinanceFixV11.js].find do |name|
+  File.file?(File.join(ROOT, "assets", name))
+end
+abort "Finance home bundle not found while removing accessory integration" unless bundle_name
+bundle_path = File.join(ROOT, "assets", bundle_name)
 bundle = read(bundle_path)
 bundle.gsub!('[`Aksesuarlar`,`/aksesuar-konfiquratoru/`],', "")
 bundle.gsub!(
@@ -49,12 +56,11 @@ bundle.sub!(
   '(0,c.jsxs)(`section`,{className:`service section`'
 )
 write(bundle_path, bundle)
-FileUtils.rm_f(File.join(ROOT, "assets", "page-CfmotoAccessoryV14.js"))
-FileUtils.rm_f(File.join(ROOT, "assets", "index-CfmotoAccessoryV14.js"))
-FileUtils.rm_f(File.join(ROOT, "assets", "layout-segment-context-CfmotoAccessoryV14.js"))
-FileUtils.rm_f(File.join(ROOT, "assets", "link-CfmotoAccessoryV14.js"))
-FileUtils.rm_f(File.join(ROOT, "assets", "router-CfmotoAccessoryV14.js"))
-FileUtils.rm_f(File.join(ROOT, "assets", "ProductMegaMenu-CfmotoAccessoryV14.js"))
+%w[CfmotoAccessoryV15 CfmotoAccessoryV14].each do |version|
+  %w[page index layout-segment-context link router ProductMegaMenu].each do |asset|
+    FileUtils.rm_f(File.join(ROOT, "assets", "#{asset}-#{version}.js"))
+  end
+end
 
 configurator_path = File.join(ROOT, "aksesuar-konfiquratoru", "index.html")
 configurator = read(configurator_path)

@@ -1,0 +1,71 @@
+/* CFMOTO:UX-ACCESSIBILITY-V1 */
+.language-switcher a:focus-visible {
+  outline: 3px solid #005fcc;
+  outline-offset: 3px;
+  background: #eaf8fa;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.calculator > small,
+.calc-result > span,
+.calc-result p,
+.model-calc-result > span,
+.model-calc-result p,
+.model-slider-note,
+.model-range-scale,
+.model-price small,
+.product-price small,
+.category-hero-featured small {
+  font-size: 12px;
+}
+
+.calculator > small,
+.model-slider-note,
+.model-range-scale,
+.model-price small,
+.product-price small,
+.model-info p {
+  color: #596468;
+}
+
+.calculator > small,
+.calc-result p,
+.model-calc-result p,
+.model-slider-note {
+  line-height: 1.5;
+}
+
+.category-hero-featured small {
+  color: rgba(255, 255, 255, .82);
+}
+
+@media (max-width: 420px) {
+  html[lang="ru"] .category-hero-title {
+    font-size: clamp(46px, 14.8vw, 60px);
+    line-height: .98;
+    letter-spacing: -.035em;
+  }
+
+  .filter-row {
+    gap: 2px;
+    scroll-padding-inline: 4px;
+    scroll-snap-type: x proximity;
+    scrollbar-color: #009bb4 transparent;
+    scrollbar-width: thin;
+  }
+
+  .filter-row button {
+    min-width: 0;
+    flex: 1 0 auto;
+    padding-inline: 11px;
+    font-size: 13px;
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 350px) {
+  .filter-row button {
+    padding-inline: 7px;
+    font-size: 12px;
+  }
+}
