@@ -64,12 +64,15 @@ end
 
 configurator_path = File.join(ROOT, "aksesuar-konfiquratoru", "index.html")
 configurator = read(configurator_path)
-configurator.gsub!(%(<script defer src="/assets/accessory-model-preselect-v1.js"></script>), "")
+configurator.gsub!(%r{<script defer src="/assets/accessory-model-preselect-v\d+\.js"></script>}, "")
 write(configurator_path, configurator)
 
 Dir.glob(File.join(ROOT, "model", "*", "index.html")).each do |path|
   slug = File.basename(File.dirname(path))
-  configurator_url = "/aksesuar-konfiquratoru/?model=#{slug}#models"
+  configurator_urls = [
+    "/aksesuar-konfiquratoru/?model=#{slug}#models",
+    "/aksesuar-konfiquratoru/?model=#{slug}&bike=0&lock=1"
+  ]
   html = read(path)
   %w[V15 V14].each do |version|
     html.gsub!("/assets/index-CfmotoAccessory#{version}.js", "/assets/index-CfmotoPolicyFixV10.js")
@@ -78,12 +81,15 @@ Dir.glob(File.join(ROOT, "model", "*", "index.html")).each do |path|
     html.gsub!("/assets/ProductMegaMenu-CfmotoAccessory#{version}.js", "/assets/ProductMegaMenu-CfmotoPolicyFixV10.js")
   end
   html.gsub!(%(<link rel="stylesheet" href="/assets/accessory-entry-v1.css"/>), "")
-  html.gsub!(%r{<a class="button accessory-model-cta" href="#{Regexp.escape(configurator_url)}">.*?</a>}m, "")
-  html.gsub!(
-    %(<div class="model-mobile-cta"><a href="#{configurator_url}">Aksesuar seç</a>),
-    '<div class="model-mobile-cta"><a href="#odenis">Aylıq ödəniş</a>'
-  )
+  configurator_urls.each do |configurator_url|
+    html.gsub!(%r{<a class="button accessory-model-cta" href="#{Regexp.escape(configurator_url)}">.*?</a>}m, "")
+    html.gsub!(
+      %(<div class="model-mobile-cta"><a href="#{configurator_url}">Aksesuar seç</a>),
+      '<div class="model-mobile-cta"><a href="#odenis">Aylıq ödəniş</a>'
+    )
+  end
 
+  configurator_url = configurator_urls.last
   original_rsc = '[\\"$\\",\\"a\\",null,{\\"className\\":\\"button ghost\\",\\"href\\":\\"#odenis\\",\\"children\\":\\"Ödənişi hesabla\\"}]]}]]}'
   accessory_rsc_element = %r{,\[\\"\$\\",\\"a\\",null,\{\\"className\\":\\"button accessory-model-cta\\".*?\\"children\\":\\"↗︎\\"\}\]\]\}\]}m
   html.gsub!(accessory_rsc_element, "")
@@ -92,9 +98,20 @@ Dir.glob(File.join(ROOT, "model", "*", "index.html")).each do |path|
   html.gsub!(malformed_rsc, original_rsc)
   html.gsub!(valid_rsc, original_rsc)
 
-  mobile_rsc = %!\\"className\\":\\"model-mobile-cta\\",\\"children\\":[[\\"$\\",\\"a\\",null,{\\"href\\":\\"#{configurator_url}\\",\\"children\\":\\"Aksesuar seç\\"}]!
   mobile_rsc_original = '\\"className\\":\\"model-mobile-cta\\",\\"children\\":[[\\"$\\",\\"a\\",null,{\\"href\\":\\"#odenis\\",\\"children\\":\\"Aylıq ödəniş\\"}]'
-  html.gsub!(mobile_rsc, mobile_rsc_original)
+  configurator_urls.each do |url|
+    mobile_rsc = %!\\"className\\":\\"model-mobile-cta\\",\\"children\\":[[\\"$\\",\\"a\\",null,{\\"href\\":\\"#{url}\\",\\"children\\":\\"Aksesuar seç\\"}]!
+    html.gsub!(mobile_rsc, mobile_rsc_original)
+  end
+  write(path, html)
+end
+
+%w[kvadrosikl buggy].each do |category|
+  path = File.join(ROOT, category, "index.html")
+  next unless File.file?(path)
+
+  html = read(path)
+  html.gsub!(%r{<a class="button primary accessory-category-cta" href="[^"]+">.*?</a>}m, "")
   write(path, html)
 end
 

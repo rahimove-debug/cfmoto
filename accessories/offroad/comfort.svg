@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">CFMOTO off-road komfort aksesuarı</title>
+  <desc id="desc">Məhsul kateqoriyası üçün neytral oturacaq və istilik illüstrasiyası</desc>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071113"/><stop offset="1" stop-color="#12323a"/></linearGradient></defs>
+  <rect width="1200" height="900" fill="url(#g)"/>
+  <path d="M405 650h390l70-145H550l-75-250H335l95 330z" fill="none" stroke="#00efd1" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M620 230c-55 58 55 90 0 150M745 230c-55 58 55 90 0 150" fill="none" stroke="#009bb4" stroke-width="24" stroke-linecap="round"/>
+  <text x="600" y="110" fill="#8b9aa2" font-family="Arial,sans-serif" font-size="38" font-weight="700" text-anchor="middle" letter-spacing="8">CFMOTO · KOMFORT</text>
+</svg>

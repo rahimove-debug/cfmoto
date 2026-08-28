@@ -70,9 +70,9 @@ if File.file?(configurator_path)
   end
 end
 
-configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-review-v1.js")
-configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-review-v1.css")
-configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-review-v1.js")
+configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-v2.js")
+configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-v2.css")
+configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-v2.js")
 if File.file?(configurator_bundle_path)
   bundle = read(configurator_bundle_path)
   forbidden = [
@@ -89,10 +89,12 @@ if File.file?(configurator_bundle_path)
   forbidden.each do |copy|
     errors << "Configurator bundle still exposes unlocalized/internal copy: #{copy}" if bundle.include?(copy)
   end
-  errors << "Commercial fitment copy is missing" unless bundle.include?("Uyğunluq, mövcudluq və yekun qiymət")
+  fitment_copy_present = bundle.include?("Uyğunluq, mövcudluq və yekun qiymət") ||
+    bundle.include?('Uyğunluq, m\\xf6vcudluq və yekun qiymət')
+  errors << "Commercial fitment copy is missing" unless fitment_copy_present
   errors << "750SR-S clean image is missing" unless bundle.include?("/models/750sr-s-clean.webp")
   errors << "750SR-S orange badge markup is missing" unless bundle.include?("simple-model-new-badge")
-  errors << "Adventure families were not merged" if bundle.include?('family:"Adventure Touring"') || bundle.include?('family:"Touring"')
+  errors << "Adventure/Touring UI grouping is missing" unless bundle.include?("Adventure / Touring")
   errors << "750SR-S Azerbaijani accessory copy is missing" unless bundle.include?("Radiator qoruyucusu") && bundle.include?("Qızdırılan sükan tutacaqları")
 else
   errors << "Cache-busted configurator page bundle is missing"

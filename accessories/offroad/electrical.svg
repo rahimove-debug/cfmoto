@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">CFMOTO off-road elektrik aksesuarı</title>
+  <desc id="desc">Məhsul kateqoriyası üçün neytral işıqlandırma və elektrik illüstrasiyası</desc>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071113"/><stop offset="1" stop-color="#12323a"/></linearGradient></defs>
+  <rect width="1200" height="900" fill="url(#g)"/>
+  <circle cx="600" cy="455" r="210" fill="none" stroke="#00efd1" stroke-width="32"/>
+  <path d="M660 210 470 495h135l-65 220 195-310H600z" fill="#009bb4" stroke="#72d6e5" stroke-width="18" stroke-linejoin="round"/>
+  <text x="600" y="110" fill="#8b9aa2" font-family="Arial,sans-serif" font-size="38" font-weight="700" text-anchor="middle" letter-spacing="8">CFMOTO · ELEKTRİK</text>
+</svg>

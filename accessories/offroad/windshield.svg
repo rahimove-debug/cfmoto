@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">CFMOTO off-road ön şüşə aksesuarı</title>
+  <desc id="desc">Məhsul kateqoriyası üçün neytral ön şüşə illüstrasiyası</desc>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071113"/><stop offset="1" stop-color="#12323a"/></linearGradient></defs>
+  <rect width="1200" height="900" fill="url(#g)"/>
+  <path d="M335 210h530l-65 480c-60 42-126 63-200 63s-140-21-200-63z" fill="#009bb4" fill-opacity=".16" stroke="#00efd1" stroke-width="30" stroke-linejoin="round"/>
+  <path d="M445 310h310M420 420h360M400 530h400" stroke="#72d6e5" stroke-width="18" stroke-linecap="round" opacity=".6"/>
+  <text x="600" y="110" fill="#8b9aa2" font-family="Arial,sans-serif" font-size="38" font-weight="700" text-anchor="middle" letter-spacing="8">CFMOTO · ÖN ŞÜŞƏ</text>
+</svg>

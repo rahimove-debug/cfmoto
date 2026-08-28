@@ -11,11 +11,9 @@ SCRIPT_URL = "/assets/mobile-menu-accessibility-v2.js"
 MARKER_START = "<!-- CFMOTO:UX-ACCESSIBILITY:START -->"
 MARKER_END = "<!-- CFMOTO:UX-ACCESSIBILITY:END -->"
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-CONFIGURATOR_PAGE_TARGET = "page-cfmoto-review-v1.js"
-CONFIGURATOR_CSS_SOURCE = "8c3fc1673e8690f0.css"
-CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-review-v1.css"
-CONFIGURATOR_RUNTIME_SOURCE = "238-9a08ade5f423d52d.js"
-CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-review-v1.js"
+CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-v2.js"
+CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-v2.css"
+CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-v2.js"
 
 def read(path)
   File.read(path, encoding: "UTF-8")
@@ -48,40 +46,42 @@ end
 configurator_text_paths = Dir.glob(File.join(CONFIGURATOR_ROOT, "**", "*"))
   .select { |path| File.file?(path) && %w[.html .txt .js .json].include?(File.extname(path)) }
 
+configurator_index_path = File.join(CONFIGURATOR_ROOT, "index.html")
+configurator_index = read(configurator_index_path)
 page_target_path = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", CONFIGURATOR_PAGE_TARGET)
-page_source_path = if File.file?(page_target_path)
+referenced_bundle = configurator_index[%r{/aksesuar-konfiquratoru/_next/static/chunks/app/(page-[^"']+\.js)}, 1]
+referenced_path = referenced_bundle && File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", referenced_bundle)
+page_source_path = if referenced_path && File.file?(referenced_path)
+  referenced_path
+elsif File.file?(page_target_path)
   page_target_path
 else
-  configurator_index_path = File.join(CONFIGURATOR_ROOT, "index.html")
-  configurator_index = read(configurator_index_path)
-  referenced_bundle = configurator_index[%r{/aksesuar-konfiquratoru/_next/static/chunks/app/(page-[^"']+\.js)}, 1]
-  referenced_path = referenced_bundle && File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", referenced_bundle)
-  if referenced_path && File.file?(referenced_path) && read(referenced_path).include?("DMS part")
-    referenced_path
-  else
-    Dir.glob(File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-*.js"))
-      .find { |path| read(path).include?("DMS part") }
-  end
+  Dir.glob(File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-*.js"))
+    .find { |path| read(path).include?("Aksesuar") || read(path).include?("accessory-list") }
 end
 abort "Configurator page bundle not found" unless page_source_path
 
 page = read(page_source_path)
-page.gsub!('family:"Adventure Touring"', 'family:"Adventure"')
-page.gsub!('family:"Touring"', 'family:"Adventure"')
+# Family grouping is handled in the configurator UI so ATV Touring remains a
+# distinct off-road filter and motorcycle Adventure/Touring stays combined.
 page.gsub!('/models/750sr-s.webp', '/models/750sr-s-clean.webp')
 
-badge_anchor = '(0,o.jsxs)("div",{className:"simple-bike-image",children:[(0,o.jsx)("span",{"aria-hidden":"true",children:L.name})'
-badge_replacement = '(0,o.jsxs)("div",{className:"simple-bike-image",children:[L.id==="750sr-s"&&(0,o.jsx)("span",{className:"simple-model-new-badge",children:"YENİ"}),(0,o.jsx)("span",{"aria-hidden":"true",children:L.name})'
-unless page.include?(badge_replacement)
-  abort "Configurator 750SR-S badge anchor not found" unless page.include?(badge_anchor)
-  page.sub!(badge_anchor, badge_replacement)
+unless page.include?('className:"simple-model-new-badge"')
+  badge_pattern = /(\(0,([A-Za-z_$][\w$]*)\.jsxs\)\("div",\{className:"simple-bike-image",children:\[)(\(0,\2\.jsx\)\("span",\{"aria-hidden":"true",children:([A-Za-z_$][\w$]*)\.name\}\))/
+  badge_match = page.match(badge_pattern)
+  abort "Configurator 750SR-S badge anchor not found" unless badge_match
+  badge = %(#{badge_match[4]}.id==="750sr-s"&&(0,#{badge_match[2]}.jsx)("span",{className:"simple-model-new-badge",children:"YENİ"}),)
+  page.sub!(badge_pattern, "\\1#{badge}\\3")
 end
 
-fitment_start = page.index('(0,o.jsxs)("div",{className:"fitment-note"')
-accessory_list_start = fitment_start && page.index('(0,o.jsxs)("div",{className:"accessory-list"', fitment_start)
-abort "Configurator fitment-note block not found" unless fitment_start && accessory_list_start
-customer_fitment = '(0,o.jsxs)("div",{className:"fitment-note",children:[(0,o.jsx)("span",{children:"i"}),"Uyğunluq, mövcudluq və yekun qiymət model ili və komplektasiyaya görə satış komandası tərəfindən təsdiqlənir. Sorğu ilə göstərilən məhsullar üçün ayrıca təklif hazırlanır."]}),' 
-page[fitment_start...accessory_list_start] = customer_fitment
+unless page.include?('className:"vehicle-type-filters"')
+  fitment_start = page.index('(0,o.jsxs)("div",{className:"fitment-note"')
+  accessory_list_start = fitment_start && page.index('(0,o.jsxs)("div",{className:"accessory-list"', fitment_start)
+  abort "Configurator fitment-note block not found" unless fitment_start && accessory_list_start
+  customer_fitment =
+    '(0,o.jsxs)("div",{className:"fitment-note",children:[(0,o.jsx)("span",{children:"i"}),"Uyğunluq, mövcudluq və yekun qiymət model ili və komplektasiyaya görə satış komandası tərəfindən təsdiqlənir. Sorğu ilə göstərilən məhsullar üçün ayrıca təklif hazırlanır."]}),'
+  page[fitment_start...accessory_list_start] = customer_fitment
+end
 page.gsub!("DMS/Benelux", "onlayn aksesuar")
 page.gsub!('children:e.priceNote?`Benelux \\xb7 ${e.priceNote} ↗`:"AZ prospekti ↗"', 'children:"Qiymət mənbəyi ↗"')
 page.gsub!('e.contentSourceLabel??"CFMOTO DMS"', '"Rəsmi CFMOTO kataloqu"')
@@ -122,8 +122,16 @@ write(page_target_path, page)
 
 css_directory = File.join(CONFIGURATOR_ROOT, "_next", "static", "css")
 css_target_path = File.join(css_directory, CONFIGURATOR_CSS_TARGET)
-css_source_path = File.file?(css_target_path) ? css_target_path : File.join(css_directory, CONFIGURATOR_CSS_SOURCE)
+referenced_css = configurator_index[%r{/aksesuar-konfiquratoru/_next/static/css/([^"']+\.css)}, 1]
+css_source_path = if referenced_css && File.file?(File.join(css_directory, referenced_css))
+  File.join(css_directory, referenced_css)
+elsif File.file?(css_target_path)
+  css_target_path
+else
+  Dir.glob(File.join(css_directory, "*.css")).max_by { |path| File.mtime(path) }
+end
 abort "Configurator stylesheet not found" unless File.file?(css_source_path)
+css_source_name = File.basename(css_source_path)
 configurator_css = read(css_source_path)
 badge_css = '.simple-bike-image>.simple-model-new-badge{left:18px;top:18px;z-index:3;padding:10px 12px;background:var(--brand-orange);color:#fff;font-size:10px;font-weight:900;letter-spacing:.12em;line-height:1;text-transform:uppercase}'
 configurator_css = "#{configurator_css.rstrip}\n#{badge_css}\n" unless configurator_css.include?("simple-model-new-badge")
@@ -135,11 +143,28 @@ write(css_target_path, configurator_css)
 # transition so production monitoring remains actionable.
 runtime_directory = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks")
 runtime_target_path = File.join(runtime_directory, CONFIGURATOR_RUNTIME_TARGET)
-runtime_source_path = File.file?(runtime_target_path) ? runtime_target_path : File.join(runtime_directory, CONFIGURATOR_RUNTIME_SOURCE)
-abort "Configurator runtime chunk not found" unless File.file?(runtime_source_path)
-runtime = read(runtime_source_path)
 recoverable_source = 'let f=e=>{let t=(0,o.default)(e)&&"cause"in e?e.cause:e;(0,l.isBailoutToCSRError)(t)||(0,i.reportGlobalError)(t)};'
 recoverable_target = 'let f=e=>{let t=(0,o.default)(e)&&"cause"in e?e.cause:e;(0,l.isBailoutToCSRError)(t)||/Minified React error #418|Hydration failed/.test(String(t&&t.message||t))||(0,i.reportGlobalError)(t)};'
+referenced_runtime_paths = configurator_index
+  .scan(%r{/aksesuar-konfiquratoru/_next/static/chunks/([^/"']+\.js)})
+  .flatten
+  .map { |name| File.join(runtime_directory, name) }
+  .select { |path| File.file?(path) }
+runtime_source_path = referenced_runtime_paths.find do |path|
+  runtime_candidate = read(path)
+  runtime_candidate.include?(recoverable_source) || runtime_candidate.include?(recoverable_target)
+end
+runtime_source_path ||= if File.file?(runtime_target_path)
+  runtime_target_path
+else
+  Dir.glob(File.join(runtime_directory, "*.js")).find do |path|
+    runtime_candidate = read(path)
+    runtime_candidate.include?(recoverable_source) || runtime_candidate.include?(recoverable_target)
+  end
+end
+abort "Configurator runtime chunk not found" unless File.file?(runtime_source_path)
+runtime_source_name = File.basename(runtime_source_path)
+runtime = read(runtime_source_path)
 unless runtime.include?(recoverable_target)
   abort "Configurator recoverable-error handler anchor not found" unless runtime.include?(recoverable_source)
   runtime.sub!(recoverable_source, recoverable_target)
@@ -151,8 +176,8 @@ reference_paths.each do |path|
   content = File.binread(path)
   updated = content
     .gsub(File.basename(page_source_path), CONFIGURATOR_PAGE_TARGET)
-    .gsub(CONFIGURATOR_CSS_SOURCE, CONFIGURATOR_CSS_TARGET)
-    .gsub(CONFIGURATOR_RUNTIME_SOURCE, CONFIGURATOR_RUNTIME_TARGET)
+    .gsub(css_source_name, CONFIGURATOR_CSS_TARGET)
+    .gsub(runtime_source_name, CONFIGURATOR_RUNTIME_TARGET)
   File.binwrite(path, updated) unless updated == content
 end
 
@@ -160,13 +185,14 @@ stale_references = reference_paths.select do |path|
   next false unless File.file?(path)
   content = File.binread(path)
   content.include?(File.basename(page_source_path)) && File.basename(page_source_path) != CONFIGURATOR_PAGE_TARGET ||
-    content.include?(CONFIGURATOR_CSS_SOURCE) || content.include?(CONFIGURATOR_RUNTIME_SOURCE)
+    content.include?(css_source_name) && css_source_name != CONFIGURATOR_CSS_TARGET ||
+    content.include?(runtime_source_name) && runtime_source_name != CONFIGURATOR_RUNTIME_TARGET
 end
 abort "Stale configurator asset references remain: #{stale_references.join(', ')}" unless stale_references.empty?
 
 Dir.glob(File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-*.js")).each do |path|
   FileUtils.rm_f(path) unless File.basename(path) == CONFIGURATOR_PAGE_TARGET
 end
-FileUtils.rm_f(File.join(css_directory, CONFIGURATOR_CSS_SOURCE)) unless CONFIGURATOR_CSS_SOURCE == CONFIGURATOR_CSS_TARGET
+FileUtils.rm_f(css_source_path) unless css_source_name == CONFIGURATOR_CSS_TARGET
 
 puts "Applied UX/accessibility assets to #{page_paths.size} AZ/RU pages; mobile menu behavior to #{home_paths.size} homepages; configurator copy and 750SR-S localized"
