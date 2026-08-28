@@ -11,9 +11,9 @@ SCRIPT_URL = "/assets/mobile-menu-accessibility-v2.js"
 MARKER_START = "<!-- CFMOTO:UX-ACCESSIBILITY:START -->"
 MARKER_END = "<!-- CFMOTO:UX-ACCESSIBILITY:END -->"
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-v2.js"
-CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-v2.css"
-CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-v2.js"
+CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-v3.js"
+CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-v3.css"
+CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-v3.js"
 
 def read(path)
   File.read(path, encoding: "UTF-8")

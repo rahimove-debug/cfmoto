@@ -70,9 +70,9 @@ if File.file?(configurator_path)
   end
 end
 
-configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-v2.js")
-configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-v2.css")
-configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-v2.js")
+configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-v3.js")
+configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-v3.css")
+configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-v3.js")
 if File.file?(configurator_bundle_path)
   bundle = read(configurator_bundle_path)
   forbidden = [
@@ -96,6 +96,18 @@ if File.file?(configurator_bundle_path)
   errors << "750SR-S orange badge markup is missing" unless bundle.include?("simple-model-new-badge")
   errors << "Adventure/Touring UI grouping is missing" unless bundle.include?("Adventure / Touring")
   errors << "750SR-S Azerbaijani accessory copy is missing" unless bundle.include?("Radiator qoruyucusu") && bundle.include?("Qızdırılan sükan tutacaqları")
+  errors << "CFMOTO USA off-road source label is missing" unless bundle.include?("CFMOTO USA 2027 Off-Road Accessories")
+  errors << "Off-road MSRP-as-AZN disclosure is missing" unless bundle.include?("valyuta çevrilmədən 1:1 AZN") || bundle.include?('valyuta \\xe7evrilmədən 1:1 AZN')
+  errors << "ZFORCE 950 Sport-4 USA fitment/price is missing" unless bundle.include?("5BYV-804300-6000") && bundle.include?("149.99")
+  {
+    "5DYV-809600-1001" => "lighted-whip mounting bracket",
+    "5HYV-800100-1000" => "Work Orb Light",
+    "Work Orb Light" => "work light",
+    "VISION X" => "Vision X lighting",
+    "DURA MINI" => "Dura Mini lighting"
+  }.each do |forbidden_light, label|
+    errors << "Off-road lighting product leaked into configurator: #{label}" if bundle.include?(forbidden_light)
+  end
 else
   errors << "Cache-busted configurator page bundle is missing"
 end
