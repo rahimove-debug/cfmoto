@@ -1,0 +1,51 @@
+name: Apply CFMOTO off-road configurator update
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - cfmoto-offroad-deploy.tar.gz
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cfmoto-offroad-configurator
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: contains(github.event.head_commit.message, '[offroad-stage]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify update archive
+        run: echo "8a38ec44c966c0989b7ef225a603f99ce6c86af7107366a40d285b6fbfc9dd48  cfmoto-offroad-deploy.tar.gz" | sha256sum -c -
+
+      - name: Validate the complete Cloudflare build
+        run: |
+          tar -xzf cfmoto-offroad-deploy.tar.gz
+          ruby scripts/build_cloudflare.rb
+
+      - name: Keep only reviewed source and configurator artifacts
+        run: |
+          git restore --worktree .
+          git clean -fd
+          tar -xzf cfmoto-offroad-deploy.tar.gz
+          rm -f cfmoto-offroad-deploy.tar.gz .github/workflows/apply-offroad-configurator.yml
+          git diff --check
+
+      - name: Commit update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m "Add ATV and buggy accessory configurator"
+          git push origin HEAD:main
