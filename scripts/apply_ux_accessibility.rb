@@ -52,8 +52,16 @@ page_target_path = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "ap
 page_source_path = if File.file?(page_target_path)
   page_target_path
 else
-  Dir.glob(File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-*.js"))
-    .find { |path| read(path).include?("DMS part") }
+  configurator_index_path = File.join(CONFIGURATOR_ROOT, "index.html")
+  configurator_index = read(configurator_index_path)
+  referenced_bundle = configurator_index[%r{/aksesuar-konfiquratoru/_next/static/chunks/app/(page-[^"']+\.js)}, 1]
+  referenced_path = referenced_bundle && File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", referenced_bundle)
+  if referenced_path && File.file?(referenced_path) && read(referenced_path).include?("DMS part")
+    referenced_path
+  else
+    Dir.glob(File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-*.js"))
+      .find { |path| read(path).include?("DMS part") }
+  end
 end
 abort "Configurator page bundle not found" unless page_source_path
 
