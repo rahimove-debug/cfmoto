@@ -9,12 +9,12 @@ ROOT = File.expand_path("..", __dir__)
 STYLE_PATH = File.join(ROOT, "assets", "cfmoto-news-v2.css")
 HOME_STYLE_PATH = File.join(ROOT, "assets", "home-news-v1.css")
 HOME_PATH = File.join(ROOT, "index.html")
-HOME_PAGE_BUNDLE_PATH = File.join(ROOT, "assets", "page-CfmotoHomeNewsV2.js")
-HOME_LOADER_PATH = File.join(ROOT, "assets", "index-CfmotoHomeNewsV2.js")
-HOME_LAYOUT_PATH = File.join(ROOT, "assets", "layout-segment-context-CfmotoHomeNewsV2.js")
-HOME_LINK_PATH = File.join(ROOT, "assets", "link-CfmotoHomeNewsV2.js")
-HOME_ROUTER_PATH = File.join(ROOT, "assets", "router-CfmotoHomeNewsV2.js")
-HOME_MEGA_PATH = File.join(ROOT, "assets", "ProductMegaMenu-CfmotoHomeNewsV2.js")
+HOME_PAGE_BUNDLE_PATH = File.join(ROOT, "assets", "page-CfmotoHomeNewsV3.js")
+HOME_LOADER_PATH = File.join(ROOT, "assets", "index-CfmotoHomeNewsV3.js")
+HOME_LAYOUT_PATH = File.join(ROOT, "assets", "layout-segment-context-CfmotoHomeNewsV3.js")
+HOME_LINK_PATH = File.join(ROOT, "assets", "link-CfmotoHomeNewsV3.js")
+HOME_ROUTER_PATH = File.join(ROOT, "assets", "router-CfmotoHomeNewsV3.js")
+HOME_MEGA_PATH = File.join(ROOT, "assets", "ProductMegaMenu-CfmotoHomeNewsV3.js")
 errors = []
 
 unless File.file?(STYLE_PATH)
@@ -52,15 +52,15 @@ else
   errors << "Homepage must link to the news index from navigation and footer" unless home.scan('<a href="/xeberler/">Xəbərlər</a>').size == 2
   errors << "Homepage news card is missing the article URL" unless home.scan(%(href="#{article_path}")).size >= 3
   errors << "Homepage news block is missing the listing URL" unless home.include?(%(class="home-news-all" href="#{news_index_path}"))
-  errors << "Homepage news image must be local, lazy and intrinsically sized" unless home.match?(%r{<img src="/gallery/z10-4-1\.webp"[^>]*width="1600"[^>]*height="1068"[^>]*loading="lazy"[^>]*decoding="async"[^>]*fetchpriority="low"}i)
+  errors << "Homepage news image must be local, lazy and intrinsically sized" unless home.match?(%r{<img src="/gallery/romaniacs-2026-450mt-hero\.webp"[^>]*width="896"[^>]*height="600"[^>]*loading="lazy"[^>]*decoding="async"[^>]*fetchpriority="low"}i)
   errors << "Homepage must load the scoped news stylesheet once" unless home.scan(%(<link rel="stylesheet" href="/assets/home-news-v1.css"/>)).size == 1
   errors << "Homepage must not load the article stylesheet" if home.match?(%r{/assets/cfmoto-news-v\d+\.css})
-  errors << "Homepage must preload the cache-busted news page bundle once" unless home.scan("/assets/page-CfmotoHomeNewsV2.js").size == 1
-  errors << "Homepage must reference the cache-busted news loader twice" unless home.scan("/assets/index-CfmotoHomeNewsV2.js").size == 2
-  errors << "Homepage must reference the cache-busted news layout once" unless home.scan("/assets/layout-segment-context-CfmotoHomeNewsV2.js").size == 1
-  errors << "Homepage must reference the cache-busted news link once" unless home.scan("/assets/link-CfmotoHomeNewsV2.js").size == 1
-  errors << "Homepage must reference the cache-busted news product menu once" unless home.scan("/assets/ProductMegaMenu-CfmotoHomeNewsV2.js").size == 1
-  errors << "Homepage must not reference the stale V1 news graph" if home.include?("CfmotoHomeNewsV1.js")
+  errors << "Homepage must preload the cache-busted news page bundle once" unless home.scan("/assets/page-CfmotoHomeNewsV3.js").size == 1
+  errors << "Homepage must reference the cache-busted news loader twice" unless home.scan("/assets/index-CfmotoHomeNewsV3.js").size == 2
+  errors << "Homepage must reference the cache-busted news layout once" unless home.scan("/assets/layout-segment-context-CfmotoHomeNewsV3.js").size == 1
+  errors << "Homepage must reference the cache-busted news link once" unless home.scan("/assets/link-CfmotoHomeNewsV3.js").size == 1
+  errors << "Homepage must reference the cache-busted news product menu once" unless home.scan("/assets/ProductMegaMenu-CfmotoHomeNewsV3.js").size == 1
+  errors << "Homepage must not reference a stale V1 or V2 news graph" if home.match?(/CfmotoHomeNewsV[12]\.js/)
   errors << "Homepage must not reference the cached accessory JavaScript graph" if home.include?("CfmotoAccessoryV15.js")
   errors << "Homepage must keep exactly one H1" unless home.scan(/<h1\b/i).size == 1
 end
@@ -72,10 +72,11 @@ else
   errors << "Hydrated homepage must contain one news section" unless home_page_bundle.scan('className:`home-news section`').size == 1
   errors << "Hydrated homepage navigation is missing News" unless home_page_bundle.include?('[`Xəbərlər`,`/xeberler/`]')
   errors << "Hydrated homepage footer is missing News" unless home_page_bundle.include?('(0,c.jsx)(`a`,{href:`/xeberler/`,children:`Xəbərlər`})')
-  errors << "Hydrated homepage news image is not lazy or intrinsically sized" unless home_page_bundle.include?('src:`/gallery/z10-4-1.webp`') && home_page_bundle.include?('width:1600,height:1068,loading:`lazy`,decoding:`async`,fetchPriority:`low`')
-  errors << "Hydrated homepage must import the cache-busted link" unless home_page_bundle.include?("link-CfmotoHomeNewsV2.js")
-  errors << "Hydrated homepage must import the cache-busted product menu" unless home_page_bundle.include?("ProductMegaMenu-CfmotoHomeNewsV2.js")
-  errors << "Hydrated homepage is missing the featured Z10 story" unless home_page_bundle.include?(NewsConfig::FEATURED_ARTICLE.fetch(:path)) && home_page_bundle.include?("Z10 və Z10-4: turbo performans Azərbaycanda")
+  errors << "Hydrated homepage news image is not lazy or intrinsically sized" unless home_page_bundle.include?('src:`/gallery/romaniacs-2026-450mt-hero.webp`') && home_page_bundle.include?('width:896,height:600,loading:`lazy`,decoding:`async`,fetchPriority:`low`')
+  errors << "Hydrated homepage must import the cache-busted link" unless home_page_bundle.include?("link-CfmotoHomeNewsV3.js")
+  errors << "Hydrated homepage must import the cache-busted product menu" unless home_page_bundle.include?("ProductMegaMenu-CfmotoHomeNewsV3.js")
+  errors << "Hydrated homepage is missing the featured Romaniacs story" unless home_page_bundle.include?(NewsConfig::FEATURED_ARTICLE.fetch(:path)) && home_page_bundle.include?("CFMOTO Romaniacs 2026-da üç Adventure sinfində qalib gəldi")
+  errors << "Hydrated homepage must not import a stale V1 or V2 news graph" if home_page_bundle.match?(/CfmotoHomeNewsV[12]\.js/)
   errors << "Hydrated homepage page bundle must not import the cached accessory graph" if home_page_bundle.include?("CfmotoAccessoryV15.js")
 end
 
@@ -83,18 +84,19 @@ if !File.file?(HOME_LOADER_PATH)
   errors << "Missing cache-busted homepage news loader"
 else
   home_loader = File.read(HOME_LOADER_PATH, encoding: "UTF-8")
-  errors << "Homepage news loader does not import the news page bundle" unless home_loader.include?("page-CfmotoHomeNewsV2.js")
+  errors << "Homepage news loader does not import the news page bundle" unless home_loader.include?("page-CfmotoHomeNewsV3.js")
   %w[layout-segment-context link ProductMegaMenu].each do |asset|
-    errors << "Homepage news loader does not import #{asset} from the news graph" unless home_loader.include?("#{asset}-CfmotoHomeNewsV2.js")
+    errors << "Homepage news loader does not import #{asset} from the news graph" unless home_loader.include?("#{asset}-CfmotoHomeNewsV3.js")
   end
+  errors << "Homepage news loader still imports a stale V1 or V2 news graph" if home_loader.match?(/CfmotoHomeNewsV[12]\.js/)
   errors << "Homepage news loader still imports the cached accessory graph" if home_loader.include?("CfmotoAccessoryV15.js")
 end
 
 {
-  HOME_LAYOUT_PATH => %w[index-CfmotoHomeNewsV2.js],
-  HOME_LINK_PATH => %w[index-CfmotoHomeNewsV2.js router-CfmotoHomeNewsV2.js],
-  HOME_ROUTER_PATH => %w[index-CfmotoHomeNewsV2.js link-CfmotoHomeNewsV2.js],
-  HOME_MEGA_PATH => %w[link-CfmotoHomeNewsV2.js],
+  HOME_LAYOUT_PATH => %w[index-CfmotoHomeNewsV3.js],
+  HOME_LINK_PATH => %w[index-CfmotoHomeNewsV3.js router-CfmotoHomeNewsV3.js],
+  HOME_ROUTER_PATH => %w[index-CfmotoHomeNewsV3.js link-CfmotoHomeNewsV3.js],
+  HOME_MEGA_PATH => %w[link-CfmotoHomeNewsV3.js],
 }.each do |path, dependencies|
   if !File.file?(path)
     errors << "Missing cache-busted homepage graph asset #{File.basename(path)}"
@@ -105,6 +107,7 @@ end
   dependencies.each do |dependency|
     errors << "#{File.basename(path)} does not import #{dependency}" unless asset.include?(dependency)
   end
+  errors << "#{File.basename(path)} still imports a stale V1 or V2 news graph" if asset.match?(/CfmotoHomeNewsV[12]\.js/)
   errors << "#{File.basename(path)} still imports the cached accessory graph" if asset.include?("CfmotoAccessoryV15.js")
 end
 
@@ -156,13 +159,16 @@ end
 listing_path = File.join(ROOT, NewsConfig::INDEX_PAGE.fetch(:file))
 if File.file?(listing_path)
   listing = File.read(listing_path, encoding: "UTF-8")
-  featured_path = NewsConfig::FEATURED_ARTICLE.fetch(:path)
-  older_path = NewsConfig::ARTICLES.fetch(1).fetch(:path)
-  errors << "News listing must declare two articles" unless listing.include?('"numberOfItems":2') && listing.include?("2 məqalə")
-  errors << "News listing must render two story cards" unless listing.scan('class="news-card"').size == 2
-  errors << "News listing must feature the Z10 story first" unless listing.index(%(href="#{featured_path}")) && listing.index(%(href="#{older_path}")) && listing.index(%(href="#{featured_path}")) < listing.index(%(href="#{older_path}"))
-  errors << "News listing featured image must be eager and intrinsic" unless listing.match?(%r{<img src="/gallery/z10-4-1\.webp"[^>]*width="1600"[^>]*height="1068"[^>]*loading="eager"[^>]*fetchpriority="high"}i)
-  errors << "News listing older image must be lazy" unless listing.match?(%r{<img src="/gallery/cforce-c4-1\.webp"[^>]*loading="lazy"[^>]*fetchpriority="low"}i)
+  article_count = NewsConfig::ARTICLES.size
+  article_positions = NewsConfig::ARTICLES.map { |article| listing.index(%(href="#{article.fetch(:path)}")) }
+  errors << "News listing must declare #{article_count} articles" unless listing.include?(%Q{"numberOfItems":#{article_count}}) && listing.include?("#{article_count} məqalə")
+  errors << "News listing must render #{article_count} story cards" unless listing.scan('class="news-card"').size == article_count
+  errors << "News listing stories are missing or out of newest-first order" unless article_positions.all? && article_positions.each_cons(2).all? { |first, second| first < second }
+  errors << "News listing featured image must be eager and intrinsic" unless listing.match?(%r{<img src="/gallery/romaniacs-2026-450mt-hero\.webp"[^>]*width="896"[^>]*height="600"[^>]*loading="eager"[^>]*fetchpriority="high"}i)
+  NewsConfig::ARTICLES.drop(1).each do |article|
+    image = Regexp.escape(article.fetch(:image))
+    errors << "News listing older image #{article.fetch(:image)} must be lazy" unless listing.match?(%r{<img src="#{image}"[^>]*loading="lazy"[^>]*fetchpriority="low"}i)
+  end
 end
 
 cforce_article_path = File.join(ROOT, NewsConfig::ROOT_SLUG, NewsConfig::CFORCE_ARTICLE_SLUG, "index.html")
@@ -185,6 +191,22 @@ if File.file?(z10_article_path)
   errors << "Z10 article must use the local power figure" unless article.include?("154 a.g.") && article.include?("145 Nm")
   errors << "Z10 article must not publish Russian-market prices" if article.match?(/3[\s ]*(?:379|579)[\s ]*900/) || article.include?("RUB")
   errors << "Z10 article must not claim an unverified local price reduction" if article.match?(/qiymət(?:lər)?\s+(?:endir|azal)/i)
+end
+
+romaniacs_article_path = File.join(ROOT, NewsConfig::ROOT_SLUG, NewsConfig::ROMANIACS_ARTICLE_SLUG, "index.html")
+if File.file?(romaniacs_article_path)
+  article = File.read(romaniacs_article_path, encoding: "UTF-8")
+  errors << "Romaniacs article is missing NewsArticle schema" unless article.include?('"@type":"NewsArticle"')
+  errors << "Romaniacs article must identify all three Adventure classes" unless %w[Ultimate Core Lite].all? { |name| article.include?("Adventure #{name}") }
+  errors << "Romaniacs article is missing the three class winners" unless ["Mario Román", "René Columna", "Guishu He"].all? { |name| article.include?(name) }
+  errors << "Romaniacs article is missing the event dates and location" unless article.include?("28 iyul–1 avqust") && article.include?("Sibiu") && article.include?("Cənubi Karpat")
+  errors << "Romaniacs article is missing the verified Ultimate winning margin" unless article.include?("14 dəqiqə 40 saniyə") && article.include?("14:40")
+  errors << "Romaniacs article must distinguish the race-prepared bike from the production model" unless article.include?("yarış üçün hazırlanmış") && article.include?("seriya modelindən fərqlənə bilər")
+  errors << "Romaniacs article is missing the local 450MT link and price" unless article.include?('href="/model/450mt/"') && article.include?("11,990 AZN")
+  errors << "Romaniacs article is missing the other participating MT model links" unless article.include?('href="/model/800mt-x/"') && article.include?('href="/model/1000mt-x/"')
+  errors << "Romaniacs article is missing the official CFMOTO source" unless article.include?("https://www.cfmoto.com/global/media-center/news/2026/mario-roman-serrano-and-cfmoto-complete-a-three-class-adventure-.html")
+  errors << "Romaniacs article is missing the official race report" unless article.include?("https://www.redbullromaniacs.com/visitors/event-news-reports/details/eng-hard-adventure-racing-baptism-of-fire-2")
+  errors << "Romaniacs headline must not claim victory in every race class" if article.match?(%r{<(?:title|h1)[^>]*>[^<]*bütün\s+(?:yarış\s+)?sinif}i)
 end
 
 sitemap_path = File.join(ROOT, "sitemap.xml")

@@ -9,26 +9,26 @@ SITEMAP_PATH = File.join(ROOT, "sitemap.xml")
 HOME_PATH = File.join(ROOT, "index.html")
 HOME_STYLESHEET = "/assets/home-news-v1.css"
 HOME_PAGE_SOURCE = "/assets/page-CfmotoAccessoryV15.js"
-HOME_PAGE_PUBLIC = "/assets/page-CfmotoHomeNewsV2.js"
+HOME_PAGE_PUBLIC = "/assets/page-CfmotoHomeNewsV3.js"
 HOME_LOADER_SOURCE = "/assets/index-CfmotoAccessoryV15.js"
-HOME_LOADER_PUBLIC = "/assets/index-CfmotoHomeNewsV2.js"
+HOME_LOADER_PUBLIC = "/assets/index-CfmotoHomeNewsV3.js"
 HOME_LAYOUT_SOURCE = "/assets/layout-segment-context-CfmotoAccessoryV15.js"
-HOME_LAYOUT_PUBLIC = "/assets/layout-segment-context-CfmotoHomeNewsV2.js"
+HOME_LAYOUT_PUBLIC = "/assets/layout-segment-context-CfmotoHomeNewsV3.js"
 HOME_LINK_SOURCE = "/assets/link-CfmotoAccessoryV15.js"
-HOME_LINK_PUBLIC = "/assets/link-CfmotoHomeNewsV2.js"
+HOME_LINK_PUBLIC = "/assets/link-CfmotoHomeNewsV3.js"
 HOME_ROUTER_SOURCE = "/assets/router-CfmotoAccessoryV15.js"
-HOME_ROUTER_PUBLIC = "/assets/router-CfmotoHomeNewsV2.js"
+HOME_ROUTER_PUBLIC = "/assets/router-CfmotoHomeNewsV3.js"
 HOME_MEGA_SOURCE = "/assets/ProductMegaMenu-CfmotoAccessoryV15.js"
-HOME_MEGA_PUBLIC = "/assets/ProductMegaMenu-CfmotoHomeNewsV2.js"
+HOME_MEGA_PUBLIC = "/assets/ProductMegaMenu-CfmotoHomeNewsV3.js"
 ARTICLE_PATH = NewsConfig::FEATURED_ARTICLE.fetch(:path)
 NEWS_INDEX_PATH = NewsConfig::INDEX_PAGE.fetch(:path)
 
 HOME_NEWS_HTML = <<~HTML.strip
-  <section class="home-news section" id="xeberler"><div class="home-news-head"><div><p class="eyebrow"><span></span> CFMOTO XƏBƏRLƏRİ</p><h2>Yeniliklər və yeni modellər</h2></div><a class="home-news-all" href="#{NEWS_INDEX_PATH}">Bütün xəbərlər <span>↗︎</span></a></div><article class="home-news-card"><a class="home-news-media" href="#{ARTICLE_PATH}" aria-label="Z10 və Z10-4 xəbərini oxu"><img src="/gallery/z10-4-1.webp" alt="Z10 və Z10-4 turbo SSV modelləri Azərbaycanda" width="1600" height="1068" loading="lazy" decoding="async" fetchpriority="low"/><span>Sport SSV</span></a><div class="home-news-copy"><time datetime="2026-08-29">29 avqust 2026</time><h3><a href="#{ARTICLE_PATH}">Z10 və Z10-4: turbo performans Azərbaycanda</a></h3><p>154 at güclü iki və dörd nəfərlik Sport SSV modellərinin yerli qiymətləri və əsas fərqləri.</p><a class="button primary" href="#{ARTICLE_PATH}">Ətraflı oxu <span>↗︎</span></a></div></article></section>
+  <section class="home-news section" id="xeberler"><div class="home-news-head"><div><p class="eyebrow"><span></span> CFMOTO XƏBƏRLƏRİ</p><h2>Yeniliklər və yeni modellər</h2></div><a class="home-news-all" href="#{NEWS_INDEX_PATH}">Bütün xəbərlər <span>↗︎</span></a></div><article class="home-news-card"><a class="home-news-media" href="#{ARTICLE_PATH}" aria-label="Romaniacs 2026 xəbərini oxu"><img src="/gallery/romaniacs-2026-450mt-hero.webp" alt="Red Bull Romaniacs 2026-da Karpat meşə cığırında CFMOTO 450MT" width="896" height="600" loading="lazy" decoding="async" fetchpriority="low"/><span>Adventure</span></a><div class="home-news-copy"><time datetime="2026-08-29">29 avqust 2026</time><h3><a href="#{ARTICLE_PATH}">CFMOTO Romaniacs 2026-da üç Adventure sinfində qalib gəldi</a></h3><p>Mario Románın 450MT ilə Ultimate qələbəsi və CFMOTO-nun hər üç Adventure sinfində birinciliyi.</p><a class="button primary" href="#{ARTICLE_PATH}">Ətraflı oxu <span>↗︎</span></a></div></article></section>
 HTML
 
 HOME_NEWS_JSX = <<~JS.strip
-  (0,c.jsxs)(`section`,{className:`home-news section`,id:`xeberler`,children:[(0,c.jsxs)(`div`,{className:`home-news-head`,children:[(0,c.jsxs)(`div`,{children:[(0,c.jsxs)(`p`,{className:`eyebrow`,children:[(0,c.jsx)(`span`,{}),` CFMOTO XƏBƏRLƏRİ`]}),(0,c.jsx)(`h2`,{children:`Yeniliklər və yeni modellər`})]}),(0,c.jsxs)(`a`,{className:`home-news-all`,href:`#{NEWS_INDEX_PATH}`,children:[`Bütün xəbərlər `,(0,c.jsx)(`span`,{children:`↗︎`})]})]}),(0,c.jsxs)(`article`,{className:`home-news-card`,children:[(0,c.jsxs)(`a`,{className:`home-news-media`,href:`#{ARTICLE_PATH}`,"aria-label":`Z10 və Z10-4 xəbərini oxu`,children:[(0,c.jsx)(`img`,{src:`/gallery/z10-4-1.webp`,alt:`Z10 və Z10-4 turbo SSV modelləri Azərbaycanda`,width:1600,height:1068,loading:`lazy`,decoding:`async`,fetchPriority:`low`}),(0,c.jsx)(`span`,{children:`Sport SSV`})]}),(0,c.jsxs)(`div`,{className:`home-news-copy`,children:[(0,c.jsx)(`time`,{dateTime:`2026-08-29`,children:`29 avqust 2026`}),(0,c.jsx)(`h3`,{children:(0,c.jsx)(`a`,{href:`#{ARTICLE_PATH}`,children:`Z10 və Z10-4: turbo performans Azərbaycanda`})}),(0,c.jsx)(`p`,{children:`154 at güclü iki və dörd nəfərlik Sport SSV modellərinin yerli qiymətləri və əsas fərqləri.`}),(0,c.jsxs)(`a`,{className:`button primary`,href:`#{ARTICLE_PATH}`,children:[`Ətraflı oxu `,(0,c.jsx)(`span`,{children:`↗︎`})]})]})]})]})
+  (0,c.jsxs)(`section`,{className:`home-news section`,id:`xeberler`,children:[(0,c.jsxs)(`div`,{className:`home-news-head`,children:[(0,c.jsxs)(`div`,{children:[(0,c.jsxs)(`p`,{className:`eyebrow`,children:[(0,c.jsx)(`span`,{}),` CFMOTO XƏBƏRLƏRİ`]}),(0,c.jsx)(`h2`,{children:`Yeniliklər və yeni modellər`})]}),(0,c.jsxs)(`a`,{className:`home-news-all`,href:`#{NEWS_INDEX_PATH}`,children:[`Bütün xəbərlər `,(0,c.jsx)(`span`,{children:`↗︎`})]})]}),(0,c.jsxs)(`article`,{className:`home-news-card`,children:[(0,c.jsxs)(`a`,{className:`home-news-media`,href:`#{ARTICLE_PATH}`,"aria-label":`Romaniacs 2026 xəbərini oxu`,children:[(0,c.jsx)(`img`,{src:`/gallery/romaniacs-2026-450mt-hero.webp`,alt:`Red Bull Romaniacs 2026-da Karpat meşə cığırında CFMOTO 450MT`,width:896,height:600,loading:`lazy`,decoding:`async`,fetchPriority:`low`}),(0,c.jsx)(`span`,{children:`Adventure`})]}),(0,c.jsxs)(`div`,{className:`home-news-copy`,children:[(0,c.jsx)(`time`,{dateTime:`2026-08-29`,children:`29 avqust 2026`}),(0,c.jsx)(`h3`,{children:(0,c.jsx)(`a`,{href:`#{ARTICLE_PATH}`,children:`CFMOTO Romaniacs 2026-da üç Adventure sinfində qalib gəldi`})}),(0,c.jsx)(`p`,{children:`Mario Románın 450MT ilə Ultimate qələbəsi və CFMOTO-nun hər üç Adventure sinfində birinciliyi.`}),(0,c.jsxs)(`a`,{className:`button primary`,href:`#{ARTICLE_PATH}`,children:[`Ətraflı oxu `,(0,c.jsx)(`span`,{children:`↗︎`})]})]})]})]})
 JS
 
 def read(path)

@@ -4,14 +4,22 @@ module NewsConfig
   ROOT_SLUG = "xeberler"
   CFORCE_ARTICLE_SLUG = "cforce-c4-c5-artiq-azerbaycanda"
   Z10_ARTICLE_SLUG = "z10-z10-4-turbo-performans-azerbaycanda"
+  ROMANIACS_ARTICLE_SLUG = "cfmoto-450mt-red-bull-romaniacs-2026"
 
   INDEX_PAGE = {
     path: "/#{ROOT_SLUG}/",
     file: File.join(ROOT_SLUG, "index.html"),
-    image: "/gallery/z10-4-1.webp"
+    image: "/gallery/romaniacs-2026-450mt-hero.webp"
   }.freeze
 
   ARTICLES = [
+    {
+      slug: ROMANIACS_ARTICLE_SLUG,
+      path: "/#{ROOT_SLUG}/#{ROMANIACS_ARTICLE_SLUG}/",
+      file: File.join(ROOT_SLUG, ROMANIACS_ARTICLE_SLUG, "index.html"),
+      image: "/gallery/romaniacs-2026-450mt-hero.webp",
+      title: "CFMOTO Red Bull Romaniacs 2026-da üç Adventure sinfində qalib gəldi"
+    },
     {
       slug: Z10_ARTICLE_SLUG,
       path: "/#{ROOT_SLUG}/#{Z10_ARTICLE_SLUG}/",
