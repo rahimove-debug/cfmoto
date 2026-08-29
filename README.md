@@ -28,13 +28,14 @@ Məhsulları, qiymətləri, izahlı mətni və FAQ bölməsini ehtiva edən ayr�
 Xəbərlər bölməsi ayrıca statik marşrutlarla yayımlanır:
 
 - `/xeberler/` — xəbər siyahısı
+- `/xeberler/z10-z10-4-turbo-performans-azerbaycanda/` — Z10 və Z10-4 turbo SSV xəbəri
 - `/xeberler/cforce-c4-c5-artiq-azerbaycanda/` — CFORCE C4 və C5 gəliş xəbəri
 
 Köhnə `/motosi%CC%87klet` yolu `301` statusu ilə `/motosiklet/` səhifəsinə yönləndirilir. Kateqoriya URL-ləri ana səhifəyə yönləndirilmir.
 
-Saytın tam rus dili versiyası `/ru/` altında yaradılır. Buraya 47 model, beş məlumat səhifəsi və üç kateqoriya daxildir. Hər AZ/RU cütü öz canonical URL-inə, qarşılıqlı `hreflang="az"`, `hreflang="ru"` və `x-default` işarələrinə malikdir. Sitemap 112 canonical URL saxlayır.
+Saytın tam rus dili versiyası `/ru/` altında yaradılır. Buraya 47 model, beş məlumat səhifəsi və üç kateqoriya daxildir. Hər AZ/RU cütü öz canonical URL-inə, qarşılıqlı `hreflang="az"`, `hreflang="ru"` və `x-default` işarələrinə malikdir. Sitemap 116 canonical URL saxlayır.
 
-Sayt `404.html` daxil olmaqla 116 HTML faylı yayımlayır. Ana səhifənin model kartları və model mega-menyusu üçün `models/cards/` daxilində 680 px WebP variantları istifadə olunur; model səhifələrinin və xəbər məqalələrinin şəkilləri isə üçüncü tərəf hostu əvəzinə yerli `models/` və `gallery/` fayllarından yüklənir. Dəyişən JavaScript və CSS assetləri keşlənmiş köhnə kodla qarışmaması üçün versiyalı URL-lərlə yayımlanır; rus səhifələri hidratasiya uyğunluğu üçün ayrı rus dili asset paketlərindən istifadə edir.
+Sayt `404.html` daxil olmaqla 117 HTML faylı yayımlayır. Ana səhifənin model kartları və model mega-menyusu üçün `models/cards/` daxilində 680 px WebP variantları istifadə olunur; model səhifələrinin və xəbər məqalələrinin şəkilləri isə üçüncü tərəf hostu əvəzinə yerli `models/` və `gallery/` fayllarından yüklənir. Dəyişən JavaScript və CSS assetləri keşlənmiş köhnə kodla qarışmaması üçün versiyalı URL-lərlə yayımlanır; rus səhifələri hidratasiya uyğunluğu üçün ayrı rus dili asset paketlərindən istifadə edir.
 
 Əsas domen `https://cfmoto.az` olaraq build mənbəyində sabitlənib. Build zamanı
 köhnə `cfmoto.com.az`, `www` və preview originləri canonical, Open Graph,

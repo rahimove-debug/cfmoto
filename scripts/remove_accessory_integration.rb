@@ -13,12 +13,14 @@ end
 
 home_path = File.join(ROOT, "index.html")
 home = read(home_path)
-home.gsub!("/assets/page-CfmotoHomeNewsV1.js", "/assets/page-CfmotoAccessoryV15.js")
-home.gsub!("/assets/index-CfmotoHomeNewsV1.js", "/assets/index-CfmotoAccessoryV15.js")
-home.gsub!("/assets/layout-segment-context-CfmotoHomeNewsV1.js", "/assets/layout-segment-context-CfmotoAccessoryV15.js")
-home.gsub!("/assets/link-CfmotoHomeNewsV1.js", "/assets/link-CfmotoAccessoryV15.js")
-home.gsub!("/assets/router-CfmotoHomeNewsV1.js", "/assets/router-CfmotoAccessoryV15.js")
-home.gsub!("/assets/ProductMegaMenu-CfmotoHomeNewsV1.js", "/assets/ProductMegaMenu-CfmotoAccessoryV15.js")
+%w[V2 V1].each do |version|
+  home.gsub!("/assets/page-CfmotoHomeNews#{version}.js", "/assets/page-CfmotoAccessoryV15.js")
+  home.gsub!("/assets/index-CfmotoHomeNews#{version}.js", "/assets/index-CfmotoAccessoryV15.js")
+  home.gsub!("/assets/layout-segment-context-CfmotoHomeNews#{version}.js", "/assets/layout-segment-context-CfmotoAccessoryV15.js")
+  home.gsub!("/assets/link-CfmotoHomeNews#{version}.js", "/assets/link-CfmotoAccessoryV15.js")
+  home.gsub!("/assets/router-CfmotoHomeNews#{version}.js", "/assets/router-CfmotoAccessoryV15.js")
+  home.gsub!("/assets/ProductMegaMenu-CfmotoHomeNews#{version}.js", "/assets/ProductMegaMenu-CfmotoAccessoryV15.js")
+end
 home.gsub!(%(<link rel="stylesheet" href="/assets/home-news-v1.css"/>), "")
 home.gsub!(%(<a href="/xeberler/">Xəbərlər</a>), "")
 home.sub!(
@@ -73,15 +75,10 @@ write(bundle_path, bundle)
     FileUtils.rm_f(File.join(ROOT, "assets", "#{asset}-#{version}.js"))
   end
 end
-%w[
-  page-CfmotoHomeNewsV1.js
-  index-CfmotoHomeNewsV1.js
-  layout-segment-context-CfmotoHomeNewsV1.js
-  link-CfmotoHomeNewsV1.js
-  router-CfmotoHomeNewsV1.js
-  ProductMegaMenu-CfmotoHomeNewsV1.js
-].each do |asset|
-  FileUtils.rm_f(File.join(ROOT, "assets", asset))
+%w[V2 V1].each do |version|
+  %w[page index layout-segment-context link router ProductMegaMenu].each do |asset|
+    FileUtils.rm_f(File.join(ROOT, "assets", "#{asset}-CfmotoHomeNews#{version}.js"))
+  end
 end
 
 configurator_path = File.join(ROOT, "aksesuar-konfiquratoru", "index.html")
