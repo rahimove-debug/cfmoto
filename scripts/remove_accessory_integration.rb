@@ -13,6 +13,18 @@ end
 
 home_path = File.join(ROOT, "index.html")
 home = read(home_path)
+home.gsub!("/assets/page-CfmotoHomeNewsV1.js", "/assets/page-CfmotoAccessoryV15.js")
+home.gsub!("/assets/index-CfmotoHomeNewsV1.js", "/assets/index-CfmotoAccessoryV15.js")
+home.gsub!("/assets/layout-segment-context-CfmotoHomeNewsV1.js", "/assets/layout-segment-context-CfmotoAccessoryV15.js")
+home.gsub!("/assets/link-CfmotoHomeNewsV1.js", "/assets/link-CfmotoAccessoryV15.js")
+home.gsub!("/assets/router-CfmotoHomeNewsV1.js", "/assets/router-CfmotoAccessoryV15.js")
+home.gsub!("/assets/ProductMegaMenu-CfmotoHomeNewsV1.js", "/assets/ProductMegaMenu-CfmotoAccessoryV15.js")
+home.gsub!(%(<link rel="stylesheet" href="/assets/home-news-v1.css"/>), "")
+home.gsub!(%(<a href="/xeberler/">Xəbərlər</a>), "")
+home.sub!(
+  %r{<section class="home-news section".*?</section><section class="service section"}m,
+  '<section class="service section"'
+)
 home.gsub!("/assets/page-CfmotoAccessoryV15.js", "/assets/page-CfmotoFinanceFixV12.js")
 home.gsub!("/assets/page-CfmotoAccessoryV14.js", "/assets/page-CfmotoFinanceFixV11.js")
 %w[V15 V14].each do |version|
@@ -60,6 +72,16 @@ write(bundle_path, bundle)
   %w[page index layout-segment-context link router ProductMegaMenu].each do |asset|
     FileUtils.rm_f(File.join(ROOT, "assets", "#{asset}-#{version}.js"))
   end
+end
+%w[
+  page-CfmotoHomeNewsV1.js
+  index-CfmotoHomeNewsV1.js
+  layout-segment-context-CfmotoHomeNewsV1.js
+  link-CfmotoHomeNewsV1.js
+  router-CfmotoHomeNewsV1.js
+  ProductMegaMenu-CfmotoHomeNewsV1.js
+].each do |asset|
+  FileUtils.rm_f(File.join(ROOT, "assets", asset))
 end
 
 configurator_path = File.join(ROOT, "aksesuar-konfiquratoru", "index.html")
