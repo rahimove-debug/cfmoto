@@ -70,7 +70,7 @@ if File.file?(configurator_path)
   end
 end
 
-configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v4.js")
+configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v5.js")
 configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-partsazn-v4.css")
 configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-partsazn-v3.js")
 if File.file?(configurator_bundle_path)
@@ -108,6 +108,10 @@ if File.file?(configurator_bundle_path)
     (bundle.include?("Sorğu ilə") || bundle.include?('Sor\u011fu il\u0259'))
   errors << "Legacy 1:1 MSRP pricing remains" if bundle.include?("valyuta çevrilmədən 1:1 AZN") ||
     bundle.include?('valyuta \\xe7evrilmədən 1:1 AZN')
+  errors << "Third-party price source link remains in accessory cards" if bundle.include?('children:"Qiymət mənbəyi ↗"')
+  errors << "Third-party source link remains in the accessory detail dialog" if bundle.include?('className:"accessory-detail-source"')
+  errors << "Verbose accessory price note is still rendered" if bundle.include?('P.priceNote&&(0,o.jsx)("em",{children:P.priceNote})')
+  errors << "Missing-price shop message remains in the configurator" if bundle.include?("mağazasında bu SKU")
   {
     "5DYV-809600-1001" => "lighted-whip mounting bracket",
     "5HYV-800100-1000" => "Work Orb Light",

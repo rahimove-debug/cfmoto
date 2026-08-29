@@ -11,7 +11,7 @@ SCRIPT_URL = "/assets/mobile-menu-accessibility-v2.js"
 MARKER_START = "<!-- CFMOTO:UX-ACCESSIBILITY:START -->"
 MARKER_END = "<!-- CFMOTO:UX-ACCESSIBILITY:END -->"
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-partsazn-v4.js"
+CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-partsazn-v5.js"
 CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-partsazn-v4.css"
 CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-partsazn-v3.js"
 
@@ -86,6 +86,20 @@ page.gsub!("DMS/Benelux", "onlayn aksesuar")
 page.gsub!('children:e.priceNote?`Benelux \\xb7 ${e.priceNote} ↗`:"AZ prospekti ↗"', 'children:"Qiymət mənbəyi ↗"')
 page.gsub!('e.contentSourceLabel??"CFMOTO DMS"', '"Rəsmi CFMOTO kataloqu"')
 page.gsub!('P.contentSourceLabel??"CFMOTO DMS"', '"Rəsmi CFMOTO kataloqu"')
+
+# Keep pricing and SKU information in the configurator, but do not expose
+# third-party shop/source links or the verbose price-note copy to customers.
+card_source_link = 'e.priceSourceUrl?(0,o.jsx)("a",{href:e.priceSourceUrl,target:"_blank",rel:"noreferrer",children:"Qiymət mənbəyi ↗"}):(0,o.jsx)("small",{children:"Diler təsdiqi"})'
+page.gsub!(card_source_link, '(0,o.jsx)("small",{children:"Diler təsdiqi"})')
+
+detail_price_note = ',P.priceNote&&(0,o.jsx)("em",{children:P.priceNote})'
+page.gsub!(detail_price_note, "")
+
+detail_source_link = ',(P.contentSourceUrl??P.priceSourceUrl)&&(0,o.jsxs)("a",{className:"accessory-detail-source",href:P.contentSourceUrl??P.priceSourceUrl,target:"_blank",rel:"noreferrer",children:["Mənbədə bax ",(0,o.jsx)("span",{children:"↗"})]})'
+page.gsub!(detail_source_link, "")
+
+offroad_price_note = /,l=null===n\?`\$\{V\} mağazasında.*?daxil deyil\.`;return/
+page.sub!(offroad_price_note, ',l="";return')
 
 page.gsub!(%r{children:"CFMOTO DMS-dən foto.*?diler tərəfindən təsdiqlənir\."}, 'children:"Konfiquratorda göstərilən məhsullar rəsmi CFMOTO kataloqlarına əsaslanır. Uyğunluq, mövcudluq və yekun satış qiyməti model və komplektasiyaya görə satış komandası tərəfindən təsdiqlənir."')
 
