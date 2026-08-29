@@ -2,18 +2,34 @@
 
 module NewsConfig
   ROOT_SLUG = "xeberler"
-  ARTICLE_SLUG = "cforce-c4-c5-artiq-azerbaycanda"
+  CFORCE_ARTICLE_SLUG = "cforce-c4-c5-artiq-azerbaycanda"
+  Z10_ARTICLE_SLUG = "z10-z10-4-turbo-performans-azerbaycanda"
 
-  PAGES = [
+  INDEX_PAGE = {
+    path: "/#{ROOT_SLUG}/",
+    file: File.join(ROOT_SLUG, "index.html"),
+    image: "/gallery/z10-4-1.webp"
+  }.freeze
+
+  ARTICLES = [
     {
-      path: "/#{ROOT_SLUG}/",
-      file: File.join(ROOT_SLUG, "index.html")
+      slug: Z10_ARTICLE_SLUG,
+      path: "/#{ROOT_SLUG}/#{Z10_ARTICLE_SLUG}/",
+      file: File.join(ROOT_SLUG, Z10_ARTICLE_SLUG, "index.html"),
+      image: "/gallery/z10-4-1.webp",
+      title: "Z10 və Z10-4: turbo performans Azərbaycanda"
     },
     {
-      path: "/#{ROOT_SLUG}/#{ARTICLE_SLUG}/",
-      file: File.join(ROOT_SLUG, ARTICLE_SLUG, "index.html")
+      slug: CFORCE_ARTICLE_SLUG,
+      path: "/#{ROOT_SLUG}/#{CFORCE_ARTICLE_SLUG}/",
+      file: File.join(ROOT_SLUG, CFORCE_ARTICLE_SLUG, "index.html"),
+      image: "/gallery/cforce-c4-1.webp",
+      title: "CFORCE C4 və C5 artıq Azərbaycanda"
     }
   ].freeze
+
+  FEATURED_ARTICLE = ARTICLES.first
+  PAGES = [INDEX_PAGE, *ARTICLES].freeze
 
   module_function
 
