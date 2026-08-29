@@ -11,7 +11,7 @@ SCRIPT_URL = "/assets/mobile-menu-accessibility-v2.js"
 MARKER_START = "<!-- CFMOTO:UX-ACCESSIBILITY:START -->"
 MARKER_END = "<!-- CFMOTO:UX-ACCESSIBILITY:END -->"
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-partsazn-v5.js"
+CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-partsazn-v6.js"
 CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-partsazn-v4.css"
 CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-partsazn-v3.js"
 

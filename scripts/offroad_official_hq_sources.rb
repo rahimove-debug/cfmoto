@@ -1,0 +1,51 @@
+# frozen_string_literal: true
+
+OFFICIAL_CFMOTO_DOWNLOAD_ROOT = "https://download.cfmoto.com/content/dam/cfmoto/site/global/media-center/download-center/products/accessories---parts---gear/03_vehicle-accessories"
+
+# Only exact model-family and accessory matches are included. Entries without a
+# reliable official high-resolution match keep their existing DMS thumbnail.
+OFFICIAL_OFFROAD_HQ_SOURCES = {
+  "c500-rack-extender" => "cforce-450&520/tif/Rear Rack Extender_02.tif",
+  "c500-front-box" => "cforce-450&520/psd/Front Box_01.psd",
+  "c600-windshield" => "cforce-625-&-625-touring/psd/Front Windshield.psd",
+  "c600-front-bumper" => "cforce-625-&-625-touring/psd/front-bumper/Front Bumper (SIMPLE LOOKING)_04.psd",
+  "c600-rear-bumper" => "cforce-625-&-625-touring/jpg/Rear Bumper (SIMPLE LOOKING).jpg",
+  "c600-cargo-box" => "cforce-625-&-625-touring/jpg/Cargo Box (plastic latch).jpg",
+  "c600-infill-rack" => "cforce-625-&-625-touring/psd/Passenger Infill Rack.psd",
+  "ct-windshield" => "cforce-850_1000-touring/psd/Front Windshield Assembly-New X8X10.psd",
+  "ct-front-bumper" => "cforce-850_1000-touring/psd/Front Bumper Assembly-NewX8X10 .psd",
+  "ct-rear-bumper" => "cforce-850_1000-touring/psd/Rear Bumper Assembly-New X8X10.psd",
+  "ct-rack-extender" => "cforce-850_1000-touring/psd/F&R Rack Extender - New X8 & X10 .psd",
+  "ct-soft-bag" => "universal-accessories/psd/Canvas Storage Bag.psd",
+  "ct-cooler" => "cforce-850_1000-touring/psd/Rear ATV Cooler-Cooler Box Assembly(1).psd",
+  "zf-full-front" => "zforce-1000-sport/psd/Front Windshield (work with Mirrors).psd",
+  "zf-half-front" => "zforce-800&950-trail&zforce-950-sport/jpg/Front Half Windshield.jpg",
+  "zf-full-rear" => "zforce-800&950-trail&zforce-950-sport/psd/Rear Windshield.psd",
+  "zf-side-mirrors" => "zforce-800&950-trail&zforce-950-sport/tif/Side Mirrors.tif",
+  "zf-front-bumper" => "zforce-800&950-trail&zforce-950-sport/jpg/Front Bumper.jpg",
+  "zf-rear-bumper" => "zforce-800&950-trail&zforce-950-sport/jpg/Rear Bumper.jpg",
+  "zf-audio-2" => "zforce-800&950-trail&zforce-950-sport/psd/Audio System-Central Control Display.psd",
+  "zf-trail-a-arm" => "zforce-800&950-trail&zforce-950-sport/psd/800 Trail A-arm Protectors.psd",
+  "zf-2-seat-nerf" => "zforce-800&950-trail&zforce-950-sport/jpg/Nerf Bars.jpg",
+  "zf-sport-a-arm" => "zforce-800&950-trail&zforce-950-sport/psd/HDPE A-arm Protectors.psd",
+  "u1000-full-poly" => "uforce-1000-&-1000-xl/psd/Full Front Windshield.psd",
+  "u1000-tipout-wiper" => "uforce-1000-&-1000-xl/psd/Wiper.psd",
+  "u1000-fixed-wiper" => "uforce-1000-&-1000-xl/psd/Wiper.psd",
+  "u1000-poly-rear" => "uforce-1000-&-1000-xl/jpg/Rear Windshield.jpg",
+  "u1000-front-bumper" => "uforce-1000-&-1000-xl/psd/Front Bumper.psd",
+  "u1000-rear-bumper" => "uforce-1000-&-1000-xl/psd/Rear Bumper.psd",
+  "u1000-nerf" => "uforce-1000-&-1000-xl/psd/Nerf Bars.psd",
+  "u1000-rear-rack" => "uforce-1000-&-1000-xl/psd/Cargo Bed Rack.psd",
+  "u600-full-poly" => "uforce-600/tif/Front Full Windshield.tif",
+  "u600-roof-liner" => "uforce-600/jpg/Roof Liner Assembly_01.jpg",
+  "u600-poly-rear" => "uforce-600/tif/Rear Windshield.tif",
+  "u600-full-door-right" => "uforce-600/tif/Right Full Door_01.tif",
+  "u600-rear-bumper" => "uforce-600/psd/Rear Bumper.psd",
+  "u600-nerf" => "uforce-600/psd/Nerf Bars.psd",
+  "u600-front-bumper" => "uforce-600/psd/Front Bumper.psd",
+  "u600-rear-rack" => "uforce-600/tif/Cargo Bed Rack.tif",
+  "u600-large-cargo" => "uforce-600/psd/Rear Cargo Box.psd",
+  "u600-half-doors" => "uforce-600/psd/Half Doors.psd",
+  "u600-heated-driver" => "uforce-600/psd/Driver Heated Seat.psd",
+  "u600-heated-passenger" => "uforce-600/psd/Passenger Heated Seat.psd"
+}.freeze

@@ -3,12 +3,14 @@
 
 require "fileutils"
 require "json"
+require_relative "offroad_official_hq_sources"
 
 ROOT = File.expand_path("..", __dir__)
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-BUNDLE = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v5.js")
+BUNDLE = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v6.js")
 SOURCE_ROOT = ENV.fetch("CFMOTO_DMS_OFFROAD_SOURCE", File.expand_path("../cfmoto-dms-accessories/final", ROOT))
 PUBLIC_DIRECTORY = "dms-offroad"
+HQ_PUBLIC_DIRECTORY = "official-offroad-hq"
 IMAGE_MAP_VARIABLE = "offroadDmsImages"
 
 # Key-specific mapping is deliberate: several catalog entries share a part
@@ -173,6 +175,15 @@ if $PROGRAM_NAME == __FILE__
     end
   end
 
+  unknown_hq_keys = OFFICIAL_OFFROAD_HQ_SOURCES.keys - IMAGE_SOURCES.keys
+  abort "Official HQ mapping contains unknown catalog keys: #{unknown_hq_keys.join(", ")}" unless unknown_hq_keys.empty?
+
+  OFFICIAL_OFFROAD_HQ_SOURCES.each_key do |catalog_key|
+    path = File.join(ROOT, "accessories", HQ_PUBLIC_DIRECTORY, public_filename(catalog_key))
+    abort "Missing committed official HQ image: #{path.delete_prefix("#{ROOT}/")}" unless File.file?(path)
+    abort "Official HQ image is unexpectedly small: #{path.delete_prefix("#{ROOT}/")}" if File.size(path) < 20_000
+  end
+
   abort "Configurator bundle not found: #{BUNDLE}" unless File.file?(BUNDLE)
   bundle = File.read(BUNDLE, encoding: "UTF-8")
 
@@ -181,7 +192,8 @@ if $PROGRAM_NAME == __FILE__
   end
 
   image_urls = IMAGE_SOURCES.to_h do |catalog_key, _relative_source|
-    [catalog_key, "/accessories/#{PUBLIC_DIRECTORY}/#{public_filename(catalog_key)}"]
+    directory = OFFICIAL_OFFROAD_HQ_SOURCES.key?(catalog_key) ? HQ_PUBLIC_DIRECTORY : PUBLIC_DIRECTORY
+    [catalog_key, "/accessories/#{directory}/#{public_filename(catalog_key)}"]
   end
   bundle.sub!(/,(?:E|#{IMAGE_MAP_VARIABLE})=\{[^}]*\},G=/, ",G=")
   image_map_anchor = /L=(\{[^}]+\}),G=/
@@ -197,5 +209,5 @@ if $PROGRAM_NAME == __FILE__
   end
 
   File.write(BUNDLE, bundle, encoding: "UTF-8")
-  puts "Applied #{IMAGE_SOURCES.size} matched CFMOTO DMS photos to the ATV and Buggy accessory catalog"
+  puts "Applied #{OFFICIAL_OFFROAD_HQ_SOURCES.size} official HQ images and #{IMAGE_SOURCES.size - OFFICIAL_OFFROAD_HQ_SOURCES.size} matched DMS photos to the ATV and Buggy accessory catalog"
 end
