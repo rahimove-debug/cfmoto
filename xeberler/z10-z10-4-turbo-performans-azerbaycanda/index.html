@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="az">
+<head><!-- CFMOTO:GTM:HEAD:START -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9877TBG');
+</script>
+<!-- CFMOTO:GTM:HEAD:END -->
+<!-- CFMOTO:ANALYTICS:START -->
+<script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=G-X0Y85BJ9ST"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
+window.gtag('js',new Date());
+window.gtag('config','G-X0Y85BJ9ST');
+document.addEventListener('click',function(event){
+  var target=event.target;
+  if(!(target instanceof Element))return;
+  var link=target.closest('a[href]');
+  if(!link)return;
+  var href=link.getAttribute('href')||'';
+  var text=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
+  var normalizedHref=href.toLowerCase();
+  var params={link_text:text,page_path:window.location.pathname};
+  var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
+  if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
+    var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
+    var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
+    send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
+    if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
+    return;
+  }
+  if(normalizedHref.startsWith('tel:')){
+    var normalizedText=text.toLowerCase();
+    var serviceContact=['servis','ehtiyat','çatdırılma'].some(function(term){return normalizedText.includes(term)});
+    send('phone_click',{contact_area:serviceContact?'service':'sales'});
+    return;
+  }
+  if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){
+    send('directions_click',{destination:'showroom'});
+  }
+},true);
+</script>
+<!-- CFMOTO:ANALYTICS:END -->
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Z10 və Z10-4 Azərbaycanda | CFMOTO Azerbaijan</title>
+  <meta name="description" content="CFMOTO Z10 və Z10-4 Azərbaycanda: 154 a.g. turbo güc, FOX QSE asqı, yerli qiymətlər və iki model arasındakı əsas fərqlər.">
+  <link rel="canonical" href="https://cfmoto.az/xeberler/z10-z10-4-turbo-performans-azerbaycanda/">
+  <link rel="alternate" hreflang="az" href="https://cfmoto.az/xeberler/z10-z10-4-turbo-performans-azerbaycanda/">
+  <link rel="alternate" hreflang="x-default" href="https://cfmoto.az/xeberler/z10-z10-4-turbo-performans-azerbaycanda/">
+  <meta property="og:title" content="Z10 və Z10-4: turbo performans Azərbaycanda">
+  <meta property="og:description" content="154 at güclü iki və dörd nəfərlik Sport SSV modellərinin yerli qiymətləri və əsas fərqləri.">
+  <meta property="og:url" content="https://cfmoto.az/xeberler/z10-z10-4-turbo-performans-azerbaycanda/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://cfmoto.az/gallery/z10-4-1.webp">
+  <meta property="og:image:alt" content="CFMOTO Z10-4 yolsuzluq marşrutunda">
+  <meta property="og:locale" content="az_AZ">
+  <meta property="og:site_name" content="CFMOTO Azerbaijan">
+  <meta property="article:published_time" content="2026-08-29T17:00:00+04:00">
+  <meta property="article:modified_time" content="2026-08-29T17:00:00+04:00">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Z10 və Z10-4: turbo performans Azərbaycanda">
+  <meta name="twitter:description" content="154 at güclü iki və dörd nəfərlik Sport SSV modellərinin yerli qiymətləri və əsas fərqləri.">
+  <meta name="twitter:image" content="https://cfmoto.az/gallery/z10-4-1.webp">
+  <meta name="twitter:image:alt" content="CFMOTO Z10-4 yolsuzluq marşrutunda">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"NewsArticle","@id":"https://cfmoto.az/xeberler/z10-z10-4-turbo-performans-azerbaycanda/#article","headline":"Z10 və Z10-4: turbo performans Azərbaycanda","description":"154 at güclü iki və dörd nəfərlik Sport SSV modellərinin yerli qiymətləri və əsas fərqləri.","image":["https://cfmoto.az/gallery/z10-4-1.webp","https://cfmoto.az/gallery/z10-1.webp"],"datePublished":"2026-08-29T17:00:00+04:00","dateModified":"2026-08-29T17:00:00+04:00","inLanguage":"az-AZ","mainEntityOfPage":{"@type":"WebPage","@id":"https://cfmoto.az/xeberler/z10-z10-4-turbo-performans-azerbaycanda/"},"author":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/"},"publisher":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/","logo":{"@type":"ImageObject","url":"https://cfmoto.az/cfmoto-logo-black.png","width":159,"height":34}},"about":[{"@type":"Product","name":"Z10","url":"https://cfmoto.az/model/z10/"},{"@type":"Product","name":"Z10-4","url":"https://cfmoto.az/model/z10-4/"}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana səhifə","item":"https://cfmoto.az/"},{"@type":"ListItem","position":2,"name":"Xəbərlər","item":"https://cfmoto.az/xeberler/"},{"@type":"ListItem","position":3,"name":"Z10 və Z10-4: turbo performans Azərbaycanda","item":"https://cfmoto.az/xeberler/z10-z10-4-turbo-performans-azerbaycanda/"}]}]}</script>
+  <link rel="icon" href="/favicon.svg">
+  <link rel="preload" as="image" href="/gallery/z10-4-1.webp" fetchpriority="high">
+
+  <link rel="stylesheet" href="/assets/cfmoto-news-v2.css">
+<link rel="stylesheet" href="/assets/cfmoto-typography-v2.css"/></head>
+<body><!-- CFMOTO:GTM:BODY:START -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9877TBG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- CFMOTO:GTM:BODY:END -->
+<div class="news-topline"><div class="news-topline-inner"><span>CFMOTO-nun Azərbaycanda rəsmi nümayəndəsi</span><span>Babək pr. 188 · Salon hər gün 10:00–19:00</span></div></div>
+  <header class="news-site-nav">
+    <div class="news-nav-inner">
+      <a class="news-brand" href="/" aria-label="CFMOTO Azerbaijan ana səhifə"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"><span>Azərbaycan</span></a>
+      <nav class="news-nav-links" aria-label="Əsas menyu"><a href="/#modeller">Modellər</a><a href="/xeberler/" class="active">Xəbərlər</a><a href="#gallery">Qalereya</a><a href="https://wa.me/994512332484?text=Salam%2C%20Z10%20v%C9%99%20Z10-4%20modell%C9%99ri%20il%C9%99%20maraqlan%C4%B1ram." class="contact" target="_blank" rel="noreferrer">Əlaqə</a></nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="article-head">
+      <div class="news-page-width">
+        <nav class="breadcrumbs" aria-label="Naviqasiya yolu"><a href="/">Ana səhifə</a><span>›</span><a href="/xeberler/">Xəbərlər</a><span>›</span><span>Sport SSV</span></nav>
+        <div class="headline-grid">
+          <div><p class="news-label">Turbo performans</p><h1>Z10 və Z10-4: <em>154 at gücü</em> Azərbaycanda</h1></div>
+          <div class="head-summary">
+            <p>İki və dörd nəfərlik Sport SSV modelləri 998 cc turbo mühərriki, FOX QSE asqısı və müasir kokpiti bir platformada birləşdirir.</p>
+            <div class="news-meta"><span><strong>29 avqust 2026</strong></span><span>CFMOTO Azerbaijan redaksiyası</span><span>5 dəqiqə oxu</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero-wrap">
+      <div class="news-page-width">
+        <figure class="hero-figure">
+          <div class="hero-image"><span class="hero-stamp">Sport SSV</span><img src="/gallery/z10-4-1.webp" alt="CFMOTO Z10-4 yolsuzluq marşrutunda" width="1600" height="1068" loading="eager" fetchpriority="high" decoding="async"></div>
+          <figcaption>Z10-4 dörd nəfərlik kabini 998 cc turbo mühərrik və elektron tənzimlənən FOX QSE asqı ilə birləşdirir.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="article-body">
+      <div class="story-grid">
+        <article class="story">
+          <p class="lead">CFMOTO-nun Sport SSV xəttində Z10 və Z10-4 eyni turbo platformanı iki fərqli istifadə ssenarisinə uyğunlaşdırır. Z10 iki nəfərlik, daha yığcam quruluşla sürücü fokuslu dinamika təqdim edir; Z10-4 isə dörd nəfərlik kabinlə həmin performansı komanda ilə bölüşməyə imkan verir. CFMOTO Azerbaijan-da göstərilən aktual nağd qiymətlər müvafiq olaraq 45,900 AZN və 47,900 AZN-dir.</p>
+          <p>Hər iki modeldə 998 cc üçsilindrli, maye soyutmalı turbo mühərrik 154 a.g. və 145 Nm hasil edir. EFI yanacaq sistemi və CVT transmissiya gücü idarəolunan şəkildə ötürür, FOX QSE asqı isə relyefə uyğun sazlama imkanları yaradır.</p>
+
+          <figure class="inline-figure"><img src="/gallery/z10-1.webp" alt="CFMOTO Z10 yolsuzluq marşrutunda" width="1600" height="1068" loading="lazy" decoding="async"><figcaption>Z10 iki nəfərlik quruluşu və geniş hərəkət amplitudalı asqısı ilə dinamik sürüşə fokuslanır.</figcaption></figure>
+
+          <h2>İki model, iki istifadə ssenarisi</h2>
+          <p><a href="/model/z10/"><strong>Z10</strong></a> iki nəfərlik kabin, sürücüyə yönəlmiş kokpit və yığcam ölçüləri ilə sükan arxasında daha birbaşa hiss axtaranlar üçün nəzərdə tutulub. Elektron tənzimlənən FOX QSE asqı və 12,3 düymlük MMI ekranı həm relyefə uyğunlaşmanı, həm də əsas məlumatların rahat izlənməsini təmin edir.</p>
+          <p><a href="/model/z10-4/"><strong>Z10-4</strong></a> eyni 154 a.g. turbo gücünü dörd nəfərlik kabinlə birləşdirir. Uzadılmış quruluş ailə və dostlarla marşrutlar üçün əlavə oturacaq sahəsi yaradır; arxa kamera və simsiz CarPlay kimi imkanlar da yerli model təqdimatında göstərilir.</p>
+
+          <div class="comparison" aria-label="CFMOTO Z10 və Z10-4 müqayisəsi">
+            <div class="compare-head"><span>Göstərici</span><a href="/model/z10/">Z10</a><a href="/model/z10-4/">Z10-4</a></div>
+            <div class="compare-row"><strong>Nağd qiymət</strong><span>45,900 AZN</span><span>47,900 AZN</span></div>
+            <div class="compare-row"><strong>Oturacaq sayı</strong><span>2 nəfər</span><span>4 nəfər</span></div>
+            <div class="compare-row"><strong>Mühərrik</strong><span>998 cc turbo</span><span>998 cc turbo</span></div>
+            <div class="compare-row"><strong>Güc</strong><span>154 a.g.</span><span>154 a.g.</span></div>
+            <div class="compare-row"><strong>Fırlanma anı</strong><span>145 Nm</span><span>145 Nm</span></div>
+            <div class="compare-row"><strong>Asqı</strong><span>FOX QSE</span><span>FOX 2.5 QSE</span></div>
+          </div>
+
+          <blockquote class="pullquote">Z10 daha yığcam və sürücü fokuslu seçimdir; Z10-4 isə eyni turbo performansı dörd nəfərlik formatda təqdim edir.</blockquote>
+
+          <h2>Turbo platformanın əsas imkanları</h2>
+          <p>Z10 ailəsində mühərrik, transmissiya, asqı və kokpit vahid performans sistemi kimi işləyir. Məqsəd yalnız yüksək güc deyil, həmin gücü müxtəlif relyeflərdə idarə edilən və proqnozlaşdırılan şəkildə sürücüyə çatdırmaqdır.</p>
+          <ul class="feature-list">
+            <li>998 cc üçsilindrli, maye soyutmalı turbo mühərrik</li><li>154 a.g. güc və 145 Nm fırlanma anı</li><li>EFI yanacaq sistemi və CVT transmissiya</li><li>Soft, Medium və Firm rejimli FOX QSE asqı</li><li>12,3 düymlük rəqəmsal MMI ekranı</li><li>LED işıqlandırma və sürücü fokuslu kokpit</li><li>Z10-4-də arxa kamera və simsiz CarPlay dəstəyi</li><li>İki və ya dörd nəfərlik kabin seçimi</li>
+          </ul>
+
+          <figure class="inline-figure"><img src="/gallery/z10-3.webp" alt="CFMOTO Z10 FOX QSE asqı detalı" width="1600" height="1068" loading="lazy" decoding="async"><figcaption>FOX QSE asqı sazlamaları marşrutun səthinə və seçilən sürüş tempinə uyğunlaşdırıla bilər.</figcaption></figure>
+
+          <h2>Azərbaycan üçün aktual seçim</h2>
+          <p>Z10 üçün 45,900 AZN, Z10-4 üçün isə 47,900 AZN nağd qiymət göstərilir. Modelin faktiki stoku, rəng seçimi, yerli komplektasiyası və maliyyələşdirmə imkanları sifariş zamanı CFMOTO Azerbaijan satış komandası ilə dəqiqləşdirilməlidir.</p>
+          <div class="market-note"><strong>Qeyd:</strong> məqalədəki göstəricilər CFMOTO Azerbaijan model səhifələri və beynəlxalq təqdimat materialları əsasında hazırlanıb. Qiymət, komplektasiya və stok məlumatı dəyişə bilər; yekun məlumatı satış komandası ilə dəqiqləşdirin.</div>
+        </article>
+
+        <aside class="facts">
+          <h2>Qısa faktlar</h2>
+          <div class="fact-row"><span>Modellər</span><strong><a href="/model/z10/">Z10</a> / <a href="/model/z10-4/">Z10-4</a></strong></div>
+          <div class="fact-row"><span>Mühərrik</span><strong>998 cc turbo</strong></div>
+          <div class="fact-row"><span>Güc</span><strong>154 a.g.</strong></div>
+          <div class="fact-row"><span>Fırlanma anı</span><strong>145 Nm</strong></div>
+          <div class="fact-row"><span>Oturacaq</span><strong>2 / 4 nəfər</strong></div>
+          <div class="fact-row"><span>Asqı</span><strong>FOX QSE</strong></div>
+          <div class="fact-row"><span>Nağd qiymət</span><strong>45,900 / 47,900 AZN</strong></div>
+          <div class="share"><span>Xəbəri paylaş</span><div class="share-links"><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcfmoto.az%2Fxeberler%2Fz10-z10-4-turbo-performans-azerbaycanda%2F" target="_blank" rel="noreferrer" aria-label="Facebook-da paylaş">F</a><a href="https://wa.me/?text=Z10%20v%C9%99%20Z10-4%3A%20turbo%20performans%20Az%C9%99rbaycanda%20https%3A%2F%2Fcfmoto.az%2Fxeberler%2Fz10-z10-4-turbo-performans-azerbaycanda%2F" target="_blank" rel="noreferrer" aria-label="WhatsApp-da paylaş">WA</a><button type="button" id="copy-news-link" aria-label="Xəbər keçidini köçür">↗</button></div></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="gallery-section" id="gallery">
+      <div class="news-page-width"><p class="section-label">Fotoqalereya</p><h2 class="gallery-title">Z10 və Z10-4 hərəkətdə</h2>
+        <div class="gallery-grid"><figure><img src="/gallery/z10-4-2.webp" alt="CFMOTO Z10-4 asqı və idarəetmə detalı" width="1600" height="1068" loading="lazy" decoding="async"><figcaption>Z10-4</figcaption></figure><figure><img src="/gallery/z10-1.webp" alt="CFMOTO Z10 hərəkətdə" width="1600" height="1068" loading="lazy" decoding="async"><figcaption>Z10</figcaption></figure><figure><img src="/models/z10-4.webp" alt="CFMOTO Z10-4 yan görünüş" width="1333" height="1000" loading="lazy" decoding="async"><figcaption>Z10-4</figcaption></figure></div>
+      </div>
+    </section>
+
+    <section class="article-footer" id="contact"><div class="news-page-width article-footer-inner"><div><h2>Z10 və Z10-4-ü yaxından tanıyın</h2><p>Qiymət, rəng, komplektasiya və stok məlumatı üçün satış komandamızla əlaqə saxlayın.</p></div><a class="button" href="https://wa.me/994512332484?text=Salam%2C%20Z10%20v%C9%99%20Z10-4%20modell%C9%99ri%20il%C9%99%20maraqlan%C4%B1ram." target="_blank" rel="noreferrer">Məlumat al <span>↗</span></a></div></section>
+  </main>
+
+  <footer class="news-footer"><div class="news-footer-inner"><span>© 2026 CFMOTO Azerbaijan · SAZMOTO MMC</span><span>İlkin xəbər mənbəyi: <a href="https://awm-trade.ru/news/novye-tseny-novye-sportivnye-zforce-z10-eps-i-zforce-z10-4-eps-ot-cfmoto/" target="_blank" rel="noreferrer">AWM-Trade</a></span></div></footer>
+  <script>
+    document.getElementById('copy-news-link').addEventListener('click',function(){
+      var button=this;
+      navigator.clipboard.writeText('https://cfmoto.az/xeberler/z10-z10-4-turbo-performans-azerbaycanda/').then(function(){
+        button.textContent='✓';
+        window.setTimeout(function(){button.textContent='↗';},1800);
+      });
+    });
+  </script>
+</body>
+</html>
