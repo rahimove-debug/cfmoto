@@ -6,7 +6,7 @@ require "json"
 
 ROOT = File.expand_path("..", __dir__)
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-BUNDLE = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v3.js")
+BUNDLE = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v4.js")
 SOURCE_ROOT = ENV.fetch("CFMOTO_DMS_OFFROAD_SOURCE", File.expand_path("../cfmoto-dms-accessories/final", ROOT))
 PUBLIC_DIRECTORY = "dms-offroad"
 IMAGE_MAP_VARIABLE = "offroadDmsImages"
