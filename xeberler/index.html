@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="az">
+<head><!-- CFMOTO:GTM:HEAD:START -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9877TBG');
+</script>
+<!-- CFMOTO:GTM:HEAD:END -->
+<!-- CFMOTO:ANALYTICS:START -->
+<script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=G-X0Y85BJ9ST"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
+window.gtag('js',new Date());
+window.gtag('config','G-X0Y85BJ9ST');
+document.addEventListener('click',function(event){
+  var target=event.target;
+  if(!(target instanceof Element))return;
+  var link=target.closest('a[href]');
+  if(!link)return;
+  var href=link.getAttribute('href')||'';
+  var text=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
+  var normalizedHref=href.toLowerCase();
+  var params={link_text:text,page_path:window.location.pathname};
+  var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
+  if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
+    var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
+    var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
+    send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
+    if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
+    return;
+  }
+  if(normalizedHref.startsWith('tel:')){
+    var normalizedText=text.toLowerCase();
+    var serviceContact=['servis','ehtiyat','çatdırılma'].some(function(term){return normalizedText.includes(term)});
+    send('phone_click',{contact_area:serviceContact?'service':'sales'});
+    return;
+  }
+  if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){
+    send('directions_click',{destination:'showroom'});
+  }
+},true);
+</script>
+<!-- CFMOTO:ANALYTICS:END -->
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CFMOTO Xəbərləri və Yeni Modellər | CFMOTO Azerbaijan</title>
+  <meta name="description" content="CFMOTO Azerbaijan xəbərləri, Azərbaycana gələn yeni motosiklet və kvadrosikl modelləri, texnologiyalar və rəsmi yeniliklər.">
+  <link rel="canonical" href="https://cfmoto.az/xeberler/">
+  <link rel="alternate" hreflang="az" href="https://cfmoto.az/xeberler/">
+  <link rel="alternate" hreflang="x-default" href="https://cfmoto.az/xeberler/">
+  <meta property="og:title" content="CFMOTO Xəbərləri və Yeni Modellər | CFMOTO Azerbaijan">
+  <meta property="og:description" content="CFMOTO Azerbaijan xəbərləri, yeni modellər və rəsmi yeniliklər.">
+  <meta property="og:url" content="https://cfmoto.az/xeberler/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://cfmoto.az/gallery/cforce-c4-1.webp">
+  <meta property="og:image:alt" content="CFMOTO CFORCE C4 yolda">
+  <meta property="og:locale" content="az_AZ">
+  <meta property="og:site_name" content="CFMOTO Azerbaijan">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CFMOTO Xəbərləri və Yeni Modellər | CFMOTO Azerbaijan">
+  <meta name="twitter:description" content="CFMOTO Azerbaijan xəbərləri, yeni modellər və rəsmi yeniliklər.">
+  <meta name="twitter:image" content="https://cfmoto.az/gallery/cforce-c4-1.webp">
+  <meta name="twitter:image:alt" content="CFMOTO CFORCE C4 yolda">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","@id":"https://cfmoto.az/xeberler/#page","url":"https://cfmoto.az/xeberler/","name":"CFMOTO Xəbərləri və Yeni Modellər","description":"CFMOTO Azerbaijan xəbərləri, yeni modellər və rəsmi yeniliklər.","inLanguage":"az-AZ","isPartOf":{"@id":"https://cfmoto.az/#website"},"publisher":{"@id":"https://cfmoto.az/#organization"},"mainEntity":{"@type":"ItemList","numberOfItems":1,"itemListElement":[{"@type":"ListItem","position":1,"url":"https://cfmoto.az/xeberler/cforce-c4-c5-artiq-azerbaycanda/","name":"CFORCE C4 və C5 artıq Azərbaycanda"}]}}</script>
+  <link rel="icon" href="/favicon.svg">
+
+  <link rel="stylesheet" href="/assets/cfmoto-news-v1.css">
+<link rel="stylesheet" href="/assets/cfmoto-typography-v2.css"/></head>
+<body><!-- CFMOTO:GTM:BODY:START -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9877TBG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- CFMOTO:GTM:BODY:END -->
+<div class="news-topline"><div class="news-topline-inner"><span>CFMOTO-nun Azərbaycanda rəsmi nümayəndəsi</span><span>Babək pr. 188 · Salon hər gün 10:00–19:00</span></div></div>
+  <header class="news-site-nav">
+    <div class="news-nav-inner">
+      <a class="news-brand" href="/" aria-label="CFMOTO Azerbaijan ana səhifə"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"><span>Azərbaycan</span></a>
+      <nav class="news-nav-links" aria-label="Əsas menyu"><a href="/#modeller">Modellər</a><a href="/xeberler/" class="active" aria-current="page">Xəbərlər</a><a href="/kvadrosikl/">Kvadrosikllər</a><a href="https://wa.me/994512332484?text=Salam%2C%20CFMOTO%20modell%C9%99ri%20il%C9%99%20maraqlan%C4%B1ram." class="contact" target="_blank" rel="noreferrer">Əlaqə</a></nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="news-index-hero">
+      <div class="news-page-width">
+        <p class="news-label">CFMOTO Azerbaijan</p>
+        <h1>Xəbərlər</h1>
+        <p>Yeni modellər, texnologiyalar və CFMOTO dünyasından Azərbaycana aid ən son rəsmi məlumatlar.</p>
+      </div>
+    </section>
+
+    <section class="news-list" aria-labelledby="latest-news">
+      <div class="news-page-width">
+        <div class="news-list-head"><h2 id="latest-news">Son xəbərlər</h2><span>1 məqalə</span></div>
+        <a class="news-card" href="/xeberler/cforce-c4-c5-artiq-azerbaycanda/">
+          <div class="news-card-media"><img src="/gallery/cforce-c4-1.webp" alt="CFMOTO CFORCE C4 yolda" width="1600" height="1067" loading="eager" fetchpriority="high" decoding="async"></div>
+          <div class="news-card-copy">
+            <time datetime="2026-08-29">29 avqust 2026</time>
+            <h2>CFORCE C4 və C5 artıq Azərbaycanda</h2>
+            <p>G4 platformalı yeni nəsil kvadrosikllər 2026-cı ilin avqustunda Azərbaycan bazarına gəlib.</p>
+            <strong>Xəbəri oxu →</strong>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="news-footer"><div class="news-footer-inner"><span>© 2026 CFMOTO Azerbaijan · SAZMOTO MMC</span><span><a href="/">Ana səhifə</a> · <a href="/kvadrosikl/">Kvadrosikllər</a> · <a href="/servis/">Servis</a></span></div></footer>
+</body>
+</html>

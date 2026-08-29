@@ -3,11 +3,12 @@ require "fileutils"
 require "rbconfig"
 require_relative "content_config"
 require_relative "category_config"
+require_relative "news_config"
 
 ROOT = File.expand_path("..", __dir__)
 DIST = File.join(ROOT, "dist")
 
-directories = %w[assets gallery model models ru accessories aksesuar-konfiquratoru] + ContentConfig::SLUGS + CategoryConfig::SLUGS
+directories = %w[assets gallery model models ru accessories aksesuar-konfiquratoru] + ContentConfig::SLUGS + CategoryConfig::SLUGS + [NewsConfig::ROOT_SLUG]
 files = %w[
   index.html
   404.html
@@ -60,6 +61,12 @@ abort "Accessory integration failed" unless system(RbConfig.ruby, accessory_inte
 accessory_audit = File.join(__dir__, "audit_accessory_integration.rb")
 abort "Accessory integration audit failed" unless system(RbConfig.ruby, accessory_audit)
 
+news_integration = File.join(__dir__, "apply_news_integration.rb")
+abort "News integration failed" unless system(RbConfig.ruby, news_integration)
+
+news_audit = File.join(__dir__, "audit_news_integration.rb")
+abort "News integration audit failed" unless system(RbConfig.ruby, news_audit)
+
 mobile_model_names = File.join(__dir__, "apply_mobile_model_names.rb")
 abort "Mobile model-name processing failed" unless system(RbConfig.ruby, mobile_model_names)
 
@@ -87,6 +94,7 @@ end
 html_count = Dir.glob(File.join(DIST, "**", "*.html")).size
 accessory_html_count = Dir.glob(File.join(ROOT, "aksesuar-konfiquratoru", "**", "*.html")).size
 expected_html_count = 2 + accessory_html_count + Dir.glob(File.join(ROOT, "model", "*", "index.html")).size + ContentConfig::SLUGS.size + CategoryConfig::SLUGS.size + Dir.glob(File.join(ROOT, "ru", "**", "index.html")).size
+expected_html_count += NewsConfig.html_paths(ROOT).size
 abort "Expected #{expected_html_count} HTML files in dist, found #{html_count}" unless html_count == expected_html_count
 
 forbidden = %w[README.md .github cloudflare scripts]

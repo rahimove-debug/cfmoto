@@ -4,6 +4,7 @@
 require_relative "domain_config"
 require_relative "content_config"
 require_relative "category_config"
+require_relative "news_config"
 
 ROOT = File.expand_path("..", __dir__)
 MEASUREMENT_ID = DomainConfig::GA4_MEASUREMENT_ID
@@ -97,11 +98,13 @@ def strip_direct_meta_pixel!(content)
   content.gsub!(pixel_noscript, "about:blank")
 end
 
+news_paths = NewsConfig.html_paths(ROOT)
 html_paths = [
   File.join(ROOT, "index.html"),
   *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort,
   *ContentConfig.html_paths(ROOT),
-  *CategoryConfig.html_paths(ROOT)
+  *CategoryConfig.html_paths(ROOT),
+  *news_paths
 ]
 
 html_paths.each do |path|
@@ -116,6 +119,10 @@ html_paths.each do |path|
   abort "#{path}: missing <body> element" unless body_match
 
   html.sub!("<head>", "<head>#{gtm_head}#{analytics}")
+  if news_paths.include?(path)
+    body_tag = body_match[0]
+    html.sub!(body_tag, "#{body_tag}#{gtm_body}")
+  end
   File.write(path, html, encoding: "UTF-8")
 end
 

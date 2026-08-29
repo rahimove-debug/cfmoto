@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="az">
+<head><!-- CFMOTO:GTM:HEAD:START -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9877TBG');
+</script>
+<!-- CFMOTO:GTM:HEAD:END -->
+<!-- CFMOTO:ANALYTICS:START -->
+<script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=G-X0Y85BJ9ST"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
+window.gtag('js',new Date());
+window.gtag('config','G-X0Y85BJ9ST');
+document.addEventListener('click',function(event){
+  var target=event.target;
+  if(!(target instanceof Element))return;
+  var link=target.closest('a[href]');
+  if(!link)return;
+  var href=link.getAttribute('href')||'';
+  var text=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
+  var normalizedHref=href.toLowerCase();
+  var params={link_text:text,page_path:window.location.pathname};
+  var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
+  if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
+    var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
+    var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
+    send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
+    if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
+    return;
+  }
+  if(normalizedHref.startsWith('tel:')){
+    var normalizedText=text.toLowerCase();
+    var serviceContact=['servis','ehtiyat','çatdırılma'].some(function(term){return normalizedText.includes(term)});
+    send('phone_click',{contact_area:serviceContact?'service':'sales'});
+    return;
+  }
+  if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){
+    send('directions_click',{destination:'showroom'});
+  }
+},true);
+</script>
+<!-- CFMOTO:ANALYTICS:END -->
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CFORCE C4 və C5 Artıq Azərbaycanda | CFMOTO Azerbaijan</title>
+  <meta name="description" content="G4 platformalı CFMOTO CFORCE C4 və CFORCE C5 modelləri 2026-cı ilin avqustunda Azərbaycana gəlib. Qiymətləri, texniki göstəriciləri və yenilikləri.">
+  <link rel="canonical" href="https://cfmoto.az/xeberler/cforce-c4-c5-artiq-azerbaycanda/">
+  <link rel="alternate" hreflang="az" href="https://cfmoto.az/xeberler/cforce-c4-c5-artiq-azerbaycanda/">
+  <link rel="alternate" hreflang="x-default" href="https://cfmoto.az/xeberler/cforce-c4-c5-artiq-azerbaycanda/">
+  <meta property="og:title" content="CFORCE C4 və C5 artıq Azərbaycanda">
+  <meta property="og:description" content="G4 platformalı yeni nəsil CFORCE C4 və C5 modelləri 2026-cı ilin avqustunda Azərbaycan bazarına gəlib.">
+  <meta property="og:url" content="https://cfmoto.az/xeberler/cforce-c4-c5-artiq-azerbaycanda/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://cfmoto.az/gallery/cforce-c4-1.webp">
+  <meta property="og:image:alt" content="CFMOTO CFORCE C4 yolda">
+  <meta property="og:locale" content="az_AZ">
+  <meta property="og:site_name" content="CFMOTO Azerbaijan">
+  <meta property="article:published_time" content="2026-08-29T09:00:00+04:00">
+  <meta property="article:modified_time" content="2026-08-29T09:00:00+04:00">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CFORCE C4 və C5 artıq Azərbaycanda">
+  <meta name="twitter:description" content="G4 platformalı yeni nəsil CFORCE C4 və C5 modelləri Azərbaycan bazarına gəlib.">
+  <meta name="twitter:image" content="https://cfmoto.az/gallery/cforce-c4-1.webp">
+  <meta name="twitter:image:alt" content="CFMOTO CFORCE C4 yolda">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"NewsArticle","@id":"https://cfmoto.az/xeberler/cforce-c4-c5-artiq-azerbaycanda/#article","headline":"CFORCE C4 və C5 artıq Azərbaycanda","description":"G4 platformalı CFMOTO CFORCE C4 və CFORCE C5 modelləri 2026-cı ilin avqustunda Azərbaycana gəlib.","image":["https://cfmoto.az/gallery/cforce-c4-1.webp","https://cfmoto.az/gallery/cforce-c5-2.webp"],"datePublished":"2026-08-29T09:00:00+04:00","dateModified":"2026-08-29T09:00:00+04:00","inLanguage":"az-AZ","mainEntityOfPage":{"@type":"WebPage","@id":"https://cfmoto.az/xeberler/cforce-c4-c5-artiq-azerbaycanda/"},"author":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/"},"publisher":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/","logo":{"@type":"ImageObject","url":"https://cfmoto.az/cfmoto-logo-black.png","width":159,"height":34}},"about":[{"@type":"Product","name":"CFORCE C4","url":"https://cfmoto.az/model/cforce-c4/"},{"@type":"Product","name":"CFORCE C5","url":"https://cfmoto.az/model/cforce-c5/"}]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana səhifə","item":"https://cfmoto.az/"},{"@type":"ListItem","position":2,"name":"Xəbərlər","item":"https://cfmoto.az/xeberler/"},{"@type":"ListItem","position":3,"name":"CFORCE C4 və C5 artıq Azərbaycanda","item":"https://cfmoto.az/xeberler/cforce-c4-c5-artiq-azerbaycanda/"}]}]}</script>
+  <link rel="icon" href="/favicon.svg">
+  <link rel="preload" as="image" href="/gallery/cforce-c4-1.webp" fetchpriority="high">
+
+  <link rel="stylesheet" href="/assets/cfmoto-news-v1.css">
+<link rel="stylesheet" href="/assets/cfmoto-typography-v2.css"/></head>
+<body><!-- CFMOTO:GTM:BODY:START -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9877TBG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- CFMOTO:GTM:BODY:END -->
+<div class="news-topline"><div class="news-topline-inner"><span>CFMOTO-nun Azərbaycanda rəsmi nümayəndəsi</span><span>Babək pr. 188 · Salon hər gün 10:00–19:00</span></div></div>
+  <header class="news-site-nav">
+    <div class="news-nav-inner">
+      <a class="news-brand" href="/" aria-label="CFMOTO Azerbaijan ana səhifə"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"><span>Azərbaycan</span></a>
+      <nav class="news-nav-links" aria-label="Əsas menyu"><a href="/#modeller">Modellər</a><a href="/xeberler/" class="active">Xəbərlər</a><a href="#gallery">Qalereya</a><a href="https://wa.me/994512332484?text=Salam%2C%20CFORCE%20C4%20v%C9%99%20C5%20modell%C9%99ri%20il%C9%99%20maraqlan%C4%B1ram." class="contact" target="_blank" rel="noreferrer">Əlaqə</a></nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="article-head">
+      <div class="news-page-width">
+        <nav class="breadcrumbs" aria-label="Naviqasiya yolu"><a href="/">Ana səhifə</a><span>›</span><a href="/xeberler/">Xəbərlər</a><span>›</span><span>Yeni modellər</span></nav>
+        <div class="headline-grid">
+          <div><p class="news-label">Azərbaycanda yeni</p><h1>CFORCE <em>C4 və C5</em> artıq Azərbaycanda</h1></div>
+          <div class="head-summary">
+            <p>G4 platformalı yeni nəsil CFORCE C4 və C5 modelləri 2026-cı ilin avqustunda Azərbaycan bazarına gəlib.</p>
+            <div class="news-meta"><span><strong>29 avqust 2026</strong></span><span>CFMOTO Azerbaijan redaksiyası</span><span>6 dəqiqə oxu</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero-wrap">
+      <div class="news-page-width">
+        <figure class="hero-figure">
+          <div class="hero-image"><span class="hero-stamp">Artıq Azərbaycanda</span><img src="/gallery/cforce-c4-1.webp" alt="Azərbaycana gələn yeni CFMOTO CFORCE C4" width="1600" height="1067" loading="eager" fetchpriority="high" decoding="async"></div>
+          <figcaption>2026-cı ilin avqustunda Azərbaycana gələn CFORCE C4 və C5 yeni G4 platformasında qurulub.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="article-body">
+      <div class="story-grid">
+        <article class="story">
+          <p class="lead">CFMOTO-nun yeni nəsil CFORCE C4 və CFORCE C5 modelləri 2026-cı ilin avqustunda Azərbaycana gəlib. Hər iki kvadrosikl G4 platformasında qurulub və əvvəlki nəslin praktikliyini daha rahat idarəetmə, yenilənmiş güc aqreqatları və geniş standart avadanlıqla tamamlayır.</p>
+          <p>Yeni platformanın əsas məqsədi sürücünün texnika ilə əlaqəsini daha təbii etməkdir. Çərçivənin daraldılmış quruluşu rahat oturuşa kömək edir, təkmilləşdirilmiş elektrik sükan gücləndiricisi isə uzun marşrutlarda qollara düşən yükü azaldır və kələ-kötür səthdən gələn zərbələri yumşaldır.</p>
+
+          <figure class="inline-figure"><img src="/gallery/cforce-c4-2.webp" alt="CFORCE C4 iş şəraitində" width="1600" height="1067" loading="lazy" decoding="async"><figcaption>G4 platformasının yığcam quruluşu texniki sahələrdə manevr imkanını yaxşılaşdırır.</figcaption></figure>
+
+          <h2>İki model, ortaq platforma</h2>
+          <p><a href="/model/cforce-c4/"><strong>CFORCE C4</strong></a> daha yüngül və rahat idarə olunan xarakteri ilə ilk kvadrosiklini seçən sürücülər və manevrliliyə üstünlük verən istifadəçilər üçün nəzərdə tutulub. 33 at gücü və 34.5 N·m fırlanma anı modelə gündəlik işlər və aktiv istirahət üçün yetərli dinamika verir.</p>
+          <p><a href="/model/cforce-c5/"><strong>CFORCE C5</strong></a> isə daha güclü DOHC mühərrik, 39 at gücü və 42.5 N·m fırlanma anı ilə universal istifadəyə fokuslanır. Model həm iş tapşırıqları, həm də daha tələbkar yolsuzluq marşrutları üçün əlavə dartı təklif edir.</p>
+
+          <div class="comparison" aria-label="CFORCE C4 və C5 müqayisəsi">
+            <div class="compare-head"><span>Göstərici</span><a href="/model/cforce-c4/">CFORCE C4</a><a href="/model/cforce-c5/">CFORCE C5</a></div>
+            <div class="compare-row"><strong>Nağd qiymət</strong><span>12,400 AZN</span><span>13,900 AZN</span></div>
+            <div class="compare-row"><strong>Mühərrik gücü</strong><span>33 a.g.</span><span>39 a.g.</span></div>
+            <div class="compare-row"><strong>Fırlanma anı</strong><span>34.5 N·m</span><span>42.5 N·m</span></div>
+            <div class="compare-row"><strong>Təkər ölçüsü</strong><span>25 düym</span><span>26 düym</span></div>
+            <div class="compare-row"><strong>Rənglər</strong><span>Boz, yaşıl</span><span>Zephyr Blue, Magma Red</span></div>
+          </div>
+
+          <blockquote class="pullquote">CFORCE C4 çevik və rahat başlanğıc, CFORCE C5 isə artan güc və daha geniş istifadə imkanları təqdim edir.</blockquote>
+
+          <h2>G4 nəyi dəyişir?</h2>
+          <p>Yeni nəsildə dəyişiklik yalnız dizaynla məhdudlaşmır. Asqı, idarəetmə, işıqlandırma və gündəlik istifadə üçün vacib olan yük imkanları vahid sistem kimi yenilənib.</p>
+          <ul class="feature-list">
+            <li>Yenilənmiş elektrik sükan gücləndiricisi — EPS</li><li>CFMOTO istehsalı yeni yüksək effektiv variator</li><li>Proqressiv yaylı təkmilləşdirilmiş amortizatorlar</li><li>20 000 cd parlaqlığa malik LED matris optika</li><li>Yeni 5.9 düymlük LCD məlumat ekranı</li><li>Sintetik troslu 2500 lb elektrik bucurqadı</li><li>40 və 80 kq tutumlu ön və arxa yük platformaları</li><li>612 kq-dək yedəkləmə qabiliyyəti</li>
+          </ul>
+
+          <figure class="inline-figure"><img src="/gallery/cforce-c5-2.webp" alt="CFORCE C5 yolsuzluq marşrutunda" width="1600" height="1067" loading="lazy" decoding="async"><figcaption>CFORCE C5 26 düymlük palçıq yönümlü şinlərlə daha tələbkar marşrutlara hazırlanıb.</figcaption></figure>
+
+          <h2>Artıq Azərbaycanda</h2>
+          <p>CFORCE C4 və C5 modelləri 2026-cı ilin avqustunda Azərbaycan bazarına gətirilib. Maraqlanan alıcılar yerli komplektasiya, rəng seçimi, qiymət və faktiki stok məlumatını CFMOTO Azerbaijan satış komandası ilə dəqiqləşdirə bilərlər.</p>
+          <div class="market-note"><strong>Qeyd:</strong> texniki məlumatlar beynəlxalq təqdimat materiallarına əsaslanır. Qiymət, yerli komplektasiya və faktiki stok dəyişə bilər; yekun məlumatı satış komandası ilə dəqiqləşdirin.</div>
+        </article>
+
+        <aside class="facts">
+          <h2>Qısa faktlar</h2>
+          <div class="fact-row"><span>Azərbaycana gəliş</span><strong>Avqust 2026</strong></div>
+          <div class="fact-row"><span>Platforma</span><strong>G4</strong></div>
+          <div class="fact-row"><span>Modellər</span><strong><a href="/model/cforce-c4/">C4</a> / <a href="/model/cforce-c5/">C5</a></strong></div>
+          <div class="fact-row"><span>Sükan sistemi</span><strong>EPS</strong></div>
+          <div class="fact-row"><span>Displey</span><strong>5.9” LCD</strong></div>
+          <div class="fact-row"><span>Yedəkləmə</span><strong>612 kq-dək</strong></div>
+          <div class="fact-row"><span>Bucurqad</span><strong>2500 lb</strong></div>
+          <div class="share"><span>Xəbəri paylaş</span><div class="share-links"><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcfmoto.az%2Fxeberler%2Fcforce-c4-c5-artiq-azerbaycanda%2F" target="_blank" rel="noreferrer" aria-label="Facebook-da paylaş">F</a><a href="https://wa.me/?text=CFORCE%20C4%20v%C9%99%20C5%20art%C4%B1q%20Az%C9%99rbaycandad%C4%B1r%20https%3A%2F%2Fcfmoto.az%2Fxeberler%2Fcforce-c4-c5-artiq-azerbaycanda%2F" target="_blank" rel="noreferrer" aria-label="WhatsApp-da paylaş">WA</a><button type="button" id="copy-news-link" aria-label="Xəbər keçidini köçür">↗</button></div></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="gallery-section" id="gallery">
+      <div class="news-page-width"><p class="section-label">Fotoqalereya</p><h2 class="gallery-title">CFORCE C4 və C5 hərəkətdə</h2>
+        <div class="gallery-grid"><figure><img src="/gallery/cforce-c4-3.webp" alt="CFORCE C4 iş şəraitində" width="1600" height="1067" loading="lazy" decoding="async"><figcaption>CFORCE C4</figcaption></figure><figure><img src="/gallery/cforce-c5-1.webp" alt="CFORCE C5 yan görünüş" width="1176" height="760" loading="lazy" decoding="async"><figcaption>CFORCE C5</figcaption></figure><figure><img src="/gallery/cforce-c5-3.webp" alt="CFORCE C5 yolsuzluqda" width="1600" height="1067" loading="lazy" decoding="async"><figcaption>CFORCE C5 hərəkətdə</figcaption></figure></div>
+      </div>
+    </section>
+
+    <section class="article-footer" id="contact"><div class="news-page-width article-footer-inner"><div><h2>CFORCE C4 və C5-i yaxından tanıyın</h2><p>Qiymət, rəng və stok məlumatı üçün satış komandamızla əlaqə saxlayın.</p></div><a class="button" href="https://wa.me/994512332484?text=Salam%2C%20CFORCE%20C4%20v%C9%99%20C5%20modell%C9%99ri%20il%C9%99%20maraqlan%C4%B1ram." target="_blank" rel="noreferrer">Məlumat al <span>↗</span></a></div></section>
+  </main>
+
+  <footer class="news-footer"><div class="news-footer-inner"><span>© 2026 CFMOTO Azerbaijan · SAZMOTO MMC</span><span>Texniki məlumat mənbəyi: <a href="https://awm-trade.ru/bez-rubriki/vstre4aite-cfmoto-cforce-400-eps-new-i-cforce-500-eps-new-na-novoj-platforme-g4-2/" target="_blank" rel="noreferrer">AWM-Trade</a></span></div></footer>
+  <script>
+    document.getElementById('copy-news-link').addEventListener('click',function(){
+      var button=this;
+      navigator.clipboard.writeText('https://cfmoto.az/xeberler/cforce-c4-c5-artiq-azerbaycanda/').then(function(){
+        button.textContent='✓';
+        window.setTimeout(function(){button.textContent='↗';},1800);
+      });
+    });
+  </script>
+</body>
+</html>

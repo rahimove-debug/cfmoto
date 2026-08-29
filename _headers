@@ -10,6 +10,9 @@
 /model/*
   Cache-Control: public, max-age=0, must-revalidate
 
+/xeberler/*
+  Cache-Control: public, max-age=0, must-revalidate
+
 /kredit*
   Cache-Control: public, max-age=0, must-revalidate
 
