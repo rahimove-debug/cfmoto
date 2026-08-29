@@ -27,13 +27,9 @@ jobs:
         run: |
           set -euo pipefail
           archive="/tmp/cfmoto-news-overlay-20260829.tar.gz"
-          workflow=".github/workflows/apply-site-update.yml"
-
-          git show 80150b41473006180ccdc8867efad43b9a94499b:"$workflow" > /tmp/apply-site-update-original.yml
           printf '%s' "$OVERLAY_B64" | base64 --decode > "$archive"
           echo "5286d5ffc25e272bbc91700ffedfaf2b957a6910c2c261de5d6a2839ac9c8499  $archive" | sha256sum -c -
           tar -xzf "$archive"
-          cp /tmp/apply-site-update-original.yml "$workflow"
 
           ruby scripts/build_cloudflare.rb
           git diff --check
@@ -41,7 +37,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- \
-            "$workflow" \
             README.md \
             _headers \
             assets/cfmoto-news-v1.css \
