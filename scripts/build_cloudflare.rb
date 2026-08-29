@@ -49,6 +49,9 @@ abort "Corporate typography processing failed" unless system(RbConfig.ruby, typo
 ux_accessibility = File.join(__dir__, "apply_ux_accessibility.rb")
 abort "UX/accessibility processing failed" unless system(RbConfig.ruby, ux_accessibility)
 
+offroad_accessory_images = File.join(__dir__, "apply_offroad_accessory_images.rb")
+abort "Off-road accessory image processing failed" unless system(RbConfig.ruby, offroad_accessory_images)
+
 audit = File.join(__dir__, "audit_seo.rb")
 abort "SEO audit failed" unless system(RbConfig.ruby, audit)
 
@@ -60,6 +63,9 @@ abort "Accessory integration failed" unless system(RbConfig.ruby, accessory_inte
 
 accessory_audit = File.join(__dir__, "audit_accessory_integration.rb")
 abort "Accessory integration audit failed" unless system(RbConfig.ruby, accessory_audit)
+
+offroad_accessory_image_audit = File.join(__dir__, "audit_offroad_accessory_images.rb")
+abort "Off-road accessory image audit failed" unless system(RbConfig.ruby, offroad_accessory_image_audit)
 
 news_integration = File.join(__dir__, "apply_news_integration.rb")
 abort "News integration failed" unless system(RbConfig.ruby, news_integration)
