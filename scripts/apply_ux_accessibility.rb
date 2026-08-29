@@ -12,7 +12,7 @@ MARKER_START = "<!-- CFMOTO:UX-ACCESSIBILITY:START -->"
 MARKER_END = "<!-- CFMOTO:UX-ACCESSIBILITY:END -->"
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
 CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-partsazn-v4.js"
-CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-partsazn-v3.css"
+CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-partsazn-v4.css"
 CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-partsazn-v3.js"
 
 def read(path)
@@ -137,6 +137,8 @@ badge_css = '.simple-bike-image>.simple-model-new-badge{left:18px;top:18px;z-ind
 configurator_css = "#{configurator_css.rstrip}\n#{badge_css}\n" unless configurator_css.include?("simple-model-new-badge")
 mobile_accessory_name_css = '/* cfmoto-mobile-accessory-name-v2 */@media (max-width:720px){.accessory-panel .accessory-copy strong{display:block!important;overflow:visible!important;white-space:normal!important;text-overflow:clip!important;line-height:1.3}.accessory-panel .accessory-item{height:auto;min-height:118px}}'
 configurator_css = "#{configurator_css.rstrip}\n#{mobile_accessory_name_css}\n" unless configurator_css.include?("cfmoto-mobile-accessory-name-v2")
+dms_price_redaction_css = '/* cfmoto-dms-price-redaction-v1 */.accessory-thumb img[src*="dms-offroad"],.accessory-detail-media img[src*="dms-offroad"]{clip-path:inset(10% 0 0 0)}'
+configurator_css = "#{configurator_css.rstrip}\n#{dms_price_redaction_css}\n" unless configurator_css.include?("cfmoto-dms-price-redaction-v1")
 write(css_target_path, configurator_css)
 
 # The imported Next.js export deliberately falls back to client rendering for
