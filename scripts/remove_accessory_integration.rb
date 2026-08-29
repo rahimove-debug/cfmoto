@@ -13,7 +13,7 @@ end
 
 home_path = File.join(ROOT, "index.html")
 home = read(home_path)
-%w[V2 V1].each do |version|
+%w[V3 V2 V1].each do |version|
   home.gsub!("/assets/page-CfmotoHomeNews#{version}.js", "/assets/page-CfmotoAccessoryV15.js")
   home.gsub!("/assets/index-CfmotoHomeNews#{version}.js", "/assets/index-CfmotoAccessoryV15.js")
   home.gsub!("/assets/layout-segment-context-CfmotoHomeNews#{version}.js", "/assets/layout-segment-context-CfmotoAccessoryV15.js")
@@ -75,7 +75,7 @@ write(bundle_path, bundle)
     FileUtils.rm_f(File.join(ROOT, "assets", "#{asset}-#{version}.js"))
   end
 end
-%w[V2 V1].each do |version|
+%w[V3 V2 V1].each do |version|
   %w[page index layout-segment-context link router ProductMegaMenu].each do |asset|
     FileUtils.rm_f(File.join(ROOT, "assets", "#{asset}-CfmotoHomeNews#{version}.js"))
   end
