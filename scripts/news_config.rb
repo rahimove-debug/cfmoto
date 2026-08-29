@@ -5,6 +5,8 @@ module NewsConfig
   CFORCE_ARTICLE_SLUG = "cforce-c4-c5-artiq-azerbaycanda"
   Z10_ARTICLE_SLUG = "z10-z10-4-turbo-performans-azerbaycanda"
   ROMANIACS_ARTICLE_SLUG = "cfmoto-450mt-red-bull-romaniacs-2026"
+  QUILES_ARTICLE_SLUG = "max-quiles-daniel-holgado-almaniya-gp-iki-podium"
+  BREMBO_ARTICLE_SLUG = "cfmoto-brembo-strateji-terefdasliq-2026"
 
   INDEX_PAGE = {
     path: "/#{ROOT_SLUG}/",
@@ -33,6 +35,20 @@ module NewsConfig
       file: File.join(ROOT_SLUG, CFORCE_ARTICLE_SLUG, "index.html"),
       image: "/gallery/cforce-c4-1.webp",
       title: "CFORCE C4 və C5 artıq Azərbaycanda"
+    },
+    {
+      slug: QUILES_ARTICLE_SLUG,
+      path: "/#{ROOT_SLUG}/#{QUILES_ARTICLE_SLUG}/",
+      file: File.join(ROOT_SLUG, QUILES_ARTICLE_SLUG, "index.html"),
+      image: "/gallery/quiles-sachsenring-2026-hero.jpg",
+      title: "Max Quiles və Daniel Holgado CFMOTO-ya Almaniyada iki podium gətirdi"
+    },
+    {
+      slug: BREMBO_ARTICLE_SLUG,
+      path: "/#{ROOT_SLUG}/#{BREMBO_ARTICLE_SLUG}/",
+      file: File.join(ROOT_SLUG, BREMBO_ARTICLE_SLUG, "index.html"),
+      image: "/gallery/cfmoto-brembo-partnership-hero.jpg",
+      title: "CFMOTO və Brembo uzunmüddətli strateji tərəfdaşlıq imzaladı"
     }
   ].freeze
 

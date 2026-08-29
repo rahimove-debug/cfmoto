@@ -209,6 +209,35 @@ if File.file?(romaniacs_article_path)
   errors << "Romaniacs headline must not claim victory in every race class" if article.match?(%r{<(?:title|h1)[^>]*>[^<]*bütün\s+(?:yarış\s+)?sinif}i)
 end
 
+quiles_article_path = File.join(ROOT, NewsConfig::ROOT_SLUG, NewsConfig::QUILES_ARTICLE_SLUG, "index.html")
+if File.file?(quiles_article_path)
+  article = File.read(quiles_article_path, encoding: "UTF-8")
+  errors << "Quiles article is missing NewsArticle schema" unless article.include?('"@type":"NewsArticle"')
+  errors << "Quiles article must identify both podium finishers" unless article.include?("Max Quiles") && article.include?("Daniel Holgado")
+  errors << "Quiles article is missing the Sachsenring location" unless article.include?("Sachsenring")
+  errors << "Quiles article is missing the verified winning gaps" unless article.include?("0,063 saniyə") && article.include?("0,6 saniyə")
+  errors << "Quiles article is missing the Moto3 championship lead" unless article.include?("104 xallıq")
+  errors << "Quiles article is missing the official CFMOTO source" unless article.include?("https://www.cfmoto.com/global/media-center/news/2026/quiles-opens-grand-prix-podium-champagne-again-for-cfmoto-in-ger.html")
+  %w[hero race moto3-podium moto2-podium].each do |image|
+    errors << "Quiles article is missing local #{image} media" unless article.include?("/gallery/quiles-sachsenring-2026-#{image}.jpg")
+  end
+end
+
+brembo_article_path = File.join(ROOT, NewsConfig::ROOT_SLUG, NewsConfig::BREMBO_ARTICLE_SLUG, "index.html")
+if File.file?(brembo_article_path)
+  article = File.read(brembo_article_path, encoding: "UTF-8")
+  errors << "Brembo article is missing NewsArticle schema" unless article.include?('"@type":"NewsArticle"')
+  errors << "Brembo article must describe the long-term strategic partnership" unless article.include?("uzunmüddətli strateji tərəfdaşlıq")
+  errors << "Brembo article is missing the target motorcycle class" unless article.include?("orta və böyük mühərrik həcmli")
+  errors << "Brembo article is missing the development workflow" unless %w[inteqrasiyasını kalibrlənməsini validasiyasını].all? { |term| article.include?(term) }
+  errors << "Brembo article is missing Talent Project" unless article.include?("CFMOTO Talent Project")
+  errors << "Brembo article must state that exact models and local availability are unannounced" unless article.include?("konkret model adları") && article.include?("Azərbaycan bazarı üçün satış vaxtı elan edilməyib")
+  errors << "Brembo article is missing the official CFMOTO source" unless article.include?("https://www.cfmoto.com/global/media-center/news/2026/cfmoto-and-brembo-sign-long-term-strategic-partnership-to--advan.html")
+  %w[hero signing performance talent].each do |image|
+    errors << "Brembo article is missing local #{image} media" unless article.include?("/gallery/cfmoto-brembo-partnership-#{image}.jpg")
+  end
+end
+
 sitemap_path = File.join(ROOT, "sitemap.xml")
 if !File.file?(sitemap_path)
   errors << "Missing sitemap.xml"
