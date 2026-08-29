@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Apply, verify and commit prepared news update
         shell: bash
@@ -27,7 +29,7 @@ jobs:
           archive="/tmp/cfmoto-news-overlay-20260829.tar.gz"
           workflow=".github/workflows/apply-site-update.yml"
 
-          git show HEAD^:"$workflow" > /tmp/apply-site-update-original.yml
+          git show 80150b41473006180ccdc8867efad43b9a94499b:"$workflow" > /tmp/apply-site-update-original.yml
           printf '%s' "$OVERLAY_B64" | base64 --decode > "$archive"
           echo "5286d5ffc25e272bbc91700ffedfaf2b957a6910c2c261de5d6a2839ac9c8499  $archive" | sha256sum -c -
           tar -xzf "$archive"
