@@ -29,3 +29,15 @@ available as duplicate copies of the canonical site.
 The deployable `_redirects` file handles former **paths** after a request reaches
 the Pages project. Cloudflare Pages does not support domain-level matching in
 `_redirects`, so the three hostname rules above must be created at zone level.
+
+## HSTS on apex and www
+
+The Pages `_headers` file adds `Strict-Transport-Security: max-age=31536000` to
+responses served by the project. The `www.cfmoto.az` Single Redirect runs at the
+zone edge before Pages headers are applied, so configure the same one-year HSTS
+policy in Cloudflare **SSL/TLS → Edge Certificates** (or an equivalent response
+header Transform Rule). Keep **Include subdomains** and **Preload** disabled
+until every subdomain has been audited for permanent HTTPS support.
+
+After deployment, confirm that both the apex response and the `www` redirect
+include `Strict-Transport-Security`.

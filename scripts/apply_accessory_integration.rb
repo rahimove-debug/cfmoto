@@ -55,6 +55,41 @@ def add_script!(html, source)
   html.sub("</body>", "#{tag}</body>")
 end
 
+def fix_configurator_seo!(html)
+  # Query-string configurator states share this static document and canonicalize
+  # to the base URL. Alternates on that document therefore create hreflang /
+  # canonical conflicts, and there is no equivalent Russian configurator page.
+  html.gsub!(
+    %r{<link rel="alternate" hrefLang="(?:az-AZ|x-default)" href="#{Regexp.escape(ACCESSORY_CANONICAL)}"/>},
+    ""
+  )
+  html.gsub!(
+    %r{,\[\\"\$\\",\\"link\\",\\"\d+\\",\{\\"rel\\":\\"alternate\\",\\"hrefLang\\":\\"(?:az-AZ|x-default)\\",\\"href\\":\\"#{Regexp.escape(ACCESSORY_CANONICAL)}\\"\}\]},
+    ""
+  )
+
+  # The client-rendered configurator has its own H1. The loading shell exists
+  # only before hydration, so giving it an H1 fixes no-JS crawls without
+  # leaving two H1 elements in the live application.
+  html.gsub!('<h1 id="configurator-seo-title">', '<h2 id="configurator-seo-title">')
+  html.gsub!('</h1><p>Konfiquratorda', '</h2><p>Konfiquratorda')
+  html.gsub!(
+    '[\\"$\\",\\"h1\\",null,{\\"id\\":\\"configurator-seo-title\\"',
+    '[\\"$\\",\\"h2\\",null,{\\"id\\":\\"configurator-seo-title\\"'
+  )
+  loading_shell = '<main class="loading-shell">Konfiqurator hazırlanır…</main>'
+  loading_shell_with_h1 = '<main class="loading-shell"><h1>CFMOTO Aksesuar Konfiquratoru</h1><p>Konfiqurator hazırlanır…</p></main>'
+  unless html.include?(loading_shell_with_h1)
+    abort "Configurator loading shell not found" unless html.include?(loading_shell)
+    html.sub!(loading_shell, loading_shell_with_h1)
+  end
+
+  abort "Configurator hreflang metadata remains" if html.include?("hrefLang")
+  abort "Configurator must expose exactly one visible H1" unless html.scan(/<h1\b/i).size == 1
+  abort "Configurator SEO heading must remain H2 after hydration" unless html.include?('<h2 id="configurator-seo-title">')
+  html
+end
+
 def create_cache_variant!(source_url, public_url, replacements)
   source_path = File.join(ROOT, source_url.delete_prefix("/"))
   public_path = File.join(ROOT, public_url.delete_prefix("/"))
@@ -198,7 +233,7 @@ ru_home = require_replace!(
 write(ru_home_path, ru_home)
 
 configurator_path = File.join(ROOT, "aksesuar-konfiquratoru", "index.html")
-configurator = read(configurator_path)
+configurator = fix_configurator_seo!(read(configurator_path))
 configurator.gsub!(%r{<script defer src="/assets/accessory-model-preselect-v\d+\.js"></script>}, "")
 configurator = add_script!(configurator, PRESELECT_SCRIPT)
 write(configurator_path, configurator)
@@ -283,11 +318,10 @@ end
 
 sitemap_path = File.join(ROOT, "sitemap.xml")
 sitemap = read(sitemap_path)
-unless sitemap.include?("<loc>#{ACCESSORY_CANONICAL}</loc>")
-  entry = %(  <url><loc>#{ACCESSORY_CANONICAL}</loc><xhtml:link rel="alternate" hreflang="az-AZ" href="#{ACCESSORY_CANONICAL}"/><xhtml:link rel="alternate" hreflang="x-default" href="#{ACCESSORY_CANONICAL}"/></url>\n)
-  abort "Sitemap closing tag not found" unless sitemap.include?("</urlset>")
-  sitemap.sub!("</urlset>", "#{entry}</urlset>")
-end
+sitemap.gsub!(%r{\s*<url><loc>#{Regexp.escape(ACCESSORY_CANONICAL)}</loc>.*?</url>\n?}, "")
+entry = %(  <url><loc>#{ACCESSORY_CANONICAL}</loc></url>\n)
+abort "Sitemap closing tag not found" unless sitemap.include?("</urlset>")
+sitemap.sub!("</urlset>", "#{entry}</urlset>")
 write(sitemap_path, sitemap)
 
 puts "Accessory configurator linked from AZ/RU navigation, sales hero, #{model_pages.size} model pages, 2 off-road category pages and AZ homepage promo"

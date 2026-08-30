@@ -20,8 +20,10 @@ errors << "Missing accessory image directory" unless Dir.exist?(File.join(ROOT, 
 if File.file?(PAGE)
   page = read(PAGE)
   errors << "Configurator canonical is missing" unless page.include?(%(<link rel="canonical" href="#{CANONICAL}"/>))
-  errors << "Configurator az-AZ hreflang is missing" unless page.include?(%(hrefLang="az-AZ" href="#{CANONICAL}"))
-  errors << "Configurator x-default hreflang is missing" unless page.include?(%(hrefLang="x-default" href="#{CANONICAL}"))
+  errors << "Configurator must not publish hreflang without an equivalent locale page" if page.match?(%r{<link rel="alternate"\b}i) || page.include?('\\"hrefLang\\"')
+  errors << "Configurator must expose exactly one H1" unless page.scan(/<h1\b/i).size == 1
+  errors << "Configurator loading-shell H1 is missing" unless page.include?('<main class="loading-shell"><h1>CFMOTO Aksesuar Konfiquratoru</h1>')
+  errors << "Configurator persistent SEO heading must remain H2" unless page.include?('<h2 id="configurator-seo-title">') && page.include?('[\\"$\\",\\"h2\\",null,{\\"id\\":\\"configurator-seo-title\\"')
   errors << "Configurator title is missing" unless page.include?("CFMOTO Aksesuar Konfiquratoru: Moto, ATV və Buggy | CFMOTO Azerbaijan")
   errors << "Configurator must contain one GA4 analytics block" unless page.scan(ANALYTICS_START).size == 1 && page.scan(ANALYTICS_END).size == 1
   ga4_loader_ids = page.scan(%r{googletagmanager\.com/gtag/js\?id=(G-[A-Z0-9]+)}).flatten
@@ -41,6 +43,13 @@ if File.file?(PAGE)
     local = File.join(ROOT, url.delete_prefix("/"))
     errors << "Missing configurator bundle: #{url}" unless File.file?(local)
   end
+
+  app_bundle_paths = Dir.glob(File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-*.js"))
+  app_has_h1 = app_bundle_paths.any? do |path|
+    bundle = read(path)
+    bundle.include?(')("h1",{children:[') && bundle.include?("CFMOTO-nu")
+  end
+  errors << "Configurator client bundle is missing its hydrated H1" unless app_has_h1
 end
 
 Dir.glob(File.join(ROOT, "aksesuar-konfiquratoru", "**", "*.{html,txt}"), File::FNM_EXTGLOB).each do |path|
@@ -90,6 +99,8 @@ end
 
 sitemap = read(File.join(ROOT, "sitemap.xml"))
 errors << "Configurator sitemap URL must appear once" unless sitemap.scan("<loc>#{CANONICAL}</loc>").size == 1
+configurator_sitemap_entry = sitemap[%r{<url><loc>#{Regexp.escape(CANONICAL)}</loc>.*?</url>}m]
+errors << "Configurator sitemap entry must not publish hreflang" if configurator_sitemap_entry&.include?("xhtml:link")
 
 errors << "Missing configurator entry stylesheet" unless File.file?(File.join(ROOT, "assets", "accessory-entry-v1.css"))
 errors << "Missing model preselection script" unless File.file?(File.join(ROOT, "assets", "accessory-model-preselect-v2.js"))

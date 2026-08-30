@@ -184,7 +184,7 @@ sitemap = [
 ].join("\n")
 
 File.write(File.join(ROOT, "sitemap.xml"), sitemap)
-File.write(File.join(ROOT, "robots.txt"), "User-agent: *\nAllow: /\nSitemap: #{SITE_ORIGIN}/sitemap.xml\n")
+File.write(File.join(ROOT, "robots.txt"), "User-agent: *\nDisallow:\n\nSitemap: #{SITE_ORIGIN}/sitemap.xml\n")
 
 redirects = DomainConfig::LEGACY_PATH_REDIRECTS.dup
 model_urls.each do |url|

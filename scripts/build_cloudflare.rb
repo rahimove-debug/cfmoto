@@ -15,6 +15,7 @@ files = %w[
   _headers
   _redirects
   robots.txt
+  llms.txt
   sitemap.xml
   favicon.svg
   cfmoto-logo-black.png
@@ -69,6 +70,9 @@ abort "Off-road accessory image audit failed" unless system(RbConfig.ruby, offro
 
 news_integration = File.join(__dir__, "apply_news_integration.rb")
 abort "News integration failed" unless system(RbConfig.ruby, news_integration)
+
+semrush_seo_fixes = File.join(__dir__, "apply_semrush_seo_fixes.rb")
+abort "Semrush structured-data fixes failed" unless system(RbConfig.ruby, semrush_seo_fixes)
 
 news_audit = File.join(__dir__, "audit_news_integration.rb")
 abort "News integration audit failed" unless system(RbConfig.ruby, news_audit)

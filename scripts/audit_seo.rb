@@ -198,8 +198,17 @@ end
 robots_path = File.join(ROOT, "robots.txt")
 if !File.exist?(robots_path)
   errors << "Missing robots.txt"
-elsif File.read(robots_path, encoding: "UTF-8") != "User-agent: *\nAllow: /\nSitemap: #{SITE_ORIGIN}/sitemap.xml\n"
+elsif File.read(robots_path, encoding: "UTF-8") != "User-agent: *\nDisallow:\n\nSitemap: #{SITE_ORIGIN}/sitemap.xml\n"
   errors << "robots.txt does not contain the canonical sitemap directive"
+end
+
+llms_path = File.join(ROOT, "llms.txt")
+if !File.exist?(llms_path)
+  errors << "Missing llms.txt"
+else
+  llms = File.read(llms_path, encoding: "UTF-8")
+  errors << "llms.txt is missing its site heading" unless llms.start_with?("# CFMOTO Azerbaijan\n")
+  errors << "llms.txt is missing the canonical site URL" unless llms.include?("https://cfmoto.az/")
 end
 
 errors << "Missing social preview image" unless File.exist?(File.join(ROOT, "official-800mtx-hero.webp"))
@@ -488,6 +497,8 @@ else
   %w[X-Content-Type-Options X-Frame-Options Referrer-Policy Permissions-Policy].each do |header|
     errors << "_headers is missing #{header}" unless headers.include?(header)
   end
+  errors << "_headers is missing the safe one-year HSTS policy" unless headers.include?("Strict-Transport-Security: max-age=31536000")
+  errors << "_headers is missing the llms.txt cache policy" unless headers.match?(%r{/llms\.txt\s+Cache-Control: public, max-age=3600}m)
 end
 
 if errors.empty?

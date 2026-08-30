@@ -17,6 +17,24 @@ HOME_ROUTER_PATH = File.join(ROOT, "assets", "router-CfmotoHomeNewsV3.js")
 HOME_MEGA_PATH = File.join(ROOT, "assets", "ProductMegaMenu-CfmotoHomeNewsV3.js")
 errors = []
 
+EXPECTED_PRODUCT_OFFERS = {
+  "CFMOTO 450MT" => ["11990", "https://cfmoto.az/model/450mt/"],
+  "CFORCE C4" => ["12400", "https://cfmoto.az/model/cforce-c4/"],
+  "CFORCE C5" => ["13900", "https://cfmoto.az/model/cforce-c5/"],
+  "Z10" => ["45900", "https://cfmoto.az/model/z10/"],
+  "Z10-4" => ["47900", "https://cfmoto.az/model/z10-4/"]
+}.freeze
+
+def collect_schema_nodes(value, nodes)
+  case value
+  when Hash
+    nodes << value
+    value.each_value { |child| collect_schema_nodes(child, nodes) }
+  when Array
+    value.each { |child| collect_schema_nodes(child, nodes) }
+  end
+end
+
 unless File.file?(STYLE_PATH)
   errors << "Missing news stylesheet"
 else
@@ -236,6 +254,44 @@ if File.file?(brembo_article_path)
   %w[hero signing performance talent].each do |image|
     errors << "Brembo article is missing local #{image} media" unless article.include?("/gallery/cfmoto-brembo-partnership-#{image}.jpg")
   end
+end
+
+schema_nodes = []
+Dir.glob(File.join(ROOT, NewsConfig::ROOT_SLUG, "*", "index.html")).sort.each do |path|
+  html = File.read(path, encoding: "UTF-8")
+  html.scan(%r{<script type="application/ld\+json">(.*?)</script>}m).flatten.each do |source|
+    collect_schema_nodes(JSON.parse(source), schema_nodes)
+  rescue JSON::ParserError
+    # The per-page audit above reports malformed JSON-LD with its file name.
+  end
+end
+
+EXPECTED_PRODUCT_OFFERS.each do |name, (price, url)|
+  products = schema_nodes.select { |node| node["@type"] == "Product" && node["name"] == name }
+  if products.size != 1
+    errors << "Expected exactly one Product schema for #{name}"
+    next
+  end
+
+  offer = products.first["offers"]
+  valid_offer = offer.is_a?(Hash) &&
+    offer["@type"] == "Offer" &&
+    offer["priceCurrency"] == "AZN" &&
+    offer["price"].to_s == price &&
+    offer["availability"] == "https://schema.org/InStock" &&
+    offer["url"] == url &&
+    offer.dig("seller", "name") == "CFMOTO Azerbaijan — SAZMOTO MMC"
+  errors << "#{name} Product schema is missing its verified local Offer" unless valid_offer
+end
+
+german_gp_events = schema_nodes.select do |node|
+  node["@type"] == "SportsEvent" && node["name"] == "2026 MotoGP Almaniya Qran Prisi"
+end
+if german_gp_events.size != 1
+  errors << "Expected exactly one German GP SportsEvent schema"
+else
+  german_gp = german_gp_events.first
+  errors << "German GP SportsEvent is missing its verified date range" unless german_gp["startDate"] == "2026-07-10" && german_gp["endDate"] == "2026-07-12"
 end
 
 sitemap_path = File.join(ROOT, "sitemap.xml")
