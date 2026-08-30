@@ -83,6 +83,12 @@ abort "Mobile model-name processing failed" unless system(RbConfig.ruby, mobile_
 mobile_model_names_audit = File.join(__dir__, "audit_mobile_model_names.rb")
 abort "Mobile model-name audit failed" unless system(RbConfig.ruby, mobile_model_names_audit)
 
+unified_navigation = File.join(__dir__, "apply_unified_navigation.rb")
+abort "Unified navigation processing failed" unless system(RbConfig.ruby, unified_navigation)
+
+unified_navigation_audit = File.join(__dir__, "audit_unified_navigation.rb")
+abort "Unified navigation audit failed" unless system(RbConfig.ruby, unified_navigation_audit)
+
 ux_accessibility_audit = File.join(__dir__, "audit_ux_accessibility.rb")
 abort "UX/accessibility audit failed" unless system(RbConfig.ruby, ux_accessibility_audit)
 
