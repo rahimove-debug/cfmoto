@@ -71,7 +71,7 @@ if File.file?(configurator_path)
 end
 
 configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v6.js")
-configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-partsazn-v4.css")
+configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-noprice-v5.css")
 configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-partsazn-v3.js")
 if File.file?(configurator_bundle_path)
   bundle = read(configurator_bundle_path)
@@ -129,8 +129,11 @@ if File.file?(configurator_css_path)
   errors << "Mobile accessory names still truncate" unless configurator_css.include?("cfmoto-mobile-accessory-name-v2") &&
     configurator_css.include?("white-space:normal!important") &&
     configurator_css.include?("text-overflow:clip!important")
-  errors << "DMS source prices are not hidden from product photos" unless configurator_css.include?("cfmoto-dms-price-redaction-v1") &&
-    configurator_css.include?('img[src*="dms-offroad"]{clip-path:inset(10% 0 0 0)}')
+  errors << "DMS source prices are not hidden from product photos" unless configurator_css.include?("cfmoto-dms-price-redaction-v2") &&
+    configurator_css.include?('.accessory-detail-media:has(img[src*="dms-offroad"])::after') &&
+    configurator_css.include?('height:24%;background:#f5fafb') &&
+    configurator_css.include?('img[src*="dms-offroad"]{clip-path:inset(12% 0 0 0)}')
+  errors << "Legacy DMS price redaction remains" if configurator_css.include?("cfmoto-dms-price-redaction-v1")
 else
   errors << "Cache-busted configurator stylesheet is missing"
 end
