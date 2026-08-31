@@ -70,7 +70,7 @@ if File.file?(configurator_path)
   end
 end
 
-configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v6.js")
+configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-cleanphotos-v7.js")
 configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-noprice-v5.css")
 configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-partsazn-v3.js")
 if File.file?(configurator_bundle_path)

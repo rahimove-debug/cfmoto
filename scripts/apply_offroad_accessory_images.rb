@@ -3,13 +3,15 @@
 
 require "fileutils"
 require "json"
+require "base64"
 require_relative "offroad_official_hq_sources"
 
 ROOT = File.expand_path("..", __dir__)
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-BUNDLE = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-cfmoto-offroad-partsazn-v6.js")
+BUNDLE = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-cfmoto-offroad-cleanphotos-v7.js")
 SOURCE_ROOT = ENV.fetch("CFMOTO_DMS_OFFROAD_SOURCE", File.expand_path("../cfmoto-dms-accessories/final", ROOT))
 PUBLIC_DIRECTORY = "dms-offroad"
+CLEAN_PUBLIC_DIRECTORY = "catalog-offroad-clean-v2"
 HQ_PUBLIC_DIRECTORY = "official-offroad-hq"
 IMAGE_MAP_VARIABLE = "offroadDmsImages"
 
@@ -150,6 +152,10 @@ def public_filename(catalog_key)
   "#{catalog_key}.jpg"
 end
 
+def clean_public_filename(catalog_key)
+  "#{catalog_key}.svg"
+end
+
 if $PROGRAM_NAME == __FILE__
   target_roots = [File.join(ROOT, "accessories", PUBLIC_DIRECTORY)]
   source_available = Dir.exist?(SOURCE_ROOT)
@@ -175,6 +181,29 @@ if $PROGRAM_NAME == __FILE__
     end
   end
 
+
+  # DMS catalog thumbnails contain a price line baked into the first pixels of
+  # the JPEG. Publish a deterministic display copy that covers that catalog-only
+  # line inside the asset itself, rather than relying on modal/card CSS geometry.
+  clean_target_root = File.join(ROOT, "accessories", CLEAN_PUBLIC_DIRECTORY)
+  FileUtils.mkdir_p(clean_target_root)
+  dms_catalog_keys = IMAGE_SOURCES.keys - OFFICIAL_OFFROAD_HQ_SOURCES.keys
+  expected_clean_filenames = dms_catalog_keys.map { |catalog_key| clean_public_filename(catalog_key) }
+  Dir.glob(File.join(clean_target_root, "*.svg")).each do |path|
+    FileUtils.rm_f(path) unless expected_clean_filenames.include?(File.basename(path))
+  end
+  dms_catalog_keys.each do |catalog_key|
+    source = File.join(ROOT, "accessories", PUBLIC_DIRECTORY, public_filename(catalog_key))
+    encoded = Base64.strict_encode64(File.binread(source))
+    clean_svg = <<~SVG
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+        <image href="data:image/jpeg;base64,#{encoded}" width="200" height="200"/>
+        <rect width="200" height="30" fill="#f4f8f9"/>
+      </svg>
+    SVG
+    File.write(File.join(clean_target_root, clean_public_filename(catalog_key)), clean_svg, encoding: "UTF-8")
+  end
+
   unknown_hq_keys = OFFICIAL_OFFROAD_HQ_SOURCES.keys - IMAGE_SOURCES.keys
   abort "Official HQ mapping contains unknown catalog keys: #{unknown_hq_keys.join(", ")}" unless unknown_hq_keys.empty?
 
@@ -192,8 +221,11 @@ if $PROGRAM_NAME == __FILE__
   end
 
   image_urls = IMAGE_SOURCES.to_h do |catalog_key, _relative_source|
-    directory = OFFICIAL_OFFROAD_HQ_SOURCES.key?(catalog_key) ? HQ_PUBLIC_DIRECTORY : PUBLIC_DIRECTORY
-    [catalog_key, "/accessories/#{directory}/#{public_filename(catalog_key)}"]
+    if OFFICIAL_OFFROAD_HQ_SOURCES.key?(catalog_key)
+      [catalog_key, "/accessories/#{HQ_PUBLIC_DIRECTORY}/#{public_filename(catalog_key)}"]
+    else
+      [catalog_key, "/accessories/#{CLEAN_PUBLIC_DIRECTORY}/#{clean_public_filename(catalog_key)}"]
+    end
   end
   bundle.sub!(/,(?:E|#{IMAGE_MAP_VARIABLE})=\{[^}]*\},G=/, ",G=")
   image_map_anchor = /L=(\{[^}]+\}),G=/
