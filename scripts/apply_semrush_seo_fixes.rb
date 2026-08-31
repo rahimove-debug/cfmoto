@@ -17,7 +17,16 @@ PRODUCT_OFFERS = {
   "Z10" => ["45900", "https://cfmoto.az/model/z10/"],
   "Z10-4" => ["47900", "https://cfmoto.az/model/z10-4/"]
 }.freeze
-GERMAN_GP = "2026 MotoGP Almaniya Qran Prisi"
+EVENT_TOPICS = {
+  "Red Bull Romaniacs 2026" => {
+    "description" => "Red Bull Romaniacs 2026, 28 iyul–1 avqust tarixlərində Sibiu və Cənubi Karpatlarda keçirilən hard-enduro yarışı.",
+    "sameAs" => "https://www.redbullromaniacs.com/visitors/event-news-reports/details/eng-hard-adventure-racing-baptism-of-fire-2"
+  },
+  "2026 MotoGP Almaniya Qran Prisi" => {
+    "description" => "2026 MotoGP Almaniya Qran Prisi, 10–12 iyul tarixlərində Sachsenring trasında keçirilən motosiklet yarış mərhələsi.",
+    "sameAs" => "https://www.cfmoto.com/global/media-center/news/2026/quiles-opens-grand-prix-podium-champagne-again-for-cfmoto-in-ger.html"
+  }
+}.freeze
 
 def fix_configurator!
   path = File.join(ROOT, "aksesuar-konfiquratoru", "index.html")
@@ -69,10 +78,13 @@ def update_schema!(value, counts)
         "seller" => SELLER
       }
       counts[value["name"]] += 1
-    elsif value["@type"] == "SportsEvent" && value["name"] == GERMAN_GP
-      value["startDate"] = "2026-07-10"
-      value["endDate"] = "2026-07-12"
-      counts[GERMAN_GP] += 1
+    elsif ["SportsEvent", "Thing"].include?(value["@type"]) && EVENT_TOPICS.key?(value["name"])
+      name = value.fetch("name")
+      value.replace({
+        "@type" => "Thing",
+        "name" => name
+      }.merge(EVENT_TOPICS.fetch(name)))
+      counts[name] += 1
     end
     value.each_value { |child| update_schema!(child, counts) }
   when Array
@@ -96,10 +108,10 @@ article_paths.each do |path|
   File.write(path, updated, encoding: "UTF-8")
 end
 
-expected = PRODUCT_OFFERS.keys + [GERMAN_GP]
+expected = PRODUCT_OFFERS.keys + EVENT_TOPICS.keys
 missing_or_duplicated = expected.reject { |name| counts[name] == 1 }
 unless missing_or_duplicated.empty?
   abort "Expected exactly one structured-data match for: #{missing_or_duplicated.join(', ')}"
 end
 
-puts "Semrush SEO fixes applied: configurator H1/hreflang, sitemap, #{PRODUCT_OFFERS.size} Product offers and 1 SportsEvent date range"
+puts "Semrush SEO fixes applied: configurator H1/hreflang, sitemap, #{PRODUCT_OFFERS.size} Product offers and #{EVENT_TOPICS.size} historical event topics"

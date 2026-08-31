@@ -284,14 +284,24 @@ EXPECTED_PRODUCT_OFFERS.each do |name, (price, url)|
   errors << "#{name} Product schema is missing its verified local Offer" unless valid_offer
 end
 
-german_gp_events = schema_nodes.select do |node|
-  node["@type"] == "SportsEvent" && node["name"] == "2026 MotoGP Almaniya Qran Prisi"
-end
-if german_gp_events.size != 1
-  errors << "Expected exactly one German GP SportsEvent schema"
-else
-  german_gp = german_gp_events.first
-  errors << "German GP SportsEvent is missing its verified date range" unless german_gp["startDate"] == "2026-07-10" && german_gp["endDate"] == "2026-07-12"
+historical_event_topics = {
+  "Red Bull Romaniacs 2026" => "28 iyul–1 avqust",
+  "2026 MotoGP Almaniya Qran Prisi" => "10–12 iyul"
+}
+
+event_nodes = schema_nodes.select { |node| node["@type"].to_s.end_with?("Event") }
+errors << "Historical news articles must not expose Event rich-result schema" unless event_nodes.empty?
+
+historical_event_topics.each do |name, date_range|
+  topics = schema_nodes.select { |node| node["@type"] == "Thing" && node["name"] == name }
+  if topics.size != 1
+    errors << "Expected exactly one historical event topic for #{name}"
+    next
+  end
+
+  topic = topics.first
+  errors << "#{name} topic is missing its factual date range" unless topic["description"].to_s.include?(date_range)
+  errors << "#{name} topic is missing its supporting source" unless topic["sameAs"].to_s.start_with?("https://")
 end
 
 sitemap_path = File.join(ROOT, "sitemap.xml")
