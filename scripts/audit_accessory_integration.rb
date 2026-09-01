@@ -135,7 +135,9 @@ model_pages.each do |path|
   slug = File.basename(File.dirname(path))
   html = read(path)
   if slug == "500sr"
-    errors << "500sr: enquiry-only page must not expose an unverified accessory deep link" if html.include?('/aksesuar-konfiquratoru/?model=500sr')
+    deep_link = "/aksesuar-konfiquratoru/?model=500sr&bike=0&lock=1"
+    errors << "500sr: query-only desktop accessory CTA is missing" unless html.include?(%(class="button accessory-model-cta" href="#{deep_link}"))
+    errors << "500sr: query-only mobile accessory CTA is missing" unless html.include?(%(<a href="#{deep_link}">Aksesuar seç</a>))
     errors << "500sr: accessory stylesheet is missing" unless html.include?('/assets/accessory-entry-v1.css')
     next
   end

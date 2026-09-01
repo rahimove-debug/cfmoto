@@ -64,6 +64,12 @@ end
 abort "Configurator page bundle not found" unless page_source_path
 
 page = read(page_source_path)
+configurator_500sr = '{id:"500sr",name:"500SR",family:"Sport Racing",years:"Cari model ili",basePriceAzn:13490,image:"/models/500sr.webp",localUrl:"https://cfmoto.az/model/500sr"}'
+unless page.include?('id:"500sr",name:"500SR"')
+  configurator_500sr_anchor = '{id:"500sr-voom",name:"500SR VOOM",family:"Sport Racing",years:"Cari model ili",basePriceAzn:13490,image:"/models/500sr-voom.webp",localUrl:"https://cfmoto.az/model/500sr-voom"}'
+  abort "Configurator 500SR VOOM model anchor not found" unless page.scan(configurator_500sr_anchor).size == 1
+  page.sub!(configurator_500sr_anchor, "#{configurator_500sr},#{configurator_500sr_anchor}")
+end
 # Family grouping is handled in the configurator UI so ATV Touring remains a
 # distinct off-road filter and motorcycle Adventure/Touring stays combined.
 page.gsub!('/models/750sr-s.webp', '/models/750sr-s-clean.webp')
@@ -75,6 +81,10 @@ unless page.include?('className:"simple-model-new-badge"')
   badge = %(#{badge_match[4]}.id==="750sr-s"&&(0,#{badge_match[2]}.jsx)("span",{className:"simple-model-new-badge",children:"YENİ"}),)
   page.sub!(badge_pattern, "\\1#{badge}\\3")
 end
+page.gsub!(
+  'N.id==="750sr-s"&&(0,o.jsx)("span",{className:"simple-model-new-badge",children:"YENİ"})',
+  '["750sr-s","500sr"].includes(N.id)&&(0,o.jsx)("span",{className:"simple-model-new-badge",children:"YENİ"})'
+)
 
 unless page.include?('className:"vehicle-type-filters"')
   fitment_start = page.index('(0,o.jsxs)("div",{className:"fitment-note"')

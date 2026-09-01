@@ -96,6 +96,8 @@ if File.file?(configurator_bundle_path)
   errors << "Commercial fitment copy is missing" unless fitment_copy_present
   errors << "750SR-S clean image is missing" unless bundle.include?("/models/750sr-s-clean.webp")
   errors << "750SR-S orange badge markup is missing" unless bundle.include?("simple-model-new-badge")
+  errors << "500SR configurator model is missing" unless bundle.include?('id:"500sr",name:"500SR"') && bundle.include?('basePriceAzn:13490,image:"/models/500sr.webp"')
+  errors << "500SR orange badge is missing" unless bundle.include?('["750sr-s","500sr"].includes')
   errors << "Adventure/Touring UI grouping is missing" unless bundle.include?("Adventure / Touring")
   errors << "750SR-S Azerbaijani accessory copy is missing" unless bundle.include?("Radiator qoruyucusu") && bundle.include?("Qızdırılan sükan tutacaqları")
   {

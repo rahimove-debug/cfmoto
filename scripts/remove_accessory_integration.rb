@@ -106,6 +106,7 @@ Dir.glob(File.join(ROOT, "model", "*", "index.html")).each do |path|
       %(<div class="model-mobile-cta"><a href="#{configurator_url}">Aksesuar seç</a>),
       '<div class="model-mobile-cta"><a href="#odenis">Aylıq ödəniş</a>'
     )
+    html.gsub!(%(<a href="#{configurator_url}">Aksesuar seç</a>), "")
   end
 
   configurator_url = configurator_urls.last

@@ -21,7 +21,7 @@ INTERNAL_20_SLUGS = %w[
 ].freeze
 INTERNAL_40_SLUGS = %w[
   1000mt-x 800mt-explore 800mt-sport 800mt-x 800nk-advanced 750sr-s
-  700cl-x-sport 700mt 675sr-r 675nk 500sr-voom 450cl-c-bobber 450cl-c
+  700cl-x-sport 700mt 675sr-r 675nk 500sr 500sr-voom 450cl-c-bobber 450cl-c
   450cl-c-amt 450sr-s 450mt 450nk
 ].freeze
 

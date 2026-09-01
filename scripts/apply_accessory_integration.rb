@@ -246,10 +246,21 @@ model_pages.each do |path|
   configurator_url = "#{ACCESSORY_URL}?model=#{slug}&bike=0&lock=1"
   html = add_stylesheet!(read(path))
 
-  # 500SR is newly announced and does not yet have a verified local
-  # accessory catalogue. Keep the model page enquiry-only until compatible
-  # SKU data is published.
+  # 500SR uses the configurator's query-only model entry until a verified
+  # compatible SKU catalogue is published. The standalone model page has no
+  # hydrated RSC payload, so only its visible desktop/mobile CTAs are added.
   if slug == "500sr"
+    unless html.include?(%(class="button accessory-model-cta" href="#{configurator_url}"))
+      visible_anchor = '<a class="button ghost" href="#odenis">Ödənişi hesabla</a></div>'
+      visible_cta = %(<a class="button accessory-model-cta" href="#{configurator_url}">Aksesuar paketini qur <span>↗︎</span></a>)
+      abort "500sr: visible model CTA anchor not found" unless html.include?(visible_anchor)
+      html.sub!(visible_anchor, %(<a class="button ghost" href="#odenis">Ödənişi hesabla</a>#{visible_cta}</div>))
+    end
+    unless html.include?(%(<a href="#{configurator_url}">Aksesuar seç</a>))
+      mobile_anchor = '<div class="model-mobile-cta"><a href="#odenis">Aylıq ödəniş</a>'
+      abort "500sr: visible mobile CTA anchor not found" unless html.include?(mobile_anchor)
+      html.sub!(mobile_anchor, %(#{mobile_anchor}<a href="#{configurator_url}">Aksesuar seç</a>))
+    end
     write(path, html)
     next
   end
