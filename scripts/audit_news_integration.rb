@@ -9,12 +9,12 @@ ROOT = File.expand_path("..", __dir__)
 STYLE_PATH = File.join(ROOT, "assets", "cfmoto-news-v2.css")
 HOME_STYLE_PATH = File.join(ROOT, "assets", "home-news-v1.css")
 HOME_PATH = File.join(ROOT, "index.html")
-HOME_PAGE_BUNDLE_PATH = File.join(ROOT, "assets", "page-CfmotoHomeNewsV3.js")
-HOME_LOADER_PATH = File.join(ROOT, "assets", "index-CfmotoHomeNewsV3.js")
-HOME_LAYOUT_PATH = File.join(ROOT, "assets", "layout-segment-context-CfmotoHomeNewsV3.js")
-HOME_LINK_PATH = File.join(ROOT, "assets", "link-CfmotoHomeNewsV3.js")
-HOME_ROUTER_PATH = File.join(ROOT, "assets", "router-CfmotoHomeNewsV3.js")
-HOME_MEGA_PATH = File.join(ROOT, "assets", "ProductMegaMenu-CfmotoHomeNewsV3.js")
+HOME_PAGE_BUNDLE_PATH = File.join(ROOT, "assets", "page-CfmotoHomeNewsV4.js")
+HOME_LOADER_PATH = File.join(ROOT, "assets", "index-CfmotoHomeNewsV4.js")
+HOME_LAYOUT_PATH = File.join(ROOT, "assets", "layout-segment-context-CfmotoHomeNewsV4.js")
+HOME_LINK_PATH = File.join(ROOT, "assets", "link-CfmotoHomeNewsV4.js")
+HOME_ROUTER_PATH = File.join(ROOT, "assets", "router-CfmotoHomeNewsV4.js")
+HOME_MEGA_PATH = File.join(ROOT, "assets", "ProductMegaMenu-CfmotoHomeNewsV4.js")
 errors = []
 
 EXPECTED_PRODUCT_OFFERS = {
@@ -73,12 +73,12 @@ else
   errors << "Homepage news image must be local, lazy and intrinsically sized" unless home.match?(%r{<img src="/gallery/romaniacs-2026-450mt-hero\.webp"[^>]*width="896"[^>]*height="600"[^>]*loading="lazy"[^>]*decoding="async"[^>]*fetchpriority="low"}i)
   errors << "Homepage must load the scoped news stylesheet once" unless home.scan(%(<link rel="stylesheet" href="/assets/home-news-v1.css"/>)).size == 1
   errors << "Homepage must not load the article stylesheet" if home.match?(%r{/assets/cfmoto-news-v\d+\.css})
-  errors << "Homepage must preload the cache-busted news page bundle once" unless home.scan("/assets/page-CfmotoHomeNewsV3.js").size == 1
-  errors << "Homepage must reference the cache-busted news loader twice" unless home.scan("/assets/index-CfmotoHomeNewsV3.js").size == 2
-  errors << "Homepage must reference the cache-busted news layout once" unless home.scan("/assets/layout-segment-context-CfmotoHomeNewsV3.js").size == 1
-  errors << "Homepage must reference the cache-busted news link once" unless home.scan("/assets/link-CfmotoHomeNewsV3.js").size == 1
-  errors << "Homepage must reference the cache-busted news product menu once" unless home.scan("/assets/ProductMegaMenu-CfmotoHomeNewsV3.js").size == 1
-  errors << "Homepage must not reference a stale V1 or V2 news graph" if home.match?(/CfmotoHomeNewsV[12]\.js/)
+  errors << "Homepage must preload the cache-busted news page bundle once" unless home.scan("/assets/page-CfmotoHomeNewsV4.js").size == 1
+  errors << "Homepage must reference the cache-busted news loader twice" unless home.scan("/assets/index-CfmotoHomeNewsV4.js").size == 2
+  errors << "Homepage must reference the cache-busted news layout once" unless home.scan("/assets/layout-segment-context-CfmotoHomeNewsV4.js").size == 1
+  errors << "Homepage must reference the cache-busted news link once" unless home.scan("/assets/link-CfmotoHomeNewsV4.js").size == 1
+  errors << "Homepage must reference the cache-busted news product menu once" unless home.scan("/assets/ProductMegaMenu-CfmotoHomeNewsV4.js").size == 1
+  errors << "Homepage must not reference a stale V1, V2 or V3 news graph" if home.match?(/CfmotoHomeNewsV[123]\.js/)
   errors << "Homepage must not reference the cached accessory JavaScript graph" if home.include?("CfmotoAccessoryV15.js")
   errors << "Homepage must keep exactly one H1" unless home.scan(/<h1\b/i).size == 1
 end
@@ -91,10 +91,10 @@ else
   errors << "Hydrated homepage navigation is missing News" unless home_page_bundle.include?('[`Xəbərlər`,`/xeberler/`]')
   errors << "Hydrated homepage footer is missing News" unless home_page_bundle.include?('(0,c.jsx)(`a`,{href:`/xeberler/`,children:`Xəbərlər`})')
   errors << "Hydrated homepage news image is not lazy or intrinsically sized" unless home_page_bundle.include?('src:`/gallery/romaniacs-2026-450mt-hero.webp`') && home_page_bundle.include?('width:896,height:600,loading:`lazy`,decoding:`async`,fetchPriority:`low`')
-  errors << "Hydrated homepage must import the cache-busted link" unless home_page_bundle.include?("link-CfmotoHomeNewsV3.js")
-  errors << "Hydrated homepage must import the cache-busted product menu" unless home_page_bundle.include?("ProductMegaMenu-CfmotoHomeNewsV3.js")
+  errors << "Hydrated homepage must import the cache-busted link" unless home_page_bundle.include?("link-CfmotoHomeNewsV4.js")
+  errors << "Hydrated homepage must import the cache-busted product menu" unless home_page_bundle.include?("ProductMegaMenu-CfmotoHomeNewsV4.js")
   errors << "Hydrated homepage is missing the featured Romaniacs story" unless home_page_bundle.include?(NewsConfig::FEATURED_ARTICLE.fetch(:path)) && home_page_bundle.include?("CFMOTO Romaniacs 2026-da üç Adventure sinfində qalib gəldi")
-  errors << "Hydrated homepage must not import a stale V1 or V2 news graph" if home_page_bundle.match?(/CfmotoHomeNewsV[12]\.js/)
+  errors << "Hydrated homepage must not import a stale V1, V2 or V3 news graph" if home_page_bundle.match?(/CfmotoHomeNewsV[123]\.js/)
   errors << "Hydrated homepage page bundle must not import the cached accessory graph" if home_page_bundle.include?("CfmotoAccessoryV15.js")
 end
 
@@ -102,19 +102,19 @@ if !File.file?(HOME_LOADER_PATH)
   errors << "Missing cache-busted homepage news loader"
 else
   home_loader = File.read(HOME_LOADER_PATH, encoding: "UTF-8")
-  errors << "Homepage news loader does not import the news page bundle" unless home_loader.include?("page-CfmotoHomeNewsV3.js")
+  errors << "Homepage news loader does not import the news page bundle" unless home_loader.include?("page-CfmotoHomeNewsV4.js")
   %w[layout-segment-context link ProductMegaMenu].each do |asset|
-    errors << "Homepage news loader does not import #{asset} from the news graph" unless home_loader.include?("#{asset}-CfmotoHomeNewsV3.js")
+    errors << "Homepage news loader does not import #{asset} from the news graph" unless home_loader.include?("#{asset}-CfmotoHomeNewsV4.js")
   end
-  errors << "Homepage news loader still imports a stale V1 or V2 news graph" if home_loader.match?(/CfmotoHomeNewsV[12]\.js/)
+  errors << "Homepage news loader still imports a stale V1, V2 or V3 news graph" if home_loader.match?(/CfmotoHomeNewsV[123]\.js/)
   errors << "Homepage news loader still imports the cached accessory graph" if home_loader.include?("CfmotoAccessoryV15.js")
 end
 
 {
-  HOME_LAYOUT_PATH => %w[index-CfmotoHomeNewsV3.js],
-  HOME_LINK_PATH => %w[index-CfmotoHomeNewsV3.js router-CfmotoHomeNewsV3.js],
-  HOME_ROUTER_PATH => %w[index-CfmotoHomeNewsV3.js link-CfmotoHomeNewsV3.js],
-  HOME_MEGA_PATH => %w[link-CfmotoHomeNewsV3.js],
+  HOME_LAYOUT_PATH => %w[index-CfmotoHomeNewsV4.js],
+  HOME_LINK_PATH => %w[index-CfmotoHomeNewsV4.js router-CfmotoHomeNewsV4.js],
+  HOME_ROUTER_PATH => %w[index-CfmotoHomeNewsV4.js link-CfmotoHomeNewsV4.js],
+  HOME_MEGA_PATH => %w[link-CfmotoHomeNewsV4.js],
 }.each do |path, dependencies|
   if !File.file?(path)
     errors << "Missing cache-busted homepage graph asset #{File.basename(path)}"
@@ -125,7 +125,7 @@ end
   dependencies.each do |dependency|
     errors << "#{File.basename(path)} does not import #{dependency}" unless asset.include?(dependency)
   end
-  errors << "#{File.basename(path)} still imports a stale V1 or V2 news graph" if asset.match?(/CfmotoHomeNewsV[12]\.js/)
+  errors << "#{File.basename(path)} still imports a stale V1, V2 or V3 news graph" if asset.match?(/CfmotoHomeNewsV[123]\.js/)
   errors << "#{File.basename(path)} still imports the cached accessory graph" if asset.include?("CfmotoAccessoryV15.js")
 end
 
