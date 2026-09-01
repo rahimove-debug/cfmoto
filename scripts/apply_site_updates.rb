@@ -599,6 +599,15 @@ update_asset(MENU_BUNDLE_SOURCES, NEW_MENU_BUNDLE) do |javascript|
     abort "Click-only product menu anchor not found" unless menu_hover_source
     javascript.sub!(menu_hover_source, menu_click_only)
   end
+  replace_required_variant!(
+    javascript,
+    [
+      '(0,u.jsxs)(r,{href:`/#modeller`,onClick:_,children:[`Bütün kataloqa bax `,(0,u.jsx)(`span`,{children:`↗︎`})]})',
+      '(0,u.jsxs)(r,{href:a===`Motosiklet`?`/motosiklet/`:a===`Kvadrosikl`?`/kvadrosikl/`:`/buggy/`,onClick:_,children:[`Bütün kataloqa bax `,(0,u.jsx)(`span`,{children:`↗︎`})]})'
+    ],
+    '(0,u.jsxs)(r,{href:a===`Motosiklet`?`/motosiklet/`:a===`Kvadrosikl`?`/kvadrosikl/`:`/buggy/`,onClick:_,children:[`Bütün kataloqa bax `,(0,u.jsx)(`span`,{children:`↗︎`})]})',
+    "Mega-menu category page CTA"
+  )
   RUNTIME_SOURCES.each { |name| javascript.gsub!(name, NEW_RUNTIME) }
   HOME_BUNDLE_SOURCES.each { |name| javascript.gsub!(name, NEW_HOME_BUNDLE) }
   [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
@@ -606,6 +615,24 @@ end
 
 update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
   [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE].each { |name| javascript.gsub!(name, NEW_MENU_BUNDLE) }
+  replace_required_variant!(
+    javascript,
+    [
+      '(0,c.jsxs)(`a`,{className:`button primary`,href:`#modeller`,tabIndex:t?0:-1,onClick:()=>m(e.type),children:[`Modellərə bax `,(0,c.jsx)(`span`,{children:`↗︎`})]})',
+      '(0,c.jsxs)(`a`,{className:`button primary`,href:e.key===`moto`?`/motosiklet/`:`#modeller`,tabIndex:t?0:-1,onClick:e.key===`moto`?void 0:()=>m(e.type),children:[`Modellərə bax `,(0,c.jsx)(`span`,{children:`↗︎`})]})'
+    ],
+    '(0,c.jsxs)(`a`,{className:`button primary`,href:e.key===`moto`?`/motosiklet/`:`#modeller`,tabIndex:t?0:-1,onClick:e.key===`moto`?void 0:()=>m(e.type),children:[`Modellərə bax `,(0,c.jsx)(`span`,{children:`↗︎`})]})',
+    "Homepage motorcycle hero CTA"
+  )
+  replace_required_variant!(
+    javascript,
+    [
+      '(0,c.jsx)(`a`,{href:`#modeller`,onClick:()=>m(`Motosiklet`),children:`Kəşf et →`})',
+      '(0,c.jsx)(`a`,{href:`/motosiklet/`,children:`Kəşf et →`})'
+    ],
+    '(0,c.jsx)(`a`,{href:`/motosiklet/`,children:`Kəşf et →`})',
+    "Homepage motorcycle category CTA"
+  )
   replace_required_variant!(
     javascript,
     [
@@ -1012,6 +1039,33 @@ end
 home.gsub!("46<!-- --> aktual model", "47<!-- --> aktual model")
 home.gsub!("46 aktual model", "47 aktual model")
 apply_home_finance_policy!(home)
+replace_required_variant!(
+  home,
+  [
+    '<div class="category-hero-actions"><a class="button primary" href="#modeller" tabindex="0">Modellərə bax <span>↗︎</span></a>',
+    '<div class="category-hero-actions"><a class="button primary" href="/motosiklet/" tabindex="0">Modellərə bax <span>↗︎</span></a>'
+  ],
+  '<div class="category-hero-actions"><a class="button primary" href="/motosiklet/" tabindex="0">Modellərə bax <span>↗︎</span></a>',
+  "Prerendered motorcycle hero CTA"
+)
+replace_required_variant!(
+  home,
+  [
+    '<h3>Motosikletlər</h3><p>Sport · Naked · Adventure · Classic</p><a href="#modeller">Kəşf et →</a>',
+    '<h3>Motosikletlər</h3><p>Sport · Naked · Adventure · Classic</p><a href="/motosiklet/">Kəşf et →</a>'
+  ],
+  '<h3>Motosikletlər</h3><p>Sport · Naked · Adventure · Classic</p><a href="/motosiklet/">Kəşf et →</a>',
+  "Prerendered motorcycle category CTA"
+)
+replace_required_variant!(
+  home,
+  [
+    '<a href="/#modeller">Bütün kataloqa bax <span>↗︎</span></a>',
+    '<a href="/motosiklet/">Bütün kataloqa bax <span>↗︎</span></a>'
+  ],
+  '<a href="/motosiklet/">Bütün kataloqa bax <span>↗︎</span></a>',
+  "Prerendered mega-menu category page CTA"
+)
 write_utf8(home_path, home)
 
 stylesheet_source = [CURRENT_STYLESHEET, LAST_STYLESHEET, CURRENT_V2_STYLESHEET, CURRENT_V3_STYLESHEET, CURRENT_V4_STYLESHEET, CURRENT_V5_STYLESHEET, CURRENT_V6_STYLESHEET, CURRENT_V7_STYLESHEET, CURRENT_V8_STYLESHEET, CURRENT_V9_STYLESHEET, NEW_STYLESHEET]
@@ -1105,6 +1159,9 @@ checks = {
   "home active hero preload" => home.include?(hero_preload),
   "home hero image URLs are deferred" => home.scan('style="--hero-image:url(').size == 3 && !home.include?('style="background-image:url(') && home_bundle.include?('style:{"--hero-image":`url(${e.image})`}') && !home_bundle.include?('style:{backgroundImage:`url(${e.image})`}'),
   "home hero performance stylesheet" => File.file?(File.join(ROOT, HERO_PERFORMANCE_STYLESHEET.delete_prefix("/"))) && home.include?(hero_performance_link),
+  "home motorcycle hero links to category page" => home.include?('<div class="category-hero-actions"><a class="button primary" href="/motosiklet/" tabindex="0">Modellərə bax') && home_bundle.include?('href:e.key===`moto`?`/motosiklet/`:`#modeller`'),
+  "home motorcycle promo links to category page" => home.include?('<h3>Motosikletlər</h3><p>Sport · Naked · Adventure · Classic</p><a href="/motosiklet/">Kəşf et →</a>') && home_bundle.include?('(0,c.jsx)(`a`,{href:`/motosiklet/`,children:`Kəşf et →`})'),
+  "mega-menu CTA links to selected category page" => home.include?('<a href="/motosiklet/">Bütün kataloqa bax <span>↗︎</span></a>') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('href:a===`Motosiklet`?`/motosiklet/`:a===`Kvadrosikl`?`/kvadrosikl/`:`/buggy/`'),
   "mobile calculator CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_CREDIT_CSS_MARKER),
   "mobile hero image deferral CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_PERFORMANCE_CSS_MARKER),
   "mobile DOM performance CSS" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?(MOBILE_DOM_CSS_MARKER),

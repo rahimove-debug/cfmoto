@@ -107,6 +107,9 @@ abort "Model image fixes failed" unless system(RbConfig.ruby, model_image_fixes)
 model_image_audit = File.join(__dir__, "audit_model_images.rb")
 abort "Model image audit failed" unless system(RbConfig.ruby, model_image_audit)
 
+home_category_links_audit = File.join(__dir__, "audit_home_category_links.rb")
+abort "Homepage category-link audit failed" unless system(RbConfig.ruby, home_category_links_audit)
+
 FileUtils.rm_rf(DIST)
 FileUtils.mkdir_p(DIST)
 
