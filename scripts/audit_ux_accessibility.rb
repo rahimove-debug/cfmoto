@@ -70,7 +70,7 @@ if File.file?(configurator_path)
   end
 end
 
-configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-offroad-cleanphotos-v7.js")
+configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-750sr-localprices-v8.js")
 configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-noprice-v5.css")
 configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-partsazn-v3.js")
 if File.file?(configurator_bundle_path)
@@ -96,6 +96,26 @@ if File.file?(configurator_bundle_path)
   errors << "750SR-S orange badge markup is missing" unless bundle.include?("simple-model-new-badge")
   errors << "Adventure/Touring UI grouping is missing" unless bundle.include?("Adventure / Touring")
   errors << "750SR-S Azerbaijani accessory copy is missing" unless bundle.include?("Radiator qoruyucusu") && bundle.include?("Qızdırılan sükan tutacaqları")
+  {
+    "6HVV-804200-1000" => 110,
+    "6HVV-806200-1000-10" => 249,
+    "6HVV-805100-1000" => 199,
+    "6ARV-802000-1001" => 119,
+    "6AQV-803000-1001-10" => 159,
+    "6HVV-804300-1000" => 119,
+    "6HVV-801100-1000" => 298,
+    "6HVV-806100-1000" => 249,
+    "6GUV-802110-5601" => 109,
+    "6HVV-802220-1000" => 149,
+    "6HVV-802300-1000" => 79,
+    "6HVV-806200-1000" => 249,
+    "6GUV-802120-5601" => 109,
+    "6GUV-802700-5601" => 79
+  }.each do |dms_id, price|
+    errors << "750SR-S local price is missing for #{dms_id}" unless bundle.match?(%r!"dmsId":"#{Regexp.escape(dms_id)}"[^}]*"localPriceAzn":#{price}\}!)
+  end
+  errors << "Unverified 750SR-S reservoir-cap price must remain query-only" if bundle.match?(%r!"dmsId":"6GUV-804300-5601"[^}]*"localPriceAzn":\d+\}!)
+  errors << "Configurator does not prioritize verified local prices" unless bundle.include?("priceAzn:r.localPriceAzn??i?.value??null")
   errors << "CFMOTO USA off-road source label is missing" unless bundle.include?("CFMOTO USA 2027 Off-Road Accessories")
   errors << "CFMoto USA Parts price source is missing" unless bundle.include?("CFMoto USA Parts")
   errors << "Official USD/AZN conversion disclosure is missing" unless bundle.include?("1 USD = 1.7000 AZN")

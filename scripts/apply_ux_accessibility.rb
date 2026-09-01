@@ -11,7 +11,7 @@ SCRIPT_URL = "/assets/mobile-menu-accessibility-v2.js"
 MARKER_START = "<!-- CFMOTO:UX-ACCESSIBILITY:START -->"
 MARKER_END = "<!-- CFMOTO:UX-ACCESSIBILITY:END -->"
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-CONFIGURATOR_PAGE_TARGET = "page-cfmoto-offroad-cleanphotos-v7.js"
+CONFIGURATOR_PAGE_TARGET = "page-cfmoto-750sr-localprices-v8.js"
 CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-noprice-v5.css"
 CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-partsazn-v3.js"
 
@@ -104,31 +104,40 @@ page.sub!(offroad_price_note, ',l="";return')
 page.gsub!(%r{children:"CFMOTO DMS-dən foto.*?diler tərəfindən təsdiqlənir\."}, 'children:"Konfiquratorda göstərilən məhsullar rəsmi CFMOTO kataloqlarına əsaslanır. Uyğunluq, mövcudluq və yekun satış qiyməti model və komplektasiyaya görə satış komandası tərəfindən təsdiqlənir."')
 
 translations = {
-  "6HVV-804200-1000" => ["Radiator qoruyucusu", "Paslanmayan polad qoruyucu radiatoru daş və qumdan qoruyur, istilik ötürülməsinə mane olmur.", ""],
-  "6HVV-806200-1000-10" => ["Yarış oturacaq örtüyü — Nebula Black", "Modelə daha idman və aqressiv görünüş verir. Ehtiyac olduqda gizli kamera bərkidicisindən istifadə edilə bilər.", "Nebula Black"],
-  "6HVV-805100-1000" => ["Hündür ön şüşə", "Tünd boz polikarbonat ön şüşə standart versiyadan 51 mm hündürdür və külək qorumasını artırır.", "Tünd boz · +51 mm"],
-  "6ARV-802000-1001" => ["Qızdırılan sükan tutacaqları", "FN düyməsi və panel göstəricisi ilə 5 səviyyəli isitmə, həddən artıq qızmaya qarşı qoruma, IP67 su və toz davamlılığı.", "IP67 · 5 səviyyə · 9V–16V"],
-  "6AQV-803000-1001-10" => ["Debriyaj qolu", "Qara anodlaşdırılmış alüminium qol dəqiq tənzimlənir və qatlanan ucu zədələnmə riskini azaldır. 450SR modeli ilə də uyğundur.", "Qara · qatlanan · tənzimlənən"],
-  "6HVV-804300-1000" => ["Mühərrik qoruyucusu", "Mühərrik səthini zədədən qorumağa və yüksək temperaturun sürücüyə təsirini azaltmağa kömək edir.", ""],
-  "6HVV-801100-1000" => ["Mühərrik slayderi", "Karbon polad baza, alüminium kronşteyn və möhkəm slayderlər yıxılma zamanı sürücünü, çərçivəni və mühərriki qorumağa kömək edir.", ""],
-  "6HVV-806100-1000" => ["Hündür oturacaq", "Oturma mövqeyini 20 mm yüksəldir, hündür sürücülər üçün ergonomiyanı yaxşılaşdırır və rahat səth təqdim edir.", "+20 mm"],
-  "6GUV-804300-5601" => ["Ön əyləc mayesi çəni qapağı", "Standart plastik qapağı əvəz edən CNC işlənmiş alüminium detal modelə yarış üslublu görünüş verir.", "CNC alüminium"],
-  "6GUV-802110-5601" => ["Sol qol qoruyucusu", "Yarış tipli sol qoruyucu idarəetmə qolunun zədələnməsi və təsadüfi sıxılması riskini azaldır. CNC alüminium və möhkəmləndirilmiş neylondandır.", "Sol"],
-  "6HVV-802220-1000" => ["Sağ əyləc qolu", "Qara anodlaşdırılmış alüminium əyləc qolu dəqiq tənzimlənir, qatlanan ucu isə zədələnmə riskini azaldır.", "Sağ · qara · qatlanan · tənzimlənən"],
-  "6HVV-802300-1000" => ["Arxa ox slayderi", "Karbon polad baza, alüminium kronşteyn və arxa ox slayderləri yıxılma zamanı zədələnmə riskini azaltmağa kömək edir.", "Arxa"],
-  "6HVV-806200-1000" => ["Yarış oturacaq örtüyü — Nebula White", "Modelə daha idman və aqressiv görünüş verir. Ehtiyac olduqda gizli kamera bərkidicisindən istifadə edilə bilər.", "Nebula White"],
-  "6GUV-802120-5601" => ["Sağ qol qoruyucusu", "Yarış tipli sağ qoruyucu idarəetmə qolunun zədələnməsi və təsadüfi sıxılması riskini azaldır. CNC alüminium və möhkəmləndirilmiş neylondandır.", "Sağ"],
-  "6GUV-802700-5601" => ["Ön ox slayderi", "İkitərəfli ön ox slayderləri asan quraşdırılır və yıxılma zamanı çəngəl ilə əyləc kaliperini qorumağa kömək edir.", "Ön"]
+  "6HVV-804200-1000" => ["Radiator qoruyucusu", "Paslanmayan polad qoruyucu radiatoru daş və qumdan qoruyur, istilik ötürülməsinə mane olmur.", "", 110],
+  "6HVV-806200-1000-10" => ["Yarış oturacaq örtüyü — Nebula Black", "Modelə daha idman və aqressiv görünüş verir. Ehtiyac olduqda gizli kamera bərkidicisindən istifadə edilə bilər.", "Nebula Black", 249],
+  "6HVV-805100-1000" => ["Hündür ön şüşə", "Tünd boz polikarbonat ön şüşə standart versiyadan 51 mm hündürdür və külək qorumasını artırır.", "Tünd boz · +51 mm", 199],
+  "6ARV-802000-1001" => ["Qızdırılan sükan tutacaqları", "FN düyməsi və panel göstəricisi ilə 5 səviyyəli isitmə, həddən artıq qızmaya qarşı qoruma, IP67 su və toz davamlılığı.", "IP67 · 5 səviyyə · 9V–16V", 119],
+  "6AQV-803000-1001-10" => ["Debriyaj qolu", "Qara anodlaşdırılmış alüminium qol dəqiq tənzimlənir və qatlanan ucu zədələnmə riskini azaldır. 450SR modeli ilə də uyğundur.", "Qara · qatlanan · tənzimlənən", 159],
+  "6HVV-804300-1000" => ["Mühərrik qoruyucusu", "Mühərrik səthini zədədən qorumağa və yüksək temperaturun sürücüyə təsirini azaltmağa kömək edir.", "", 119],
+  "6HVV-801100-1000" => ["Mühərrik slayderi", "Karbon polad baza, alüminium kronşteyn və möhkəm slayderlər yıxılma zamanı sürücünü, çərçivəni və mühərriki qorumağa kömək edir.", "", 298],
+  "6HVV-806100-1000" => ["Hündür oturacaq", "Oturma mövqeyini 20 mm yüksəldir, hündür sürücülər üçün ergonomiyanı yaxşılaşdırır və rahat səth təqdim edir.", "+20 mm", 249],
+  "6GUV-804300-5601" => ["Ön əyləc mayesi çəni qapağı", "Standart plastik qapağı əvəz edən CNC işlənmiş alüminium detal modelə yarış üslublu görünüş verir.", "CNC alüminium", nil],
+  "6GUV-802110-5601" => ["Sol qol qoruyucusu", "Yarış tipli sol qoruyucu idarəetmə qolunun zədələnməsi və təsadüfi sıxılması riskini azaldır. CNC alüminium və möhkəmləndirilmiş neylondandır.", "Sol", 109],
+  "6HVV-802220-1000" => ["Sağ əyləc qolu", "Qara anodlaşdırılmış alüminium əyləc qolu dəqiq tənzimlənir, qatlanan ucu isə zədələnmə riskini azaldır.", "Sağ · qara · qatlanan · tənzimlənən", 149],
+  "6HVV-802300-1000" => ["Arxa ox slayderi", "Karbon polad baza, alüminium kronşteyn və arxa ox slayderləri yıxılma zamanı zədələnmə riskini azaltmağa kömək edir.", "Arxa", 79],
+  "6HVV-806200-1000" => ["Yarış oturacaq örtüyü — Nebula White", "Modelə daha idman və aqressiv görünüş verir. Ehtiyac olduqda gizli kamera bərkidicisindən istifadə edilə bilər.", "Nebula White", 249],
+  "6GUV-802120-5601" => ["Sağ qol qoruyucusu", "Yarış tipli sağ qoruyucu idarəetmə qolunun zədələnməsi və təsadüfi sıxılması riskini azaldır. CNC alüminium və möhkəmləndirilmiş neylondandır.", "Sağ", 109],
+  "6GUV-802700-5601" => ["Ön ox slayderi", "İkitərəfli ön ox slayderləri asan quraşdırılır və yıxılma zamanı çəngəl ilə əyləc kaliperini qorumağa kömək edir.", "Ön", 79]
 }.freeze
 
-translations.each do |dms_id, (name, description, specification)|
-  matches = page.scan(%r{\{"description":"[^"]*","dmsId":"#{Regexp.escape(dms_id)}".*?,"name":"[^"]*","specification":"[^"]*"\}})
+translations.each do |dms_id, (name, description, specification, local_price_azn)|
+  matches = page.scan(%r{\{"description":"[^"]*","dmsId":"#{Regexp.escape(dms_id)}".*?,"name":"[^"]*","specification":"[^"]*"(?:,"localPriceAzn":\d+)?\}})
   abort "Expected one 750SR-S DMS object for #{dms_id}, found #{matches.size}" unless matches.size == 1
   object = matches.first
   localized = object.sub(%r{"description":"[^"]*"}, %Q{"description":"#{description}"})
   localized.sub!(%r{"name":"[^"]*"}, %Q{"name":"#{name}"})
   localized.sub!(%r{"specification":"[^"]*"}, %Q{"specification":"#{specification}"})
+  localized.sub!(%r{,"localPriceAzn":\d+}, "")
+  localized.sub!(%r{\}\z}, %Q(,"localPriceAzn":#{local_price_azn}})) if local_price_azn
   page.sub!(object, localized)
+end
+
+local_price_source = "priceAzn:i?.value??null"
+local_price_target = "priceAzn:r.localPriceAzn??i?.value??null"
+unless page.include?(local_price_target)
+  abort "Configurator local-price factory anchor not found" unless page.include?(local_price_source)
+  page.gsub!(local_price_source, local_price_target)
 end
 
 FileUtils.mkdir_p(File.dirname(page_target_path))
