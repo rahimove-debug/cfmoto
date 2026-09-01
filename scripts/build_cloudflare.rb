@@ -98,6 +98,12 @@ abort "Unified navigation audit failed" unless system(RbConfig.ruby, unified_nav
 ux_accessibility_audit = File.join(__dir__, "audit_ux_accessibility.rb")
 abort "UX/accessibility audit failed" unless system(RbConfig.ruby, ux_accessibility_audit)
 
+model_image_fixes = File.join(__dir__, "apply_model_image_fixes.rb")
+abort "Model image fixes failed" unless system(RbConfig.ruby, model_image_fixes)
+
+model_image_audit = File.join(__dir__, "audit_model_images.rb")
+abort "Model image audit failed" unless system(RbConfig.ruby, model_image_audit)
+
 FileUtils.rm_rf(DIST)
 FileUtils.mkdir_p(DIST)
 
