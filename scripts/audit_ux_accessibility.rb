@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "json"
 require_relative "category_config"
 require_relative "content_config"
+require_relative "godaddy_accessory_prices"
 
 ROOT = File.expand_path("..", __dir__)
 STYLE_URL = "/assets/ux-accessibility-v1.css"
@@ -70,7 +72,7 @@ if File.file?(configurator_path)
   end
 end
 
-configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-750sr-localprices-v8.js")
+configurator_bundle_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-godaddy-localprices-v9.js")
 configurator_css_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "css", "cfmoto-configurator-offroad-noprice-v5.css")
 configurator_runtime_path = File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "238-cfmoto-offroad-partsazn-v3.js")
 if File.file?(configurator_bundle_path)
@@ -116,6 +118,14 @@ if File.file?(configurator_bundle_path)
   end
   errors << "Unverified 750SR-S reservoir-cap price must remain query-only" if bundle.match?(%r!"dmsId":"6GUV-804300-5601"[^}]*"localPriceAzn":\d+\}!)
   errors << "Configurator does not prioritize verified local prices" unless bundle.include?("priceAzn:r.localPriceAzn??i?.value??null")
+  godaddy_price_json = bundle[%r{cfmotoGodaddyAccessoryPricesV1=(\{.*?\}),cfmotoApplyGodaddyAccessoryPricesV1=}, 1]
+  if godaddy_price_json
+    errors << "GoDaddy accessory-price table differs from the verified local list" unless JSON.parse(godaddy_price_json) == GodaddyAccessoryPrices::PRICES
+  else
+    errors << "GoDaddy accessory-price table is missing"
+  end
+  errors << "GoDaddy local prices are not applied to final model accessories" unless bundle.include?("cfmotoApplyGodaddyAccessoryPricesV1=ei.forEach") &&
+    bundle.include?("void 0!==t&&(r.priceAzn=t)")
   errors << "CFMOTO USA off-road source label is missing" unless bundle.include?("CFMOTO USA 2027 Off-Road Accessories")
   errors << "CFMoto USA Parts price source is missing" unless bundle.include?("CFMoto USA Parts")
   errors << "Official USD/AZN conversion disclosure is missing" unless bundle.include?("1 USD = 1.7000 AZN")

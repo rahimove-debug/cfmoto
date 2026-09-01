@@ -2,8 +2,10 @@
 # frozen_string_literal: true
 
 require "fileutils"
+require "json"
 require_relative "category_config"
 require_relative "content_config"
+require_relative "godaddy_accessory_prices"
 
 ROOT = File.expand_path("..", __dir__)
 STYLE_URL = "/assets/ux-accessibility-v1.css"
@@ -11,7 +13,7 @@ SCRIPT_URL = "/assets/mobile-menu-accessibility-v2.js"
 MARKER_START = "<!-- CFMOTO:UX-ACCESSIBILITY:START -->"
 MARKER_END = "<!-- CFMOTO:UX-ACCESSIBILITY:END -->"
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-CONFIGURATOR_PAGE_TARGET = "page-cfmoto-750sr-localprices-v8.js"
+CONFIGURATOR_PAGE_TARGET = "page-cfmoto-godaddy-localprices-v9.js"
 CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-noprice-v5.css"
 CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-partsazn-v3.js"
 
@@ -138,6 +140,15 @@ local_price_target = "priceAzn:r.localPriceAzn??i?.value??null"
 unless page.include?(local_price_target)
   abort "Configurator local-price factory anchor not found" unless page.include?(local_price_source)
   page.gsub!(local_price_source, local_price_target)
+end
+
+godaddy_price_marker = "cfmotoGodaddyAccessoryPricesV1"
+unless page.include?(godaddy_price_marker)
+  model_list_anchor = ").filter(e=>!!e),es=new Intl.NumberFormat"
+  abort "Configurator final model-list price anchor not found" unless page.scan(model_list_anchor).size == 1
+  prices_json = JSON.generate(GodaddyAccessoryPrices::PRICES)
+  price_override = %Q{).filter(e=>!!e),#{godaddy_price_marker}=#{prices_json},cfmotoApplyGodaddyAccessoryPricesV1=ei.forEach(e=>e.accessories.forEach(r=>{let t=#{godaddy_price_marker}[e.id]?.[r.partNumber];void 0!==t&&(r.priceAzn=t)})),es=new Intl.NumberFormat}
+  page.sub!(model_list_anchor, price_override)
 end
 
 FileUtils.mkdir_p(File.dirname(page_target_path))

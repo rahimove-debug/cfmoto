@@ -8,7 +8,7 @@ require_relative "offroad_official_hq_sources"
 
 ROOT = File.expand_path("..", __dir__)
 CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
-BUNDLE = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-cfmoto-750sr-localprices-v8.js")
+BUNDLE = File.join(CONFIGURATOR_ROOT, "_next", "static", "chunks", "app", "page-cfmoto-godaddy-localprices-v9.js")
 SOURCE_ROOT = ENV.fetch("CFMOTO_DMS_OFFROAD_SOURCE", File.expand_path("../cfmoto-dms-accessories/final", ROOT))
 PUBLIC_DIRECTORY = "dms-offroad"
 CLEAN_PUBLIC_DIRECTORY = "catalog-offroad-clean-v2"
