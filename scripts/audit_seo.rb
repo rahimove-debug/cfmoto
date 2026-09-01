@@ -296,7 +296,7 @@ content_expectations = {
   "servis" => ["Bazar ertəsi istisna olmaqla", "+994 10 241 42 99", "45 AZN", '"@type":"Service"'],
   "zemanet" => ["2 il / 24.000 km", "model və istifadə rejiminə görə", "ümumi məlumat verir"],
   "ehtiyat-hisseleri" => ["orijinal ehtiyat hissələri", "yağlar və aksesuarlar", "mövcudluq telefon sorğusu"],
-  "model-muqayisesi" => ["47 aktual modeli", "Minimum ilkin ödəniş", '"numberOfItems":47']
+  "model-muqayisesi" => ["48 aktual modeli", "Minimum ilkin ödəniş", '"numberOfItems":48']
 }
 content_expectations.each do |slug, expected_texts|
   path = File.join(ROOT, slug, "index.html")
@@ -316,7 +316,7 @@ end
 category_expectations = {
   "motosiklet" => {
     title: "Motosiklet Satışı və Qiymətləri | CFMOTO Azerbaijan",
-    count: 29,
+    count: 30,
     required: ["CFMOTO motosiklet satışı və qiymətləri", "Maliyyələşmə şərtləri", "20%", "40%"]
   },
   "kvadrosikl" => {
@@ -342,7 +342,8 @@ category_expectations.each do |slug, expectation|
   card_count = category.scan('class="category-model-card"').size
   errors << "/#{slug}/ expected #{expectation.fetch(:count)} product cards, found #{card_count}" unless card_count == expectation.fetch(:count)
   price_count = category.scan(%r{<strong>[\d,]+ AZN(?: · ƏDV daxil)?</strong>}).size
-  errors << "/#{slug}/ expected a price for every product" unless price_count == card_count
+  pending_price_count = category.scan(%r{<strong>Dəqiqləşdirin</strong>}).size
+  errors << "/#{slug}/ expected a price or enquiry label for every product" unless price_count + pending_price_count == card_count
   expectation.fetch(:required).each do |text|
     errors << "/#{slug}/ is missing required content: #{text}" unless category.include?(text)
   end
@@ -355,9 +356,9 @@ category_expectations.each do |slug, expectation|
 end
 
 card_images = Dir.glob(File.join(ROOT, "models", "cards", "*.webp"))
-errors << "Expected 47 base and 4 clean optimized model card images, found #{card_images.size}" unless card_images.size == 51
+errors << "Expected 48 base and 4 clean optimized model card images, found #{card_images.size}" unless card_images.size == 52
 homepage_card_sources = home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten
-errors << "Homepage must use all 47 optimized model card images" unless homepage_card_sources.uniq.size == 47
+errors << "Homepage must use all 48 optimized model card images" unless homepage_card_sources.uniq.size == 48
 homepage_card_sources.uniq.each do |source|
   errors << "Homepage card image is missing: #{source}" unless File.file?(File.join(ROOT, source.delete_prefix("/")))
 end

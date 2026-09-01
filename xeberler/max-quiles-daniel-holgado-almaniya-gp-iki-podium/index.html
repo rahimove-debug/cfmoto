@@ -1,6 +1,51 @@
 <!doctype html>
 <html lang="az">
-<head>
+<head><!-- CFMOTO:GTM:HEAD:START -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9877TBG');
+</script>
+<!-- CFMOTO:GTM:HEAD:END -->
+<!-- CFMOTO:ANALYTICS:START -->
+<script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=G-X0Y85BJ9ST"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
+window.gtag('js',new Date());
+window.gtag('config','G-X0Y85BJ9ST');
+document.addEventListener('click',function(event){
+  var target=event.target;
+  if(!(target instanceof Element))return;
+  var link=target.closest('a[href]');
+  if(!link)return;
+  var href=link.getAttribute('href')||'';
+  var text=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
+  var normalizedHref=href.toLowerCase();
+  var params={link_text:text,page_path:window.location.pathname};
+  var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
+  if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
+    var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
+    var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
+    send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
+    if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
+    return;
+  }
+  if(normalizedHref.startsWith('tel:')){
+    var normalizedText=text.toLowerCase();
+    var serviceContact=['servis','ehtiyat','çatdırılma'].some(function(term){return normalizedText.includes(term)});
+    send('phone_click',{contact_area:serviceContact?'service':'sales'});
+    return;
+  }
+  if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){
+    send('directions_click',{destination:'showroom'});
+  }
+},true);
+</script>
+<!-- CFMOTO:ANALYTICS:END -->
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CFMOTO Almaniya Qran Prisində iki podium qazandı</title>
@@ -25,19 +70,29 @@
   <meta name="twitter:description" content="Max Quiles və Daniel Holgado Sachsenring-də ikinci yerə çıxdılar.">
   <meta name="twitter:image" content="https://cfmoto.az/gallery/quiles-sachsenring-2026-hero.jpg">
   <meta name="twitter:image:alt" content="Max Quiles Sachsenring Moto3 podiumunda">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"NewsArticle","@id":"https://cfmoto.az/xeberler/max-quiles-daniel-holgado-almaniya-gp-iki-podium/#article","headline":"Max Quiles və Daniel Holgado CFMOTO-ya Almaniyada iki podium gətirdi","description":"Max Quiles Moto3-də, Daniel Holgado isə Moto2-də ikinci oldu. CFMOTO Aspar Team Sachsenring-dən iki podiumla ayrıldı.","image":["https://cfmoto.az/gallery/quiles-sachsenring-2026-hero.jpg","https://cfmoto.az/gallery/quiles-sachsenring-2026-race.jpg","https://cfmoto.az/gallery/quiles-sachsenring-2026-moto2-podium.jpg"],"datePublished":"2026-07-14T12:00:00+04:00","dateModified":"2026-08-30T12:00:00+04:00","inLanguage":"az-AZ","mainEntityOfPage":{"@type":"WebPage","@id":"https://cfmoto.az/xeberler/max-quiles-daniel-holgado-almaniya-gp-iki-podium/"},"author":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/"},"publisher":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/","logo":{"@type":"ImageObject","url":"https://cfmoto.az/cfmoto-logo-black.png","width":159,"height":34}},"about":[{"@type":"SportsEvent","name":"2026 MotoGP Almaniya Qran Prisi","location":{"@type":"Place","name":"Sachsenring, Almaniya"},"startDate":"2026-07-10","endDate":"2026-07-12"},{"@type":"SportsTeam","name":"CFMOTO Aspar Team"}],"citation":"https://www.cfmoto.com/global/media-center/news/2026/quiles-opens-grand-prix-podium-champagne-again-for-cfmoto-in-ger.html"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana səhifə","item":"https://cfmoto.az/"},{"@type":"ListItem","position":2,"name":"Xəbərlər","item":"https://cfmoto.az/xeberler/"},{"@type":"ListItem","position":3,"name":"CFMOTO Almaniya Qran Prisində","item":"https://cfmoto.az/xeberler/max-quiles-daniel-holgado-almaniya-gp-iki-podium/"}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"NewsArticle","@id":"https://cfmoto.az/xeberler/max-quiles-daniel-holgado-almaniya-gp-iki-podium/#article","headline":"Max Quiles və Daniel Holgado CFMOTO-ya Almaniyada iki podium gətirdi","description":"Max Quiles Moto3-də, Daniel Holgado isə Moto2-də ikinci oldu. CFMOTO Aspar Team Sachsenring-dən iki podiumla ayrıldı.","image":["https://cfmoto.az/gallery/quiles-sachsenring-2026-hero.jpg","https://cfmoto.az/gallery/quiles-sachsenring-2026-race.jpg","https://cfmoto.az/gallery/quiles-sachsenring-2026-moto2-podium.jpg"],"datePublished":"2026-07-14T12:00:00+04:00","dateModified":"2026-08-30T12:00:00+04:00","inLanguage":"az-AZ","mainEntityOfPage":{"@type":"WebPage","@id":"https://cfmoto.az/xeberler/max-quiles-daniel-holgado-almaniya-gp-iki-podium/"},"author":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/"},"publisher":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/","logo":{"@type":"ImageObject","url":"https://cfmoto.az/cfmoto-logo-black.png","width":159,"height":34}},"about":[{"@type":"Thing","name":"2026 MotoGP Almaniya Qran Prisi","description":"2026 MotoGP Almaniya Qran Prisi, 10–12 iyul tarixlərində Sachsenring trasında keçirilən motosiklet yarış mərhələsi.","sameAs":"https://www.cfmoto.com/global/media-center/news/2026/quiles-opens-grand-prix-podium-champagne-again-for-cfmoto-in-ger.html"},{"@type":"SportsTeam","name":"CFMOTO Aspar Team"}],"citation":"https://www.cfmoto.com/global/media-center/news/2026/quiles-opens-grand-prix-podium-champagne-again-for-cfmoto-in-ger.html"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana səhifə","item":"https://cfmoto.az/"},{"@type":"ListItem","position":2,"name":"Xəbərlər","item":"https://cfmoto.az/xeberler/"},{"@type":"ListItem","position":3,"name":"CFMOTO Almaniya Qran Prisində","item":"https://cfmoto.az/xeberler/max-quiles-daniel-holgado-almaniya-gp-iki-podium/"}]}]}</script>
   <link rel="icon" href="/favicon.svg">
   <link rel="preload" as="image" href="/gallery/quiles-sachsenring-2026-hero.jpg" fetchpriority="high">
   <link rel="stylesheet" href="/assets/cfmoto-news-v2.css">
-</head>
-<body>
-  <div class="news-topline"><div class="news-topline-inner"><span>CFMOTO-nun Azərbaycanda rəsmi nümayəndəsi</span><span>Babək pr. 188 · Salon hər gün 10:00–19:00</span></div></div>
-  <header class="news-site-nav">
-    <div class="news-nav-inner">
-      <a class="news-brand" href="/" aria-label="CFMOTO Azerbaijan ana səhifə"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"><span>Azərbaycan</span></a>
-      <nav class="news-nav-links" aria-label="Əsas menyu"><a href="/#modeller">Modellər</a><a href="/xeberler/" class="active">Xəbərlər</a><a href="#gallery">Qalereya</a><a href="https://wa.me/994512332484?text=Salam%2C%20CFMOTO%20modell%C9%99ri%20il%C9%99%20maraqlan%C4%B1ram." class="contact" target="_blank" rel="noreferrer">Əlaqə</a></nav>
-    </div>
-  </header>
+<link rel="stylesheet" href="/assets/cfmoto-typography-v2.css"/><!-- CFMOTO:UNIFIED-NAV:HEAD:START --><link rel="stylesheet" href="/assets/unified-navigation-v1.css"><script defer src="/assets/unified-navigation-v1.js"></script><!-- CFMOTO:UNIFIED-NAV:HEAD:END --></head>
+<body><!-- CFMOTO:GTM:BODY:START -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9877TBG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- CFMOTO:GTM:BODY:END -->
+
+  <!-- CFMOTO:UNIFIED-NAV:HEADER:START -->
+<div class="unified-topline"><span>CFMOTO-nun Azərbaycanda rəsmi nümayəndəsi</span><span class="topline-detail">Babək pr. 188 · Salon hər gün 10:00–19:00</span></div>
+<header class="site-header unified-site-header">
+  <a class="brand" href="/" aria-label="CFMOTO Azerbaijan ana səhifə"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"><b>AZƏRBAYCAN</b></a>
+  <nav class="main-nav" id="site-primary-navigation" aria-label="Əsas menyu">
+    <details class="unified-products-menu"><summary>Modellər <span aria-hidden="true">⌄</span></summary><div class="unified-products-panel"><a href="/motosiklet/">Motosikletlər<span>↗</span></a><a href="/kvadrosikl/">Kvadrosikllər<span>↗</span></a><a href="/buggy/">Buggy və UTV<span>↗</span></a><a href="/#modeller">Bütün modellər<span>↗</span></a></div></details>
+    <a href="/aksesuar-konfiquratoru/">Aksesuarlar</a><a href="/kredit/">Kredit</a><a href="/servis/">Servis</a><a href="/xeberler/">Xəbərlər</a><a href="/#showroom">Satış mərkəzi</a>
+    <a class="nav-cta" href="https://wa.me/994512332484?text=Salam%2C%20CFMOTO%20modeli%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m" target="_blank" rel="noreferrer">Əlaqə</a>
+  </nav>
+  <nav class="language-switcher" aria-label="Dil seçimi"><span aria-current="page">AZ</span><a href="/ru/" lang="ru" hreflang="ru">RU</a></nav>
+  <button class="menu-button" type="button" aria-label="Menyunu aç" aria-expanded="false" aria-controls="site-primary-navigation"><span></span><span></span></button>
+</header>
+<!-- CFMOTO:UNIFIED-NAV:HEADER:END -->
 
   <main>
     <section class="article-head">

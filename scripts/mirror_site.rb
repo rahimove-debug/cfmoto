@@ -67,6 +67,9 @@ end
 FileUtils.touch(File.join(DEST, ".nojekyll"))
 puts "Imported #{seen.size} discovered URLs"
 
+model_500sr_script = File.join(__dir__, "apply_500sr_model.rb")
+abort "500SR model integration failed" unless system(RbConfig.ruby, model_500sr_script)
+
 updates_script = File.join(__dir__, "apply_site_updates.rb")
 abort "Site updates failed" unless system(RbConfig.ruby, updates_script)
 

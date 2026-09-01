@@ -84,6 +84,7 @@ INTERNAL_40_MOTORCYCLE_SLUGS = %w[
   700cl-x-sport 700mt 675sr-r 675nk 500sr-voom 450cl-c-bobber 450cl-c
   450cl-c-amt 450sr-s 450mt 450nk
 ].freeze
+PRICE_PENDING_SLUGS = %w[500sr].freeze
 
 INSTALLMENT_INTEREST_RATES = {
   6 => 0.08,
@@ -922,8 +923,10 @@ html_paths.each do |path|
     slug = File.basename(File.dirname(path))
     localize_primary_model_image!(html, slug)
     ensure_clean_model_product_badge!(html, slug)
-    apply_model_finance_policy!(html, slug)
-    normalize_model_finance_calculator!(html, slug)
+    unless slug == "500sr"
+      apply_model_finance_policy!(html, slug)
+      normalize_model_finance_calculator!(html, slug)
+    end
   end
   normalize_footer_links!(html)
   normalize_embedded_footer_links!(html)
@@ -1065,6 +1068,7 @@ end
 offroad_slugs = Dir.glob(File.join(ROOT, "model", "*", "index.html")).map do |path|
   File.basename(File.dirname(path))
 end - INTERNAL_20_SLUGS - INTERNAL_40_MOTORCYCLE_SLUGS
+offroad_slugs -= PRICE_PENDING_SLUGS
 offroad_finance_pages = offroad_slugs.to_h do |slug|
   [slug, read_utf8(File.join(ROOT, "model", slug, "index.html"))]
 end
@@ -1090,7 +1094,7 @@ checks = {
   "home internal term excludes 3 months" => home.include?('id="term" type="range" min="6" max="18" step="6" value="18"') && home_bundle.include?('min:_===`Bank krediti`?3:6') && !home.include?('id="term" type="range" min="3"'),
   "home bank labels exclude uncalculated costs" => home_bundle.include?(BANK_CALCULATOR_NOTE) && home_bundle.include?(BANK_DEBT_LABEL),
   "model finance policy allowlist" => INTERNAL_20_MODEL_NAMES.all? { |model| model_finance_bundle.include?("`#{model}`") } && model_finance_bundle.include?('x=s&&q.has(e)') && model_finance_bundle.include?('[f,p]=(0,r.useState)(x?20:s?40:50)'),
-  "motorcycle finance policy partitions all models" => INTERNAL_20_SLUGS.size == 12 && INTERNAL_40_MOTORCYCLE_SLUGS.size == 17 && (INTERNAL_20_SLUGS & INTERNAL_40_MOTORCYCLE_SLUGS).empty?,
+  "motorcycle finance policy partitions all models" => INTERNAL_20_SLUGS.size == 12 && INTERNAL_40_MOTORCYCLE_SLUGS.size == 17 && PRICE_PENDING_SLUGS == %w[500sr] && (INTERNAL_20_SLUGS & INTERNAL_40_MOTORCYCLE_SLUGS).empty?,
   "eligible motorcycle calculators retain 20 percent" => eligible_finance_pages.all? { |_slug, page| page.include?('min="20" max="80" step="5" value="20"') && page.include?("Daxili ödəniş: 20%-dən başlayan ilkin ödəniş") },
   "other motorcycle calculators require 40 percent" => ineligible_finance_pages.all? { |_slug, page| page.include?('min="40" max="80" step="5" value="40"') && page.include?("Daxili ödəniş: 40%-dən başlayan ilkin ödəniş") && !page.include?("Daxili ödəniş: 20%-dən başlayan ilkin ödəniş") && !page.include?("Daxili ödəniş: 50%-dən başlayan ilkin ödəniş") },
   "offroad calculators retain 50 percent" => offroad_finance_pages.size == 18 && offroad_finance_pages.all? { |_slug, page| page.include?('min="50" max="80" step="5" value="50"') && page.include?("Daxili ödəniş: 50%-dən başlayan ilkin ödəniş") },
@@ -1126,7 +1130,7 @@ checks = {
     html.include?(%(<img class="model-color-image" src="#{source}")) &&
       html.include?(%(<link rel="preload" as="image" href="#{source}"))
   end,
-  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 51 && home.scan(%r{class="model-card"}).size == 47 && home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten.uniq.size == 47 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
+  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 52 && home.scan(%r{class="model-card"}).size == 48 && home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten.uniq.size == 48 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
   "clean model images replace red-label originals" => CLEAN_IMAGE_SLUGS.all? do |slug|
     primary = primary_model_image_source(slug)
     card = card_model_image_source(slug)
@@ -1150,7 +1154,7 @@ checks = {
   "home C5 card" => home.include?('href="/model/cforce-c5/"'),
   "home C5 engine class" => home.include?('CFORCE C5</h3><p>Kvadrosikl<!-- --> · <!-- -->500 cc</p>'),
   "home C5 calculator option" => home.include?('value="CFORCE C5"'),
-  "home catalog count" => home.include?("47<!-- --> aktual model") || home.include?("47 aktual model"),
+  "home catalog count" => home.include?("48<!-- --> aktual model") || home.include?("48 aktual model"),
   "C5 VAT price" => c5.include?("13,900 AZN"),
   "C5 calculator matches VAT price" => c5.include?('<strong>50<!-- -->% · <!-- -->6,950<!-- --> AZN</strong>') && c5.include?('<strong>666<!-- --> <small>AZN / ay</small></strong>') && c5.include?('6%2C950%20AZN%20(50%25)'),
   "C5 chassis tab matches RSC data" => c5.include?(">Şassi və yük</button>") && !c5.include?(">Şassi</button>"),

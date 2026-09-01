@@ -26,6 +26,9 @@ files = %w[
 accessory_cleanup = File.join(__dir__, "remove_accessory_integration.rb")
 abort "Accessory integration cleanup failed" unless system(RbConfig.ruby, accessory_cleanup)
 
+model_500sr = File.join(__dir__, "apply_500sr_model.rb")
+abort "500SR model integration failed" unless system(RbConfig.ruby, model_500sr)
+
 updates = File.join(__dir__, "apply_site_updates.rb")
 abort "Site updates failed" unless system(RbConfig.ruby, updates)
 

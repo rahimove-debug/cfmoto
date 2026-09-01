@@ -36,7 +36,7 @@ end
 def parse_models
   home = File.read(File.join(ROOT, "index.html"), encoding: "UTF-8")
   cards = home.scan(%r{<article class="model-card">.*?</article>}m)
-  abort "Expected 47 homepage model cards, found #{cards.size}" unless cards.size == 47
+  abort "Expected 48 homepage model cards, found #{cards.size}" unless cards.size == 48
 
   cards.map do |card|
     slug = card[%r{href="/model/([^"/]+)/?"}, 1]
@@ -45,7 +45,8 @@ def parse_models
     type, engine = info.to_s.split(/<!-- -->\s*·\s*<!-- -->/, 2).map { |part| html_text(part) }
     segment = html_text(card[%r{<span class="model-type">(.*?)</span>}m, 1])
     price_label = html_text(card[%r{<div class="model-price">.*?<strong>(.*?)</strong>}m, 1])
-    price = price_label[/[\d,]+/].to_s.delete(",").to_i
+    numeric_price = price_label[/[\d,]+/]
+    price = numeric_price&.delete(",")&.to_i
     percent = if INTERNAL_20_SLUGS.include?(slug)
       20
     elsif INTERNAL_40_SLUGS.include?(slug)
@@ -64,7 +65,7 @@ def parse_models
       price: price,
       price_label: price_label,
       percent: percent,
-      down_payment: (price * percent / 100.0).round,
+      down_payment: price && (price * percent / 100.0).round,
       term: term
     }
   end
@@ -237,12 +238,15 @@ comparison_schema = page_schema(
 )
 comparison_rows = models.map do |model|
   type_label = [model[:type], model[:segment], model[:engine]].reject(&:empty?).join(" · ")
+  price = model[:price] ? "#{format_amount(model[:price])} AZN" : "Dəqiqləşdirin"
+  down_payment = model[:down_payment] ? "#{model[:percent]}% · #{format_amount(model[:down_payment])} AZN" : "—"
+  term = model[:price] ? "#{model[:term]} ayadək" : "—"
   <<~ROW.delete("\n")
-    <tr><th scope="row"><a href="/model/#{model[:slug]}/">#{CGI.escapeHTML(model[:name])}</a></th><td>#{CGI.escapeHTML(type_label)}</td><td>#{format_amount(model[:price])} AZN</td><td>#{model[:percent]}% · #{format_amount(model[:down_payment])} AZN</td><td>#{model[:term]} ayadək</td><td><a href="/model/#{model[:slug]}/">Ətraflı →</a></td></tr>
+    <tr><th scope="row"><a href="/model/#{model[:slug]}/">#{CGI.escapeHTML(model[:name])}</a></th><td>#{CGI.escapeHTML(type_label)}</td><td>#{price}</td><td>#{down_payment}</td><td>#{term}</td><td><a href="/model/#{model[:slug]}/">Ətraflı →</a></td></tr>
   ROW
 end.join
 comparison_body = <<~HTML
-  <p class="lead">47 aktual modeli kateqoriya, mühərrik sinfi, nağd qiymət və daxili hissəli ödənişin minimum şərtlərinə görə bir cədvəldə müqayisə edin.</p>
+  <p class="lead">48 aktual modeli kateqoriya, mühərrik sinfi, nağd qiymət və daxili hissəli ödənişin minimum şərtlərinə görə bir cədvəldə müqayisə edin.</p>
   <p class="table-note">Cədvəli mobil telefonda sağa-sola sürüşdürə bilərsiniz. Hesablamalar məlumat xarakterlidir.</p>
   <div class="table-wrap"><table><thead><tr><th>Model</th><th>Kateqoriya</th><th>Nağd qiymət</th><th>Minimum ilkin ödəniş</th><th>Maksimal müddət</th><th>Keçid</th></tr></thead><tbody>#{comparison_rows}</tbody></table></div>
   <div class="notice">Bank faizi və komissiyalar cədvələ daxil deyil. Yekun qiymət və maliyyələşmə şərtləri satış mütəxəssisi tərəfindən dəqiqləşdirilir.</div>
@@ -254,7 +258,7 @@ pages = {
   "servis" => page_html(slug: "servis", title: "CFMOTO Rəsmi Servis Bakı | Texniki Qulluq və Təmir", description: "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir. Servis: +994 10 241 42 99; bazar ertəsi xaric hər gün 10:00–19:00.", eyebrow: "Rəsmi texniki xidmət", heading: "CFMOTO servis, texniki qulluq və təmir", intro: "Diaqnostikadan planlı qulluğa qədər CFMOTO texnikanız üçün rəsmi servis dəstəyi.", body: service_body, schema: service_schema),
   "zemanet" => page_html(slug: "zemanet", title: "CFMOTO Zəmanət Şərtləri | Azərbaycan", description: "CFMOTO motosikletləri üçün 2 il və ya 24.000 km zəmanət məlumatı. ATV və buggy şərtləri model və istifadə rejiminə görə dəqiqləşdirilir.", eyebrow: "Rəsmi məlumat", heading: "CFMOTO zəmanət şərtləri", intro: "Motosiklet, ATV və buggy modelləri üçün zəmanət məlumatını və dəqiqləşdirmə qaydasını öyrənin.", body: warranty_body, schema: warranty_schema),
   "ehtiyat-hisseleri" => page_html(slug: "ehtiyat-hisseleri", title: "CFMOTO Ehtiyat Hissələri və Aksesuarlar | Bakı", description: "CFMOTO modellərinə uyğun orijinal ehtiyat hissələri, yağlar və aksesuarlar. Uyğunluğu dəqiqləşdirmək üçün +994 10 241 42 99 ilə əlaqə saxlayın.", eyebrow: "Modelə uyğun seçim", heading: "CFMOTO ehtiyat hissələri və aksesuarlar", intro: "Orijinal hissələr, qulluq məhsulları və aksesuarlar üçün modelə uyğun məlumat alın.", body: parts_body, schema: parts_schema),
-  "model-muqayisesi" => page_html(slug: "model-muqayisesi", title: "CFMOTO Modellərinin Müqayisəsi | Qiymət və Kateqoriya", description: "CFMOTO motosiklet, kvadrosikl və buggy modellərini kateqoriya, nağd qiymət, ilkin ödəniş və müddətə görə müqayisə edin.", eyebrow: "47 aktual model", heading: "CFMOTO modellərini müqayisə et", intro: "Qiymət, kateqoriya, mühərrik sinfi və maliyyələşmə şərtlərini bir baxışda müqayisə edin.", body: comparison_body, schema: comparison_schema)
+  "model-muqayisesi" => page_html(slug: "model-muqayisesi", title: "CFMOTO Modellərinin Müqayisəsi | Qiymət və Kateqoriya", description: "CFMOTO motosiklet, kvadrosikl və buggy modellərini kateqoriya, nağd qiymət, ilkin ödəniş və müddətə görə müqayisə edin.", eyebrow: "48 aktual model", heading: "CFMOTO modellərini müqayisə et", intro: "Qiymət, kateqoriya, mühərrik sinfi və maliyyələşmə şərtlərini bir baxışda müqayisə edin.", body: comparison_body, schema: comparison_schema)
 }
 
 ContentConfig::SLUGS.each do |slug|

@@ -35,7 +35,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     "Orijinal",
     "Aksesuarlar",
     "2 il / 24.000 km",
-    "47 aktual model",
+    "48 aktual model",
     "<label>Model<select>",
     "<th>Model</th>",
     "children:[`Model`,",
@@ -67,10 +67,10 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     "5 дюйм LCD",
     "12,3 дюйм MMI"
   ].freeze
-  EXPECTED_MODEL_COUNT = 47
-  EXPECTED_AZ_PAGE_COUNT = 56
-  EXPECTED_RU_PAGE_COUNT = 56
-  EXPECTED_SITEMAP_URL_COUNT = 112
+  EXPECTED_MODEL_COUNT = 48
+  EXPECTED_AZ_PAGE_COUNT = 57
+  EXPECTED_RU_PAGE_COUNT = 57
+  EXPECTED_SITEMAP_URL_COUNT = 114
 
   Entry = Struct.new(:kind, :slug, :az_path, :ru_path, :az_file, :ru_file, keyword_init: true)
 
@@ -87,7 +87,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       audit_sitemap
 
       if @errors.empty?
-        puts "Russian audit passed: 56 AZ + 56 RU pages, reciprocal hreflang, 13 locale assets and 112 sitemap URLs"
+        puts "Russian audit passed: 57 AZ + 57 RU pages, reciprocal hreflang, 13 locale assets and 114 sitemap URLs"
         return true
       end
 
@@ -197,8 +197,8 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
           counterpart_path: entry.az_path
         )
         audit_analytics(entry.ru_file, ru_html)
-        audit_react_asset_pair(entry, az_html, ru_html) if react_page?(entry)
-        audit_react_metadata_parity(entry, ru_html) if react_page?(entry)
+        audit_react_asset_pair(entry, az_html, ru_html) if react_page?(entry, az_html)
+        audit_react_metadata_parity(entry, ru_html) if react_page?(entry, az_html)
         audit_no_azerbaijani_letters(entry.ru_file, ru_html)
         audit_no_untranslated_units(entry.ru_file, ru_html)
         audit_no_corrupted_external_urls(entry.ru_file, ru_html)
@@ -678,8 +678,8 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       path.delete_prefix("#{ROOT}/")
     end
 
-    def react_page?(entry)
-      entry.kind == :home || entry.kind == :model
+    def react_page?(entry, html)
+      (entry.kind == :home || entry.kind == :model) && html.include?("__VINEXT_RSC_")
     end
   end
 

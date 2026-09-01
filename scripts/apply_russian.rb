@@ -41,7 +41,7 @@ RU_CONTENT_META = {
   },
   "sravnenie-modeley" => {
     title: "Сравнение моделей CFMOTO | Цены и категории",
-    description: "Сравните 47 моделей CFMOTO по категории, объёму двигателя, цене, первоначальному взносу и максимальному сроку рассрочки.",
+    description: "Сравните 48 моделей CFMOTO по категории, объёму двигателя, цене, первоначальному взносу и максимальному сроку рассрочки.",
     heading: "Сравните модели CFMOTO"
   }
 }.freeze
@@ -348,7 +348,7 @@ def build_sitemap!(page_entries)
 end
 
 page_entries = entries
-abort "Expected 56 Azerbaijani source pages, found #{page_entries.size}" unless page_entries.size == 56
+abort "Expected 57 Azerbaijani source pages, found #{page_entries.size}" unless page_entries.size == 57
 
 FileUtils.rm_rf(RU_ROOT)
 ([RussianConfig::ASSET_RUSSIAN_VERSION] + RussianConfig::LEGACY_RUSSIAN_ASSET_VERSIONS).each do |version|
@@ -406,5 +406,5 @@ end
 build_sitemap!(page_entries)
 
 ru_pages = Dir.glob(File.join(RU_ROOT, "**", "index.html"))
-abort "Expected 56 Russian pages, found #{ru_pages.size}" unless ru_pages.size == 56
+abort "Expected 57 Russian pages, found #{ru_pages.size}" unless ru_pages.size == 57
 puts "Russian site generated: #{ru_pages.size} pages, 13 locale assets and #{page_entries.size * 2} sitemap URLs"

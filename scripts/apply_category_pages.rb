@@ -79,7 +79,7 @@ end
 def models
   home = File.read(File.join(ROOT, "index.html"), encoding: "UTF-8")
   cards = home.scan(%r{<article class="model-card">.*?</article>}m)
-  abort "Expected 47 model cards, found #{cards.size}" unless cards.size == 47
+  abort "Expected 48 model cards, found #{cards.size}" unless cards.size == 48
   cards.map do |card|
     slug = card[%r{href="/model/([^"/]+)/?"}, 1]
     name = html_text(card[%r{<h3>(.*?)</h3>}m, 1])
@@ -195,11 +195,11 @@ all_models = models
 CategoryConfig::SLUGS.each do |slug|
   config = CONFIG.fetch(slug)
   items = all_models.select { |model| model[:type] == config[:type] }
-  expected = { "motosiklet" => 29, "kvadrosikl" => 9, "buggy" => 9 }.fetch(slug)
+  expected = { "motosiklet" => 30, "kvadrosikl" => 9, "buggy" => 9 }.fetch(slug)
   abort "#{slug}: expected #{expected} models, found #{items.size}" unless items.size == expected
   directory = File.join(ROOT, slug)
   FileUtils.mkdir_p(directory)
   File.write(File.join(directory, "index.html"), page_html(slug, config, items), encoding: "UTF-8")
 end
 
-puts "Generated 3 category pages with 47 model cards"
+puts "Generated 3 category pages with 48 model cards"

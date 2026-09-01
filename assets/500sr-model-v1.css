@@ -1,0 +1,29 @@
+/* CFMOTO 500SR standalone model page */
+.model-page[data-model="500sr"] .product-price strong{font-size:clamp(28px,4vw,52px)}
+.model-page[data-model="500sr"] .product-image-wrap{background:linear-gradient(145deg,#eef4f5 0%,#fff 72%)}
+.model-page[data-model="500sr"] .product-image-wrap:after{content:"INLINE FOUR";position:absolute;right:7%;bottom:5%;color:rgba(8,30,33,.08);font-size:clamp(42px,7vw,112px);font-weight:900;letter-spacing:-.07em;pointer-events:none}
+.model-page[data-model="500sr"] .model-color-image{position:relative;z-index:1}
+.model-page[data-model="500sr"] .product-badge{z-index:2}
+.model-500sr-banner{position:relative;min-height:min(62vw,760px);display:flex;align-items:flex-end;background:#071113 url(/gallery/500sr-banner.webp) center/cover no-repeat;color:#fff;overflow:hidden}
+.model-500sr-banner:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.08) 58%),linear-gradient(0deg,rgba(0,0,0,.58),transparent 55%)}
+.model-500sr-banner-copy{position:relative;z-index:1;width:min(720px,92%);padding:clamp(32px,6vw,88px)}
+.model-500sr-banner-copy span{display:inline-flex;border-left:4px solid #00d5cb;padding-left:12px;color:#b8fffb;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.model-500sr-banner-copy h2{margin:18px 0 12px;font-size:clamp(42px,7vw,96px);line-height:.9;letter-spacing:-.06em;text-transform:uppercase}
+.model-500sr-banner-copy p{max-width:580px;margin:0;color:rgba(255,255,255,.82);font-size:clamp(16px,2vw,22px);line-height:1.55}
+.model-static-spec-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#cfd8da;border:1px solid #cfd8da}
+.model-static-spec-group{background:#fff;padding:clamp(22px,3vw,38px)}
+.model-static-spec-group h3{margin:0 0 20px;padding-bottom:14px;border-bottom:2px solid #0fd1c8;font-size:22px}
+.model-static-spec-group dl{margin:0}
+.model-static-spec-group div{display:flex;justify-content:space-between;gap:18px;padding:12px 0;border-bottom:1px solid #e4e9ea}
+.model-static-spec-group div:last-child{border-bottom:0}
+.model-static-spec-group dt{color:#657174;font-size:13px}
+.model-static-spec-group dd{margin:0;color:#0a1719;font-size:13px;font-weight:800;text-align:right}
+.model-500sr-note{margin-top:20px;padding:16px 18px;border-left:4px solid #00cfc4;background:#edf8f8;color:#334144;font-size:13px;line-height:1.6}
+.model-500sr-gallery{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:12px}
+.model-500sr-gallery figure{margin:0;min-height:260px;background:#071113;overflow:hidden}
+.model-500sr-gallery img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.model-500sr-gallery figure:hover img{transform:scale(1.025)}
+.model-500sr-source{margin-top:16px;color:#748083;font-size:12px}
+.model-page[data-model="500sr"] .model-mobile-cta{grid-template-columns:1fr}
+@media (max-width:900px){.model-static-spec-grid{grid-template-columns:1fr}.model-500sr-gallery{grid-template-columns:1fr 1fr}.model-500sr-gallery figure:first-child{grid-column:1/-1}.model-500sr-banner{min-height:620px}}
+@media (max-width:580px){.model-page[data-model="500sr"] .product-image-wrap:after{display:none}.model-500sr-banner{min-height:520px;background-position:64% center}.model-500sr-banner-copy{padding:30px 20px}.model-500sr-gallery{grid-template-columns:1fr}.model-500sr-gallery figure:first-child{grid-column:auto}.model-500sr-gallery figure{min-height:220px}.model-static-spec-group{padding:22px 18px}}
