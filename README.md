@@ -21,7 +21,7 @@ Build zamanı beş yüngül SEO məlumat səhifəsi də yaradılır:
 
 Məhsulları, qiymətləri, izahlı mətni və FAQ bölməsini ehtiva edən ayrıca kateqoriya səhifələri yaradılır:
 
-- `/motosiklet/` — 29 motosiklet
+- `/motosiklet/` — 30 motosiklet
 - `/kvadrosikl/` — 9 ATV
 - `/buggy/` — 9 buggy/UTV
 

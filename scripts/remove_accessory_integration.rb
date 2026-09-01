@@ -13,13 +13,14 @@ end
 
 home_path = File.join(ROOT, "index.html")
 home = read(home_path)
-%w[V4 V3 V2 V1].each do |version|
-  home.gsub!("/assets/page-CfmotoHomeNews#{version}.js", "/assets/page-CfmotoAccessoryV15.js")
-  home.gsub!("/assets/index-CfmotoHomeNews#{version}.js", "/assets/index-CfmotoAccessoryV15.js")
-  home.gsub!("/assets/layout-segment-context-CfmotoHomeNews#{version}.js", "/assets/layout-segment-context-CfmotoAccessoryV15.js")
-  home.gsub!("/assets/link-CfmotoHomeNews#{version}.js", "/assets/link-CfmotoAccessoryV15.js")
-  home.gsub!("/assets/router-CfmotoHomeNews#{version}.js", "/assets/router-CfmotoAccessoryV15.js")
-  home.gsub!("/assets/ProductMegaMenu-CfmotoHomeNews#{version}.js", "/assets/ProductMegaMenu-CfmotoAccessoryV15.js")
+%w[V5 V4 V3 V2 V1].each do |version|
+  accessory_version = version == "V5" ? "V16" : "V15"
+  home.gsub!("/assets/page-CfmotoHomeNews#{version}.js", "/assets/page-CfmotoAccessory#{accessory_version}.js")
+  home.gsub!("/assets/index-CfmotoHomeNews#{version}.js", "/assets/index-CfmotoAccessory#{accessory_version}.js")
+  home.gsub!("/assets/layout-segment-context-CfmotoHomeNews#{version}.js", "/assets/layout-segment-context-CfmotoAccessory#{accessory_version}.js")
+  home.gsub!("/assets/link-CfmotoHomeNews#{version}.js", "/assets/link-CfmotoAccessory#{accessory_version}.js")
+  home.gsub!("/assets/router-CfmotoHomeNews#{version}.js", "/assets/router-CfmotoAccessory#{accessory_version}.js")
+  home.gsub!("/assets/ProductMegaMenu-CfmotoHomeNews#{version}.js", "/assets/ProductMegaMenu-CfmotoAccessory#{accessory_version}.js")
 end
 home.gsub!(%(<link rel="stylesheet" href="/assets/home-news-v1.css"/>), "")
 home.gsub!(%(<a href="/xeberler/">Xəbərlər</a>), "")
@@ -27,9 +28,10 @@ home.sub!(
   %r{<section class="home-news section".*?</section><section class="service section"}m,
   '<section class="service section"'
 )
+home.gsub!("/assets/page-CfmotoAccessoryV16.js", "/assets/page-CfmotoFinanceFixV12.js")
 home.gsub!("/assets/page-CfmotoAccessoryV15.js", "/assets/page-CfmotoFinanceFixV12.js")
 home.gsub!("/assets/page-CfmotoAccessoryV14.js", "/assets/page-CfmotoFinanceFixV11.js")
-%w[V15 V14].each do |version|
+%w[V16 V15 V14].each do |version|
   home.gsub!("/assets/index-CfmotoAccessory#{version}.js", "/assets/index-CfmotoPolicyFixV10.js")
   home.gsub!("/assets/layout-segment-context-CfmotoAccessory#{version}.js", "/assets/layout-segment-context-CfmotoPolicyFixV10.js")
   home.gsub!("/assets/link-CfmotoAccessory#{version}.js", "/assets/link-CfmotoPolicyFixV10.js")
@@ -70,12 +72,12 @@ bundle.sub!(
   '(0,c.jsxs)(`section`,{className:`service section`'
 )
 write(bundle_path, bundle)
-%w[CfmotoAccessoryV15 CfmotoAccessoryV14].each do |version|
+%w[CfmotoAccessoryV16 CfmotoAccessoryV15 CfmotoAccessoryV14].each do |version|
   %w[page index layout-segment-context link router ProductMegaMenu].each do |asset|
     FileUtils.rm_f(File.join(ROOT, "assets", "#{asset}-#{version}.js"))
   end
 end
-%w[V4 V3 V2 V1].each do |version|
+%w[V5 V4 V3 V2 V1].each do |version|
   %w[page index layout-segment-context link router ProductMegaMenu].each do |asset|
     FileUtils.rm_f(File.join(ROOT, "assets", "#{asset}-CfmotoHomeNews#{version}.js"))
   end
@@ -93,7 +95,7 @@ Dir.glob(File.join(ROOT, "model", "*", "index.html")).each do |path|
     "/aksesuar-konfiquratoru/?model=#{slug}&bike=0&lock=1"
   ]
   html = read(path)
-  %w[V15 V14].each do |version|
+  %w[V16 V15 V14].each do |version|
     html.gsub!("/assets/index-CfmotoAccessory#{version}.js", "/assets/index-CfmotoPolicyFixV10.js")
     html.gsub!("/assets/layout-segment-context-CfmotoAccessory#{version}.js", "/assets/layout-segment-context-CfmotoPolicyFixV10.js")
     html.gsub!("/assets/link-CfmotoAccessory#{version}.js", "/assets/link-CfmotoPolicyFixV10.js")

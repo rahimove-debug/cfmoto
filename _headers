@@ -11,6 +11,24 @@
 /model/*
   Cache-Control: public, max-age=0, must-revalidate
 
+/motosiklet*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/kvadrosikl*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/buggy*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ru/motocikly*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ru/kvadrocikly*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/ru/buggy*
+  Cache-Control: public, max-age=0, must-revalidate
+
 /xeberler/*
   Cache-Control: public, max-age=0, must-revalidate
 

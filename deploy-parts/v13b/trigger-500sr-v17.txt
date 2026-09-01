@@ -1,1 +1,0 @@
-Trigger 500SR visibility and color-selector deployment v17.

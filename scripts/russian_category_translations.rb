@@ -53,7 +53,7 @@ module RussianCategoryTranslations
     "Uyğun modeli seçin" => "Выберите подходящую модель",
     "aktual model və nağd satış qiyməti" => "актуальных моделей и цен при оплате наличными",
     "9 aktual buggy və UTV" => "9 актуальных моделей багги и UTV",
-    "29 aktual motosiklet" => "29 актуальных мотоциклов",
+    "30 aktual motosiklet" => "30 актуальных мотоциклов",
     "9 aktual kvadrosikl" => "9 актуальных квадроциклов",
     "Naviqasiya yolu" => "Навигация",
     "Motosikletlər model siyahısı" => "Список моделей мотоциклов",

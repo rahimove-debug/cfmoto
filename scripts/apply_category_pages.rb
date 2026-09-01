@@ -23,7 +23,7 @@ CONFIG = {
     type: "Motosiklet",
     title: "Motosiklet Satışı və Qiymətləri | CFMOTO Azerbaijan",
     description: "CFMOTO motosiklet modelləri və Azərbaycandakı nağd satış qiymətləri. Naked, sport, touring, adventure, cruiser və scooter seçimlərini müqayisə edin.",
-    eyebrow: "29 aktual motosiklet",
+    eyebrow: "30 aktual motosiklet",
     heading: "CFMOTO motosiklet satışı və qiymətləri",
     intro: "Şəhər, touring, adventure, sport və gündəlik istifadə üçün CFMOTO motosikletlərini aktual qiymətlərlə bir səhifədə müqayisə edin.",
     body_heading: "Hansı CFMOTO motosikleti sizə uyğundur?",

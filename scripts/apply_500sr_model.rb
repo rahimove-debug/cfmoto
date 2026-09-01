@@ -137,7 +137,7 @@ def custom_page(template)
     ]
   }
 
-  <<~HTML
+  page = <<~HTML
     <!DOCTYPE html><html lang="az"><head>#{tracking_head(template)}
     <meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="preload" href="/cfmoto-logo-black.png" as="image"/><link rel="preload" as="image" href="/models/500sr.webp" fetchpriority="high"/>
@@ -163,10 +163,21 @@ def custom_page(template)
     <section class="product-cta section"><div><p class="eyebrow"><span></span> CFMOTO Azerbaijan</p><h2>500SR üçün fərdi təklif al.</h2><p>Satış, rəng, komplektasiya, çatdırılma və ödəniş imkanlarını satış komandamızla dəqiqləşdirin.</p></div><a class="button primary" href="#{WHATSAPP_URL}" target="_blank" rel="noreferrer">WhatsApp-la əlaqə <span>↗︎</span></a></section>
     #{footer}<div class="model-mobile-cta"><a href="#odenis">Aylıq ödəniş</a></div><a class="whatsapp model-whatsapp" href="#{WHATSAPP_URL}" target="_blank" rel="noreferrer" aria-label="WhatsApp ilə əlaqə">WA</a></main></body></html>
   HTML
+
+  page = page.dup
+  color_selector = <<~HTML.delete("\n")
+    <div class="product-image-wrap"><span class="product-badge">Yeni</span><img class="model-color-image" src="/models/500sr.webp" data-500sr-color-image alt="500SR — Galaxy Grey rəngi" width="882" height="588" loading="eager" fetchpriority="high"/><div class="model-colors" data-500sr-colors aria-label="CFMOTO Global rəsmi rəng seçimləri"><div class="model-color-heading"><small>CFMOTO rəsmi rəngləri</small><strong data-500sr-color-name aria-live="polite">Galaxy Grey</strong></div><div class="model-color-options" role="group" aria-label="Model rəngləri"><button type="button" class="active" aria-pressed="true" aria-label="Galaxy Grey rəngini göstər" title="Galaxy Grey" data-500sr-color-button data-name="Galaxy Grey" data-image="/models/500sr.webp" data-alt="500SR — Galaxy Grey rəngi"><i style="background-color:#6b6b70"></i><span>Galaxy Grey</span></button><button type="button" aria-pressed="false" aria-label="Nebula White rəngini göstər" title="Nebula White" data-500sr-color-button data-name="Nebula White" data-image="/models/500sr-nebula-white.webp" data-alt="500SR — Nebula White rəngi"><i style="background-color:#d9d9d9"></i><span>Nebula White</span></button></div></div></div>
+  HTML
+  product_image = %r{<div class="product-image-wrap"><span class="product-badge">Yeni</span><img class="model-color-image" src="/models/500sr\.webp".*?</div>}m
+  abort "500SR product image anchor not found" unless page.scan(product_image).size == 1
+  page.sub!(product_image, color_selector)
+  page.sub!("</head>", %(<script defer src="/assets/500sr-colors-v1.js"></script></head>))
+  page
 end
 
 required_images = %w[
   models/500sr.webp
+  models/500sr-nebula-white.webp
   models/cards/500sr.webp
   gallery/500sr-banner.webp
   gallery/500sr-1.webp

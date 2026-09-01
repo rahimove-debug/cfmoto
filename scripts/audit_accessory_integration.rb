@@ -65,27 +65,33 @@ errors << "AZ homepage promo is missing" unless home.include?('class="accessory-
 errors << "AZ homepage sales hero CTA is missing" unless home.include?('class="button accessory-hero-button"')
 errors << "AZ homepage configurator link is missing" unless home.scan('href="/aksesuar-konfiquratoru/"').size >= 3
 errors << "AZ homepage accessory stylesheet is missing" unless home.include?('/assets/accessory-entry-v1.css')
-errors << "AZ homepage cache-busted bundle is missing" unless home.include?('/assets/page-CfmotoAccessoryV15.js')
-errors << "AZ homepage cache-busted app loader is missing" unless home.scan('/assets/index-CfmotoAccessoryV15.js').size >= 2
+errors << "AZ homepage cache-busted bundle is missing" unless home.include?('/assets/page-CfmotoAccessoryV16.js')
+errors << "AZ homepage cache-busted app loader is missing" unless home.scan('/assets/index-CfmotoAccessoryV16.js').size >= 2
 
 ru_home = read(File.join(ROOT, "ru", "index.html"))
 errors << "RU homepage configurator link is missing" unless ru_home.scan('href="/aksesuar-konfiquratoru/"').size >= 2
 
-home_bundle = read(File.join(ROOT, "assets", "page-CfmotoAccessoryV15.js"))
-app_loader = read(File.join(ROOT, "assets", "index-CfmotoAccessoryV15.js"))
+home_bundle = read(File.join(ROOT, "assets", "page-CfmotoAccessoryV16.js"))
+app_loader = read(File.join(ROOT, "assets", "index-CfmotoAccessoryV16.js"))
 errors << "AZ hydrated promo is missing" unless home_bundle.include?('className:`accessory-promo section`')
 errors << "AZ hydrated sales hero CTA is missing" unless home_bundle.include?('button accessory-hero-button')
 errors << "AZ hydrated navigation link is missing" unless home_bundle.include?('[`Aksesuarlar`,`/aksesuar-konfiquratoru/`]')
-errors << "AZ app loader does not load cache-busted home bundle" unless app_loader.include?('assets/page-CfmotoAccessoryV15.js')
+errors << "AZ app loader does not load cache-busted home bundle" unless app_loader.include?('assets/page-CfmotoAccessoryV16.js')
 errors << "AZ app loader still references stale home bundle" if app_loader.include?('page-CfmotoFinanceFixV12.js')
 %w[
-  layout-segment-context-CfmotoAccessoryV15.js
-  link-CfmotoAccessoryV15.js
-  router-CfmotoAccessoryV15.js
-  ProductMegaMenu-CfmotoAccessoryV15.js
+  layout-segment-context-CfmotoAccessoryV16.js
+  link-CfmotoAccessoryV16.js
+  router-CfmotoAccessoryV16.js
+  ProductMegaMenu-CfmotoAccessoryV16.js
 ].each do |asset|
   errors << "Missing cache-busted dependency: #{asset}" unless File.file?(File.join(ROOT, "assets", asset))
 end
+mega_menu = read(File.join(ROOT, "assets", "ProductMegaMenu-CfmotoAccessoryV16.js"))
+mega_menu_slugs = mega_menu.scan(/\{slug:`([^`]+)`/).flatten
+model_500sr_index = mega_menu_slugs.index("500sr")
+model_500sr_voom_index = mega_menu_slugs.index("500sr-voom")
+errors << "AZ hydrated mega menu must contain 500SR exactly once" unless mega_menu_slugs.count("500sr") == 1
+errors << "AZ hydrated mega menu must place 500SR immediately before 500SR VOOM" unless model_500sr_index && model_500sr_voom_index && model_500sr_index + 1 == model_500sr_voom_index
 errors << "AZ app loader still references stale layout" if app_loader.include?('layout-segment-context-CfmotoPolicyFixV10.js')
 errors << "AZ app loader still references stale link" if app_loader.include?('link-CfmotoPolicyFixV10.js')
 errors << "AZ app loader still references stale mega menu" if app_loader.include?('ProductMegaMenu-CfmotoPolicyFixV10.js')
@@ -145,11 +151,11 @@ model_pages.each do |path|
   errors << "#{slug}: desktop accessory CTA is missing" unless html.include?(%(class="button accessory-model-cta" href="#{deep_link}"))
   errors << "#{slug}: mobile accessory CTA is missing" unless html.include?(%(<div class="model-mobile-cta"><a href="#{deep_link}">Aksesuar seç</a>))
   errors << "#{slug}: accessory stylesheet is missing" unless html.include?('/assets/accessory-entry-v1.css')
-  errors << "#{slug}: cache-busted app loader is missing" unless html.scan('/assets/index-CfmotoAccessoryV15.js').size >= 2
+  errors << "#{slug}: cache-busted app loader is missing" unless html.scan('/assets/index-CfmotoAccessoryV16.js').size >= 2
   errors << "#{slug}: stale immutable app loader remains" if html.include?('/assets/index-CfmotoPolicyFixV10.js')
-  errors << "#{slug}: cache-busted layout is missing" unless html.include?('/assets/layout-segment-context-CfmotoAccessoryV15.js')
-  errors << "#{slug}: cache-busted link module is missing" unless html.include?('/assets/link-CfmotoAccessoryV15.js')
-  errors << "#{slug}: cache-busted mega menu is missing" unless html.include?('/assets/ProductMegaMenu-CfmotoAccessoryV15.js')
+  errors << "#{slug}: cache-busted layout is missing" unless html.include?('/assets/layout-segment-context-CfmotoAccessoryV16.js')
+  errors << "#{slug}: cache-busted link module is missing" unless html.include?('/assets/link-CfmotoAccessoryV16.js')
+  errors << "#{slug}: cache-busted mega menu is missing" unless html.include?('/assets/ProductMegaMenu-CfmotoAccessoryV16.js')
 end
 
 {

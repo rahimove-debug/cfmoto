@@ -350,6 +350,16 @@ category_expectations.each do |slug, expectation|
   errors << "/#{slug}/ is missing FAQ structured data" unless category.include?('"@type":"FAQPage"')
   errors << "/#{slug}/ is missing collection structured data" unless category.include?('"@type":"CollectionPage"')
   errors << "/#{slug}/ is missing visible FAQ content" unless category.scan("<details>").size >= 4
+  if slug == "motosiklet"
+    category_model_slugs = category.scan(%r{<article class="category-model-card">.*?</article>}m).map do |card|
+      card[%r{href="/model/([^/]+)/"}, 1]
+    end.compact
+    model_500sr_position = category_model_slugs.index("500sr")
+    model_500sr_voom_position = category_model_slugs.index("500sr-voom")
+    errors << "/motosiklet/ must contain 500SR exactly once" unless category_model_slugs.count("500sr") == 1
+    errors << "/motosiklet/ must place 500SR immediately before 500SR VOOM" unless model_500sr_position && model_500sr_voom_position && model_500sr_position + 1 == model_500sr_voom_position
+    errors << "/motosiklet/ must identify 30 current motorcycles" unless category.include?("30 aktual motosiklet")
+  end
   CategoryConfig::SLUGS.each do |linked_slug|
     errors << "/#{slug}/ is missing internal link /#{linked_slug}/" unless category.include?(%(href="/#{linked_slug}/"))
   end
@@ -384,9 +394,16 @@ Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.each do |path|
   slug = File.basename(File.dirname(path))
   content = File.read(path, encoding: "UTF-8")
   primary = expected_primary_model_image(slug)
-  errors << "#{slug}: primary model image is not local" unless content.include?(%(<img class="model-color-image" src="#{primary}"))
+  errors << "#{slug}: primary model image is not local" unless content.match?(%r{<img class="model-color-image"[^>]*src="#{Regexp.escape(primary)}"})
   errors << "#{slug}: primary model preload is not local" unless content.include?(%(<link rel="preload" as="image" href="#{primary}"))
 end
+
+model_500sr_page = File.read(File.join(ROOT, "model", "500sr", "index.html"), encoding: "UTF-8")
+errors << "500SR color selector is missing" unless model_500sr_page.include?('data-500sr-colors') && model_500sr_page.scan('data-500sr-color-button').size == 2
+errors << "500SR official Galaxy Grey color is missing" unless model_500sr_page.include?('data-name="Galaxy Grey"') && model_500sr_page.include?('data-image="/models/500sr.webp"')
+errors << "500SR official Nebula White color is missing" unless model_500sr_page.include?('data-name="Nebula White"') && model_500sr_page.include?('data-image="/models/500sr-nebula-white.webp"')
+errors << "500SR color-selector script is missing" unless model_500sr_page.include?('/assets/500sr-colors-v1.js') && File.file?(File.join(ROOT, "assets", "500sr-colors-v1.js"))
+errors << "500SR Nebula White image is missing" unless File.file?(File.join(ROOT, "models", "500sr-nebula-white.webp"))
 
 public_code_paths = [
   *Dir.glob(File.join(ROOT, "**", "*.html")),
