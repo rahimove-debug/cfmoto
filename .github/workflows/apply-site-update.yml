@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: cfmoto-site-update-v16
+  group: cfmoto-site-update-v17
   cancel-in-progress: false
 
 jobs:
@@ -27,9 +27,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          parts_dir="deploy-parts/v16"
-          archive="/tmp/cfmoto-500sr-v16.tar.gz"
-          overlay="deploy-overlay/v16.tar.gz"
+          parts_dir="deploy-parts/v17"
+          archive="/tmp/cfmoto-500sr-v17.tar.gz"
+          overlay="deploy-overlay/v17.tar.gz"
           apply_workflow=".github/workflows/apply-site-update.yml"
           import_workflow=".github/workflows/import-site.yml"
 
@@ -43,12 +43,12 @@ jobs:
 
           if [[ -d "$parts_dir" ]]; then
             cat "$parts_dir"/part-* | base64 --decode > "$archive"
-            echo "224be2fd9ebd46b5eb1082da0b4bfbf5966fc3c28453045520e330e519cb404a  $archive" | sha256sum -c -
+            echo "b357e7a09c259ec19f05d9264c6ec0561395204256bc27a6addd5350da0dc5c2  $archive" | sha256sum -c -
             tar -xzf "$archive"
           fi
 
           if [[ -f "$overlay" ]]; then
-            echo "224be2fd9ebd46b5eb1082da0b4bfbf5966fc3c28453045520e330e519cb404a  $overlay" | sha256sum -c -
+            echo "b357e7a09c259ec19f05d9264c6ec0561395204256bc27a6addd5350da0dc5c2  $overlay" | sha256sum -c -
             tar -xzf "$overlay"
           fi
 
@@ -64,5 +64,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --quiet && exit 0
-          git commit -m "Add 500SR price, finance and configurator"
+          git commit -m "Fix 500SR visibility and add color selector"
           git push
