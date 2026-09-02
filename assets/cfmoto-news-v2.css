@@ -308,6 +308,11 @@ figcaption { padding: 13px 0 0; color: #7c8585; font-size: 12px; line-height: 1.
 .news-index-hero .news-label { color: var(--news-cyan); }
 .news-index-hero h1 { max-width: 850px; margin: 0; font-size: clamp(58px, 8vw, 112px); line-height: .9; letter-spacing: -.06em; text-transform: uppercase; }
 .news-index-hero p:last-child { max-width: 650px; margin: 26px 0 0; color: rgba(255,255,255,.7); font-size: 19px; line-height: 1.6; }
+.news-index-guide { padding: 58px 0; background: var(--news-paper); border-bottom: 1px solid var(--news-line); }
+.news-index-guide h2 { max-width: 760px; margin: 0; font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -.04em; text-transform: uppercase; }
+.news-index-guide-copy { margin-top: 28px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; }
+.news-index-guide-copy p { margin: 0; color: #425051; font-size: 16px; line-height: 1.65; }
+.news-index-guide-copy a { color: var(--news-cyan-dark); font-weight: 800; text-underline-offset: 3px; }
 .news-list { padding: 74px 0 100px; background: #fff; }
 .news-list-head { margin-bottom: 29px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
 .news-list-head h2 { margin: 0; font-size: clamp(36px, 4vw, 54px); line-height: 1; letter-spacing: -.045em; text-transform: uppercase; }
@@ -335,6 +340,7 @@ figcaption { padding: 13px 0 0; color: #7c8585; font-size: 12px; line-height: 1.
   .facts .share { grid-column: 1 / -1; }
   .gallery-grid { grid-template-rows: repeat(2, 250px); }
   .article-footer-inner { align-items: flex-start; flex-direction: column; }
+  .news-index-guide-copy { grid-template-columns: 1fr; gap: 18px; }
   .news-card { grid-template-columns: 1fr; }
   .news-card-media { min-height: 390px; }
 }

@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require "cgi"
 require "json"
 require_relative "category_config"
 require_relative "content_config"
@@ -19,6 +20,7 @@ GTM_BODY_START = "<!-- CFMOTO:GTM:BODY:START -->"
 GTM_BODY_END = "<!-- CFMOTO:GTM:BODY:END -->"
 GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
 META_PIXEL_NOSCRIPT = "https://www.facebook.com/tr?id=#{META_PIXEL_ID}&ev=PageView&noscript=1"
+MIN_INFORMATIONAL_MAIN_WORDS = 220
 
 def expected_primary_model_image(slug)
   suffix = CLEAN_IMAGE_SLUGS.include?(slug) ? "-clean" : ""
@@ -33,6 +35,15 @@ def walk_json(value, &block)
   when Array
     value.each { |nested| walk_json(nested, &block) }
   end
+end
+
+def visible_main_word_count(html)
+  main = html[%r{<main\b[^>]*>.*?</main>}mi] || html
+  text = main
+    .gsub(%r{<(script|style)\b[^>]*>.*?</\1>}mi, " ")
+    .gsub(/<!--.*?-->/m, " ")
+    .gsub(/<[^>]+>/, " ")
+  CGI.unescapeHTML(text).scan(/[[:alpha:]]+/u).size
 end
 
 errors = []
@@ -307,6 +318,10 @@ content_expectations.each do |slug, expected_texts|
   content = File.read(path, encoding: "UTF-8")
   expected_texts.each do |text|
     errors << "/#{slug} is missing required content: #{text}" unless content.include?(text)
+  end
+  if %w[servis zemanet ehtiyat-hisseleri].include?(slug)
+    word_count = visible_main_word_count(content)
+    errors << "/#{slug}/ main content is too short: #{word_count} words (minimum #{MIN_INFORMATIONAL_MAIN_WORDS})" if word_count < MIN_INFORMATIONAL_MAIN_WORDS
   end
   ContentConfig::SLUGS.each do |linked_slug|
     errors << "/#{slug}/ is missing internal link /#{linked_slug}/" unless content.include?(%(href="/#{linked_slug}/"))

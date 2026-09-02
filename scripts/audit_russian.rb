@@ -71,6 +71,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
   EXPECTED_AZ_PAGE_COUNT = 57
   EXPECTED_RU_PAGE_COUNT = 57
   EXPECTED_SITEMAP_URL_COUNT = 114
+  MIN_INFORMATIONAL_MAIN_WORDS = 220
 
   Entry = Struct.new(:kind, :slug, :az_path, :ru_path, :az_file, :ru_file, keyword_init: true)
 
@@ -203,6 +204,10 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
         audit_no_untranslated_units(entry.ru_file, ru_html)
         audit_no_corrupted_external_urls(entry.ru_file, ru_html)
         audit_russian_navigation(entry, ru_html)
+        if entry.kind == :content && %w[servis zemanet ehtiyat-hisseleri].include?(entry.slug)
+          word_count = visible_main_word_count(ru_html)
+          @errors << "#{relative(entry.ru_file)}: main content is too short: #{word_count} words (minimum #{MIN_INFORMATIONAL_MAIN_WORDS})" if word_count < MIN_INFORMATIONAL_MAIN_WORDS
+        end
       end
     end
 
@@ -661,6 +666,15 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
 
     def strip_tags(text)
       CGI.unescapeHTML(text.gsub(%r{<[^>]+>}, ""))
+    end
+
+    def visible_main_word_count(html)
+      main = html[%r{<main\b[^>]*>.*?</main>}mi] || html
+      text = main
+        .gsub(%r{<(script|style)\b[^>]*>.*?</\1>}mi, " ")
+        .gsub(/<!--.*?-->/m, " ")
+        .gsub(/<[^>]+>/, " ")
+      CGI.unescapeHTML(text).scan(/[[:alpha:]]+/u).size
     end
 
     def read(path)

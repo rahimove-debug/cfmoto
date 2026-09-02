@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "cgi"
 require "json"
 require_relative "domain_config"
 require_relative "news_config"
@@ -16,6 +17,7 @@ HOME_LINK_PATH = File.join(ROOT, "assets", "link-CfmotoHomeNewsV5.js")
 HOME_ROUTER_PATH = File.join(ROOT, "assets", "router-CfmotoHomeNewsV5.js")
 HOME_MEGA_PATH = File.join(ROOT, "assets", "ProductMegaMenu-CfmotoHomeNewsV5.js")
 errors = []
+MIN_NEWS_INDEX_MAIN_WORDS = 220
 
 EXPECTED_PRODUCT_OFFERS = {
   "CFMOTO 450MT" => ["11990", "https://cfmoto.az/model/450mt/"],
@@ -33,6 +35,15 @@ def collect_schema_nodes(value, nodes)
   when Array
     value.each { |child| collect_schema_nodes(child, nodes) }
   end
+end
+
+def visible_main_word_count(html)
+  main = html[%r{<main\b[^>]*>.*?</main>}mi] || html
+  text = main
+    .gsub(%r{<(script|style)\b[^>]*>.*?</\1>}mi, " ")
+    .gsub(/<!--.*?-->/m, " ")
+    .gsub(/<[^>]+>/, " ")
+  CGI.unescapeHTML(text).scan(/[[:alpha:]]+/u).size
 end
 
 unless File.file?(STYLE_PATH)
@@ -190,6 +201,8 @@ if File.file?(listing_path)
   article_positions = NewsConfig::ARTICLES.map { |article| listing.index(%(href="#{article.fetch(:path)}")) }
   errors << "News listing must declare #{article_count} articles" unless listing.include?(%Q{"numberOfItems":#{article_count}}) && listing.include?("#{article_count} məqalə")
   errors << "News listing must render #{article_count} story cards" unless listing.scan('class="news-card"').size == article_count
+  listing_word_count = visible_main_word_count(listing)
+  errors << "News listing main content is too short: #{listing_word_count} words (minimum #{MIN_NEWS_INDEX_MAIN_WORDS})" if listing_word_count < MIN_NEWS_INDEX_MAIN_WORDS
   errors << "News listing stories are missing or out of newest-first order" unless article_positions.all? && article_positions.each_cons(2).all? { |first, second| first < second }
   errors << "News listing featured image must be eager and intrinsic" unless listing.match?(%r{<img src="/gallery/romaniacs-2026-450mt-hero\.webp"[^>]*width="896"[^>]*height="600"[^>]*loading="eager"[^>]*fetchpriority="high"}i)
   NewsConfig::ARTICLES.drop(1).each do |article|
