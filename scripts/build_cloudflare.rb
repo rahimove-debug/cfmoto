@@ -141,3 +141,8 @@ puts "Cloudflare bundle ready: #{html_count} HTML files in dist/"
 # imported catalog in the source snapshot for category/SEO generation.
 abort "Sales improvements failed" unless system("node", File.join(__dir__, "apply_sales_improvements.mjs"))
 abort "Sales regression audit failed" unless system("node", File.join(__dir__, "audit_sales_improvements.mjs"))
+
+# Keep the imported configurator as the audited source; publish its resolved
+# catalog in model-sized files only after all local price/image patches ran.
+abort "Configurator improvements failed" unless system("node", File.join(__dir__, "apply_configurator_improvements.mjs"))
+abort "Configurator regression audit failed" unless system("node", File.join(__dir__, "audit_configurator_improvements.mjs"))

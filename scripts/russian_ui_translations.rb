@@ -2,6 +2,12 @@
 
 module RussianUiTranslations
   MAP = {
+    "Kredit<br/>kalkulyatoru." => "Кредитный<br/>калькулятор.",
+    "CFMOTO 500SR yolda" => "CFMOTO 500SR на дороге",
+    "500SR — Galaxy Grey rəngi" => "500SR — цвет Galaxy Grey",
+    "500SR — Nebula White rəngi" => "500SR — цвет Nebula White",
+    "Galaxy Grey rəngini göstər" => "Показать цвет Galaxy Grey",
+    "Nebula White rəngini göstər" => "Показать цвет Nebula White",
     "Salam, CFMOTO ${e} üçün ${c===`internal`?`daxili hissəli ödəniş`:`bank krediti`} təklifi istəyirəm. İlkin ödəniş: ${a(y.downPayment)} AZN (${f}%), müddət: ${u} ay." => "Здравствуйте! Меня интересует ${c===`internal`?`рассрочка`:`банковский кредит`} на CFMOTO ${e}. Первоначальный взнос: ${a(y.downPayment)} AZN (${f}%), срок: ${u} мес.",
     "Salam, ${h} üçün ${_.toLowerCase()} barədə təklif almaq istəyirəm." => "Здравствуйте! Хочу получить предложение по ${_.toLowerCase()} для ${h}.",
     "${e.type} kateqoriyasını göstər" => "${e.key===`moto`?`Показать категорию мотоциклов`:e.key===`atv`?`Показать категорию квадроциклов`:`Показать категорию багги`}",

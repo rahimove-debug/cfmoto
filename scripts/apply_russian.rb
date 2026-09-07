@@ -201,8 +201,9 @@ def set_russian_metadata!(html, entry, source_html)
   when :model
     model = source_html[%r{<h1 class="[^"]*\bproduct-title\b[^"]*">(.*?)</h1>}m, 1]
     abort "#{entry[:slug]}: missing product title" unless model
+    title_model = model.sub(/\ACFMOTO\s+/i, "")
     [
-      "#{model} | CFMOTO Азербайджан",
+      "CFMOTO #{title_model} — цена и характеристики",
       "#{model}: официальная модель CFMOTO в Азербайджане. Характеристики, цена, условия оплаты, фотографии и консультация."
     ]
   when :content

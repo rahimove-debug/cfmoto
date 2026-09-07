@@ -26,6 +26,8 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
   META_PIXEL_NOSCRIPT = "https://www.facebook.com/tr?id=#{META_PIXEL_ID}&ev=PageView&noscript=1"
   AZERBAIJANI_SPECIAL_LETTERS = /[ƏəĞğİıÖöÜüÇçŞş]/
   AZERBAIJANI_ASCII_FRAGMENTS = [
+    "kalkulyatoru",
+    "CFMOTO 500SR yolda",
     "Naviqasiya yolu",
     "aktual motosiklet",
     "aktual kvadrosikl",
@@ -214,6 +216,19 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     def audit_page(entry, html, language:, own_path:, counterpart_path:)
       file = language == "az" ? entry.az_file : entry.ru_file
       label = relative(file)
+
+      if entry.kind == :model && language == "ru"
+        model = html[%r{<h1 class="[^"]*\bproduct-title\b[^"]*">(.*?)</h1>}m, 1]
+        model = CGI.unescapeHTML(model.to_s.gsub(/<[^>]+>/, "")).strip.sub(/\ACFMOTO\s+/i, "")
+        expected_title = CGI.escapeHTML("CFMOTO #{model} — цена и характеристики")
+        @errors << "#{label}: model title must describe price and specifications in Russian" unless !model.empty? && html.include?("<title>#{expected_title}</title>")
+        @errors << "#{label}: social titles must match the model title" unless html.include?(%(property="og:title" content="#{expected_title}")) && html.include?(%(name="twitter:title" content="#{expected_title}"))
+      end
+      if entry.kind == :category
+        intro = html[%r{<h1>.*?</h1><p>(.*?)</p></section>}m, 1]
+        summary = html[%r{<div class="category-summary"><p class="lead">(.*?)</p>}m, 1]
+        @errors << "#{label}: category summary must differ from the introduction" unless intro && summary && !summary.empty? && summary != intro
+      end
       own_url = absolute(own_path)
       az_url = absolute(entry.az_path)
       ru_url = absolute(entry.ru_path)

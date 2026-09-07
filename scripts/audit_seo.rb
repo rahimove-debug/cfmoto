@@ -80,6 +80,19 @@ html_paths.each do |path|
   errors << "#{relative}: og:image must use #{SITE_ORIGIN}" unless og_image&.start_with?("#{SITE_ORIGIN}/")
   errors << "#{relative}: twitter:image must use #{SITE_ORIGIN}" unless twitter_image&.start_with?("#{SITE_ORIGIN}/")
 
+  if relative.start_with?("model/")
+    model = html[%r{<h1 class="[^"]*\bproduct-title\b[^"]*">(.*?)</h1>}m, 1]
+    model = CGI.unescapeHTML(model.to_s.gsub(/<[^>]+>/, "")).strip.sub(/\ACFMOTO\s+/i, "")
+    expected_title = CGI.escapeHTML("CFMOTO #{model} — qiymət və texniki göstəricilər")
+    errors << "#{relative}: product title must describe the price and specifications" unless !model.empty? && title == expected_title
+    og_title = html[%r{<meta property="og:title" content="([^"]*)"\s*/>}, 1]
+    twitter_title = html[%r{<meta name="twitter:title" content="([^"]*)"\s*/>}, 1]
+    errors << "#{relative}: social titles must match the page title" unless og_title == title && twitter_title == title
+    if html.include?("__VINEXT_RSC_")
+      errors << "#{relative}: embedded React title differs from static title" unless html.include?(%Q{\\"children\\":\\"#{title}\\"})
+    end
+  end
+
   titles << title if title
   descriptions << description if description
   canonicals << canonical if canonical
@@ -354,6 +367,9 @@ category_expectations.each do |slug, expectation|
 
   category = File.read(path, encoding: "UTF-8")
   errors << "/#{slug}/ has the wrong requested title" unless category.include?("<title>#{expectation.fetch(:title)}</title>")
+  intro = category[%r{<h1>.*?</h1><p>(.*?)</p></section>}m, 1]
+  summary = category[%r{<div class="category-summary"><p class="lead">(.*?)</p>}m, 1]
+  errors << "/#{slug}/ category summary must add information beyond the introduction" unless intro && summary && !summary.empty? && summary != intro
   card_count = category.scan('class="category-model-card"').size
   errors << "/#{slug}/ expected #{expectation.fetch(:count)} product cards, found #{card_count}" unless card_count == expectation.fetch(:count)
   price_count = category.scan(%r{<strong>[\d,]+ AZN(?: · ƏDV daxil)?</strong>}).size

@@ -32,6 +32,26 @@ Events Manager avtomatik qaydası 2047920172500023 `.site-header` mətnini
 valyuta kimi oxuyur. Bu qayda Meta daxilində düzəldilməlidir; sayt build-i
 Pixel-i və mövcud hadisələri söndürmür.
 
+### Konfiqurator optimallaşdırılması
+
+`scripts/apply_configurator_improvements.mjs` son mərhələdə yerli qiymət və
+şəkil düzəlişləri tətbiq edilmiş kataloqu modelə görə bölür. İlkin JavaScript
+yalnız 48 modelin əsas məlumatlarını saxlayır; aksesuarlar seçilən model üçün
+məzmuna əsaslanan, keşlənən JSON URL-dən yüklənir. 500SR ayrıca modeldir;
+VOOM üçün aksesuar uyğunluğu ona avtomatik köçürülmür.
+
+Seçimlər bu brauzerdə 90 günə qədər qaralama kimi saxlanır. URL-də verilən
+model, aksesuar və texnikanı cəmə daxil etmə parametrləri qaralamadan üstündür.
+Paketin paylaşım keçidi yalnız model/seçim parametrlərini daşıyır; qiymətlər
+həmişə aktual kataloqdan yenidən hesablanır. Yaddaş və ya şəbəkə xətası olduqda
+tətbiq müvafiq olaraq yaddaşsız işləyir və ya yenidən yükləmə imkanı verir.
+
+GA4 üçün model seçimi, aksesuar baxışı/əlavəsi/silinməsi, paket xülasəsi,
+WhatsApp sorğusu və paylaşım hadisələri əlavə edilib. Parametrlərdə model,
+SKU və məlum AZN məbləğləri var; şəxsi məlumat və mesaj mətni yoxdur.
+`scripts/audit_configurator_improvements.mjs` kataloq, URL/yaddaş və hadisə
+qaydalarını yayımdan əvvəl yoxlayır. Bu testlər Google-a hadisə göndərmir.
+
 Build skripti SEO auditini işə salır və yalnız ictimai sayt fayllarını `dist/` qovluğuna köçürür. GitHub Actions əsas saytdan yeni versiyanı idxal edərkən SEO düzəlişlərini yenidən tətbiq edir və Cloudflare paketini yoxlayır.
 
 Build zamanı beş yüngül SEO məlumat səhifəsi də yaradılır:

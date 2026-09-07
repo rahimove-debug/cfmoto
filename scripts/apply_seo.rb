@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require "cgi"
 require "json"
 require_relative "content_config"
 require_relative "category_config"
@@ -95,6 +96,27 @@ def normalize_directory_page_url!(content, page_url)
   content.gsub!(pattern, "#{page_url}/")
 end
 
+def normalize_model_title!(html, path)
+  model = html[%r{<h1 class="[^"]*\bproduct-title\b[^"]*">(.*?)</h1>}m, 1]
+  previous_title = html[%r{<title>(.*?)</title>}m, 1]
+  abort "#{path}: model heading or title is missing" unless model && previous_title
+
+  model = CGI.unescapeHTML(model.gsub(/<[^>]+>/, "")).strip.sub(/\ACFMOTO\s+/i, "")
+  title = CGI.escapeHTML("CFMOTO #{model} — qiymət və texniki göstəricilər")
+  # The imported page includes its head metadata in the embedded RSC payload.
+  # Replace the existing title in both representations before Russian generation.
+  html.gsub!(previous_title, title) unless previous_title == title
+  [%(property="og:title"), %(name="twitter:title")].each do |attribute|
+    pattern = %r{<meta #{Regexp.escape(attribute)} content="[^"]*"\s*/>}
+    abort "#{path}: #{attribute} is missing" unless html.match?(pattern)
+    html.sub!(pattern, %(<meta #{attribute} content="#{title}"/>))
+  end
+  if html.include?("__VINEXT_RSC_")
+    embedded_title = %Q{\\"children\\":\\"#{title}\\"}
+    abort "#{path}: model RSC title differs from HTML" unless html.include?(embedded_title)
+  end
+end
+
 html_paths = [
   File.join(ROOT, "index.html"),
   *Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort,
@@ -138,6 +160,7 @@ html_paths.each do |path|
       html.gsub!(heading, %(<p class="category-hero-title">#{title}</p>))
     end
   else
+    normalize_model_title!(html, path) if path.start_with?(File.join(ROOT, "model", ""))
     unless html.include?(%(property="og:locale"))
       html.sub!(%(property="og:type" content="website"/>), %(property="og:type" content="website"/><meta property="og:locale" content="az_AZ"/><meta property="og:site_name" content="CFMOTO Azerbaijan"/>))
     end
