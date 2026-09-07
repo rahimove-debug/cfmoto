@@ -59,7 +59,21 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   for (const model of models.filter(model => model.slug !== '500sr')) {
     const finance = componentModule(path.join(assets, files.finance)).default({ model: model.name, price: model.price, type: model.type, whatsapp: 'https://wa.me/994512332484' });
     const file = path.join(dist, locale === 'az' ? 'model' : 'ru/model', model.slug, 'index.html');
-    assert(read(file).includes(render(finance)), `${locale} ${model.slug} finance HTML/client parity`);
+    const modelHtml = read(file);
+    assert(modelHtml.includes(render(finance)), `${locale} ${model.slug} finance HTML/client parity`);
+    const header = modelHtml.match(/<header class="site-header detail-header">.*?<\/header>/s)?.[0];
+    assert.equal(header?.match(/class="menu-button"/g)?.length, 1, 'Model menu button is server-rendered');
+    assert.equal(header?.match(/class="language-switcher"/g)?.length, 1, 'Model language switcher is server-rendered');
+    assert(!modelHtml.includes('<!-- CFMOTO:LANGUAGE:START -->'), 'No duplicate body switcher');
+    const rows = [...modelHtml.matchAll(/__VINEXT_RSC_CHUNKS__\.push\(("(?:\\.|[^"\\])*")\)/g)].flatMap(match => JSON.parse(match[1]).split('\n'));
+    const main = JSON.parse(rows.find(row => row.startsWith('1:')).slice(2));
+    const rscHeader = main[3].children.find(node => node?.[1] === 'header');
+    assert.equal(rscHeader[3].children.length, 4, 'Model header has identical hydrated controls');
+    const [brand, nav, switcher, button] = rscHeader[3].children;
+    assert.equal(nav[3].id, 'site-primary-navigation');
+    assert.equal(switcher[3].className, 'language-switcher');
+    assert.equal(button[3].className, 'menu-button');
+    assert.equal(button[3]['aria-controls'], nav[3].id);
   }
   const credit = read(path.join(dist, locale === 'az' ? 'kredit/index.html' : 'ru/kredit/index.html'));
   assert(credit.includes(locale === 'az' ? '36 ayadək' : '36 месяцев'));

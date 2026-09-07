@@ -21,6 +21,51 @@ const replace = (source, from, to, label) => {
 const walk = folder => fs.readdirSync(folder, { withFileTypes: true }).flatMap(item => item.isDirectory() ? walk(path.join(folder, item.name)) : path.join(folder, item.name));
 const originalModules = Object.fromEntries(fs.readdirSync(assets).filter(name => name.endsWith('.js')).map(name => [name, read(path.join(assets, name))]));
 
+// The navigation/language controllers used to insert children before React
+// hydrated model pages. Author those same controls in both render sources.
+function modelHeader(html, language, slug) {
+  const ru = language === 'ru';
+  const element = (tag, props) => ['$', tag, null, props];
+  const alternate = element('a', { href: `${ru ? '' : '/ru'}/model/${slug}/`, lang: ru ? 'az' : 'ru', hrefLang: ru ? 'az' : 'ru', children: ru ? 'AZ' : 'RU' });
+  const current = element('span', { 'aria-current': 'page', children: ru ? 'RU' : 'AZ' });
+  const switcher = element('nav', { className: 'language-switcher', 'aria-label': ru ? 'Выбор языка' : 'Dil seçimi', children: ru ? [alternate, current] : [current, alternate] });
+  const button = element('button', { className: 'menu-button', type: 'button', 'aria-label': ru ? 'Открыть меню' : 'Menyunu aç', 'aria-expanded': 'false', 'aria-controls': 'site-primary-navigation', children: [element('span', {}), element('span', {})] });
+  const toTree = node => Array.isArray(node) && node[0] === '$'
+    ? { tag: node[1], props: { ...node[3], children: toTree(node[3].children) } }
+    : Array.isArray(node) ? node.map(toTree) : node;
+  html = html.replace(/<!-- CFMOTO:LANGUAGE:START -->.*?<!-- CFMOTO:LANGUAGE:END -->/gs, '');
+  let visibleHeaders = 0;
+  html = html.replace(/<header class="site-header detail-header">.*?<\/header>/gs, header => {
+    visibleHeaders++;
+    return header.replace('class="main-nav detail-nav"', 'class="main-nav detail-nav" id="site-primary-navigation"')
+      .replace('</header>', render(toTree(switcher)) + render(toTree(button)) + '</header>');
+  });
+  let payloadHeaders = 0;
+  const visit = node => {
+    if (!node || typeof node !== 'object') return;
+    if (Array.isArray(node) && node[0] === '$' && node[1] === 'header' && node[3]?.className === 'site-header detail-header') {
+      const nav = node[3].children.find(child => child?.[1] === 'nav');
+      nav[3].id = 'site-primary-navigation';
+      node[3].children.push(switcher, button);
+      payloadHeaders++;
+      return;
+    }
+    Object.values(node).forEach(visit);
+  };
+  html = html.replace(/(__VINEXT_RSC_CHUNKS__\.push\()("(?:\\.|[^"\\])*")(\))/g, (_, before, value, after) => {
+    const chunk = JSON.parse(value).split('\n').map(line => {
+      const match = line.match(/^([0-9a-f]+:)([\[{].*)$/);
+      if (!match) return line;
+      const node = JSON.parse(match[2]);
+      visit(node);
+      return match[1] + JSON.stringify(node);
+    }).join('\n');
+    return before + JSON.stringify(chunk).replaceAll('<', '\\u003c') + after;
+  });
+  assert(visibleHeaders === 1 && payloadHeaders === 1, `${language} ${slug} model header parity`);
+  return html;
+}
+
 const locales = {
   az: {
     home: 'index.html', page: 'page-CfmotoHomeNewsV5.js', menu: 'ProductMegaMenu-CfmotoHomeNewsV5.js', finance: 'ModelFinance-CfmotoFinanceFixV12.js',
@@ -144,6 +189,7 @@ for (const [language, copy] of Object.entries(locales)) {
     const component = componentModule(financeFile).default;
     const markup = render(component({ model: model.name, price: model.price, type: model.type, whatsapp: 'https://wa.me/994512332484' }));
     html = html.replace(fragment, markup);
+    html = modelHeader(html, language, slug);
     write(file, html);
     modelCount++;
   }

@@ -30,7 +30,7 @@ const escapeText = value => String(value).replaceAll('&', '&amp;').replaceAll('<
 const escapeAttribute = value => escapeText(value).replaceAll('"', '&quot;');
 const voidTags = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
 const booleanAttrs = new Set(['checked', 'disabled', 'hidden', 'multiple', 'selected', 'autoFocus', 'required', 'readOnly']);
-const aliases = { className: 'class', htmlFor: 'for', tabIndex: 'tabindex', fetchPriority: 'fetchpriority', dateTime: 'datetime', crossOrigin: 'crossorigin', charSet: 'charset' };
+const aliases = { className: 'class', htmlFor: 'for', tabIndex: 'tabindex', fetchPriority: 'fetchpriority', dateTime: 'datetime', crossOrigin: 'crossorigin', charSet: 'charset', hrefLang: 'hreflang' };
 
 export function render(node, selectedValue) {
   if (node == null || typeof node === 'boolean') return '';
