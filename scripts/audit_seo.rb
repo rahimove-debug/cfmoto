@@ -425,6 +425,11 @@ Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.each do |path|
   slug = File.basename(File.dirname(path))
   content = File.read(path, encoding: "UTF-8")
   primary = expected_primary_model_image(slug)
+  # Rebuilt AURA pages retain the verified local Ivory White color photo.
+  if slug == "aura-150" && content.include?('<img class="model-color-image" src="/models/aura-150-ivory-white-official-v1.png"')
+    primary = "/models/aura-150-ivory-white-official-v1.png"
+    errors << "#{slug}: official Ivory White image is missing" unless File.file?(File.join(ROOT, primary.delete_prefix("/")))
+  end
   errors << "#{slug}: primary model image is not local" unless content.match?(%r{<img class="model-color-image"[^>]*src="#{Regexp.escape(primary)}"})
   errors << "#{slug}: primary model preload is not local" unless content.include?(%(<link rel="preload" as="image" href="#{primary}"))
 end

@@ -268,6 +268,13 @@ def localize_primary_model_image!(content, slug)
   source = content[/<img\s+class="model-color-image"\s+src="([^"]+)"/, 1]
   return unless source
 
+  # Preserve the verified Ivory White hero on repeat builds. The generic AURA
+  # catalog/card image is Vintage White and must not replace this color photo.
+  if slug == "aura-150" && source == "/models/aura-150-ivory-white-official-v1.png"
+    abort "Missing official AURA Ivory White image" unless File.file?(File.join(ROOT, source.delete_prefix("/")))
+    return
+  end
+
   local_source = primary_model_image_source(slug)
   return if source == local_source
 
@@ -1182,6 +1189,9 @@ checks = {
     slug = File.basename(File.dirname(path))
     html = read_utf8(path)
     source = primary_model_image_source(slug)
+    if slug == "aura-150" && html.include?('<img class="model-color-image" src="/models/aura-150-ivory-white-official-v1.png"')
+      source = "/models/aura-150-ivory-white-official-v1.png"
+    end
     html.include?(%(<img class="model-color-image" src="#{source}")) &&
       html.include?(%(<link rel="preload" as="image" href="#{source}"))
   end,
