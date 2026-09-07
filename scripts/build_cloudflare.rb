@@ -136,3 +136,8 @@ leaked = forbidden.select { |path| File.exist?(File.join(DIST, path)) }
 abort "Non-public files copied to dist: #{leaked.join(', ')}" unless leaked.empty?
 
 puts "Cloudflare bundle ready: #{html_count} HTML files in dist/"
+
+# Apply the authored sales changes to the deployment output. Keep the complete
+# imported catalog in the source snapshot for category/SEO generation.
+abort "Sales improvements failed" unless system("node", File.join(__dir__, "apply_sales_improvements.mjs"))
+abort "Sales regression audit failed" unless system("node", File.join(__dir__, "audit_sales_improvements.mjs"))

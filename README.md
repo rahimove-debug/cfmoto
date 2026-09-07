@@ -9,6 +9,29 @@ CFMOTO Azerbaijan üçün statik sayt, SEO emalı və Cloudflare Pages build pak
 - Build command: `ruby scripts/build_cloudflare.rb`
 - Build output directory: `dist`
 
+### Satış düzəlişləri
+
+`scripts/apply_sales_improvements.mjs` son build mərhələsində yayımlanacaq
+HTML və müştəri modullarını birlikdə hazırlayır. Ana səhifə 8 seçilmiş model
+göstərir; 48 modelin hamısı kateqoriyalarda, menyuda və kalkulyatorda saxlanır.
+Seçim siyahısı həmin skriptdəki `featured` massivində idarə olunur.
+
+AZ/RU kredit məlumatları bank üçün 36 ayadək müddəti, motosikletlər üzrə
+bank/daxili ödəniş sənədlərinin fərqini və daxili ödənişin yekun məbləğini
+göstərir. 150SC qiyməti 5.490 AZN olaraq saxlanılır. `sales-improvements-v1.css`
+əsas satış düymələrini vurğulayır. Yeni modullara məzmuna əsaslanan URL verilir;
+köhnə URL-lər açıq qalmış səhifələr üçün qorunur.
+
+`scripts/audit_sales_improvements.mjs` HTML və ilkin React görünüşünün
+uyğunluğunu, bütün model kalkulyatorlarını və bank/daxili ödəniş nümunələrini
+yayımdan əvvəl yoxlayır. Tam idxal edilmiş kataloq mənbə fayllarında qalır;
+son satış görünüşü `dist/` qovluğundan yayımlanır.
+
+Meta Pixel qeydi: sayt/GTM valyuta göndərmir. Pixel 1395135232664282 üçün
+Events Manager avtomatik qaydası 2047920172500023 `.site-header` mətnini
+valyuta kimi oxuyur. Bu qayda Meta daxilində düzəldilməlidir; sayt build-i
+Pixel-i və mövcud hadisələri söndürmür.
+
 Build skripti SEO auditini işə salır və yalnız ictimai sayt fayllarını `dist/` qovluğuna köçürür. GitHub Actions əsas saytdan yeni versiyanı idxal edərkən SEO düzəlişlərini yenidən tətbiq edir və Cloudflare paketini yoxlayır.
 
 Build zamanı beş yüngül SEO məlumat səhifəsi də yaradılır:

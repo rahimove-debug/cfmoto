@@ -61,10 +61,10 @@ analytics = <<~HTML
     var href=link.getAttribute('href')||'';
     var text=(link.textContent||'').trim().replace(/\\s+/g,' ').slice(0,100);
     var normalizedHref=href.toLowerCase();
+    var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
     var params={link_text:text,page_path:window.location.pathname};
     var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
     if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
-      var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
       var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
       send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
       if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
@@ -72,8 +72,8 @@ analytics = <<~HTML
     }
     if(normalizedHref.startsWith('tel:')){
       var normalizedText=text.toLowerCase();
-      var serviceContact=['servis','ehtiyat','çatdırılma'].some(function(term){return normalizedText.includes(term)});
-      send('phone_click',{contact_area:serviceContact?'service':'sales'});
+      var serviceContact=normalizedHref.replace(/[^+0-9:tel]/g,'')==='tel:+994102414299'||['servis','ehtiyat','çatdırılma'].some(function(term){return normalizedText.includes(term)});
+      send('phone_click',{contact_area:declaredArea||(serviceContact?'service':'sales')});
       return;
     }
     if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){

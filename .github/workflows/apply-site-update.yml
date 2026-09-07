@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - "deploy-parts/v13b/**"
+      - "deploy-parts/v17/**"
       - "deploy-overlay/**"
 
 permissions:

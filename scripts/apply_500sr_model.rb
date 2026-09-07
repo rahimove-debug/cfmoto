@@ -193,7 +193,17 @@ abort "500SR VOOM template not found" unless File.file?(template_path)
 html_paths = [File.join(ROOT, "index.html"), *Dir.glob(File.join(ROOT, "model", "*", "index.html"))]
 html_paths.each do |path|
   html = add_500sr_mega_item!(read(path))
-  html = add_500sr_home_card!(html) if path == File.join(ROOT, "index.html")
+  if path == File.join(ROOT, "index.html")
+    html = add_500sr_home_card!(html)
+    # Keep the server-rendered calculator in the same order as the client
+    # catalog. A missing option makes React discard the homepage on hydration.
+    unless html.include?('<option value="500SR">')
+      anchor = '<option value="500SR VOOM">'
+      abort "500SR VOOM calculator option not found" unless html.include?(anchor)
+      option = '<option value="500SR">500SR<!-- --> — <!-- -->13,490<!-- --> AZN</option>'
+      html.sub!(anchor, option + anchor)
+    end
+  end
   write(path, html)
 end
 

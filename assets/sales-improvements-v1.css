@@ -1,0 +1,44 @@
+/* Sales hierarchy, extending the established CFMOTO visual system. */
+.model-page .product-copy .hero-actions .button.primary,
+.model-page .model-calculator .button.primary,
+.model-page .model-subnav-cta,
+.model-page .model-mobile-cta a:last-child {
+  background: linear-gradient(105deg, #00a8b8, #00dfc6);
+  border-color: transparent;
+  color: #071113;
+  font-weight: 700;
+}
+.model-page .product-copy .hero-actions .button.primary span,
+.model-page .model-calculator .button.primary span { color: inherit; }
+.model-page .product-copy .hero-actions .button.primary:hover,
+.model-page .model-calculator .button.primary:hover { background: #00dfc6; }
+.model-page .product-copy .hero-actions .accessory-model-cta,
+.category-hero-actions .accessory-hero-button {
+  background: transparent;
+  border: 1px solid #8a9697;
+  box-shadow: none;
+  color: inherit;
+  font-weight: 500;
+  transform: none;
+}
+.model-page .product-copy .hero-actions .accessory-model-cta span { color: inherit; }
+.category-hero-actions .accessory-hero-button { color: #fff; border-color: #aab7b8; }
+.model-page .product-copy .hero-actions .accessory-model-cta:hover { background: #e5eeee; box-shadow: none; }
+.catalog-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.catalog-links .button { min-height: 48px; color: #102024; border-color: #53686c; font-size: 14px; }
+.catalog-links .button:hover { background: #102024; color: #fff; }
+.model-calc-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.model-calc-summary .finance-total { grid-column: 1 / -1; background: #e2f7f4; border-top: 2px solid #00b6b1; padding: 14px; }
+.model-calc-summary .finance-total strong { color: #102024; font-size: 24px; }
+.calc-result .finance-total { margin-top: 12px; border-top: 1px solid #b1cece; padding-top: 12px; font-weight: 600; }
+.model-finance-note, .calc-note { line-height: 1.65; }
+.finance-eligibility h3 { margin-top: 24px; font-size: 20px; }
+[data-installment-total-row] { padding: 14px; background: #e2f7f4; color: #102024; }
+@media (max-width: 580px) {
+  .catalog-links { display: grid; grid-template-columns: 1fr; }
+  .catalog-links .button { justify-content: space-between; width: 100%; }
+  .model-page .product-copy .hero-actions .button.primary { grid-column: 1 / -1; min-height: 50px; }
+  .model-page .product-copy .hero-actions .accessory-model-cta { min-height: 44px; }
+  .model-calc-summary { grid-template-columns: 1fr; }
+  .model-calculator .model-finance-note, .calculator .calc-note { font-size: 13px; }
+}
