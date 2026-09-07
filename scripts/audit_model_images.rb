@@ -93,7 +93,7 @@ aura_colors.each do |name, (reference, sha256)|
 end
 
 %w[model/aura-150/index.html ru/model/aura-150/index.html].each do |relative_path|
-  source = File.read(File.join(ROOT, relative_path))
+  source = File.binread(File.join(ROOT, relative_path)).force_encoding(Encoding::UTF_8)
   decoded = source.gsub('\\"', '"')
   aura_colors.each do |name, (reference, _sha256)|
     mapping = /"name":"#{Regexp.escape(name)}","value":"[^"]+","image":"#{Regexp.escape(reference)}"/
