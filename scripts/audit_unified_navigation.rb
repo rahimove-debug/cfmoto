@@ -3,6 +3,7 @@
 
 ROOT = File.expand_path("..", __dir__)
 STYLE_URL = "/assets/unified-navigation-v1.css"
+LOGO_URL = "/assets/cfmoto-logo-transparent-v1.svg"
 SCRIPT_URL = "/assets/unified-navigation-v1.js"
 errors = []
 
@@ -20,6 +21,8 @@ paths.uniq.each do |path|
   relative = path.delete_prefix("#{ROOT}/")
   errors << "#{relative}: unified navigation stylesheet must appear once" unless html.scan(STYLE_URL).size == 1
   errors << "#{relative}: unified navigation script must appear once" unless html.scan(SCRIPT_URL).size == 1
+  errors << "#{relative}: opaque logo must not remain in markup or RSC" if html.include?("/cfmoto-logo-black.png")
+  errors << "#{relative}: transparent official logo is missing" unless html.include?(LOGO_URL)
 end
 
 %w[
@@ -70,6 +73,19 @@ if File.file?(script_path)
   errors << "Language switcher must move into existing headers" unless javascript.include?("moveLanguageSwitcher")
 else
   errors << "Unified navigation script is missing"
+end
+
+logo_path = File.join(ROOT, LOGO_URL.delete_prefix("/"))
+if File.file?(logo_path)
+  logo = read(logo_path)
+  errors << "Official vector logo must contain paths without a background or active content" unless logo.include?('<path ') && !logo.match?(/<(?:rect|image|script|foreignObject)\b|onload=|href=/i)
+else
+  errors << "Official transparent vector logo is missing"
+end
+logo_modules = Dir.glob(File.join(ROOT, "assets", "*.js"))
+logo_modules << File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-godaddy-localprices-v9.js")
+logo_modules.each do |path|
+  errors << "#{File.basename(path)}: hydrated component still uses the opaque logo" if read(path).include?("/cfmoto-logo-black.png")
 end
 
 abort "Unified navigation audit failed:\n- #{errors.join("\n- ")}" unless errors.empty?

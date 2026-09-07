@@ -3,6 +3,7 @@
 
 ROOT = File.expand_path("..", __dir__)
 STYLE_URL = "/assets/unified-navigation-v1.css"
+LOGO_URL = "/assets/cfmoto-logo-transparent-v1.svg"
 SCRIPT_URL = "/assets/unified-navigation-v1.js"
 HEAD_START = "<!-- CFMOTO:UNIFIED-NAV:HEAD:START -->"
 HEAD_END = "<!-- CFMOTO:UNIFIED-NAV:HEAD:END -->"
@@ -77,6 +78,18 @@ paths << File.join(ROOT, "404.html") if File.file?(File.join(ROOT, "404.html"))
 paths.reject! { |path| path.include?("/dist/") }
 
 static_count = 0
+
+# Official transparent vector: https://cn.cfmoto.com/icons/logo.svg
+# Keep markup and hydrated components on the same cache-safe image URL.
+abort "Transparent CFMOTO logo is missing" unless File.file?(File.join(ROOT, LOGO_URL.delete_prefix("/")))
+logo_modules = Dir.glob(File.join(ROOT, "assets", "*.js"))
+logo_modules << File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", "page-cfmoto-godaddy-localprices-v9.js")
+logo_modules.each do |path|
+  javascript = read(path)
+  next unless javascript.include?("/cfmoto-logo-black.png")
+  write(path, javascript.gsub("/cfmoto-logo-black.png", LOGO_URL))
+end
+
 paths.uniq.each do |path|
   html = read(path)
   next unless html.include?("</head>") && html.include?("<body")
@@ -108,6 +121,7 @@ paths.uniq.each do |path|
     static_count += 1
   end
 
+  html.gsub!("/cfmoto-logo-black.png", LOGO_URL)
   write(path, html)
 end
 
