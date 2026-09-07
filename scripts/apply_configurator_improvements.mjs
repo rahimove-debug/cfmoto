@@ -95,8 +95,13 @@ const filename = `page-cfmoto-improvements-${hash(output)}.js`;
 const publicBundle = `/aksesuar-konfiquratoru/_next/static/chunks/app/${filename}`;
 fs.writeFileSync(path.join(path.dirname(sourcePath),filename),output);
 const css = `.cf-model-status{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:1200;max-width:calc(100vw - 32px);padding:14px 20px;background:#10191b;color:#fff;box-shadow:0 5px 25px #0004;font-size:14px}.cf-model-error button,.cf-catalog-loading button{background:#00cfc3;color:#10191b;border:0;padding:10px 16px;cursor:pointer}.cf-package-share{margin:16px 0}.cf-share-button{width:100%;min-height:48px;padding:14px;border:1px solid #142023;background:#fff;color:#142023;font:inherit;font-weight:700;cursor:pointer}.cf-package-share p{margin:10px 0 6px;font-size:13px}.cf-package-share input{width:100%;padding:10px;border:1px solid #c6cecf;background:#fff;color:#142023;font-size:13px;box-sizing:border-box}.cf-share-button:focus-visible,.cf-model-status button:focus-visible{outline:3px solid #00cfc3;outline-offset:3px}.cf-catalog-loading{min-height:60vh;padding:60px 24px;text-align:center}.cf-catalog-loading h1{font-size:clamp(24px,5vw,42px)}.summary-sheet,.summary-sheet .summary-bike-toggle{color:#f5f7f7}.summary-sheet :is(h2,strong,b),.summary-sheet .cf-package-share p{color:#f5f7f7}`;
-const cssName = `configurator-improvements-${hash(css)}.css`;
-fs.writeFileSync(path.join(dist,"assets",cssName),css);
+// Catalog photos mix transparent cutouts and white studio backgrounds. A white
+// stage removes the visible photo rectangle without tinting paintwork with a
+// blend/filter or modifying official product images. Keep the orange NEW badge.
+const modelStageCss = `.simple-bike-image{background:#fff}.simple-bike-image>span:not(.simple-model-new-badge){display:none}`;
+const finalCss = css + modelStageCss;
+const cssName = `configurator-improvements-${hash(finalCss)}.css`;
+fs.writeFileSync(path.join(dist,"assets",cssName),finalCss);
 const cssTag = `<link rel="stylesheet" href="/assets/${cssName}"/>`;
 let updated = 0;
 for (const file of filesUnder(configRoot).filter(file => /\.(html|txt|json)$/.test(file) && !file.includes(`${path.sep}catalog${path.sep}`))) {

@@ -55,6 +55,16 @@ assert.ok(!html.includes("page-cfmoto-godaddy-localprices-v9"));
 assert.ok(!html.includes("accessory-model-preselect-"));
 assert.ok(!/CFMoto USA Parts|1 USD = 1\.7000|\$159\.99/.test(html+script));
 
+// Opaque studio photos and transparent model cutouts must share a seamless,
+// color-neutral stage. Scope this fix away from accessory/DMS price redaction.
+const stylesheet = fs.readFileSync(path.join(dist,report.stylesheet),"utf8");
+assert.ok(html.includes(report.stylesheet), "Cache-versioned configurator CSS missing");
+assert.ok(stylesheet.includes(".simple-bike-image{background:#fff}"), "White model stage missing");
+assert.ok(stylesheet.includes(".simple-bike-image>span:not(.simple-model-new-badge){display:none}"), "Model watermark must not expose the photo rectangle or hide the NEW badge");
+assert.ok(!/mix-blend-mode|\bfilter:/.test(stylesheet), "Model paintwork must retain its original colors");
+const redactionPath = "aksesuar-konfiquratoru/_next/static/css/cfmoto-configurator-offroad-noprice-v5.css";
+assert.equal(fs.readFileSync(path.join(dist,redactionPath),"utf8"),fs.readFileSync(path.join(root,redactionPath),"utf8"), "Existing DMS price masking changed");
+
 // Run the authored helpers with isolated storage/fetch/analytics; never send network events.
 const fixtures = [
   {id:"a",name:"A",basePriceAzn:1000,accessoryCount:2,accessories:[],catalogUrl:"/a.json"},
