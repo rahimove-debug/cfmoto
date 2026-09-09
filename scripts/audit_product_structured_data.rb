@@ -28,10 +28,11 @@ products.each do |path, product|
     next
   end
 
-  %w[price priceCurrency availability url priceValidUntil itemCondition].each do |property|
+  %w[price priceCurrency availability url validFrom priceValidUntil itemCondition].each do |property|
     errors << "#{label} Offer is missing #{property}" if offer[property].nil? || offer[property] == ""
   end
   errors << "#{label} Offer has the wrong price-validity date" unless offer["priceValidUntil"] == PRICE_VALID_UNTIL
+  errors << "#{label} Offer has an invalid start date" unless offer["validFrom"].to_s.match?(/\A\d{4}-\d{2}-\d{2}\z/) && offer["validFrom"] <= offer["priceValidUntil"]
   errors << "#{label} Offer is not marked as new" unless offer["itemCondition"] == NEW_CONDITION
   errors << "#{label} Offer seller is missing its name" if offer.dig("seller", "name").to_s.empty?
   errors << "#{label} Offer seller is missing its URL" unless offer.dig("seller", "url") == SELLER_URL

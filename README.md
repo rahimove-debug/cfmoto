@@ -89,6 +89,28 @@ Cloudflare qaydaları [cloudflare/README.md](cloudflare/README.md) faylında ver
 
 ## Lokal yoxlama
 
+### 9 September 2026 SEO repair
+
+- The traffic-bearing former price/installment URL (including its combining-dot
+  spelling and trailing-slash variants) redirects to `/kredit/`.
+- AZ/RU ATV and buggy hero links open full category pages. The initial homepage
+  stays at eight featured models; choosing a category shows every matching model.
+- Republished Product offers declare a stable `validFrom` of `2026-09-09` unless
+  an existing start date is already supplied. This is the effective date of the
+  republished offer metadata, not a claim about historical price availability.
+- `audit_published_seo.mjs` runs after all output transformations and checks the
+  final canonical pages, reciprocal language links, sitemap, local dependencies,
+  Product offers, redirects and complete category coverage.
+- GA4 `generate_lead` retains its existing event name for reporting continuity,
+  with `lead_stage=contact_click` and `value_basis=quoted_package`. It indicates
+  opening a WhatsApp enquiry; its value is a quoted package amount, not revenue
+  or confirmation that a message was sent. Annotate reporting at this release.
+
+The external Meta automatic rule `2047920172500023` for Pixel `1395135232664282`
+still needs correction in Events Manager: remove its `.site-header` currency
+extraction and use the currency of the actual tracked offer (AZN for local
+offers). Do not disable the Pixel or unrelated events to hide the warning.
+
 ```sh
 ruby scripts/build_cloudflare.rb
 python3 -m http.server 4173 --directory dist

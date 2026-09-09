@@ -36,6 +36,12 @@ module DomainConfig
     "/motosi%CC%87klet" => "/motosiklet/",
     "/kvadrosikl" => "/kvadrosikl/",
     "/buggy" => "/buggy/",
+    # August Search Console still reports clicks to this former credit page.
+    # Preserve both the original combining-dot spelling and its plain variant.
+    "/qi%CC%87ym%C9%99t-hi%CC%87ss%C9%99vi%CC%87-%C3%B6d%C9%99ni%CC%87%C5%9F" => "/kredit/",
+    "/qi%CC%87ym%C9%99t-hi%CC%87ss%C9%99vi%CC%87-%C3%B6d%C9%99ni%CC%87%C5%9F/" => "/kredit/",
+    "/qiym%C9%99t-hiss%C9%99vi-%C3%B6d%C9%99ni%C5%9F" => "/kredit/",
+    "/qiym%C9%99t-hiss%C9%99vi-%C3%B6d%C9%99ni%C5%9F/" => "/kredit/",
     "/cflitemodelleri" => "/#modeller",
     "/800mt-explore-1" => "/model/800mt-explore/",
     "/800mt-x-2" => "/model/800mt-x/",

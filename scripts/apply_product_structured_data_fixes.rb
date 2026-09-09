@@ -6,6 +6,9 @@ require "uri"
 
 ROOT = File.expand_path("..", __dir__)
 PRICE_VALID_UNTIL = "2027-09-01"
+# Effective date of the offers republished with this metadata repair. Keep it
+# stable across rebuilds; do not invent a historical offer commencement date.
+OFFER_VALID_FROM = "2026-09-09"
 SELLER_URL = "https://cfmoto.az/"
 NEW_CONDITION = "https://schema.org/NewCondition"
 
@@ -80,6 +83,7 @@ def apply_product_structured_data_fixes!
         node["model"] ||= node["name"].to_s.sub(/\ACFMOTO\s+/i, "")
 
         offer["priceValidUntil"] = PRICE_VALID_UNTIL
+        offer["validFrom"] ||= OFFER_VALID_FROM
         offer["itemCondition"] = NEW_CONDITION
         seller = offer["seller"]
         seller["url"] ||= SELLER_URL if seller.is_a?(Hash)

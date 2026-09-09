@@ -72,6 +72,7 @@ const locales = {
     all: 'Hamısı', motorcycle: 'Motosiklet',
     oldCatalogNote: ' aktual model · Hər modelin ayrıca məlumat səhifəsi mövcuddur.',
     catalogNote: ' seçilmiş model. Tam model sırasına kateqoriyalar üzrə baxın.',
+    categoryNote: ' model. Kateqoriyanın bütün modelləri göstərilir.',
     catalogLabel: 'Tam model sırası',
     categories: [['Motosikletlər', '/motosiklet/'], ['Kvadrosikllər', '/kvadrosikl/'], ['Buggy və UTV', '/buggy/']],
     oldCashLabel: 'Yekun nağd qiymət', cashLabel: 'Nağd qiymət', totalLabel: 'Ümumi ödəniş · ilkin ödəniş daxil', surchargeLabel: 'Hissəli ödəniş üzrə əlavə məbləğ',
@@ -89,6 +90,7 @@ const locales = {
     all: 'Все', motorcycle: 'Мотоцикл',
     oldCatalogNote: ' актуальных моделей · У каждой модели есть отдельная страница с информацией.',
     catalogNote: ' избранных моделей. Полный модельный ряд — в разделах каталога.',
+    categoryNote: ' моделей. Показаны все модели выбранной категории.',
     catalogLabel: 'Полный модельный ряд',
     categories: [['Мотоциклы', '/ru/motocikly/'], ['Квадроциклы', '/ru/kvadrocikly/'], ['Багги и UTV', '/ru/buggy/']],
     oldCashLabel: 'Итоговая цена при оплате наличными', cashLabel: 'Цена при оплате наличными', totalLabel: 'Всего к оплате · включая первоначальный взнос', surchargeLabel: 'Переплата по рассрочке',
@@ -132,14 +134,19 @@ for (const [language, copy] of Object.entries(locales)) {
   const pageFile = path.join(assets, copy.page);
   let page = read(pageFile);
   const selection = `C=(0,s.useMemo)(()=>p===\`${copy.all}\`?a:a.filter(e=>e.type===p),[p])`;
-  const selectionNew = `C=(0,s.useMemo)(()=>{const featured=${JSON.stringify(featured)},ordered=[...featured.map(slug=>a.find(model=>model.slug===slug)),...a.filter(model=>!featured.includes(model.slug))].filter(Boolean);return(p===\`${copy.all}\`?ordered:ordered.filter(model=>model.type===p)).slice(0,8)},[p])`;
+  const selectionNew = `C=(0,s.useMemo)(()=>{const featured=${JSON.stringify(featured)},ordered=[...featured.map(slug=>a.find(model=>model.slug===slug)),...a.filter(model=>!featured.includes(model.slug))].filter(Boolean);return p===\`${copy.all}\`?ordered.slice(0,8):ordered.filter(model=>model.type===p)},[p])`;
   page = replace(page, selection, selectionNew, `${language} catalog selection`);
+  const [motoCategory, atvCategory, buggyCategory] = copy.categories.map(([, href]) => href);
+  page = replace(page,
+    `href:e.key===\`moto\`?\`${motoCategory}\`:\`#modeller\`,tabIndex:t?0:-1,onClick:e.key===\`moto\`?void 0:()=>m(e.type)`,
+    `href:({moto:\`${motoCategory}\`,atv:\`${atvCategory}\`,buggy:\`${buggyCategory}\`})[e.key],tabIndex:t?0:-1`,
+    `${language} full-category hero destinations`);
   // The translated snapshot's exact catalog note is read from its component;
   // this preserves compatibility with wording improvements in the importer.
   const notePattern = /\(0,c\.jsxs\)\(`p`,\{className:`catalog-note`,children:\[C\.length,`[^`]+`\]\}\)/;
   assert(notePattern.test(page), `${language} catalog note not found`);
   const links = copy.categories.map(([label, href]) => `(0,c.jsx)(\`a\`,{className:\`button ghost\`,href:\`${href}\`,children:\`${label} →\`})`).join(',');
-  page = page.replace(notePattern, `(0,c.jsxs)(\`p\`,{className:\`catalog-note\`,children:[C.length,\`${copy.catalogNote}\`]}),(0,c.jsxs)(\`nav\`,{className:\`catalog-links\`,\"aria-label\":\`${copy.catalogLabel}\`,children:[${links}]})`);
+  page = page.replace(notePattern, `(0,c.jsxs)(\`p\`,{className:\`catalog-note\`,children:[C.length,p===\`${copy.all}\`?\`${copy.catalogNote}\`:\`${copy.categoryNote}\`]}),(0,c.jsxs)(\`nav\`,{className:\`catalog-links\`,\"aria-label\":\`${copy.catalogLabel}\`,children:[${links}]})`);
   const homeResult = /\(0,c\.jsxs\)\(`p`,\{children:\[_===`[^`]+`\?`[^`]+`:`[^`]+`,o\(financedWithInterest\),` AZN`\]\}\)/;
   assert(homeResult.test(page), `${language} home result not found`);
   page = page.replace(homeResult, match => `${match},_!==\`${copy.bankMode}\`&&(0,c.jsxs)(\`p\`,{className:\`finance-total\`,children:[\`${copy.totalLabel}: \`,o(M+financedWithInterest),\` AZN\`]})`);

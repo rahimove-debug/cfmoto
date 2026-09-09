@@ -26,6 +26,16 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   assert.equal(models.find(model => model.slug === '150sc').price, 5490, 'User-confirmed 150SC price');
   const fullLinks = descendants(tree, node => hasClass(node, 'catalog-links'))[0];
   assert.equal(descendants(fullLinks, node => node.tag === 'a').length, 3);
+  const categoryPaths = locale === 'az' ? ['/motosiklet/', '/kvadrosikl/', '/buggy/'] : ['/ru/motocikly/', '/ru/kvadrocikly/', '/ru/buggy/'];
+  const hero = descendants(tree, node => hasClass(node, 'category-hero'))[0];
+  const heroLinks = descendants(hero, node => node.tag === 'a' && hasClass(node, 'primary'));
+  assert.deepEqual(heroLinks.map(link => link.props.href), categoryPaths, `${locale} hero opens full categories`);
+  // Selecting a category must not silently omit its ninth (or thirtieth) model.
+  for (const category of [...new Set(models.map(model => model.type))]) {
+    const filtered = homeModule(assets, files.page, files.menu, [false, 'moto', category]).tree;
+    const filteredCards = descendants(filtered, node => hasClass(node, 'model-card'));
+    assert.equal(filteredCards.length, models.filter(model => model.type === category).length, `${locale} complete ${category} filter`);
+  }
 
   const internalExamples = [
     { slug: '150sc', down: 20, monthly: '421', total: '6,149' },

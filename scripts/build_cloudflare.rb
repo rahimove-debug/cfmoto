@@ -146,3 +146,6 @@ abort "Sales regression audit failed" unless system("node", File.join(__dir__, "
 # catalog in model-sized files only after all local price/image patches ran.
 abort "Configurator improvements failed" unless system("node", File.join(__dir__, "apply_configurator_improvements.mjs"))
 abort "Configurator regression audit failed" unless system("node", File.join(__dir__, "audit_configurator_improvements.mjs"))
+
+# Validate the files actually published, after every final-output transformation.
+abort "Published SEO audit failed" unless system("node", File.join(__dir__, "audit_published_seo.mjs"))

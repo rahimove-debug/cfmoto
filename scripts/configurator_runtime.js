@@ -56,7 +56,7 @@ function cfPackageEvent(name, model, ids, includeBike) {
   const items = includeBike ? [{id:`vehicle:${model.id}`,name:model.name,priceAzn:model.basePriceAzn},...selected] : selected;
   cfEvent(name, model, items, {include_vehicle:includeBike, accessory_count:selected.length,
     ...(name === "share" ? {method:"copy_link",content_type:"accessory_package",item_id:model.id} : {}),
-    ...(name === "generate_lead" ? {lead_type:"whatsapp_package"} : {})});
+    ...(name === "generate_lead" ? {lead_type:"whatsapp_package", lead_stage:"contact_click", value_basis:"quoted_package"} : {})});
 }
 function cfPackageUrl(model, ids, includeBike) {
   const url = new URL("/aksesuar-konfiquratoru/", window.location.origin);

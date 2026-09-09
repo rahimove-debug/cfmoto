@@ -110,6 +110,8 @@ assert.equal(events.at(-1)[1],"add_to_cart");assert.ok(!("value" in events.at(-1
 runtime.cfPackageEvent("begin_checkout",fixtures[0],["known","unknown"],false);assert.equal(events.at(-1)[2].value,25);assert.equal(events.at(-1)[2].unpriced_count,1);
 runtime.cfPackageEvent("begin_checkout",fixtures[0],["known"],true);assert.equal(events.at(-1)[2].value,1025);assert.equal(events.at(-1)[2].items[0].item_id,"vehicle:a");assert.equal(events.at(-1)[2].items.reduce((sum,item)=>sum+item.price*item.quantity,0),1025);
 runtime.cfPackageEvent("generate_lead",fixtures[0],["unknown"],false);assert.ok(!("value" in events.at(-1)[2]));assert.equal(events.at(-1)[2].lead_type,"whatsapp_package");
+assert.equal(events.at(-1)[2].lead_stage,"contact_click");
+assert.equal(events.at(-1)[2].value_basis,"quoted_package");
 assert.equal(runtime.cfPackageUrl(fixtures[0],["known","invalid"],false),"https://cfmoto.az/aksesuar-konfiquratoru/?model=a&accessories=known&bike=0");
 runtime.navigator.clipboard.writeText=async()=>{throw new Error("blocked")};
 const copy=await runtime.cfCopyPackage(fixtures[0],["known"],true);assert.ok(copy.url.includes("accessories=known"));assert.ok(copy.message.includes("seçib"));
