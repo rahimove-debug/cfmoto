@@ -27,6 +27,7 @@ assert.equal(models[models.findIndex(model=>model.id==="500sr")+1].id,"500sr-voo
 assert.equal(models.find(model=>model.id==="500sr").accessoryCount,0);
 assert.equal(models.find(model=>model.id==="500sr").basePriceAzn,13490);
 let accessoryCount=0;
+const blackLuggageModels=[];
 for (const model of models) {
   const json = JSON.parse(fs.readFileSync(path.join(dist,model.catalogUrl),"utf8"));
   assert.equal(json.modelId,model.id); assert.equal(json.accessories.length,model.accessoryCount);
@@ -45,8 +46,14 @@ for (const model of models) {
   for (const item of json.accessories) {
     assert.ok(item.priceAzn === null || (Number.isFinite(item.priceAzn) && item.priceAzn >= 0));
     assert.ok(!("priceNote" in item));
+    if (item.partNumber === "6WWV-808000-5002-10") {
+      assert.equal(item.name,"Kit Luggage Cases Black");
+      assert.equal(item.priceAzn,2000,`${model.id}: confirmed black luggage retail price must be 2,000 AZN`);
+      blackLuggageModels.push(model.id);
+    }
   }
 }
+assert.deepEqual(blackLuggageModels.sort(),["1000mt-x","800mt-x"]);
 assert.equal(accessoryCount,594);
 assert.ok(report.bundleBytes < 60000);
 const html = fs.readFileSync(path.join(dist,"aksesuar-konfiquratoru/index.html"),"utf8");

@@ -161,6 +161,21 @@ unless page.include?(godaddy_price_marker)
   page.sub!(model_list_anchor, price_override)
 end
 
+# Owner-confirmed retail prices take precedence over legacy imported prices.
+# 2026-09-11: Kit Luggage Cases Black, the same SKU in each compatible catalog.
+confirmed_prices_json = JSON.generate("6WWV-808000-5002-10" => 2_000)
+confirmed_price_marker = "cfmotoConfirmedAccessoryPricesV1"
+if page.include?(confirmed_price_marker)
+  confirmed_table = /#{confirmed_price_marker}=\{.*?\},cfmotoApplyConfirmedAccessoryPricesV1=/
+  abort "Expected one confirmed accessory-price table" unless page.scan(confirmed_table).size == 1
+  page.sub!(confirmed_table, "#{confirmed_price_marker}=#{confirmed_prices_json},cfmotoApplyConfirmedAccessoryPricesV1=")
+else
+  formatter_anchor = ",es=new Intl.NumberFormat"
+  abort "Confirmed accessory-price formatter anchor not found" unless page.scan(formatter_anchor).size == 1
+  confirmed_override = %Q{,#{confirmed_price_marker}=#{confirmed_prices_json},cfmotoApplyConfirmedAccessoryPricesV1=ei.forEach(e=>e.accessories.forEach(r=>{let t=#{confirmed_price_marker}[r.partNumber];void 0!==t&&(r.priceAzn=t)})),es=new Intl.NumberFormat}
+  page.sub!(formatter_anchor, confirmed_override)
+end
+
 FileUtils.mkdir_p(File.dirname(page_target_path))
 write(page_target_path, page)
 
