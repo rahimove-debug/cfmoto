@@ -29,6 +29,9 @@ abort "Accessory integration cleanup failed" unless system(RbConfig.ruby, access
 model_500sr = File.join(__dir__, "apply_500sr_model.rb")
 abort "500SR model integration failed" unless system(RbConfig.ruby, model_500sr)
 
+confirmed_model_prices = File.join(__dir__, "apply_confirmed_model_prices.rb")
+abort "Confirmed model price update failed" unless system(RbConfig.ruby, confirmed_model_prices)
+
 updates = File.join(__dir__, "apply_site_updates.rb")
 abort "Site updates failed" unless system(RbConfig.ruby, updates)
 
@@ -110,6 +113,9 @@ abort "Model image audit failed" unless system(RbConfig.ruby, model_image_audit)
 home_category_links_audit = File.join(__dir__, "audit_home_category_links.rb")
 abort "Homepage category-link audit failed" unless system(RbConfig.ruby, home_category_links_audit)
 
+confirmed_price_presentation = File.join(__dir__, "apply_confirmed_price_presentation.rb")
+abort "Confirmed price presentation failed" unless system(RbConfig.ruby, confirmed_price_presentation)
+
 FileUtils.rm_rf(DIST)
 FileUtils.mkdir_p(DIST)
 
@@ -149,3 +155,6 @@ abort "Configurator regression audit failed" unless system("node", File.join(__d
 
 # Validate the files actually published, after every final-output transformation.
 abort "Published SEO audit failed" unless system("node", File.join(__dir__, "audit_published_seo.mjs"))
+
+confirmed_pricing_audit = File.join(__dir__, "audit_confirmed_pricing.rb")
+abort "Confirmed pricing audit failed" unless system(RbConfig.ruby, confirmed_pricing_audit, DIST)

@@ -533,10 +533,10 @@ def build_c5_page
   html.gsub!("12,400", "13,900")
   html.gsub!("12400", "13900")
   html.gsub!("Nağd satış qiyməti", "Nağd satış qiyməti · ƏDV daxil")
-  html.gsub!("Hər relyef üçün hazır.", "Gündəlik işdən həftəsonu macərasına.")
+  html.gsub!("Hər relyef üçün hazır.", "Yeni GEN⁴ platforması ilə daha çox imkan.")
   html.gsub!(
     "CFORCE C5 iş, istirahət və çətin relyefdə etibarlı hərəkət üçün yaradılmış çoxməqsədli kvadrosikldir.",
-    "CFORCE C5 yeni nəsil 500 cc sinifli ATV-dir; gündəlik iş, yedəkləmə və həftəsonu macəraları üçün hazırlanıb."
+    "CFORCE C5 yeni GEN⁴ platformalı 500 cc sinifli ATV-dir; gündəlik iş, yedəkləmə və həftəsonu macəraları üçün hazırlanıb."
   )
   html.gsub!("408,8", "498,6")
   html.gsub!("33 a.g.", "39 a.g.")
@@ -555,8 +555,9 @@ def build_c5_page
   )
   html.gsub!(
     "Yığcam ölçülər, ifadəli işıqlandırma və funksional kuzov C4-ü gündəlik istifadə üçün əlçatan edir.",
-    "GEN⁴ kuzov, LED işıqlandırma və arxa hərəkət işığı C5-i işdə və çətin relyefdə daha funksional edir."
+    "GEN⁴ platforması müasir kuzovu, LED işıqlandırmanı və güclü yük imkanlarını bir araya gətirərək C5-i gündəlik işdə və çətin relyefdə daha funksional edir."
   )
+  html.gsub!("Yeni GEN⁴ dizayn", "Yeni GEN⁴ platforması")
   html.gsub!(
     "Yük platformaları və yedəkləmə yönümlü quruluş təsərrüfatla istirahəti bir texnikada birləşdirir.",
     "40/80 kq yük rəfləri, 612 kq yedəkləmə və 2500 lb bucurqad işi və istirahəti bir texnikada birləşdirir."
@@ -1221,6 +1222,7 @@ checks = {
   "home C5 calculator option" => home.include?('value="CFORCE C5"'),
   "home catalog count" => home.include?("48<!-- --> aktual model") || home.include?("48 aktual model"),
   "C5 VAT price" => c5.include?("13,900 AZN"),
+  "C5 GEN4 platform positioning" => c5.include?("Yeni GEN⁴ platforması") && c5.include?("yeni GEN⁴ platformalı 500 cc sinifli ATV-dir"),
   "C5 calculator matches VAT price" => c5.include?('<strong>50<!-- -->% · <!-- -->6,950<!-- --> AZN</strong>') && c5.include?('<strong>666<!-- --> <small>AZN / ay</small></strong>') && c5.include?('6%2C950%20AZN%20(50%25)'),
   "C5 chassis tab matches RSC data" => c5.include?(">Şassi və yük</button>") && !c5.include?(">Şassi</button>"),
   "C5 blue color image" => c5.include?("/models/cforce-c5.webp"),

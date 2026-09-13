@@ -1,0 +1,102 @@
+/* User-confirmed model pricing and campaign presentation. */
+.product-price.is-campaign,
+.model-price.is-campaign,
+.category-campaign-price,
+.campaign-table-price,
+.campaign-menu-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 5px 10px;
+}
+
+.product-price.is-campaign small,
+.model-price.is-campaign small {
+  flex-basis: 100%;
+}
+
+.product-price.is-campaign del,
+.model-price.is-campaign del,
+.category-campaign-price del,
+.campaign-table-price del,
+.campaign-menu-price del {
+  color: #68777a;
+  font-size: 0.78em;
+  font-weight: 600;
+  text-decoration-color: #ef5b2a;
+  text-decoration-thickness: 2px;
+}
+
+.product-price.is-campaign strong,
+.model-price.is-campaign strong,
+.category-campaign-price strong,
+.campaign-table-price strong,
+.campaign-menu-price span {
+  color: #e94f1d;
+}
+
+.product-price .campaign-saving,
+.model-price .campaign-saving,
+.category-campaign-price small,
+.campaign-table-price small {
+  border-radius: 999px;
+  background: #fff0e9;
+  color: #a5320d;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.product-price .campaign-saving {
+  flex-basis: auto;
+}
+
+.category-campaign-price {
+  margin: 7px 0 10px;
+}
+
+.campaign-table-price {
+  min-width: 150px;
+}
+
+.campaign-menu-price {
+  line-height: 1.25;
+}
+
+.campaign-menu-price del {
+  flex-basis: 100%;
+}
+
+/* The C5 VAT label and Z10-4 two-price treatment need a full card row at
+   four-column desktop widths; stacking prevents model names and prices from
+   colliding while retaining the existing card design. */
+.model-card:has(a[href="/model/cforce-c5/"]) .model-info,
+.model-card:has(a[href="/ru/model/cforce-c5/"]) .model-info,
+.model-card:has(a[href="/model/z10-4/"]) .model-info,
+.model-card:has(a[href="/ru/model/z10-4/"]) .model-info {
+  display: block;
+}
+
+.model-card:has(a[href="/model/cforce-c5/"]) .model-price,
+.model-card:has(a[href="/ru/model/cforce-c5/"]) .model-price,
+.model-card:has(a[href="/model/z10-4/"]) .model-price,
+.model-card:has(a[href="/ru/model/z10-4/"]) .model-price {
+  width: 100%;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.model-card .model-price.is-campaign {
+  justify-content: flex-start;
+}
+
+@media (max-width: 580px) {
+  .product-price.is-campaign {
+    gap: 4px 8px;
+  }
+
+  .product-price.is-campaign strong {
+    font-size: clamp(30px, 10vw, 42px);
+  }
+}
