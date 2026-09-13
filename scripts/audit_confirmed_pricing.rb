@@ -30,6 +30,24 @@ def props_identify_675nk?(props)
     props["href"].to_s.match?(%r{/model/675nk/?\z})
 end
 
+def deep_contains_675nk_name?(value)
+  case value
+  when String
+    value.include?("675NK")
+  when Array
+    value.any? { |child| deep_contains_675nk_name?(child) }
+  when Hash
+    value.each_value.any? { |child| deep_contains_675nk_name?(child) }
+  else
+    false
+  end
+end
+
+def schema_props_identify_675nk?(props)
+  schema = props.is_a?(Hash) ? props.dig("dangerouslySetInnerHTML", "__html") : nil
+  schema.is_a?(String) && schema.include?('"name":"675NK"')
+end
+
 def deep_contains_old_675_price?(value)
   case value
   when String
@@ -63,11 +81,15 @@ def stale_675_rsc_node?(html)
         case value
         when Array
           props = value[3].is_a?(Hash) ? value[3] : nil
-          identifies_model = value[2].to_s.downcase == "675nk" || props_identify_675nk?(props)
+          identifies_model = value[2].to_s.downcase == "675nk" ||
+            props_identify_675nk?(props) ||
+            schema_props_identify_675nk?(props) ||
+            (props&.fetch("className", nil) == "product-hero" && deep_contains_675nk_name?(value))
           stale ||= deep_contains_old_675_price?(value) if identifies_model
           value.each { |child| visit.call(child) } unless identifies_model
         when Hash
           identifies_model = props_identify_675nk?(value) ||
+            schema_props_identify_675nk?(value) ||
             (value["name"] == "675NK" && (value.key?("price") || value.key?("basePriceAzn")))
           stale ||= deep_contains_old_675_price?(value) if identifies_model
           value.each_value { |child| visit.call(child) } unless identifies_model
@@ -181,8 +203,11 @@ end
 
 Dir.glob(File.join(ROOT, "**", "*.html")).each do |path|
   html = read_utf8(path)
-  if path.match?(%r{/(?:ru/)?model/675nk/index\.html\z}) && html.match?(OLD_675_PRICE)
-    errors << "Stale 675NK price remains on #{path}"
+  if path.match?(%r{/(?:ru/)?model/675nk/index\.html\z})
+    product_price = html[%r{<div class="product-price"[^>]*>.*?</div>}m]
+    finance = html[%r{<section class="model-finance\b.*?</section>}m]
+    errors << "Stale 675NK product price remains on #{path}" if product_price&.match?(OLD_675_PRICE)
+    errors << "Stale 675NK finance price remains on #{path}" if finance&.match?(OLD_675_PRICE)
   end
   %w[article tr option a].each do |tag|
     html.scan(%r{<#{tag}\b[^>]*>.*?</#{tag}>}m).each do |fragment|

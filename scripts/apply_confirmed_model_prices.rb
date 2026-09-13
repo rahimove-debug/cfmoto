@@ -65,6 +65,24 @@ def props_identify_675nk?(props)
     props["href"].to_s.match?(%r{/model/675nk/?\z})
 end
 
+def deep_contains_675nk_name?(value)
+  case value
+  when String
+    value.include?("675NK")
+  when Array
+    value.any? { |child| deep_contains_675nk_name?(child) }
+  when Hash
+    value.each_value.any? { |child| deep_contains_675nk_name?(child) }
+  else
+    false
+  end
+end
+
+def schema_props_identify_675nk?(props)
+  schema = props.is_a?(Hash) ? props.dig("dangerouslySetInnerHTML", "__html") : nil
+  schema.is_a?(String) && schema.include?('"name":"675NK"')
+end
+
 def transform_rsc_675nk!(html)
   replacements = 0
   pattern = /(self\.__VINEXT_RSC_CHUNKS__\.push\()("(?:\\.|[^"\\])*")(\))/
@@ -89,14 +107,19 @@ def transform_rsc_675nk!(html)
         case value
         when Array
           props = value[3].is_a?(Hash) ? value[3] : nil
-          identifies_model = value[2].to_s.downcase == "675nk" || props_identify_675nk?(props)
+          identifies_model = value[2].to_s.downcase == "675nk" ||
+            props_identify_675nk?(props) ||
+            schema_props_identify_675nk?(props) ||
+            (props&.fetch("className", nil) == "product-hero" && deep_contains_675nk_name?(value))
           if identifies_model
             replacements += replace_deep!(value)
           else
             value.each { |child| visit.call(child) }
           end
         when Hash
-          if props_identify_675nk?(value) || (value["name"] == "675NK" && (value.key?("price") || value.key?("basePriceAzn")))
+          if props_identify_675nk?(value) ||
+              schema_props_identify_675nk?(value) ||
+              (value["name"] == "675NK" && (value.key?("price") || value.key?("basePriceAzn")))
             replacements += replace_deep!(value)
           else
             value.each_value { |child| visit.call(child) }
@@ -112,6 +135,44 @@ def transform_rsc_675nk!(html)
   end
 
   [transformed, replacements]
+end
+
+
+def transform_675nk_detail!(html)
+  replacements = 0
+
+  html = html.gsub(%r{<script type="application/ld\+json">(.*?)</script>}m) do |script|
+    source = Regexp.last_match(1)
+    begin
+      schema = JSON.parse(source)
+    rescue JSON::ParserError
+      next script
+    end
+    unless schema["@type"] == "Product" && schema["name"] == "675NK"
+      next script
+    end
+
+    price = schema.dig("offers", "price")
+    if price.to_s == "12800"
+      schema["offers"]["price"] = price.is_a?(String) ? "13290" : 13_290
+      replacements += 1
+    end
+    %(<script type="application/ld+json">#{JSON.generate(schema)}</script>)
+  end
+
+  html = html.gsub(%r{<div class="product-price"[^>]*>.*?</div>}m) do |fragment|
+    changed = replace_price_tokens(fragment)
+    replacements += fragment.scan(OLD_PRICE).size if changed != fragment
+    changed
+  end
+
+  html = html.gsub(%r{<section class="model-finance\b.*?</section>}m) do |fragment|
+    changed = replace_price_tokens(fragment)
+    replacements += fragment.scan(OLD_PRICE).size if changed != fragment
+    changed
+  end
+
+  [html, replacements]
 end
 
 def transform_rendered_675nk!(html)
@@ -145,13 +206,14 @@ PUBLIC_TEXT_PATHS.each do |path|
   content = original.dup
   replacements = 0
 
-  if path.match?(%r{/(?:ru/)?model/675nk/index\.html\z})
-    replacements = content.scan(OLD_PRICE).size
-    content = replace_price_tokens(content)
-  elsif path.end_with?(".html")
+  if path.end_with?(".html")
     content, rendered = transform_rendered_675nk!(content)
+    detail = 0
+    if path.match?(%r{/(?:ru/)?model/675nk/index\.html\z})
+      content, detail = transform_675nk_detail!(content)
+    end
     content, rsc = transform_rsc_675nk!(content)
-    replacements += rendered + rsc
+    replacements += rendered + detail + rsc
   elsif path.include?("/assets/")
     content = content.gsub(/\{slug:`675nk`,[^{}]*\}/) do |record|
       changed = replace_price_tokens(record)
@@ -174,7 +236,10 @@ PUBLIC_TEXT_PATHS.each do |path|
 end
 
 model_page = File.read(File.join(ROOT, "model", "675nk", "index.html"), encoding: "UTF-8")
-abort "675NK model page still contains the old price" if model_page.match?(OLD_PRICE)
+probe, rendered_remaining = transform_rendered_675nk!(model_page.dup)
+probe, detail_remaining = transform_675nk_detail!(probe)
+_probe, rsc_remaining = transform_rsc_675nk!(probe)
+abort "675NK model page still contains a scoped old price" unless rendered_remaining + detail_remaining + rsc_remaining == 0
 abort "675NK model page was not updated" unless model_page.include?("13,290") && model_page.include?("13290")
 
 menu_bundles = Dir.glob(File.join(ROOT, "assets", "ProductMegaMenu-*.js"))
