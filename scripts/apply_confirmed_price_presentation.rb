@@ -2,12 +2,44 @@
 require "json"
 
 ROOT = File.expand_path("..", __dir__)
-STYLESHEET = '<link rel="stylesheet" href="/assets/confirmed-pricing-v1.css"/>'
+STYLESHEET = '<link rel="stylesheet" href="/assets/confirmed-pricing-v2.css"/>'
 
-AZ_CAMPAIGN_LABEL = "Kampaniya qiyməti"
-RU_CAMPAIGN_LABEL = "Акционная цена"
-AZ_ACCESSIBLE_PRICE = "Z10-4 üçün siyahı qiyməti 49,900 AZN, kampaniya qiyməti 47,900 AZN-dir. Qənaət 2,000 AZN təşkil edir."
-RU_ACCESSIBLE_PRICE = "Цена Z10-4 по прайс-листу — 49,900 AZN, акционная цена — 47,900 AZN. Экономия составляет 2,000 AZN."
+CAMPAIGNS = {
+  "z10-4" => {
+    model: "Z10-4",
+    list_price: "49,900 AZN",
+    campaign_price: "47,900 AZN",
+    copy: {
+      az: {
+        label: "Kampaniya qiyməti",
+        saving: "2,000 AZN qənaət",
+        accessible: "Z10-4 üçün siyahı qiyməti 49,900 AZN, kampaniya qiyməti 47,900 AZN-dir. Qənaət 2,000 AZN təşkil edir."
+      },
+      ru: {
+        label: "Акционная цена",
+        saving: "Экономия 2,000 AZN",
+        accessible: "Цена Z10-4 по прайс-листу — 49,900 AZN, акционная цена — 47,900 AZN. Экономия составляет 2,000 AZN."
+      }
+    }
+  },
+  "450cl-c-bobber" => {
+    model: "450CL-C BOBBER",
+    list_price: "12,400 AZN",
+    campaign_price: "10,900 AZN",
+    copy: {
+      az: {
+        label: "Kampaniya qiyməti",
+        saving: "1,500 AZN qənaət",
+        accessible: "450CL-C BOBBER üçün siyahı qiyməti 12,400 AZN, kampaniya qiyməti 10,900 AZN-dir. Qənaət 1,500 AZN təşkil edir."
+      },
+      ru: {
+        label: "Акционная цена",
+        saving: "Экономия 1,500 AZN",
+        accessible: "Цена 450CL-C BOBBER по прайс-листу — 12,400 AZN, акционная цена — 10,900 AZN. Экономия составляет 1,500 AZN."
+      }
+    }
+  }
+}.freeze
 
 def read_utf8(path)
   File.read(path, encoding: "UTF-8")
@@ -25,6 +57,19 @@ def replace_required!(content, before, after, label)
   true
 end
 
+def replace_scoped_fragment!(content, pattern, before, after, label)
+  matches = 0
+  transformed = content.gsub(pattern) do |fragment|
+    matches += 1
+    next fragment if fragment.include?(after)
+
+    abort "#{label} anchor not found in scoped fragment" unless fragment.include?(before)
+    fragment.sub(before, after)
+  end
+  abort "#{label}: expected one scoped fragment, found #{matches}" unless matches == 1
+  transformed
+end
+
 def replace_page_metadata!(html, title:, description:)
   old_title = html[/<title>(.*?)<\/title>/m, 1]
   old_description = html[/<meta name="description" content="([^"]*)"\/>/, 1]
@@ -35,9 +80,10 @@ def replace_page_metadata!(html, title:, description:)
   html.gsub!(old_description, description)
 end
 
-def transform_z10_rsc_price!(html, language)
+def transform_campaign_rsc_price!(html, language, campaign)
   replacements = 0
   existing = 0
+  copy = campaign.fetch(:copy).fetch(language)
   pattern = /(self\.__VINEXT_RSC_CHUNKS__\.push\()("(?:\\.|[^"\\])*")(\))/
 
   html = html.gsub(pattern) do
@@ -59,26 +105,24 @@ def transform_z10_rsc_price!(html, language)
       visit = lambda do |value|
         if value.is_a?(Array)
           if value[0] == "$" && value[1] == "div" && value[3].is_a?(Hash) && value[3]["className"] == "product-price"
-            ru = language == :ru
             value[3]["className"] = "product-price is-campaign"
-            value[3]["aria-label"] = ru ? RU_ACCESSIBLE_PRICE : AZ_ACCESSIBLE_PRICE
+            value[3]["aria-label"] = copy.fetch(:accessible)
             value[3]["children"] = [
-              ["$", "small", nil, { "children" => ru ? RU_CAMPAIGN_LABEL : AZ_CAMPAIGN_LABEL }],
-              ["$", "del", nil, { "children" => "49,900 AZN" }],
-              ["$", "strong", nil, { "children" => "47,900 AZN" }],
-              ["$", "span", nil, { "className" => "campaign-saving", "children" => ru ? "Экономия 2,000 AZN" : "2,000 AZN qənaət" }]
+              ["$", "small", nil, { "children" => copy.fetch(:label) }],
+              ["$", "del", nil, { "children" => campaign.fetch(:list_price) }],
+              ["$", "strong", nil, { "children" => campaign.fetch(:campaign_price) }],
+              ["$", "span", nil, { "className" => "campaign-saving", "children" => copy.fetch(:saving) }]
             ]
             replacements += 1
           elsif value[0] == "$" && value[1] == "div" && value[3].is_a?(Hash) && value[3]["className"] == "product-price is-campaign"
-            expected_label = language == :ru ? RU_CAMPAIGN_LABEL : AZ_CAMPAIGN_LABEL
-            expected_accessible = language == :ru ? RU_ACCESSIBLE_PRICE : AZ_ACCESSIBLE_PRICE
             children = value[3]["children"]
-            valid = value[3]["aria-label"] == expected_accessible &&
+            valid = value[3]["aria-label"] == copy.fetch(:accessible) &&
               children.is_a?(Array) &&
-              children.dig(0, 3, "children") == expected_label &&
-              children.dig(1, 3, "children") == "49,900 AZN" &&
-              children.dig(2, 3, "children") == "47,900 AZN"
-            abort "#{language}: malformed existing Z10-4 RSC campaign price" unless valid
+              children.dig(0, 3, "children") == copy.fetch(:label) &&
+              children.dig(1, 3, "children") == campaign.fetch(:list_price) &&
+              children.dig(2, 3, "children") == campaign.fetch(:campaign_price) &&
+              children.dig(3, 3, "children") == copy.fetch(:saving)
+            abort "#{language}: malformed existing #{campaign.fetch(:model)} RSC campaign price" unless valid
             existing += 1
           end
           value.each { |child| visit.call(child) }
@@ -95,24 +139,21 @@ def transform_z10_rsc_price!(html, language)
   end
 
   count = replacements + existing
-  abort "#{language}: expected one Z10-4 RSC price block, found #{count}" unless count == 1
+  abort "#{language}: expected one #{campaign.fetch(:model)} RSC price block, found #{count}" unless count == 1
   html
 end
 
-def campaign_product_price(language)
-  if language == :ru
-    %(<div class="product-price is-campaign" aria-label="#{RU_ACCESSIBLE_PRICE}"><small>#{RU_CAMPAIGN_LABEL}</small><del>49,900 AZN</del><strong>47,900 AZN</strong><span class="campaign-saving">Экономия 2,000 AZN</span></div>)
-  else
-    %(<div class="product-price is-campaign" aria-label="#{AZ_ACCESSIBLE_PRICE}"><small>#{AZ_CAMPAIGN_LABEL}</small><del>49,900 AZN</del><strong>47,900 AZN</strong><span class="campaign-saving">2,000 AZN qənaət</span></div>)
-  end
+def campaign_product_price(language, campaign)
+  copy = campaign.fetch(:copy).fetch(language)
+  %(<div class="product-price is-campaign" aria-label="#{copy.fetch(:accessible)}"><small>#{copy.fetch(:label)}</small><del>#{campaign.fetch(:list_price)}</del><strong>#{campaign.fetch(:campaign_price)}</strong><span class="campaign-saving">#{copy.fetch(:saving)}</span></div>)
 end
 
 # Add list-price metadata to the shared catalog and render it in both the
-# mega-menu and homepage React components. The transactional price remains
-# 47,900 AZN, which is what calculators and Product Offer schema must use.
+# mega-menu and homepage React components. Transactional prices remain the
+# campaign prices used by calculators, the configurator and Product Offers.
 Dir.glob(File.join(ROOT, "assets", "ProductMegaMenu-*.js")).each do |path|
   content = read_utf8(path)
-  next unless content.include?('slug:`z10-4`') || content.include?('slug:`cforce-c5`')
+  next unless content.include?('slug:`z10-4`') || content.include?('slug:`450cl-c-bobber`') || content.include?('slug:`cforce-c5`')
 
   if content.include?('slug:`cforce-c5`')
     content = content.gsub(/\{slug:`cforce-c5`,[^{}]*\}/) do |record|
@@ -126,17 +167,20 @@ Dir.glob(File.join(ROOT, "assets", "ProductMegaMenu-*.js")).each do |path|
     end
   end
 
-  unless content.include?('slug:`z10-4`')
-    write_utf8(path, content)
-    next
-  end
-
-  unless content.include?('price:47900,listPrice:49900,campaign:!0,image:`/models/z10-4.webp`')
-    changed = content.sub!(
+  {
+    "Z10-4" => [
       'price:47900,image:`/models/z10-4.webp`',
       'price:47900,listPrice:49900,campaign:!0,image:`/models/z10-4.webp`'
-    )
-    abort "Z10-4 catalog anchor missing in #{File.basename(path)}" unless changed
+    ],
+    "450CL-C BOBBER" => [
+      'price:10900,image:`/models/450cl-c-bobber.webp`',
+      'price:10900,listPrice:12400,campaign:!0,image:`/models/450cl-c-bobber.webp`'
+    ]
+  }.each do |model, (before, after)|
+    next if content.include?(after)
+
+    changed = content.sub!(before, after)
+    abort "#{model} catalog anchor missing in #{File.basename(path)}" unless changed
   end
 
   russian = content.include?("Уточнить цену")
@@ -191,6 +235,7 @@ end
 
 html_paths.each do |path|
   html = read_utf8(path)
+  html.gsub!('<link rel="stylesheet" href="/assets/confirmed-pricing-v1.css"/>', "")
   html.sub!("</head>", "#{STYLESHEET}</head>") unless html.include?(STYLESHEET)
   russian = path.include?("/ru/")
 
@@ -198,13 +243,18 @@ html_paths.each do |path|
     card.gsub(/<span class="badge">(?:Yeni|Новинка)<\/span>/, '<span class="badge">GEN⁴</span>')
   end
 
-  old_menu = '<h3>Z10-4</h3><p>47,900 AZN<!-- --> <b>↗︎</b></p>'
-  new_menu = if russian
-    '<h3>Z10-4</h3><p class="campaign-menu-price"><del>49,900 AZN</del><span>47,900 AZN · Акция</span><!-- --> <b>↗︎</b></p>'
-  else
-    '<h3>Z10-4</h3><p class="campaign-menu-price"><del>49,900 AZN</del><span>47,900 AZN · Kampaniya</span><!-- --> <b>↗︎</b></p>'
+  [
+    ["Z10-4", "49,900 AZN", "47,900 AZN"],
+    ["450CL-C BOBBER", "12,400 AZN", "10,900 AZN"]
+  ].each do |model, list_price, campaign_price|
+    old_menu = %(<h3>#{model}</h3><p>#{campaign_price}<!-- --> <b>↗︎</b></p>)
+    new_menu = if russian
+      %(<h3>#{model}</h3><p class="campaign-menu-price"><del>#{list_price}</del><span>#{campaign_price} · Акция</span><!-- --> <b>↗︎</b></p>)
+    else
+      %(<h3>#{model}</h3><p class="campaign-menu-price"><del>#{list_price}</del><span>#{campaign_price} · Kampaniya</span><!-- --> <b>↗︎</b></p>)
+    end
+    html.gsub!(old_menu, new_menu)
   end
-  html.gsub!(old_menu, new_menu)
   write_utf8(path, html)
 end
 
@@ -229,6 +279,27 @@ end
   write_utf8(path, html)
 end
 
+{
+  File.join(ROOT, "index.html") => [
+    '<div class="model-price"><small>Qiymət</small><strong>10,900 AZN</strong></div>',
+    '<div class="model-price is-campaign"><small>Kampaniya qiyməti</small><del>12,400 AZN</del><strong>10,900 AZN</strong><span class="campaign-saving">1,500 AZN qənaət</span></div>'
+  ],
+  File.join(ROOT, "ru", "index.html") => [
+    '<div class="model-price"><small>Цена</small><strong>10,900 AZN</strong></div>',
+    '<div class="model-price is-campaign"><small>Акционная цена</small><del>12,400 AZN</del><strong>10,900 AZN</strong><span class="campaign-saving">Экономия 1,500 AZN</span></div>'
+  ]
+}.each do |path, (before, after)|
+  html = read_utf8(path)
+  html = replace_scoped_fragment!(
+    html,
+    %r{<article class="model-card">(?:(?!</article>).)*href="/(?:ru/)?model/450cl-c-bobber/"(?:(?!</article>).)*</article>}m,
+    before,
+    after,
+    "#{path} 450CL-C BOBBER card"
+  )
+  write_utf8(path, html)
+end
+
 # Category pages.
 {
   File.join(ROOT, "buggy", "index.html") => [
@@ -238,10 +309,18 @@ end
   File.join(ROOT, "ru", "buggy", "index.html") => [
     '<h2>Z10-4</h2><p>Багги · 1000 см³</p><strong>47,900 AZN</strong>',
     '<h2>Z10-4</h2><p>Багги · 1000 см³</p><div class="category-campaign-price" aria-label="Z10-4: цена по прайс-листу 49,900 AZN, акционная цена 47,900 AZN"><small>Акция</small><del>49,900 AZN</del><strong>47,900 AZN</strong></div>'
+  ],
+  File.join(ROOT, "motosiklet", "index.html") => [
+    '<h2>450CL-C BOBBER</h2><p>Motosiklet · 450 cc</p><strong>10,900 AZN</strong>',
+    '<h2>450CL-C BOBBER</h2><p>Motosiklet · 450 cc</p><div class="category-campaign-price" aria-label="450CL-C BOBBER: siyahı qiyməti 12,400 AZN, kampaniya qiyməti 10,900 AZN, qənaət 1,500 AZN"><small>Kampaniya</small><del>12,400 AZN</del><strong>10,900 AZN</strong></div>'
+  ],
+  File.join(ROOT, "ru", "motocikly", "index.html") => [
+    '<h2>450CL-C BOBBER</h2><p>Мотоцикл · 450 см³</p><strong>10,900 AZN</strong>',
+    '<h2>450CL-C BOBBER</h2><p>Мотоцикл · 450 см³</p><div class="category-campaign-price" aria-label="450CL-C BOBBER: цена по прайс-листу 12,400 AZN, акционная цена 10,900 AZN, экономия 1,500 AZN"><small>Акция</small><del>12,400 AZN</del><strong>10,900 AZN</strong></div>'
   ]
 }.each do |path, (before, after)|
   html = read_utf8(path)
-  replace_required!(html, before, after, "#{path} Z10-4 category card")
+  replace_required!(html, before, after, "#{path} campaign category card")
   write_utf8(path, html)
 end
 
@@ -279,24 +358,56 @@ end
   write_utf8(path, html)
 end
 
+{
+  File.join(ROOT, "model-muqayisesi", "index.html") => [
+    '<th scope="row"><a href="/model/450cl-c-bobber/">450CL-C BOBBER</a></th><td>Motosiklet · Cruiser · 450 cc</td><td>10,900 AZN</td>',
+    '<th scope="row"><a href="/model/450cl-c-bobber/">450CL-C BOBBER</a></th><td>Motosiklet · Cruiser · 450 cc</td><td class="campaign-table-price"><small>Kampaniya</small><del>12,400 AZN</del><strong>10,900 AZN</strong></td>'
+  ],
+  File.join(ROOT, "ru", "sravnenie-modeley", "index.html") => [
+    '<th scope="row"><a href="/ru/model/450cl-c-bobber/">450CL-C BOBBER</a></th><td>Мотоцикл · Круизер · 450 см³</td><td>10,900 AZN</td>',
+    '<th scope="row"><a href="/ru/model/450cl-c-bobber/">450CL-C BOBBER</a></th><td>Мотоцикл · Круизер · 450 см³</td><td class="campaign-table-price"><small>Акция</small><del>12,400 AZN</del><strong>10,900 AZN</strong></td>'
+  ]
+}.each do |path, (before, after)|
+  html = read_utf8(path)
+  replace_required!(html, before, after, "#{path} 450CL-C BOBBER comparison row")
+  write_utf8(path, html)
+end
+
 # Product detail pages and search/social metadata.
 {
   File.join(ROOT, "model", "z10-4", "index.html") => {
+    campaign: "z10-4",
     language: :az,
     before: '<div class="product-price"><small>Nağd satış qiyməti</small><strong>47,900 AZN</strong></div>',
     title: "Z10-4 | CFMOTO Azerbaijan",
     description: "CFMOTO Z10-4: siyahı qiyməti 49,900 AZN, kampaniya qiyməti 47,900 AZN. 998 cc turbo mühərrik və dörd nəfərlik kokpit."
   },
   File.join(ROOT, "ru", "model", "z10-4", "index.html") => {
+    campaign: "z10-4",
     language: :ru,
     before: '<div class="product-price"><small>Цена при оплате наличными</small><strong>47,900 AZN</strong></div>',
     title: "Z10-4 | CFMOTO Азербайджан",
     description: "CFMOTO Z10-4: цена по прайс-листу 49,900 AZN, акционная цена 47,900 AZN. Турбодвигатель 998 см³ и четырёхместный кокпит."
+  },
+  File.join(ROOT, "model", "450cl-c-bobber", "index.html") => {
+    campaign: "450cl-c-bobber",
+    language: :az,
+    before: '<div class="product-price"><small>Nağd satış qiyməti</small><strong>10,900 AZN</strong></div>',
+    title: "CFMOTO 450CL-C BOBBER — kampaniya qiyməti 10,900 AZN",
+    description: "CFMOTO 450CL-C BOBBER: siyahı qiyməti 12,400 AZN, kampaniya qiyməti 10,900 AZN. 1,500 AZN qənaət və model xüsusiyyətləri."
+  },
+  File.join(ROOT, "ru", "model", "450cl-c-bobber", "index.html") => {
+    campaign: "450cl-c-bobber",
+    language: :ru,
+    before: '<div class="product-price"><small>Цена при оплате наличными</small><strong>10,900 AZN</strong></div>',
+    title: "CFMOTO 450CL-C BOBBER — цена по акции 10,900 AZN",
+    description: "CFMOTO 450CL-C BOBBER: цена по прайс-листу 12,400 AZN, акционная цена 10,900 AZN. Экономия 1,500 AZN и характеристики модели."
   }
 }.each do |path, config|
+  campaign = CAMPAIGNS.fetch(config.fetch(:campaign))
   html = read_utf8(path)
-  replace_required!(html, config[:before], campaign_product_price(config[:language]), "#{path} campaign product price")
-  html = transform_z10_rsc_price!(html, config[:language])
+  replace_required!(html, config[:before], campaign_product_price(config[:language], campaign), "#{path} campaign product price")
+  html = transform_campaign_rsc_price!(html, config[:language], campaign)
   replace_page_metadata!(html, title: config[:title], description: config[:description])
   write_utf8(path, html)
 end
@@ -345,4 +456,4 @@ replace_required!(
 )
 write_utf8(news_path, news)
 
-puts "Confirmed price presentation applied: C5 GEN⁴ positioning and Z10-4 list/campaign pricing"
+puts "Confirmed price presentation applied: C5 GEN⁴ positioning plus Z10-4 and 450CL-C BOBBER list/campaign pricing"
