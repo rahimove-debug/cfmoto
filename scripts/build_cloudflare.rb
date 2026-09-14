@@ -32,6 +32,9 @@ abort "500SR model integration failed" unless system(RbConfig.ruby, model_500sr)
 confirmed_model_prices = File.join(__dir__, "apply_confirmed_model_prices.rb")
 abort "Confirmed model price update failed" unless system(RbConfig.ruby, confirmed_model_prices)
 
+cflite_250nk = File.join(__dir__, "apply_cflite_250nk.rb")
+abort "CFLITE 250NK update failed" unless system(RbConfig.ruby, cflite_250nk)
+
 updates = File.join(__dir__, "apply_site_updates.rb")
 abort "Site updates failed" unless system(RbConfig.ruby, updates)
 
@@ -49,6 +52,10 @@ abort "Analytics processing failed" unless system(RbConfig.ruby, analytics)
 
 russian = File.join(__dir__, "apply_russian.rb")
 abort "Russian localization failed" unless system(RbConfig.ruby, russian)
+
+# The Russian generator rebuilds localized model pages, so reapply the
+# model-specific variant presentation to keep both rendered languages aligned.
+abort "Localized CFLITE 250NK update failed" unless system(RbConfig.ruby, cflite_250nk)
 
 typography = File.join(__dir__, "apply_typography.rb")
 abort "Corporate typography processing failed" unless system(RbConfig.ruby, typography)
@@ -147,6 +154,11 @@ puts "Cloudflare bundle ready: #{html_count} HTML files in dist/"
 # imported catalog in the source snapshot for category/SEO generation.
 abort "Sales improvements failed" unless system("node", File.join(__dir__, "apply_sales_improvements.mjs"))
 abort "Sales regression audit failed" unless system("node", File.join(__dir__, "audit_sales_improvements.mjs"))
+
+# Sales rendering refreshes finance markup from the catalogue. Reassert the
+# two-variant hero and localized product schema in the actual deploy output.
+abort "Published CFLITE 250NK update failed" unless system(RbConfig.ruby, cflite_250nk, DIST)
+abort "Published CFLITE 250NK audit failed" unless system(RbConfig.ruby, File.join(__dir__, "audit_cflite_250nk.rb"), DIST)
 
 # Keep the imported configurator as the audited source; publish its resolved
 # catalog in model-sized files only after all local price/image patches ran.

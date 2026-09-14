@@ -1,0 +1,12 @@
+/* CFMOTO:CFLITE-250NK-V1 */
+.cflite-price-range strong{white-space:nowrap}
+.cflite-variants{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0 20px;max-width:520px}
+.cflite-variant{border:1px solid rgba(14,18,20,.14);border-radius:16px;background:rgba(255,255,255,.72);padding:14px 15px;box-shadow:0 10px 28px rgba(14,18,20,.05)}
+.cflite-variant.is-efi{border-color:rgba(61,183,194,.55);background:linear-gradient(135deg,rgba(76,199,209,.13),rgba(255,255,255,.8))}
+.cflite-variant-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.cflite-variant-head strong{font-size:15px;letter-spacing:.01em}
+.cflite-variant-head span{border-radius:999px;background:#121719;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.cflite-variant.is-efi .cflite-variant-head span{background:#42b9c4}
+.cflite-variant p{margin:0 0 8px;color:var(--muted,#677075);font-size:12px;line-height:1.45}
+.cflite-variant-price{display:block;font-size:22px;line-height:1.1;letter-spacing:-.025em;color:var(--ink,#111719)}
+@media (max-width:580px){.cflite-variants{grid-template-columns:1fr;margin:14px 0 18px}.cflite-variant{padding:13px 14px}.cflite-variant-price{font-size:21px}}
