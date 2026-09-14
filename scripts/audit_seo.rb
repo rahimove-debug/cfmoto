@@ -23,6 +23,8 @@ META_PIXEL_NOSCRIPT = "https://www.facebook.com/tr?id=#{META_PIXEL_ID}&ev=PageVi
 MIN_INFORMATIONAL_MAIN_WORDS = 220
 
 def expected_primary_model_image(slug)
+  return "/models/cflite-250nk-zephyr-blue-v1.webp" if slug == "250nk"
+
   suffix = CLEAN_IMAGE_SLUGS.include?(slug) ? "-clean" : ""
   "/models/#{slug}#{suffix}.webp"
 end
@@ -397,7 +399,7 @@ category_expectations.each do |slug, expectation|
 end
 
 card_images = Dir.glob(File.join(ROOT, "models", "cards", "*.webp"))
-errors << "Expected 48 base and 4 clean optimized model card images, found #{card_images.size}" unless card_images.size == 52
+errors << "Expected 48 base, 4 clean, and 1 cache-versioned optimized model card images, found #{card_images.size}" unless card_images.size == 53
 homepage_card_sources = home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten
 errors << "Homepage must use all 48 optimized model card images" unless homepage_card_sources.uniq.size == 48
 homepage_card_sources.uniq.each do |source|

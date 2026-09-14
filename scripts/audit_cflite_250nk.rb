@@ -19,7 +19,8 @@ pages.each do |locale, path|
   errors << "#{locale}: Carb variant missing" unless html.include?("Carb") && html.include?("4,790 AZN")
   errors << "#{locale}: legacy standalone name remains" if html.match?(/(?<!CFLITE )(?<!CFLITE%20)250NK/)
   errors << "#{locale}: official Zephyr Blue colour missing" unless html.include?("Zephyr Blue")
-  errors << "#{locale}: official Bordeaux Red colour missing" unless html.include?("Bordeaux Red") && html.include?("/models/250nk-bordeaux-red.webp")
+  errors << "#{locale}: official Zephyr Blue image missing" unless html.include?("/models/cflite-250nk-zephyr-blue-v1.webp")
+  errors << "#{locale}: official Bordeaux Red colour missing" unless html.include?("Bordeaux Red") && html.include?("/models/cflite-250nk-bordeaux-red-v1.webp")
   errors << "#{locale}: legacy colour remains" if html.include?("Athens Blue") || html.include?("Nebula Black") || html.include?("Ruby Red")
   errors << "#{locale}: variant stylesheet missing" unless html.include?("/assets/cflite-250nk-v1.css")
 
@@ -37,12 +38,12 @@ pages.each do |locale, path|
 end
 
 required_images = {
-  "models/250nk.webp" => "9aeb763ebfd82739689593413e86e26f29ec10f123b2e1a34ada3743ef5c45aa",
-  "models/250nk-bordeaux-red.webp" => "9929123d18dcddb9b24b2339acc81a80423ff605080a937aacfb95750cb049cf",
-  "models/cards/250nk.webp" => "f2cdb42642a7eac5260c6224b42d35c516282e27f352d52db1b29d3c0e565381",
-  "gallery/250nk-1.webp" => "ac6d82b36f5ec5eea9919949df474456e0e2ed585c9dd4630b4eecd4b3cebf38",
-  "gallery/250nk-2.webp" => "7767eba57a968a63992d362f529f75cef203db17a793261a5402709ddfe2fa10",
-  "gallery/250nk-3.webp" => "d2076b2513c78c192e4e071639373feeedaa5f808796fa60c6be995a8dbeedaf"
+  "models/cflite-250nk-zephyr-blue-v1.webp" => "9aeb763ebfd82739689593413e86e26f29ec10f123b2e1a34ada3743ef5c45aa",
+  "models/cflite-250nk-bordeaux-red-v1.webp" => "9929123d18dcddb9b24b2339acc81a80423ff605080a937aacfb95750cb049cf",
+  "models/cards/cflite-250nk-v1.webp" => "f2cdb42642a7eac5260c6224b42d35c516282e27f352d52db1b29d3c0e565381",
+  "gallery/cflite-250nk-1-v1.webp" => "ac6d82b36f5ec5eea9919949df474456e0e2ed585c9dd4630b4eecd4b3cebf38",
+  "gallery/cflite-250nk-2-v1.webp" => "7767eba57a968a63992d362f529f75cef203db17a793261a5402709ddfe2fa10",
+  "gallery/cflite-250nk-3-v1.webp" => "d2076b2513c78c192e4e071639373feeedaa5f808796fa60c6be995a8dbeedaf"
 }
 required_images.each do |relative, expected_sha256|
   path = File.join(ROOT, relative)
@@ -51,7 +52,7 @@ required_images.each do |relative, expected_sha256|
 end
 
 catalogues = Dir.glob(File.join(ROOT, "assets", "ProductMegaMenu-*.js"))
-record_pattern = /slug:`250nk`,name:`CFLITE 250NK`,type:`[^`]+`,segment:`Naked`,engineClass:`[^`]+`,price:4790,image:`\/models\/250nk\.webp`/
+record_pattern = /slug:`250nk`,name:`CFLITE 250NK`,type:`[^`]+`,segment:`Naked`,engineClass:`[^`]+`,price:4790,image:`\/models\/cflite-250nk-zephyr-blue-v1\.webp`/
 errors << "CFLITE 250NK entry price is missing from the public catalogue" unless catalogues.any? { |path| File.read(path, encoding: "UTF-8").match?(record_pattern) }
 
 configurator = Dir.glob(File.join(ROOT, "aksesuar-konfiquratoru", "**", "page-*.js"))

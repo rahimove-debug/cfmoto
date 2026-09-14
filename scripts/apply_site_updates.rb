@@ -219,11 +219,15 @@ def remove_unused_vinext_font_css!(content)
 end
 
 def primary_model_image_source(slug)
+  return "/models/cflite-250nk-zephyr-blue-v1.webp" if slug == "250nk"
+
   suffix = CLEAN_IMAGE_SLUGS.include?(slug) ? "-clean" : ""
   "/models/#{slug}#{suffix}.webp"
 end
 
 def card_model_image_source(slug)
+  return "/models/cards/cflite-250nk-v1.webp" if slug == "250nk"
+
   primary_model_image_source(slug).sub("/models/", "/models/cards/")
 end
 
@@ -1196,7 +1200,7 @@ checks = {
     html.include?(%(<img class="model-color-image" src="#{source}")) &&
       html.include?(%(<link rel="preload" as="image" href="#{source}"))
   end,
-  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 52 && home.scan(%r{class="model-card"}).size == 48 && home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten.uniq.size == 48 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
+  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 53 && home.scan(%r{class="model-card"}).size == 48 && home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten.uniq.size == 48 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
   "clean model images replace red-label originals" => CLEAN_IMAGE_SLUGS.all? do |slug|
     primary = primary_model_image_source(slug)
     card = card_model_image_source(slug)

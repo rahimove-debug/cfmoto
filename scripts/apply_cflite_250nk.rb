@@ -13,6 +13,13 @@ MODEL_NAME = "CFLITE 250NK"
 ENTRY_PRICE = 4_790
 EFI_ABS_PRICE = 5_390
 STYLE_URL = "/assets/cflite-250nk-v1.css"
+ASSET_REPLACEMENTS = {
+  "/models/250nk.webp" => "/models/cflite-250nk-zephyr-blue-v1.webp",
+  "/models/cards/250nk.webp" => "/models/cards/cflite-250nk-v1.webp",
+  "/gallery/250nk-1.webp" => "/gallery/cflite-250nk-1-v1.webp",
+  "/gallery/250nk-2.webp" => "/gallery/cflite-250nk-2-v1.webp",
+  "/gallery/250nk-3.webp" => "/gallery/cflite-250nk-3-v1.webp"
+}.freeze
 
 AZ_SUMMARY = "CFLITE 250NK çevik şəhər idarəetməsi üçün hazırlanmış naked modelidir. Azərbaycanda iki versiya təqdim olunur: EFI + ABS və karburatorlu, ABS-siz versiya."
 RU_SUMMARY = "CFLITE 250NK — манёвренный naked-байк для города. В Азербайджане модель представлена в двух версиях: EFI + ABS и карбюраторной версии без ABS."
@@ -34,6 +41,10 @@ end
 
 def encode_whatsapp_spaces(text)
   text.gsub(%r{https://wa\.me/[^"'<>`]*}) { |url| url.gsub(" ", "%20") }
+end
+
+def replace_asset_paths(text)
+  ASSET_REPLACEMENTS.reduce(text) { |updated, (legacy, current)| updated.gsub(legacy, current) }
 end
 
 def catalogue_record(record)
@@ -164,10 +175,10 @@ def transform_detail_strings(value, language)
     value.transform_values! { |child| transform_detail_strings(child, language) }
     if value["name"] == "Zephyr Blue" && value.key?("image")
       value["value"] = "#39a8c7"
-      value["image"] = "/models/250nk.webp"
+      value["image"] = "/models/cflite-250nk-zephyr-blue-v1.webp"
     elsif value["name"] == "Bordeaux Red" && value.key?("image")
       value["value"] = "#a71930"
-      value["image"] = "/models/250nk-bordeaux-red.webp"
+      value["image"] = "/models/cflite-250nk-bordeaux-red-v1.webp"
     end
     value
   else
@@ -260,7 +271,7 @@ def transform_detail_page!(html, language)
   html = replace_model_name(replace_entry_price(html))
   html = html.gsub("Athens Blue", "Zephyr Blue").gsub("Nebula Black", "Bordeaux Red").gsub("Ruby Red", "Bordeaux Red")
   html = html.gsub("#1f6797", "#39a8c7").gsub("#171717", "#a71930").gsub("#a8242f", "#a71930")
-  html = html.gsub("https://www.cfmoto.com/content/dam/cfmoto/site/global/product/motorcycle/nk---naked/250nk-/250NK_Nebula-Black.png", "/models/250nk-bordeaux-red.webp")
+  html = html.gsub("https://www.cfmoto.com/content/dam/cfmoto/site/global/product/motorcycle/nk---naked/250nk-/250NK_Nebula-Black.png", "/models/cflite-250nk-bordeaux-red-v1.webp")
 
   if language == :ru
     html = html.gsub("Управляй ритмом города.", "Два варианта для города.")
@@ -309,7 +320,7 @@ updated_files = 0
 public_files.each do |path|
   next if path.include?("/scripts/")
   original = File.read(path, encoding: "UTF-8")
-  content = replace_model_name(original)
+  content = replace_asset_paths(replace_model_name(original))
 
   if path.end_with?(".js")
     content = content.gsub(/\{slug:`250nk`,[^{}]*\}/) { |record| catalogue_record(record) }
