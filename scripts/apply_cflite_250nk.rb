@@ -165,7 +165,7 @@ def transform_detail_strings(value, language)
       value["image"] = "/models/250nk.webp"
     elsif value["name"] == "Ruby Red" && value.key?("image")
       value["value"] = "#a8242f"
-      value["image"] = "/gallery/250nk-2.webp"
+      value["image"] = "/models/250nk-ruby-red.webp"
     end
     value
   else
@@ -258,7 +258,7 @@ def transform_detail_page!(html, language)
   html = replace_model_name(replace_entry_price(html))
   html = html.gsub("Athens Blue", "Zephyr Blue").gsub("Nebula Black", "Ruby Red")
   html = html.gsub("#1f6797", "#39a8c7").gsub("#171717", "#a8242f")
-  html = html.gsub("https://www.cfmoto.com/content/dam/cfmoto/site/global/product/motorcycle/nk---naked/250nk-/250NK_Nebula-Black.png", "/gallery/250nk-2.webp")
+  html = html.gsub("https://www.cfmoto.com/content/dam/cfmoto/site/global/product/motorcycle/nk---naked/250nk-/250NK_Nebula-Black.png", "/models/250nk-ruby-red.webp")
 
   if language == :ru
     html = html.gsub("Управляй ритмом города.", "Два варианта для города.")

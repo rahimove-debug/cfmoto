@@ -19,6 +19,8 @@ pages.each do |locale, path|
   errors << "#{locale}: Carb variant missing" unless html.include?("Carb") && html.include?("4,790 AZN")
   errors << "#{locale}: legacy standalone name remains" if html.match?(/(?<!CFLITE )(?<!CFLITE%20)250NK/)
   errors << "#{locale}: official Zephyr Blue colour missing" unless html.include?("Zephyr Blue")
+  errors << "#{locale}: official Ruby Red colour image missing" unless html.include?("/models/250nk-ruby-red.webp")
+  errors << "#{locale}: Ruby Red still points to a gallery photo" if html.include?('name:"Ruby Red"') && html.include?('name:"Ruby Red",value:"#a8242f",image:"/gallery/250nk-2.webp"')
   errors << "#{locale}: old colour remains" if html.include?("Athens Blue") || html.include?("Nebula Black")
   errors << "#{locale}: variant stylesheet missing" unless html.include?("/assets/cflite-250nk-v1.css")
 
@@ -37,6 +39,7 @@ end
 
 required_images = %w[
   models/250nk.webp
+  models/250nk-ruby-red.webp
   models/cards/250nk.webp
   gallery/250nk-1.webp
   gallery/250nk-2.webp
