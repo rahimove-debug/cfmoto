@@ -19,9 +19,8 @@ pages.each do |locale, path|
   errors << "#{locale}: Carb variant missing" unless html.include?("Carb") && html.include?("4,790 AZN")
   errors << "#{locale}: legacy standalone name remains" if html.match?(/(?<!CFLITE )(?<!CFLITE%20)250NK/)
   errors << "#{locale}: official Zephyr Blue colour missing" unless html.include?("Zephyr Blue")
-  errors << "#{locale}: official Ruby Red colour image missing" unless html.include?("/models/250nk-ruby-red.webp")
-  errors << "#{locale}: Ruby Red still points to a gallery photo" if html.include?('name:"Ruby Red"') && html.include?('name:"Ruby Red",value:"#a8242f",image:"/gallery/250nk-2.webp"')
-  errors << "#{locale}: old colour remains" if html.include?("Athens Blue") || html.include?("Nebula Black")
+  errors << "#{locale}: official Bordeaux Red colour missing" unless html.include?("Bordeaux Red") && html.include?("/models/250nk-bordeaux-red.webp")
+  errors << "#{locale}: legacy colour remains" if html.include?("Athens Blue") || html.include?("Nebula Black") || html.include?("Ruby Red")
   errors << "#{locale}: variant stylesheet missing" unless html.include?("/assets/cflite-250nk-v1.css")
 
   schema_source = html[%r{<script type="application/ld\+json">(.*?)</script>}m, 1]
@@ -37,17 +36,18 @@ pages.each do |locale, path|
   end
 end
 
-required_images = %w[
-  models/250nk.webp
-  models/250nk-ruby-red.webp
-  models/cards/250nk.webp
-  gallery/250nk-1.webp
-  gallery/250nk-2.webp
-  gallery/250nk-3.webp
-]
-required_images.each do |relative|
+required_images = {
+  "models/250nk.webp" => "9aeb763ebfd82739689593413e86e26f29ec10f123b2e1a34ada3743ef5c45aa",
+  "models/250nk-bordeaux-red.webp" => "9929123d18dcddb9b24b2339acc81a80423ff605080a937aacfb95750cb049cf",
+  "models/cards/250nk.webp" => "f2cdb42642a7eac5260c6224b42d35c516282e27f352d52db1b29d3c0e565381",
+  "gallery/250nk-1.webp" => "ac6d82b36f5ec5eea9919949df474456e0e2ed585c9dd4630b4eecd4b3cebf38",
+  "gallery/250nk-2.webp" => "7767eba57a968a63992d362f529f75cef203db17a793261a5402709ddfe2fa10",
+  "gallery/250nk-3.webp" => "d2076b2513c78c192e4e071639373feeedaa5f808796fa60c6be995a8dbeedaf"
+}
+required_images.each do |relative, expected_sha256|
   path = File.join(ROOT, relative)
   errors << "Missing official CFLITE image: #{relative}" unless File.file?(path) && File.size(path) > 10_000
+  errors << "Incorrect CFLITE model image: #{relative}" if File.file?(path) && Digest::SHA256.file(path).hexdigest != expected_sha256
 end
 
 catalogues = Dir.glob(File.join(ROOT, "assets", "ProductMegaMenu-*.js"))

@@ -119,7 +119,8 @@ def transform_detail_strings(value, language)
       "37 mm USD / mərkəzi monoshock" => "37 мм телескопическая / центральный моноамортизатор",
       "37 мм teleskopik / mərkəzi monoshock" => "37 мм телескопическая / центральный моноамортизатор",
       "Athens Blue" => "Zephyr Blue",
-      "Nebula Black" => "Ruby Red"
+      "Nebula Black" => "Bordeaux Red",
+      "Ruby Red" => "Bordeaux Red"
     }
   else
     {
@@ -132,7 +133,8 @@ def transform_detail_strings(value, language)
       "151 kq" => "158 kq",
       "37 mm USD / mərkəzi monoshock" => "37 mm teleskopik / mərkəzi monoshock",
       "Athens Blue" => "Zephyr Blue",
-      "Nebula Black" => "Ruby Red"
+      "Nebula Black" => "Bordeaux Red",
+      "Ruby Red" => "Bordeaux Red"
     }
   end
 
@@ -163,9 +165,9 @@ def transform_detail_strings(value, language)
     if value["name"] == "Zephyr Blue" && value.key?("image")
       value["value"] = "#39a8c7"
       value["image"] = "/models/250nk.webp"
-    elsif value["name"] == "Ruby Red" && value.key?("image")
-      value["value"] = "#a8242f"
-      value["image"] = "/models/250nk-ruby-red.webp"
+    elsif value["name"] == "Bordeaux Red" && value.key?("image")
+      value["value"] = "#a71930"
+      value["image"] = "/models/250nk-bordeaux-red.webp"
     end
     value
   else
@@ -256,9 +258,9 @@ def transform_detail_page!(html, language)
   summary = language == :ru ? RU_SUMMARY : AZ_SUMMARY
   finance = language == :ru ? RU_FINANCE : AZ_FINANCE
   html = replace_model_name(replace_entry_price(html))
-  html = html.gsub("Athens Blue", "Zephyr Blue").gsub("Nebula Black", "Ruby Red")
-  html = html.gsub("#1f6797", "#39a8c7").gsub("#171717", "#a8242f")
-  html = html.gsub("https://www.cfmoto.com/content/dam/cfmoto/site/global/product/motorcycle/nk---naked/250nk-/250NK_Nebula-Black.png", "/models/250nk-ruby-red.webp")
+  html = html.gsub("Athens Blue", "Zephyr Blue").gsub("Nebula Black", "Bordeaux Red").gsub("Ruby Red", "Bordeaux Red")
+  html = html.gsub("#1f6797", "#39a8c7").gsub("#171717", "#a71930").gsub("#a8242f", "#a71930")
+  html = html.gsub("https://www.cfmoto.com/content/dam/cfmoto/site/global/product/motorcycle/nk---naked/250nk-/250NK_Nebula-Black.png", "/models/250nk-bordeaux-red.webp")
 
   if language == :ru
     html = html.gsub("Управляй ритмом города.", "Два варианта для города.")
