@@ -5,12 +5,14 @@ import vm from "node:vm";
 import crypto from "node:crypto";
 import zlib from "node:zlib";
 import {fileURLToPath} from "node:url";
+import {configuratorSchemaId, configuratorStructuredData} from "./configurator_structured_data.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dist = process.env.CFMOTO_BUILD_DIR || path.join(root,"dist");
 const configRoot = path.join(dist,"aksesuar-konfiquratoru");
 const sourcePath = path.join(configRoot,"_next/static/chunks/app/page-cfmoto-godaddy-localprices-v9.js");
 const source = fs.readFileSync(sourcePath,"utf8");
+const structuredDataTag = `<script id="${configuratorSchemaId}" type="application/ld+json">${JSON.stringify(configuratorStructuredData).replace(/</g,"\\u003c")}</script>`;
 const hash = text => crypto.createHash("sha256").update(text).digest("hex").slice(0,16);
 const assert = (condition,message) => { if (!condition) throw new Error(message); };
 function once(text, anchor, replacement) {
@@ -70,7 +72,7 @@ let output = input.slice(0,dataStart) + `let ee="994512332484",ei=${JSON.stringi
 output = output.replace(/"(?:ATV və Buggy qiymətləri|Aksesuar məbləğləri) CFMoto USA Parts[^"\n]*"/g,JSON.stringify(neutral));
 assert(!output.includes("CFMoto USA Parts") && !output.includes("1.7000"), "Old price-conversion text remains in UI bundle");
 const runtime = fs.readFileSync(path.join(root,"scripts/configurator_runtime.js"),"utf8");
-output = once(output,";function em(){",`;${runtime}\nfunction em(){`);
+output = once(output,";function em(){",`;const cfStructuredData=${JSON.stringify(configuratorStructuredData)},cfSchemaId=${JSON.stringify(configuratorSchemaId)};${runtime}\nfunction em(){`);
 const routeStart = output.indexOf("function eu(){");
 const componentStart = output.indexOf("function ep({");
 assert(routeStart > 0 && componentStart > routeStart,"Configurator route boundary missing");
@@ -111,6 +113,8 @@ for (const file of filesUnder(configRoot).filter(file => /\.(html|txt|json)$/.te
   if (file.endsWith(".html")) {
     text = text.replace(/<link rel="stylesheet" href="\/assets\/configurator-improvements-[a-f0-9]+\.css"\/>/g,"");
     text = once(text,"</head>",`${cssTag}</head>`);
+    text = text.replace(new RegExp(`<script id="${configuratorSchemaId}" type="application\\/ld\\+json">[\\s\\S]*?<\\/script>`,"g"),"");
+    if (path.basename(file) === "index.html") text = once(text,"</body>",`${structuredDataTag}</body>`);
   }
   assert(!/CFMoto USA Parts|1 USD = 1\.7000|\$159\.99/.test(text),`Stale conversion claim remains: ${file}`);
   if (text !== original) { fs.writeFileSync(file,text); updated++; }

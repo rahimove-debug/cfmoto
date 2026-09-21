@@ -4,6 +4,7 @@ import path from "node:path";
 import vm from "node:vm";
 import assert from "node:assert/strict";
 import {fileURLToPath} from "node:url";
+import {configuratorSchemaId, configuratorStructuredData} from "./configurator_structured_data.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const dist = process.env.CFMOTO_BUILD_DIR || path.join(root,"dist");
@@ -61,6 +62,31 @@ assert.ok(html.includes(path.basename(report.bundle)));
 assert.ok(!html.includes("page-cfmoto-godaddy-localprices-v9"));
 assert.ok(!html.includes("accessory-model-preselect-"));
 assert.ok(!/CFMoto USA Parts|1 USD = 1\.7000|\$159\.99/.test(html+script));
+const schemaTags = [...html.matchAll(new RegExp(`<script id="${configuratorSchemaId}" type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>`,"g"))];
+assert.equal(schemaTags.length,1,"Exactly one server-rendered configurator graph is required");
+assert.deepEqual(JSON.parse(schemaTags[0][1]),configuratorStructuredData);
+assert.ok(script.includes("cfEnsureStructuredData"),"Hydration must preserve or restore the graph");
+assert.ok(!JSON.stringify(configuratorStructuredData).includes('"offers"'),"Do not invent inventory or prices in page-level schema");
+const schemaNodes = new Map();
+const schemaDocument = {
+  getElementById:id=>schemaNodes.get(id),
+  createElement:()=>({}),
+  head:{appendChild:node=>schemaNodes.set(node.id,node)},
+};
+const schemaContext = {cfSchemaId:configuratorSchemaId,cfStructuredData:configuratorStructuredData,document:schemaDocument};
+vm.createContext(schemaContext);
+const runtimeSource = fs.readFileSync(path.join(root,"scripts/configurator_runtime.js"),"utf8");
+const ensureFunction = runtimeSource.slice(runtimeSource.indexOf("function cfEnsureStructuredData"),runtimeSource.indexOf("const cfCatalogRequests"));
+vm.runInContext(ensureFunction + ";cfEnsureStructuredData();cfEnsureStructuredData();",schemaContext);
+assert.equal(schemaNodes.size,1,"Repeated hydration must not duplicate JSON-LD");
+assert.deepEqual(JSON.parse(schemaNodes.get(configuratorSchemaId).textContent),configuratorStructuredData);
+const existingSchemaNode = schemaNodes.get(configuratorSchemaId);
+vm.runInContext("cfEnsureStructuredData()",schemaContext);
+assert.equal(schemaNodes.get(configuratorSchemaId),existingSchemaNode,"Retain the existing SSR node");
+schemaNodes.delete(configuratorSchemaId);
+vm.runInContext("cfEnsureStructuredData()",schemaContext);
+assert.equal(schemaNodes.size,1,"Restore a graph removed during hydration");
+assert.notEqual(schemaNodes.get(configuratorSchemaId),existingSchemaNode);
 
 // Opaque studio photos and transparent model cutouts must share a seamless,
 // color-neutral stage. Scope this fix away from accessory/DMS price redaction.
@@ -85,6 +111,7 @@ let stateIndex=0,refIndex=0,effectIndex=0;
 const dependencies=[];
 const runtime = {
   ei:fixtures,URL,URLSearchParams,Map,Set,Date,Promise,
+  cfSchemaId:configuratorSchemaId,cfStructuredData:configuratorStructuredData,document:schemaDocument,
   window:{location:{origin:"https://cfmoto.az"},localStorage:{getItem:()=>saved,setItem:(_,value)=>{saved=value;}},gtag:(...event)=>events.push(event)},
   navigator:{clipboard:{writeText:async()=>{}}},
   fetch:async()=>{fetchCount++;return{ok:true,json:async()=>({version:1,modelId:"a",accessories})};},

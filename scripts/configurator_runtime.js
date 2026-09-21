@@ -1,5 +1,17 @@
 /* Inserted into the existing configurator module by apply_configurator_improvements.mjs. */
 const cfDraftKey = "cfmoto-configurator-draft-v1";
+// Keep the server-rendered graph through hydration and restore it if the
+// imported renderer removes document nodes it did not create.
+function cfEnsureStructuredData() {
+  let script = document.getElementById(cfSchemaId);
+  if (!script) {
+    script = document.createElement("script");
+    script.id = cfSchemaId;
+    script.type = "application/ld+json";
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(cfStructuredData);
+}
 const cfCatalogRequests = new Map();
 const cfKnownModel = id => ei.find(model => model.id === id);
 const cfResolveId = id => {
@@ -79,6 +91,7 @@ function cfRoute() {
   const [route, setRoute] = (0,s.useState)(null);
   const [failed, setFailed] = (0,s.useState)(false);
   const [retry, setRetry] = (0,s.useState)(0);
+  (0,s.useEffect)(cfEnsureStructuredData, []);
   (0,s.useEffect)(() => {
     let cancelled = false;
     setRoute(null); setFailed(false);
