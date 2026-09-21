@@ -103,7 +103,7 @@ def page_schema(slug, title, description, label, extras = [])
   }
 end
 
-def page_html(slug:, title:, description:, eyebrow:, heading:, intro:, body:, schema:)
+def page_html(slug:, title:, description:, eyebrow:, heading:, intro:, body:, schema:, extra_head: "", body_class: nil)
   canonical = "#{SITE_ORIGIN}/#{slug}/"
   label = ContentConfig::LABELS.fetch(slug)
   content_links = ContentConfig::SLUGS.map do |item|
@@ -138,9 +138,10 @@ def page_html(slug:, title:, description:, eyebrow:, heading:, intro:, body:, sc
       <meta name="twitter:image:alt" content="CFMOTO Azerbaijan"/>
       <link rel="icon" href="/favicon.svg"/>
       <link rel="stylesheet" href="/assets/content.css"/>
+      #{extra_head}
       <script type="application/ld+json">#{JSON.generate(schema)}</script>
     </head>
-    <body>
+    <body#{body_class ? %( class="#{body_class}") : ""}>
       <div class="topline">CFMOTO-nun Azərbaycanda rəsmi nümayəndəsi</div>
       <header class="content-header">
         <a class="brand" href="/" aria-label="CFMOTO Azerbaijan ana səhifə"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"/><b>AZƏRBAYCAN</b></a>
@@ -253,12 +254,46 @@ comparison_body = <<~HTML
   <div class="cta-box"><div><h2>Seçiminizi daraldın</h2><p>Kateqoriya filtri və model səhifələrindəki texniki məlumatlarla uyğun variantı tapın.</p></div><div class="cta-actions"><a class="button primary" href="/#modeller">Bütün modellər</a><a class="button ghost" href="/kredit/">Kredit şərtləri</a></div></div>
 HTML
 
+suspension_faq = [
+  ["Dəyərlər rəsmi zavod məlumatıdır?", "Hesablamanın dayaq nöqtələri CFMOTO istifadəçi təlimatlarındakı sazlama cədvəllərindən götürülür. Aralıq çəkilər üçün göstərilən nəticə həmin rəsmi nöqtələr arasında hesablanan başlanğıc dəyəridir."],
+  ["Niyə nəticə çəkini dəyişdikcə yenilənir?", "Asqının daşıdığı ümumi yük dəyişdikcə uyğun iki cədvəl sətri arasında proporsional hesab aparılır. Beləliklə yalnız dörd standart ssenari ilə məhdudlaşmadan real yükünüzə daha yaxın başlanğıc sazlaması əldə edilir."],
+  ["Yolsuzluq rejimi bütün modellərdə işləyir?", "Xeyr. Bu seçim yalnız rəsmi təlimatda davamlı pis yol və ya yüngül yolsuzluq üçün ayrıca sətr olan modellərdə göstərilir. Digər modellər üçün təsdiqlənməmiş yumşaltma və ya sərtləşdirmə tətbiq edilmir."],
+  ["Yük cədvəldəki maksimumdan çox olarsa nə baş verir?", "Kalkulyator ən yüksək rəsmi cədvəl sətrini saxlayır və xəbərdarlıq verir. Bu, motosikletin icazə verilən maksimum yükü demək deyil; yük limitini ayrıca istifadəçi təlimatından yoxlayın."]
+]
+suspension_schema = page_schema(
+  "asqi-kalkulyatoru",
+  "CFMOTO Asqı Tənzimləmə Kalkulyatoru | Azərbaycan",
+  "CFMOTO motosikletləri üçün model, yük və sürüş şəraitinə uyğun ön və arxa asqı sazlamalarını hesablayın.",
+  ContentConfig::LABELS.fetch("asqi-kalkulyatoru"),
+  [{ "@type" => "FAQPage", "mainEntity" => suspension_faq.map { |question, answer| { "@type" => "Question", "name" => question, "acceptedAnswer" => { "@type" => "Answer", "text" => answer } } } }]
+)
+suspension_body = <<~HTML
+  <div id="cfmoto-suspension-calculator" class="suspension-calculator" data-cfmoto-suspension-calculator data-initial-model="800mt-x" data-source-1000mt-x="https://cfimages.cfmoto.com/cfmoto/1000_MT_X_CF_900_2_2_A_6_WXV_380101_2002_11_CN_262_20260429_b73ad233af.pdf" data-source-800mt-x="https://cfimages.cfmoto.com/cfmoto/800_MT_X_CF_800_11_11_A_6_WWV_380101_8000_11_CN_249_20260310_d146c3982b.pdf" data-source-800mt="https://cfimages.cfmoto.com/cfmoto/CF_800_5_CF_800_5_A_6_WWV_380101_5_A00_11_CN_248_20260310_f9054e92c0.pdf" data-source-700mt="https://cfimages.cfmoto.com/cfmoto/700_MT_CF_700_9_A_9_B_6_GUV_380101_2000_11_CN_249_20251010_6ddf70826f.pdf" data-source-450mt="https://cfimages.cfmoto.com/cfmoto/450_MT_CF_400_8_8_A_6_AQV_380101_6000_11_CN_23_A_20260526_526d9d775f.pdf"></div>
+  <noscript><p class="notice">Kalkulyatorun işləməsi üçün JavaScript aktiv olmalıdır.</p></noscript>
+  <section class="prose suspension-guide">
+    <h2>Bu kalkulyator nə edir?</h2>
+    <p>Alət seçilmiş CFMOTO modelinin istifadəçi təlimatında dərc olunan asqı cədvəllərini rəqəmsal formaya çevirir. Sürücü, sərnişin və baqaj çəkisini daxil etdikdə ümumi yük hesablanır, sonra cədvəldəki ən yaxın iki rəsmi yük nöqtəsi arasında xətti hesablama aparılır. Nəticə tənzimləyicinin real addımına uyğun olaraq kliklər üçün tam ədədə, dövr və millimetr üçün yarım addıma yuvarlaqlaşdırılır.</p>
+    <p>Rəsmi cədvəlin aşağı və ya yuxarı sərhədi keçildikdə kalkulyator yeni dəyər uydurmur; ən yaxın sənədləşdirilmiş sazlamanı saxlayır və ekranda xəbərdarlıq göstərir. Modelin icazə verilən yük həddi, konkret bazar versiyası və istehsal ili üzrə istifadəçi təlimatı həmişə əsas mənbədir.</p>
+    <h2>Hesablama qaydası</h2>
+    <ol><li>Motosiklet modelini və sürüş rejimini seçin.</li><li>Tək, baqajlı və ya sərnişinli istifadə ssenarisini qeyd edin.</li><li>Faktiki çəkiləri qoruyucu geyim və daşınan əşyalarla birlikdə daxil edin.</li><li>Ön və arxa asqı nəticələrini, sayma istiqamətini və hesablamanın izahını yoxlayın.</li></ol>
+    <h2>Nəticəni necə tətbiq etməli?</h2>
+    <p>Motosikleti düz və sabit səthdə saxlayın, mühərriki söndürün və hər dəyişiklikdən əvvəl mövcud sazlamanı qeyd edin. Sol və sağ ön amortizatorlar ayrıca tənzimlənirsə, hər iki tərəfdə eyni dəyəri seçin. Tənzimləyicini son nöqtədə zorlamayın; yüngül dayanmaya çatdıqda kalkulyatorda göstərilən istiqamətdə saymağa başlayın. Bir dəfəyə yalnız bir parametr dəyişin və qısa, təhlükəsiz test yürüşü ilə nəticəni qiymətləndirin.</p>
+    <p>Asqı motosikletin sabitliyinə, əyləcləmə davranışına və təkərin yol ilə təmasına təsir edir. Qeyri-adi səs, yağ sızması, zədələnmiş detal, idarəetmədə qeyri-sabitlik və ya sazlama addımlarının uyğun gəlməməsi müşahidə olunursa, sürüşü dayandırın və rəsmi servisə müraciət edin. SAG ölçümü və fərdi sazlama üçün peşəkar texnik dəstəyi daha dəqiq nəticə verir.</p>
+    <h2>Niyə bütün modellər siyahıda deyil?</h2>
+    <p>İlk versiyada yalnız Azərbaycan kataloqunda olan və sazlama cədvəli rəsmi təlimatda təsdiqlənən 1000MT-X, 800MT-X, 800MT SPORT, 800MT EXPLORE, 700MT və 450MT modelləri göstərilir. Tənzimlənməyən və ya yükə görə rəsmi cədvəli olmayan amortizatorlar üçün təxmini rəqəm təqdim edilmir. Digər modellər yalnız uyğun təlimat və yerli komplektasiya yoxlandıqdan sonra əlavə olunacaq.</p>
+    <div class="notice">Bu nəticələr başlanğıc nöqtəsidir, servis diaqnostikasını və motosikletinizin istifadəçi təlimatını əvəz etmir. Model ili və komplektasiyaya görə fərqlər mümkündür.</div>
+  </section>
+  <section class="faq"><h2>Tez-tez verilən suallar</h2>#{suspension_faq.map { |question, answer| "<details><summary>#{question}</summary><p>#{answer}</p></details>" }.join}</section>
+  <div class="cta-box"><div><h2>Rəsmi servis ilə sazlamanı dəqiqləşdirin</h2><p>Model ili, yerli komplektasiya və faktiki SAG ölçüsünə uyğun fərdi yoxlama üçün servis komandası ilə əlaqə saxlayın.</p></div><div class="cta-actions"><a class="button primary" href="tel:#{SERVICE_PHONE}" data-contact-area="service">Servisə zəng et</a><a class="button ghost" href="/servis/">#{SERVICE_PHONE_DISPLAY}</a></div></div>
+HTML
+
 pages = {
   "kredit" => page_html(slug: "kredit", title: "CFMOTO Kredit və Hissəli Ödəniş | Azərbaycan", description: "CFMOTO motosiklet, ATV və buggy modelləri üçün daxili hissəli ödəniş və bank krediti şərtləri. İlkin ödənişləri və müddətləri öyrənin.", eyebrow: "Maliyyələşmə", heading: "CFMOTO kredit və hissəli ödəniş şərtləri", intro: "Motosiklet, ATV və buggy üçün ilkin ödənişləri, müddətləri və hesablama qaydasını aydın şəkildə öyrənin.", body: credit_body, schema: credit_schema),
   "servis" => page_html(slug: "servis", title: "CFMOTO Rəsmi Servis Bakı | Texniki Qulluq və Təmir", description: "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir. Servis: +994 10 241 42 99; bazar ertəsi xaric hər gün 10:00–19:00.", eyebrow: "Rəsmi texniki xidmət", heading: "CFMOTO servis, texniki qulluq və təmir", intro: "Diaqnostikadan planlı qulluğa qədər CFMOTO texnikanız üçün rəsmi servis dəstəyi.", body: service_body, schema: service_schema),
   "zemanet" => page_html(slug: "zemanet", title: "CFMOTO Zəmanət Şərtləri | Azərbaycan", description: "CFMOTO motosikletləri üçün 2 il və ya 24.000 km zəmanət məlumatı. ATV və buggy şərtləri model və istifadə rejiminə görə dəqiqləşdirilir.", eyebrow: "Rəsmi məlumat", heading: "CFMOTO zəmanət şərtləri", intro: "Motosiklet, ATV və buggy modelləri üçün zəmanət məlumatını və dəqiqləşdirmə qaydasını öyrənin.", body: warranty_body, schema: warranty_schema),
   "ehtiyat-hisseleri" => page_html(slug: "ehtiyat-hisseleri", title: "CFMOTO Ehtiyat Hissələri və Aksesuarlar | Bakı", description: "CFMOTO modellərinə uyğun orijinal ehtiyat hissələri, yağlar və aksesuarlar. Uyğunluğu dəqiqləşdirmək üçün +994 10 241 42 99 ilə əlaqə saxlayın.", eyebrow: "Modelə uyğun seçim", heading: "CFMOTO ehtiyat hissələri və aksesuarlar", intro: "Orijinal hissələr, qulluq məhsulları və aksesuarlar üçün modelə uyğun məlumat alın.", body: parts_body, schema: parts_schema),
-  "model-muqayisesi" => page_html(slug: "model-muqayisesi", title: "CFMOTO Modellərinin Müqayisəsi | Qiymət və Kateqoriya", description: "CFMOTO motosiklet, kvadrosikl və buggy modellərini kateqoriya, nağd qiymət, ilkin ödəniş və müddətə görə müqayisə edin.", eyebrow: "48 aktual model", heading: "CFMOTO modellərini müqayisə et", intro: "Qiymət, kateqoriya, mühərrik sinfi və maliyyələşmə şərtlərini bir baxışda müqayisə edin.", body: comparison_body, schema: comparison_schema)
+  "model-muqayisesi" => page_html(slug: "model-muqayisesi", title: "CFMOTO Modellərinin Müqayisəsi | Qiymət və Kateqoriya", description: "CFMOTO motosiklet, kvadrosikl və buggy modellərini kateqoriya, nağd qiymət, ilkin ödəniş və müddətə görə müqayisə edin.", eyebrow: "48 aktual model", heading: "CFMOTO modellərini müqayisə et", intro: "Qiymət, kateqoriya, mühərrik sinfi və maliyyələşmə şərtlərini bir baxışda müqayisə edin.", body: comparison_body, schema: comparison_schema),
+  "asqi-kalkulyatoru" => page_html(slug: "asqi-kalkulyatoru", title: "CFMOTO Asqı Tənzimləmə Kalkulyatoru | Azərbaycan", description: "CFMOTO motosikletləri üçün model, yük və sürüş şəraitinə uyğun ön və arxa asqı sazlamalarını hesablayın.", eyebrow: "Məlumatlandırma və sazlama aləti", heading: "CFMOTO asqı tənzimləmə kalkulyatoru", intro: "Modeli, real yükü və sürüş şəraitini seçin; rəsmi istifadəçi təlimatlarındakı cədvəllər əsasında ön və arxa asqı üçün başlanğıc dəyərlərini dərhal görün.", body: suspension_body, schema: suspension_schema, body_class: "suspension-calculator-page", extra_head: '<link rel="stylesheet" href="/assets/suspension-calculator-v1.css"/><script defer src="/assets/suspension-calculator-v1.js"></script>')
 }
 
 ContentConfig::SLUGS.each do |slug|

@@ -4,6 +4,7 @@ require_relative "russian_category_translations"
 require_relative "russian_content_schema_translations"
 require_relative "russian_technical_translations"
 require_relative "russian_ui_translations"
+require_relative "russian_suspension_translations"
 
 module RussianConfig
   RU_PREFIX = "/ru"
@@ -16,7 +17,8 @@ module RussianConfig
     "servis" => "servis",
     "zemanet" => "garantiya",
     "ehtiyat-hisseleri" => "zapchasti",
-    "model-muqayisesi" => "sravnenie-modeley"
+    "model-muqayisesi" => "sravnenie-modeley",
+    "asqi-kalkulyatoru" => "kalkulyator-podveski"
   }.freeze
 
   CATEGORY_ROUTES = {
@@ -30,7 +32,8 @@ module RussianConfig
     "servis" => "Официальный сервис",
     "garantiya" => "Гарантия",
     "zapchasti" => "Запчасти",
-    "sravnenie-modeley" => "Сравнение моделей"
+    "sravnenie-modeley" => "Сравнение моделей",
+    "kalkulyator-podveski" => "Калькулятор подвески"
   }.freeze
 
   # Longest matches are applied first. The same map is used for prerendered HTML,
@@ -717,6 +720,7 @@ module RussianConfig
       .merge(RussianContentSchemaTranslations::MAP)
       .merge(RussianTechnicalTranslations::MAP)
       .merge(RussianUiTranslations::MAP)
+      .merge(RussianSuspensionTranslations::MAP)
       .sort_by { |source, _target| -source.length }
       .each do |source, target|
       translated.gsub!(source, target)

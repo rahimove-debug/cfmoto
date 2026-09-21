@@ -26,7 +26,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
   META_PIXEL_NOSCRIPT = "https://www.facebook.com/tr?id=#{META_PIXEL_ID}&ev=PageView&noscript=1"
   AZERBAIJANI_SPECIAL_LETTERS = /[ƏəĞğİıÖöÜüÇçŞş]/
   AZERBAIJANI_ASCII_FRAGMENTS = [
-    "kalkulyatoru",
+    "Kredit kalkulyatoru",
     "CFMOTO 500SR yolda",
     "Naviqasiya yolu",
     "aktual motosiklet",
@@ -70,9 +70,9 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     "12,3 дюйм MMI"
   ].freeze
   EXPECTED_MODEL_COUNT = 48
-  EXPECTED_AZ_PAGE_COUNT = 57
-  EXPECTED_RU_PAGE_COUNT = 57
-  EXPECTED_SITEMAP_URL_COUNT = 114
+  EXPECTED_AZ_PAGE_COUNT = 1 + EXPECTED_MODEL_COUNT + ContentConfig::SLUGS.size + CategoryConfig::SLUGS.size
+  EXPECTED_RU_PAGE_COUNT = EXPECTED_AZ_PAGE_COUNT
+  EXPECTED_SITEMAP_URL_COUNT = EXPECTED_AZ_PAGE_COUNT * 2
   MIN_INFORMATIONAL_MAIN_WORDS = 220
 
   Entry = Struct.new(:kind, :slug, :az_path, :ru_path, :az_file, :ru_file, keyword_init: true)
@@ -90,7 +90,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       audit_sitemap
 
       if @errors.empty?
-        puts "Russian audit passed: 57 AZ + 57 RU pages, reciprocal hreflang, 13 locale assets and 114 sitemap URLs"
+        puts "Russian audit passed: #{EXPECTED_AZ_PAGE_COUNT} AZ + #{EXPECTED_RU_PAGE_COUNT} RU pages, reciprocal hreflang, 13 locale assets and #{EXPECTED_SITEMAP_URL_COUNT} sitemap URLs"
         return true
       end
 
@@ -206,7 +206,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
         audit_no_untranslated_units(entry.ru_file, ru_html)
         audit_no_corrupted_external_urls(entry.ru_file, ru_html)
         audit_russian_navigation(entry, ru_html)
-        if entry.kind == :content && %w[servis zemanet ehtiyat-hisseleri].include?(entry.slug)
+        if entry.kind == :content && %w[servis zemanet ehtiyat-hisseleri asqi-kalkulyatoru].include?(entry.slug)
           word_count = visible_main_word_count(ru_html)
           @errors << "#{relative(entry.ru_file)}: main content is too short: #{word_count} words (minimum #{MIN_INFORMATIONAL_MAIN_WORDS})" if word_count < MIN_INFORMATIONAL_MAIN_WORDS
         end

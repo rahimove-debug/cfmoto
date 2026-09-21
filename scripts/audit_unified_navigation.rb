@@ -5,6 +5,7 @@ ROOT = File.expand_path("..", __dir__)
 STYLE_URL = "/assets/unified-navigation-v1.css"
 LOGO_URL = "/assets/cfmoto-logo-transparent-v1.svg"
 SCRIPT_URL = "/assets/unified-navigation-v1.js"
+SUSPENSION_ENTRY_SCRIPT_URL = "/assets/suspension-entry-v1.js"
 errors = []
 
 def read(path)
@@ -21,6 +22,7 @@ paths.uniq.each do |path|
   relative = path.delete_prefix("#{ROOT}/")
   errors << "#{relative}: unified navigation stylesheet must appear once" unless html.scan(STYLE_URL).size == 1
   errors << "#{relative}: unified navigation script must appear once" unless html.scan(SCRIPT_URL).size == 1
+  errors << "#{relative}: suspension navigation entry script must appear once" unless html.scan(SUSPENSION_ENTRY_SCRIPT_URL).size == 1
   errors << "#{relative}: opaque logo must not remain in markup or RSC" if html.include?("/cfmoto-logo-black.png")
   errors << "#{relative}: transparent official logo is missing" unless html.include?(LOGO_URL)
 end
@@ -42,6 +44,9 @@ end
   errors << "#{relative}: duplicate old content/news header remains" if html.include?('class="content-header"') || html.include?('class="news-site-nav"')
   category_paths = html.match?(/<html[^>]+lang=["']ru/i) ? %w[/ru/motocikly/ /ru/kvadrocikly/ /ru/buggy/] : %w[/motosiklet/ /kvadrosikl/ /buggy/]
   errors << "#{relative}: category navigation is incomplete" unless html.include?("unified-products-menu") && category_paths.all? { |category_path| html.include?(category_path) }
+  suspension_path = html.match?(/<html[^>]+lang=["']ru/i) ? "/ru/kalkulyator-podveski/" : "/asqi-kalkulyatoru/"
+  suspension_label = html.match?(/<html[^>]+lang=["']ru/i) ? "Подвеска" : "Asqı"
+  errors << "#{relative}: suspension calculator navigation entry is missing" unless html.include?(%(href="#{suspension_path}" data-suspension-entry="true">#{suspension_label}</a>))
   header = html[%r{<header class="site-header unified-site-header">.*?</header>}m].to_s
   language_control = header.include?('class="language-switcher"') || header.include?("/assets/language-switcher-v4.js")
   errors << "#{relative}: language selector loader must be inside the header" unless language_control
@@ -56,6 +61,7 @@ end
 
 style_path = File.join(ROOT, STYLE_URL.delete_prefix("/"))
 script_path = File.join(ROOT, SCRIPT_URL.delete_prefix("/"))
+suspension_entry_script_path = File.join(ROOT, SUSPENSION_ENTRY_SCRIPT_URL.delete_prefix("/"))
 if File.file?(style_path)
   css = read(style_path)
   errors << "Mobile home header must participate in layout" unless css.include?(".site-header.home-header") && css.include?("position: relative !important")
@@ -73,6 +79,18 @@ if File.file?(script_path)
   errors << "Language switcher must move into existing headers" unless javascript.include?("moveLanguageSwitcher")
 else
   errors << "Unified navigation script is missing"
+end
+
+if File.file?(suspension_entry_script_path)
+  javascript = read(suspension_entry_script_path)
+  errors << "Suspension entry must include the Azerbaijani calculator route" unless javascript.include?('/asqi-kalkulyatoru/')
+  errors << "Suspension entry must include the Russian calculator route" unless javascript.include?('/ru/kalkulyator-podveski/')
+  errors << "Suspension entry must include the Azerbaijani label" unless javascript.include?('label: "Asqı"')
+  errors << "Suspension entry must include the Russian label" unless javascript.include?('label: "Подвеска"')
+  errors << "Suspension entry must target established site headers" unless javascript.include?('.site-header .main-nav')
+  errors << "Suspension entry must resync after hydrated headers render" unless javascript.include?("MutationObserver") && javascript.include?('window.addEventListener("load"')
+else
+  errors << "Suspension navigation entry script is missing"
 end
 
 logo_path = File.join(ROOT, LOGO_URL.delete_prefix("/"))

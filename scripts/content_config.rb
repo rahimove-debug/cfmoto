@@ -7,6 +7,7 @@ module ContentConfig
     zemanet
     ehtiyat-hisseleri
     model-muqayisesi
+    asqi-kalkulyatoru
   ].freeze
 
   LABELS = {
@@ -14,7 +15,8 @@ module ContentConfig
     "servis" => "Rəsmi servis",
     "zemanet" => "Zəmanət",
     "ehtiyat-hisseleri" => "Ehtiyat hissələri",
-    "model-muqayisesi" => "Model müqayisəsi"
+    "model-muqayisesi" => "Model müqayisəsi",
+    "asqi-kalkulyatoru" => "Asqı kalkulyatoru"
   }.freeze
 
   module_function

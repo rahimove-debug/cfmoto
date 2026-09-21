@@ -5,6 +5,7 @@ ROOT = File.expand_path("..", __dir__)
 STYLE_URL = "/assets/unified-navigation-v1.css"
 LOGO_URL = "/assets/cfmoto-logo-transparent-v1.svg"
 SCRIPT_URL = "/assets/unified-navigation-v1.js"
+SUSPENSION_ENTRY_SCRIPT_URL = "/assets/suspension-entry-v1.js"
 HEAD_START = "<!-- CFMOTO:UNIFIED-NAV:HEAD:START -->"
 HEAD_END = "<!-- CFMOTO:UNIFIED-NAV:HEAD:END -->"
 HEADER_START = "<!-- CFMOTO:UNIFIED-NAV:HEADER:START -->"
@@ -44,6 +45,7 @@ def header_markup(locale, language)
   all_models = ru ? "Все модели" : "Bütün modellər"
   accessories = ru ? "Аксессуары" : "Aksesuarlar"
   credit = ru ? "Кредит" : "Kredit"
+  suspension = ru ? "Подвеска" : "Asqı"
   service = ru ? "Сервис" : "Servis"
   news = ru ? "Новости" : "Xəbərlər"
   showroom = ru ? "Салон" : "Satış mərkəzi"
@@ -53,6 +55,7 @@ def header_markup(locale, language)
   atv_path = ru ? "/ru/kvadrocikly/" : "/kvadrosikl/"
   buggy_path = ru ? "/ru/buggy/" : "/buggy/"
   credit_path = ru ? "/ru/kredit/" : "/kredit/"
+  suspension_path = ru ? "/ru/kalkulyator-podveski/" : "/asqi-kalkulyatoru/"
   service_path = ru ? "/ru/servis/" : "/servis/"
   showroom_path = ru ? "/ru/#showroom" : "/#showroom"
 
@@ -63,7 +66,7 @@ def header_markup(locale, language)
       <a class="brand" href="#{ru ? '/ru/' : '/'}" aria-label="#{brand_label}"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"><b>#{brand_country}</b></a>
       <nav class="main-nav" id="site-primary-navigation" aria-label="#{nav_label}">
         <details class="unified-products-menu"><summary>#{models} <span aria-hidden="true">⌄</span></summary><div class="unified-products-panel"><a href="#{moto_path}">#{motorcycles}<span>↗</span></a><a href="#{atv_path}">#{atvs}<span>↗</span></a><a href="#{buggy_path}">#{buggy}<span>↗</span></a><a href="#{ru ? '/ru/#modeller' : '/#modeller'}">#{all_models}<span>↗</span></a></div></details>
-        <a href="/aksesuar-konfiquratoru/">#{accessories}</a><a href="#{credit_path}">#{credit}</a><a href="#{service_path}">#{service}</a><a href="/xeberler/">#{news}</a><a href="#{showroom_path}">#{showroom}</a>
+        <a href="/aksesuar-konfiquratoru/">#{accessories}</a><a href="#{credit_path}">#{credit}</a><a href="#{suspension_path}" data-suspension-entry="true">#{suspension}</a><a href="#{service_path}">#{service}</a><a href="/xeberler/">#{news}</a><a href="#{showroom_path}">#{showroom}</a>
         <a class="nav-cta" href="https://wa.me/994512332484?text=Salam%2C%20CFMOTO%20modeli%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m" target="_blank" rel="noreferrer">#{contact}</a>
       </nav>
       #{language}
@@ -95,7 +98,7 @@ paths.uniq.each do |path|
   next unless html.include?("</head>") && html.include?("<body")
 
   html.gsub!(%r{#{Regexp.escape(HEAD_START)}.*?#{Regexp.escape(HEAD_END)}}, "")
-  head_block = %(#{HEAD_START}<link rel="stylesheet" href="#{STYLE_URL}"><script defer src="#{SCRIPT_URL}"></script>#{HEAD_END})
+  head_block = %(#{HEAD_START}<link rel="stylesheet" href="#{STYLE_URL}"><script defer src="#{SCRIPT_URL}"></script><script defer src="#{SUSPENSION_ENTRY_SCRIPT_URL}"></script>#{HEAD_END})
   html.sub!("</head>", "#{head_block}</head>")
 
   relative = path.delete_prefix("#{ROOT}/")

@@ -43,6 +43,11 @@ RU_CONTENT_META = {
     title: "Сравнение моделей CFMOTO | Цены и категории",
     description: "Сравните 48 моделей CFMOTO по категории, объёму двигателя, цене, первоначальному взносу и максимальному сроку рассрочки.",
     heading: "Сравните модели CFMOTO"
+  },
+  "kalkulyator-podveski" => {
+    title: "Калькулятор настройки подвески CFMOTO | Азербайджан",
+    description: "Подберите начальные настройки преднатяга, сжатия и отбоя подвески CFMOTO с учётом модели, нагрузки и условий движения.",
+    heading: "Калькулятор настройки подвески CFMOTO"
   }
 }.freeze
 
@@ -349,7 +354,8 @@ def build_sitemap!(page_entries)
 end
 
 page_entries = entries
-abort "Expected 57 Azerbaijani source pages, found #{page_entries.size}" unless page_entries.size == 57
+expected_page_count = 1 + Dir.glob(File.join(ROOT, "model", "*", "index.html")).size + ContentConfig::SLUGS.size + CategoryConfig::SLUGS.size
+abort "Expected #{expected_page_count} Azerbaijani source pages, found #{page_entries.size}" unless page_entries.size == expected_page_count
 
 FileUtils.rm_rf(RU_ROOT)
 ([RussianConfig::ASSET_RUSSIAN_VERSION] + RussianConfig::LEGACY_RUSSIAN_ASSET_VERSIONS).each do |version|
@@ -407,5 +413,5 @@ end
 build_sitemap!(page_entries)
 
 ru_pages = Dir.glob(File.join(RU_ROOT, "**", "index.html"))
-abort "Expected 57 Russian pages, found #{ru_pages.size}" unless ru_pages.size == 57
+abort "Expected #{expected_page_count} Russian pages, found #{ru_pages.size}" unless ru_pages.size == expected_page_count
 puts "Russian site generated: #{ru_pages.size} pages, 13 locale assets and #{page_entries.size * 2} sitemap URLs"

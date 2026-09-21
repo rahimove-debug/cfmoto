@@ -123,6 +123,9 @@ abort "Homepage category-link audit failed" unless system(RbConfig.ruby, home_ca
 confirmed_price_presentation = File.join(__dir__, "apply_confirmed_price_presentation.rb")
 abort "Confirmed price presentation failed" unless system(RbConfig.ruby, confirmed_price_presentation)
 
+suspension_calculator_audit = File.join(__dir__, "audit_suspension_calculator.mjs")
+abort "Suspension calculator audit failed" unless system("node", suspension_calculator_audit, ROOT)
+
 FileUtils.rm_rf(DIST)
 FileUtils.mkdir_p(DIST)
 
@@ -170,3 +173,7 @@ abort "Published SEO audit failed" unless system("node", File.join(__dir__, "aud
 
 confirmed_pricing_audit = File.join(__dir__, "audit_confirmed_pricing.rb")
 abort "Confirmed pricing audit failed" unless system(RbConfig.ruby, confirmed_pricing_audit, DIST)
+
+# Re-run against the exact deployment bundle after JavaScript fingerprinting
+# and all final-output transformations.
+abort "Published suspension calculator audit failed" unless system("node", suspension_calculator_audit, DIST)

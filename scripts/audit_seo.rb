@@ -322,7 +322,8 @@ content_expectations = {
   "servis" => ["Bazar ertəsi istisna olmaqla", "+994 10 241 42 99", "45 AZN", '"@type":"Service"'],
   "zemanet" => ["2 il / 24.000 km", "model və istifadə rejiminə görə", "ümumi məlumat verir"],
   "ehtiyat-hisseleri" => ["orijinal ehtiyat hissələri", "yağlar və aksesuarlar", "mövcudluq telefon sorğusu"],
-  "model-muqayisesi" => ["48 aktual modeli", "Minimum ilkin ödəniş", '"numberOfItems":48']
+  "model-muqayisesi" => ["48 aktual modeli", "Minimum ilkin ödəniş", '"numberOfItems":48'],
+  "asqi-kalkulyatoru" => ["data-cfmoto-suspension-calculator", "1000MT-X", "800MT-X", "700MT", "450MT", '"@type":"FAQPage"']
 }
 content_expectations.each do |slug, expected_texts|
   path = File.join(ROOT, slug, "index.html")
@@ -334,7 +335,7 @@ content_expectations.each do |slug, expected_texts|
   expected_texts.each do |text|
     errors << "/#{slug} is missing required content: #{text}" unless content.include?(text)
   end
-  if %w[servis zemanet ehtiyat-hisseleri].include?(slug)
+  if %w[servis zemanet ehtiyat-hisseleri asqi-kalkulyatoru].include?(slug)
     word_count = visible_main_word_count(content)
     errors << "/#{slug}/ main content is too short: #{word_count} words (minimum #{MIN_INFORMATIONAL_MAIN_WORDS})" if word_count < MIN_INFORMATIONAL_MAIN_WORDS
   end
