@@ -9,6 +9,7 @@
 - [Kvadrosikllər](https://cfmoto.az/kvadrosikl/): CFORCE ATV modelləri
 - [Buggy və UTV](https://cfmoto.az/buggy/): ZFORCE və UFORCE modelləri
 - [Aksesuar konfiquratoru](https://cfmoto.az/aksesuar-konfiquratoru/): modelə uyğun orijinal aksesuar seçimi
+- [Asqı kalkulyatoru](https://cfmoto.az/asqi-kalkulyatoru/): rəsmi təlimat cədvəlləri əsasında başlanğıc asqı sazlaması
 - [Xəbərlər](https://cfmoto.az/xeberler/): CFMOTO Azerbaijan yenilikləri
 - [Rus dili](https://cfmoto.az/ru/): saytın rusdilli versiyası
 

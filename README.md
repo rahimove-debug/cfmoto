@@ -54,13 +54,14 @@ qaydalarını yayımdan əvvəl yoxlayır. Bu testlər Google-a hadisə göndər
 
 Build skripti SEO auditini işə salır və yalnız ictimai sayt fayllarını `dist/` qovluğuna köçürür. GitHub Actions əsas saytdan yeni versiyanı idxal edərkən SEO düzəlişlərini yenidən tətbiq edir və Cloudflare paketini yoxlayır.
 
-Build zamanı beş yüngül SEO məlumat səhifəsi də yaradılır:
+Build zamanı altı yüngül SEO məlumat səhifəsi də yaradılır:
 
 - `/kredit`
 - `/servis`
 - `/zemanet`
 - `/ehtiyat-hisseleri`
 - `/model-muqayisesi`
+- `/asqi-kalkulyatoru/` — rəsmi təlimat cədvəllərinə əsaslanan asqı sazlama kalkulyatoru
 
 Məhsulları, qiymətləri, izahlı mətni və FAQ bölməsini ehtiva edən ayrıca kateqoriya səhifələri yaradılır:
 
@@ -77,9 +78,9 @@ Xəbərlər bölməsi ayrıca statik marşrutlarla yayımlanır:
 
 Köhnə `/motosi%CC%87klet` yolu `301` statusu ilə `/motosiklet/` səhifəsinə yönləndirilir. Kateqoriya URL-ləri ana səhifəyə yönləndirilmir.
 
-Saytın tam rus dili versiyası `/ru/` altında yaradılır. Buraya 48 model, beş məlumat səhifəsi və üç kateqoriya daxildir. Hər AZ/RU cütü öz canonical URL-inə, qarşılıqlı `hreflang="az"`, `hreflang="ru"` və `x-default` işarələrinə malikdir. Sitemap 121 canonical URL saxlayır.
+Saytın tam rus dili versiyası `/ru/` altında yaradılır. Buraya 48 model, altı məlumat səhifəsi və üç kateqoriya daxildir. Hər AZ/RU cütü öz canonical URL-inə, qarşılıqlı `hreflang="az"`, `hreflang="ru"` və `x-default` işarələrinə malikdir. Sitemap 123 canonical URL saxlayır.
 
-Sayt `404.html` daxil olmaqla 122 HTML faylı yayımlayır. Ana səhifənin model kartları və model mega-menyusu üçün `models/cards/` daxilində 680 px WebP variantları istifadə olunur; model səhifələrinin və xəbər məqalələrinin şəkilləri isə üçüncü tərəf hostu əvəzinə yerli `models/` və `gallery/` fayllarından yüklənir. Dəyişən JavaScript və CSS assetləri keşlənmiş köhnə kodla qarışmaması üçün versiyalı URL-lərlə yayımlanır; rus səhifələri hidratasiya uyğunluğu üçün ayrı rus dili asset paketlərindən istifadə edir.
+Sayt `404.html` daxil olmaqla 124 HTML faylı yayımlayır. Ana səhifənin model kartları və model mega-menyusu üçün `models/cards/` daxilində 680 px WebP variantları istifadə olunur; model səhifələrinin və xəbər məqalələrinin şəkilləri isə üçüncü tərəf hostu əvəzinə yerli `models/` və `gallery/` fayllarından yüklənir. Dəyişən JavaScript və CSS assetləri keşlənmiş köhnə kodla qarışmaması üçün versiyalı URL-lərlə yayımlanır; rus səhifələri hidratasiya uyğunluğu üçün ayrı rus dili asset paketlərindən istifadə edir.
 
 Əsas domen `https://cfmoto.az` olaraq build mənbəyində sabitlənib. Build zamanı
 köhnə `cfmoto.com.az`, `www` və preview originləri canonical, Open Graph,
