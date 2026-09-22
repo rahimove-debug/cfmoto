@@ -1,0 +1,18 @@
+/* The official BOBBER gallery photography is 3:2. Preserve that framing on
+   desktop and mobile instead of forcing tall tiles that crop the motorcycle. */
+.model-feature-image,
+.model-feature-card:first-child .model-feature-image {
+  aspect-ratio: 3 / 2;
+  min-height: 0 !important;
+}
+
+.model-feature-image > img {
+  object-position: center;
+}
+
+@media (max-width: 580px) {
+  .model-feature-image,
+  .model-feature-card:first-child .model-feature-image {
+    aspect-ratio: 3 / 2;
+  }
+}
