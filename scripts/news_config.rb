@@ -2,6 +2,7 @@
 
 module NewsConfig
   ROOT_SLUG = "xeberler"
+  SUSPENSION_CALCULATOR_ARTICLE_SLUG = "cfmoto-asqi-tenzimleme-kalkulyatoru"
   CFORCE_ARTICLE_SLUG = "cforce-c4-c5-artiq-azerbaycanda"
   Z10_ARTICLE_SLUG = "z10-z10-4-turbo-performans-azerbaycanda"
   ROMANIACS_ARTICLE_SLUG = "cfmoto-450mt-red-bull-romaniacs-2026"
@@ -11,10 +12,17 @@ module NewsConfig
   INDEX_PAGE = {
     path: "/#{ROOT_SLUG}/",
     file: File.join(ROOT_SLUG, "index.html"),
-    image: "/gallery/romaniacs-2026-450mt-hero.webp"
+    image: "/gallery/800mt-x-1.webp"
   }.freeze
 
   ARTICLES = [
+    {
+      slug: SUSPENSION_CALCULATOR_ARTICLE_SLUG,
+      path: "/#{ROOT_SLUG}/#{SUSPENSION_CALCULATOR_ARTICLE_SLUG}/",
+      file: File.join(ROOT_SLUG, SUSPENSION_CALCULATOR_ARTICLE_SLUG, "index.html"),
+      image: "/gallery/800mt-x-1.webp",
+      title: "CFMOTO asqı tənzimləmə kalkulyatoru istifadəyə verildi"
+    },
     {
       slug: ROMANIACS_ARTICLE_SLUG,
       path: "/#{ROOT_SLUG}/#{ROMANIACS_ARTICLE_SLUG}/",
