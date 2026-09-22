@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="az">
+<head><!-- CFMOTO:GTM:HEAD:START -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9877TBG');
+</script>
+<!-- CFMOTO:GTM:HEAD:END -->
+<!-- CFMOTO:ANALYTICS:START -->
+<script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=G-X0Y85BJ9ST"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
+window.gtag('js',new Date());
+window.gtag('config','G-X0Y85BJ9ST');
+document.addEventListener('click',function(event){
+  var target=event.target;
+  if(!(target instanceof Element))return;
+  var link=target.closest('a[href]');
+  if(!link)return;
+  var href=link.getAttribute('href')||'';
+  var text=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
+  var normalizedHref=href.toLowerCase();
+  var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
+  var params={link_text:text,page_path:window.location.pathname};
+  var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
+  if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
+    var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
+    send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
+    if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
+    return;
+  }
+  if(normalizedHref.startsWith('tel:')){
+    var normalizedText=text.toLowerCase();
+    var serviceContact=normalizedHref.replace(/[^+0-9:tel]/g,'')==='tel:+994102414299'||['servis','ehtiyat','çatdırılma'].some(function(term){return normalizedText.includes(term)});
+    send('phone_click',{contact_area:declaredArea||(serviceContact?'service':'sales')});
+    return;
+  }
+  if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){
+    send('directions_click',{destination:'showroom'});
+  }
+},true);
+</script>
+<!-- CFMOTO:ANALYTICS:END -->
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CFMOTO asqı kalkulyatoru istifadəyə verildi | CFMOTO Azerbaijan</title>
+  <meta name="description" content="CFMOTO motosikletləri üçün model, real yük və sürüş rejiminə əsaslanan yeni asqı tənzimləmə kalkulyatoru istifadəyə verildi.">
+  <link rel="canonical" href="https://cfmoto.az/xeberler/cfmoto-asqi-tenzimleme-kalkulyatoru/">
+  <link rel="alternate" hreflang="az" href="https://cfmoto.az/xeberler/cfmoto-asqi-tenzimleme-kalkulyatoru/">
+  <link rel="alternate" hreflang="x-default" href="https://cfmoto.az/xeberler/cfmoto-asqi-tenzimleme-kalkulyatoru/">
+  <meta property="og:title" content="CFMOTO asqı tənzimləmə kalkulyatoru istifadəyə verildi">
+  <meta property="og:description" content="Modeli, real yükü və sürüş şəraitini seçin, rəsmi təlimat məlumatları əsasında başlanğıc asqı sazlamasını hesablayın.">
+  <meta property="og:url" content="https://cfmoto.az/xeberler/cfmoto-asqi-tenzimleme-kalkulyatoru/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://cfmoto.az/gallery/800mt-x-1.webp">
+  <meta property="og:image:width" content="1140">
+  <meta property="og:image:height" content="892">
+  <meta property="og:image:alt" content="CFMOTO 800MT-X və yeni asqı tənzimləmə kalkulyatoru">
+  <meta property="og:locale" content="az_AZ">
+  <meta property="og:site_name" content="CFMOTO Azerbaijan">
+  <meta property="article:published_time" content="2026-09-22T10:00:00+04:00">
+  <meta property="article:modified_time" content="2026-09-22T10:00:00+04:00">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CFMOTO asqı tənzimləmə kalkulyatoru istifadəyə verildi">
+  <meta name="twitter:description" content="Altı CFMOTO modeli üçün yük və sürüş şəraitinə uyğun başlanğıc asqı sazlamasını hesablayın.">
+  <meta name="twitter:image" content="https://cfmoto.az/gallery/800mt-x-1.webp">
+  <meta name="twitter:image:alt" content="CFMOTO 800MT-X və yeni asqı tənzimləmə kalkulyatoru">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"NewsArticle","@id":"https://cfmoto.az/xeberler/cfmoto-asqi-tenzimleme-kalkulyatoru/#article","headline":"CFMOTO asqı tənzimləmə kalkulyatoru istifadəyə verildi","description":"CFMOTO motosikletləri üçün model, real yük və sürüş rejiminə əsaslanan yeni asqı tənzimləmə kalkulyatoru istifadəyə verildi.","image":["https://cfmoto.az/gallery/800mt-x-1.webp","https://cfmoto.az/gallery/1000mt-x-1.webp","https://cfmoto.az/gallery/450mt-1.webp"],"datePublished":"2026-09-22T10:00:00+04:00","dateModified":"2026-09-22T10:00:00+04:00","inLanguage":"az-AZ","mainEntityOfPage":{"@type":"WebPage","@id":"https://cfmoto.az/xeberler/cfmoto-asqi-tenzimleme-kalkulyatoru/"},"author":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/"},"publisher":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/","logo":{"@type":"ImageObject","url":"https://cfmoto.az/assets/cfmoto-logo-transparent-v1.svg","width":159,"height":34}},"about":{"@id":"https://cfmoto.az/asqi-kalkulyatoru/#application"}},{"@type":"WebApplication","@id":"https://cfmoto.az/asqi-kalkulyatoru/#application","name":"CFMOTO asqı tənzimləmə kalkulyatoru","url":"https://cfmoto.az/asqi-kalkulyatoru/","applicationCategory":"UtilityApplication","operatingSystem":"Web browser","browserRequirements":"JavaScript","inLanguage":["az-AZ","ru-RU"],"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"AZN"},"provider":{"@type":"Organization","name":"CFMOTO Azerbaijan","url":"https://cfmoto.az/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana səhifə","item":"https://cfmoto.az/"},{"@type":"ListItem","position":2,"name":"Xəbərlər","item":"https://cfmoto.az/xeberler/"},{"@type":"ListItem","position":3,"name":"Asqı tənzimləmə kalkulyatoru","item":"https://cfmoto.az/xeberler/cfmoto-asqi-tenzimleme-kalkulyatoru/"}]}]}</script>
+  <link rel="icon" href="/favicon.svg">
+  <link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high">
+  <link rel="stylesheet" href="/assets/cfmoto-news-v2.css">
+
+<!-- CFMOTO:UNIFIED-NAV:HEAD:START --><link rel="stylesheet" href="/assets/unified-navigation-v1.css"><script defer src="/assets/unified-navigation-v1.js"></script><script defer src="/assets/suspension-entry-v1.js"></script><!-- CFMOTO:UNIFIED-NAV:HEAD:END --><link rel="stylesheet" href="/assets/confirmed-pricing-v2.css"/><link rel="stylesheet" href="/assets/cfmoto-typography-v2.css"/></head>
+<body><!-- CFMOTO:GTM:BODY:START -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9877TBG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- CFMOTO:GTM:BODY:END -->
+<!-- CFMOTO:UNIFIED-NAV:HEADER:START -->
+<div class="unified-topline"><span>CFMOTO-nun Azərbaycanda rəsmi nümayəndəsi</span><span class="topline-detail">Babək pr. 188 · Salon hər gün 10:00–19:00</span></div>
+<header class="site-header unified-site-header">
+  <a class="brand" href="/" aria-label="CFMOTO Azerbaijan ana səhifə"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"><b>AZƏRBAYCAN</b></a>
+  <nav class="main-nav" id="site-primary-navigation" aria-label="Əsas menyu">
+    <details class="unified-products-menu"><summary>Modellər <span aria-hidden="true">⌄</span></summary><div class="unified-products-panel"><a href="/motosiklet/">Motosikletlər<span>↗</span></a><a href="/kvadrosikl/">Kvadrosikllər<span>↗</span></a><a href="/buggy/">Buggy və UTV<span>↗</span></a><a href="/#modeller">Bütün modellər<span>↗</span></a></div></details>
+    <a href="/aksesuar-konfiquratoru/">Aksesuarlar</a><a href="/kredit/">Kredit</a><a href="/asqi-kalkulyatoru/" data-suspension-entry="true">Asqı</a><a href="/servis/">Servis</a><a href="/xeberler/">Xəbərlər</a><a href="/#showroom">Satış mərkəzi</a>
+    <a class="nav-cta" href="https://wa.me/994512332484?text=Salam%2C%20CFMOTO%20modeli%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m" target="_blank" rel="noreferrer">Əlaqə</a>
+  </nav>
+  <nav class="language-switcher" aria-label="Dil seçimi"><span aria-current="page">AZ</span><a href="/ru/" lang="ru" hreflang="ru">RU</a></nav>
+  <button class="menu-button" type="button" aria-label="Menyunu aç" aria-expanded="false" aria-controls="site-primary-navigation"><span></span><span></span></button>
+</header>
+<!-- CFMOTO:UNIFIED-NAV:HEADER:END -->
+
+  <main>
+    <section class="article-head">
+      <div class="news-page-width">
+        <nav class="breadcrumbs" aria-label="Naviqasiya yolu"><a href="/">Ana səhifə</a><span>›</span><a href="/xeberler/">Xəbərlər</a><span>›</span><span>Asqı kalkulyatoru</span></nav>
+        <div class="headline-grid">
+          <div><p class="news-label">Texnologiya · Sürüş</p><h1>Asqını daha dəqiq sazlamaq üçün <em>yeni kalkulyator</em></h1></div>
+          <div class="head-summary">
+            <p>CFMOTO Azerbaijan-ın yeni rəqəmsal aləti seçdiyiniz model, faktiki yük və sürüş şəraitinə əsasən ön və arxa asqı üçün başlanğıc dəyərlərini göstərir.</p>
+            <div class="news-meta"><span><strong>22 sentyabr 2026</strong></span><span>CFMOTO Azerbaijan redaksiyası</span><span>3 dəqiqə oxu</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero-wrap">
+      <div class="news-page-width">
+        <figure class="hero-figure">
+          <div class="hero-image"><span class="hero-stamp">Yeni rəqəmsal alət</span><img src="/gallery/800mt-x-1.webp" alt="CFMOTO 800MT-X və yeni asqı tənzimləmə kalkulyatoru" width="1140" height="892" loading="eager" fetchpriority="high" decoding="async" style="object-position:center 58%"></div>
+          <figcaption>800MT-X kalkulyatorda dəstəklənən altı CFMOTO modelindən biridir.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="article-body">
+      <div class="story-grid">
+        <article class="story">
+          <p class="lead">Yeni <a href="/asqi-kalkulyatoru/"><strong>CFMOTO asqı tənzimləmə kalkulyatoru</strong></a> motosikletin modelini, sürüş rejimini, sürücü, sərnişin və baqaj çəkisini nəzərə alaraq istifadəçi təlimatlarında dərc olunan məlumatları daha rahat tətbiq etməyə kömək edir.</p>
+
+          <h2>Altı model üçün ilkin sazlama</h2>
+          <p>İlk versiyada 1000MT-X, 800MT-X, 800MT SPORT, 800MT EXPLORE, 700MT və 450MT modelləri dəstəklənir. Siyahıya yalnız uyğun asqı cədvəli rəsmi istifadəçi təlimatında təsdiqlənən modellər daxil edilib; məlumat olmayan model üçün təxmini rəqəm göstərilmir.</p>
+          <ul class="feature-list">
+            <li>1000MT-X</li><li>800MT-X</li><li>800MT SPORT</li><li>800MT EXPLORE</li><li>700MT</li><li>450MT</li><li>Azərbaycan və rus dilləri</li><li>Mobil telefon üçün uyğun interfeys</li>
+          </ul>
+
+          <h2>Hesablama necə işləyir?</h2>
+          <p>İstifadəçi modeli və istifadə ssenarisini seçir, sonra faktiki çəkiləri daxil edir. Kalkulyator ümumi yükü hesablayır və təlimatda göstərilən iki ən yaxın yük nöqtəsi arasında başlanğıc sazlamasını müəyyənləşdirir. Kliklər tam ədədə, dövr və millimetr ölçüləri isə tənzimləyicinin praktik addımına uyğun yuvarlaqlaşdırılır.</p>
+          <p>Yük rəsmi cədvəlin aşağı və ya yuxarı sərhədini keçdikdə sistem yeni dəyər uydurmur. Bunun əvəzinə ən yaxın sənədləşdirilmiş dəyəri saxlayır və nəticənin sərhəddə olduğunu bildirir.</p>
+
+          <figure class="inline-figure"><img src="/gallery/1000mt-x-1.webp" alt="CFMOTO 1000MT-X adventure motosikleti" width="1600" height="1066" loading="lazy" decoding="async"><figcaption>1000MT-X üçün ön və arxa asqı dəyərləri real yükə uyğun hesablanır.</figcaption></figure>
+
+          <h2>Yol və yolsuzluq rejimləri</h2>
+          <p><strong>Yol rejimi</strong> sürücü, sərnişin və baqajdan yaranan ümumi yükə uyğun nəticəni göstərir. <strong>Yolsuzluq rejimi</strong> isə yalnız həmin modelin rəsmi təlimatında ayrıca yolsuzluq sazlaması dərc olunubsa aktiv olur. Rejim mövcud olmadıqda kalkulyator rəqəm təxmin etmir.</p>
+          <blockquote class="pullquote">Kalkulyatorun məqsədi rəsmi cədvəlləri əvəz etmək deyil, onları gündəlik istifadədə daha aydın və əlçatan etməkdir.</blockquote>
+
+          <h2>Nəticəni tətbiq etməzdən əvvəl</h2>
+          <p>Göstərilən nəticə yalnız başlanğıc sazlamasıdır. Motosikletin model ili, bazar komplektasiyası, faktiki texniki vəziyyəti və sürücünün fərdi üstünlükləri nəticəyə təsir edə bilər. Dəyişiklikdən əvvəl mövcud parametrləri qeyd edin, tənzimləyicini son nöqtədə zorlamayın və hər dəyişiklikdən sonra təhlükəsiz ərazidə qısa sınaq sürüşü edin.</p>
+          <p>Yağ sızması, zədələnmiş detal, qeyri-adi səs və ya idarəetmədə qeyri-sabitlik müşahidə edilirsə, sazlama aparmadan rəsmi servis ilə əlaqə saxlayın. Dəqiq SAG ölçümü və fərdi sazlama üçün peşəkar texnik yoxlaması tövsiyə olunur.</p>
+
+          <div class="market-note"><strong>Vacib qeyd:</strong> kalkulyator şin təzyiqini və motosikletin icazə verilən maksimum yükünü hesablamır. Həmişə konkret model ili üzrə istifadəçi təlimatını əsas götürün.</div>
+          <p><a href="/asqi-kalkulyatoru/"><strong>CFMOTO asqı tənzimləmə kalkulyatorunu açın və modeliniz üçün başlanğıc sazlamasını hesablayın.</strong></a></p>
+        </article>
+
+        <aside class="facts">
+          <h2>Qısa faktlar</h2>
+          <div class="fact-row"><span>Dəstəklənən model</span><strong>6</strong></div>
+          <div class="fact-row"><span>Dillər</span><strong>AZ · RU</strong></div>
+          <div class="fact-row"><span>Giriş məlumatları</span><strong>Model · yük · rejim</strong></div>
+          <div class="fact-row"><span>Rejimlər</span><strong>Yol · Yolsuzluq</strong></div>
+          <div class="fact-row"><span>Mənbə</span><strong>Rəsmi təlimatlar</strong></div>
+          <div class="fact-row"><span>İstifadə</span><strong>Ödənişsiz</strong></div>
+          <div class="share"><span>Xəbəri paylaş</span><div class="share-links"><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcfmoto.az%2Fxeberler%2Fcfmoto-asqi-tenzimleme-kalkulyatoru%2F" target="_blank" rel="noreferrer" aria-label="Facebook-da paylaş">F</a><a href="https://wa.me/?text=CFMOTO%20asq%C4%B1%20t%C9%99nziml%C9%99m%C9%99%20kalkulyatoru%20istifad%C9%99y%C9%99%20verildi%20https%3A%2F%2Fcfmoto.az%2Fxeberler%2Fcfmoto-asqi-tenzimleme-kalkulyatoru%2F" target="_blank" rel="noreferrer" aria-label="WhatsApp-da paylaş">WA</a><button type="button" id="copy-news-link" aria-label="Xəbər keçidini köçür">↗</button></div></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="gallery-section" id="gallery">
+      <div class="news-page-width"><p class="section-label">Dəstəklənən modellərdən</p><h2 class="gallery-title">Adventure ailəsi üçün praktik sazlama</h2>
+        <div class="gallery-grid"><figure><img src="/gallery/1000mt-x-1.webp" alt="CFMOTO 1000MT-X" width="1600" height="1066" loading="lazy" decoding="async"><figcaption>1000MT-X</figcaption></figure><figure><img src="/gallery/800mt-x-1.webp" alt="CFMOTO 800MT-X" width="1140" height="892" loading="lazy" decoding="async"><figcaption>800MT-X</figcaption></figure><figure><img src="/gallery/450mt-1.webp" alt="CFMOTO 450MT" width="1600" height="1066" loading="lazy" decoding="async"><figcaption>450MT</figcaption></figure></div>
+      </div>
+    </section>
+
+    <section class="article-footer" id="calculator"><div class="news-page-width article-footer-inner"><div><h2>Modeliniz üçün asqını hesablayın</h2><p>Modeli, yükü və sürüş rejimini seçin; başlanğıc sazlamasını dərhal görün.</p></div><a class="button" href="/asqi-kalkulyatoru/">Asqını hesabla <span>↗</span></a></div></section>
+  </main>
+
+  <footer class="news-footer"><div class="news-footer-inner"><span>© 2026 CFMOTO Azerbaijan · SAZMOTO MMC</span><span><a href="/asqi-kalkulyatoru/">Asqı kalkulyatoru</a> · <a href="/servis/">Rəsmi servis</a></span></div></footer>
+  <script>
+    document.getElementById('copy-news-link').addEventListener('click',function(){
+      var button=this;
+      navigator.clipboard.writeText('https://cfmoto.az/xeberler/cfmoto-asqi-tenzimleme-kalkulyatoru/').then(function(){
+        button.textContent='✓';
+        window.setTimeout(function(){button.textContent='↗';},1800);
+      });
+    });
+  </script>
+</body>
+</html>
