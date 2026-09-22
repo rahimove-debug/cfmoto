@@ -81,7 +81,7 @@ else
   errors << "Homepage must link to the news index from navigation and footer" unless home.scan('<a href="/xeberler/">Xəbərlər</a>').size == 2
   errors << "Homepage news card is missing the article URL" unless home.scan(%(href="#{article_path}")).size >= 3
   errors << "Homepage news block is missing the listing URL" unless home.include?(%(class="home-news-all" href="#{news_index_path}"))
-  errors << "Homepage news image must be local, lazy and intrinsically sized" unless home.match?(%r{<img src="/gallery/romaniacs-2026-450mt-hero\.webp"[^>]*width="896"[^>]*height="600"[^>]*loading="lazy"[^>]*decoding="async"[^>]*fetchpriority="low"}i)
+  errors << "Homepage news image must be local, lazy and intrinsically sized" unless home.match?(%r{<img src="/gallery/800mt-x-1\.webp"[^>]*width="1140"[^>]*height="892"[^>]*loading="lazy"[^>]*decoding="async"[^>]*fetchpriority="low"}i)
   errors << "Homepage must load the scoped news stylesheet once" unless home.scan(%(<link rel="stylesheet" href="/assets/home-news-v1.css"/>)).size == 1
   errors << "Homepage must not load the article stylesheet" if home.match?(%r{/assets/cfmoto-news-v\d+\.css})
   errors << "Homepage must preload the cache-busted news page bundle once" unless home.scan("/assets/page-CfmotoHomeNewsV5.js").size == 1
@@ -101,10 +101,10 @@ else
   errors << "Hydrated homepage must contain one news section" unless home_page_bundle.scan('className:`home-news section`').size == 1
   errors << "Hydrated homepage navigation is missing News" unless home_page_bundle.include?('[`Xəbərlər`,`/xeberler/`]')
   errors << "Hydrated homepage footer is missing News" unless home_page_bundle.include?('(0,c.jsx)(`a`,{href:`/xeberler/`,children:`Xəbərlər`})')
-  errors << "Hydrated homepage news image is not lazy or intrinsically sized" unless home_page_bundle.include?('src:`/gallery/romaniacs-2026-450mt-hero.webp`') && home_page_bundle.include?('width:896,height:600,loading:`lazy`,decoding:`async`,fetchPriority:`low`')
+  errors << "Hydrated homepage news image is not lazy or intrinsically sized" unless home_page_bundle.include?('src:`/gallery/800mt-x-1.webp`') && home_page_bundle.include?('width:1140,height:892,loading:`lazy`,decoding:`async`,fetchPriority:`low`')
   errors << "Hydrated homepage must import the cache-busted link" unless home_page_bundle.include?("link-CfmotoHomeNewsV5.js")
   errors << "Hydrated homepage must import the cache-busted product menu" unless home_page_bundle.include?("ProductMegaMenu-CfmotoHomeNewsV5.js")
-  errors << "Hydrated homepage is missing the featured Romaniacs story" unless home_page_bundle.include?(NewsConfig::FEATURED_ARTICLE.fetch(:path)) && home_page_bundle.include?("CFMOTO Romaniacs 2026-da üç Adventure sinfində qalib gəldi")
+  errors << "Hydrated homepage is missing the featured suspension calculator story" unless home_page_bundle.include?(NewsConfig::FEATURED_ARTICLE.fetch(:path)) && home_page_bundle.include?("CFMOTO asqı tənzimləmə kalkulyatoru istifadəyə verildi")
   errors << "Hydrated homepage must not import a stale V1, V2, V3 or V4 news graph" if home_page_bundle.match?(/CfmotoHomeNewsV[1234]\.js/)
   errors << "Hydrated homepage page bundle must not import the cached accessory graph" if home_page_bundle.include?("CfmotoAccessoryV16.js")
 end
@@ -204,11 +204,22 @@ if File.file?(listing_path)
   listing_word_count = visible_main_word_count(listing)
   errors << "News listing main content is too short: #{listing_word_count} words (minimum #{MIN_NEWS_INDEX_MAIN_WORDS})" if listing_word_count < MIN_NEWS_INDEX_MAIN_WORDS
   errors << "News listing stories are missing or out of newest-first order" unless article_positions.all? && article_positions.each_cons(2).all? { |first, second| first < second }
-  errors << "News listing featured image must be eager and intrinsic" unless listing.match?(%r{<img src="/gallery/romaniacs-2026-450mt-hero\.webp"[^>]*width="896"[^>]*height="600"[^>]*loading="eager"[^>]*fetchpriority="high"}i)
+  errors << "News listing featured image must be eager and intrinsic" unless listing.match?(%r{<img src="/gallery/800mt-x-1\.webp"[^>]*width="1140"[^>]*height="892"[^>]*loading="eager"[^>]*fetchpriority="high"}i)
   NewsConfig::ARTICLES.drop(1).each do |article|
     image = Regexp.escape(article.fetch(:image))
     errors << "News listing older image #{article.fetch(:image)} must be lazy" unless listing.match?(%r{<img src="#{image}"[^>]*loading="lazy"[^>]*fetchpriority="low"}i)
   end
+end
+
+suspension_article_path = File.join(ROOT, NewsConfig::ROOT_SLUG, NewsConfig::SUSPENSION_CALCULATOR_ARTICLE_SLUG, "index.html")
+if File.file?(suspension_article_path)
+  article = File.read(suspension_article_path, encoding: "UTF-8")
+  errors << "Suspension calculator article is missing NewsArticle schema" unless article.include?('"@type":"NewsArticle"')
+  errors << "Suspension calculator article is missing WebApplication schema" unless article.include?('"@type":"WebApplication"')
+  errors << "Suspension calculator article must link to the live calculator" unless article.scan('href="/asqi-kalkulyatoru/"').size >= 2
+  errors << "Suspension calculator article must identify all six supported models" unless ["1000MT-X", "800MT-X", "800MT SPORT", "800MT EXPLORE", "700MT", "450MT"].all? { |model| article.include?(model) }
+  errors << "Suspension calculator article must explain both riding modes" unless article.include?("Yol rejimi") && article.include?("Yolsuzluq rejimi")
+  errors << "Suspension calculator article must retain the safety boundary" unless article.include?("başlanğıc sazlaması") && article.include?("rəsmi servis") && article.include?("istifadəçi təlimatı")
 end
 
 cforce_article_path = File.join(ROOT, NewsConfig::ROOT_SLUG, NewsConfig::CFORCE_ARTICLE_SLUG, "index.html")
