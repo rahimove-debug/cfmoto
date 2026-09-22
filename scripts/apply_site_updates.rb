@@ -272,10 +272,15 @@ def localize_primary_model_image!(content, slug)
   source = content[/<img\s+class="model-color-image"\s+src="([^"]+)"/, 1]
   return unless source
 
-  # Preserve the verified Ivory White hero on repeat builds. The generic AURA
-  # catalog/card image is Vintage White and must not replace this color photo.
+  # Preserve verified color-specific heroes on repeat builds. Generic catalog
+  # images must not overwrite the exact paint option shown by the selector.
   if slug == "aura-150" && source == "/models/aura-150-ivory-white-official-v1.png"
     abort "Missing official AURA Ivory White image" unless File.file?(File.join(ROOT, source.delete_prefix("/")))
+    return
+  end
+
+  if slug == "450cl-c-bobber" && source == "/models/450cl-c-bobber-ivory-white-official-v1.webp"
+    abort "Missing official BOBBER Ivory White image" unless File.file?(File.join(ROOT, source.delete_prefix("/")))
     return
   end
 
@@ -1196,6 +1201,9 @@ checks = {
     source = primary_model_image_source(slug)
     if slug == "aura-150" && html.include?('<img class="model-color-image" src="/models/aura-150-ivory-white-official-v1.png"')
       source = "/models/aura-150-ivory-white-official-v1.png"
+    end
+    if slug == "450cl-c-bobber" && html.include?('<img class="model-color-image" src="/models/450cl-c-bobber-ivory-white-official-v1.webp"')
+      source = "/models/450cl-c-bobber-ivory-white-official-v1.webp"
     end
     html.include?(%(<img class="model-color-image" src="#{source}")) &&
       html.include?(%(<link rel="preload" as="image" href="#{source}"))
