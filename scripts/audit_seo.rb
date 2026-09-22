@@ -433,6 +433,12 @@ Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.each do |path|
     primary = "/models/aura-150-ivory-white-official-v1.png"
     errors << "#{slug}: official Ivory White image is missing" unless File.file?(File.join(ROOT, primary.delete_prefix("/")))
   end
+  # Rebuilt BOBBER pages retain the verified local Ivory White hero; the
+  # Nebula Black selector asset is checked by audit_model_images.rb.
+  if slug == "450cl-c-bobber" && content.include?('<img class="model-color-image" src="/models/450cl-c-bobber-ivory-white-official-v1.webp"')
+    primary = "/models/450cl-c-bobber-ivory-white-official-v1.webp"
+    errors << "#{slug}: official Ivory White image is missing" unless File.file?(File.join(ROOT, primary.delete_prefix("/")))
+  end
   errors << "#{slug}: primary model image is not local" unless content.match?(%r{<img class="model-color-image"[^>]*src="#{Regexp.escape(primary)}"})
   errors << "#{slug}: primary model preload is not local" unless content.include?(%(<link rel="preload" as="image" href="#{primary}"))
 end
