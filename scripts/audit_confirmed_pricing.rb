@@ -119,6 +119,8 @@ required = {
   "RU home" => File.join(ROOT, "ru", "index.html"),
   "675NK AZ" => File.join(ROOT, "model", "675nk", "index.html"),
   "675NK RU" => File.join(ROOT, "ru", "model", "675nk", "index.html"),
+  "U10 XL AZ" => File.join(ROOT, "model", "u10-xl-pro", "index.html"),
+  "U10 XL RU" => File.join(ROOT, "ru", "model", "u10-xl-pro", "index.html"),
   "C5 AZ" => File.join(ROOT, "model", "cforce-c5", "index.html"),
   "C5 RU" => File.join(ROOT, "ru", "model", "cforce-c5", "index.html"),
   "Z10-4 AZ" => File.join(ROOT, "model", "z10-4", "index.html"),
@@ -140,6 +142,8 @@ az_home = read_utf8(required.fetch("AZ home"))
 ru_home = read_utf8(required.fetch("RU home"))
 n675_az = read_utf8(required.fetch("675NK AZ"))
 n675_ru = read_utf8(required.fetch("675NK RU"))
+u10_xl_az = read_utf8(required.fetch("U10 XL AZ"))
+u10_xl_ru = read_utf8(required.fetch("U10 XL RU"))
 c5_az = read_utf8(required.fetch("C5 AZ"))
 c5_ru = read_utf8(required.fetch("C5 RU"))
 z10_az = read_utf8(required.fetch("Z10-4 AZ"))
@@ -181,6 +185,52 @@ end
   errors << "#{label} calculator down payment is wrong" unless html.include?("5,316<!-- --> AZN")
   errors << "#{label} calculator financed debt is wrong" unless html.include?("9,170<!-- --> AZN")
   errors << "#{label} calculator monthly payment is wrong" unless html.include?("764<!-- --> <small>AZN / ay</small>") || html.include?("764<!-- --> <small>AZN / мес.</small>")
+end
+
+{
+  "AZ U10 XL PRO" => [u10_xl_az, "AZN / ay"],
+  "RU U10 XL PRO" => [u10_xl_ru, "AZN / мес."]
+}.each do |label, (html, monthly_unit)|
+  errors << "#{label} visible cash price is wrong" unless html.include?("45,900 AZN")
+  errors << "#{label} calculator down payment is wrong" unless html.include?("22,950<!-- --> AZN")
+  errors << "#{label} calculator financed debt is wrong" unless html.include?("26,392<!-- --> AZN")
+  errors << "#{label} calculator monthly payment is wrong" unless html.include?("2,199<!-- --> <small>#{monthly_unit}</small>")
+  prices = product_offer_prices(html, "U10 XL PRO")
+  errors << "#{label} Product Offer must be present once at 45,900" unless prices == ["45900"]
+  errors << "#{label} still contains the old 39,900 price" if html.match?(/39,900|(?<!\d)39900(?!\d)/)
+end
+
+{
+  "AZ home" => required.fetch("AZ home"),
+  "RU home" => required.fetch("RU home")
+}.each do |label, path|
+  html = read_utf8(path)
+  card = html[%r{<article class="model-card">(?:(?!</article>).)*href="/(?:ru/)?model/u10-xl-pro/"(?:(?!</article>).)*</article>}m]
+  option = html[%r{<option value="U10 XL PRO">.*?</option>}m]
+  errors << "#{label} U10 XL PRO card price is wrong" if card && !card.include?("45,900 AZN")
+  errors << "#{label} U10 XL PRO finance-option price is wrong" unless option&.include?("45,900")
+end
+
+[required.fetch("AZ buggy"), required.fetch("RU buggy")].each do |path|
+  html = read_utf8(path)
+  card = html[%r{<article class="category-model-card">(?:(?!</article>).)*href="/(?:ru/)?model/u10-xl-pro/"(?:(?!</article>).)*</article>}m]
+  errors << "#{path} U10 XL PRO category price is wrong" unless card&.include?("45,900 AZN")
+end
+
+[required.fetch("AZ compare"), required.fetch("RU compare")].each do |path|
+  html = read_utf8(path)
+  row = html[%r{<tr>(?:(?!</tr>).)*href="/(?:ru/)?model/u10-xl-pro/"(?:(?!</tr>).)*</tr>}m]
+  errors << "#{path} U10 XL PRO comparison price is wrong" unless row&.include?("45,900 AZN")
+  errors << "#{path} U10 XL PRO comparison down payment is wrong" unless row&.include?("50% · 22,950 AZN")
+end
+
+%w[u10-pro uforce-1000-xl uforce-600].each do |slug|
+  ["model", File.join("ru", "model")].each do |prefix|
+    path = File.join(ROOT, prefix, slug, "index.html")
+    html = read_utf8(path)
+    related = html[%r{<a href="/(?:ru/)?model/u10-xl-pro/" class="related-card">.*?</a>}m]
+    errors << "#{path} U10 XL PRO related-card price is wrong" unless related&.include?("45,900 AZN")
+  end
 end
 
 errors << "C5 AZ price changed" unless c5_az.include?("13,900 AZN")
@@ -272,6 +322,7 @@ end
 
 {
   "675NK" => "13290",
+  "U10 XL PRO" => "45900",
   "CFORCE C5" => "13900",
   "Z10-4" => "47900",
   "450CL-C BOBBER" => "10900"
@@ -309,6 +360,7 @@ if File.file?(sales_manifest)
   manifest.fetch("locales").each do |language, files|
     menu = read_utf8(File.join(ROOT, "assets", files.fetch("menu")))
     errors << "#{language} client catalog lost 675NK price" unless menu.include?('slug:`675nk`') && menu.include?('price:13290')
+    errors << "#{language} client catalog lost U10 XL PRO price" unless menu.match?(/slug:`u10-xl-pro`[^{}]*price:45900/)
     errors << "#{language} client catalog lost Z10-4 list/campaign fields" unless menu.include?('price:47900,listPrice:49900,campaign:!0')
     errors << "#{language} client catalog lost BOBBER list/campaign fields" unless menu.include?('price:10900,listPrice:12400,campaign:!0,image:`/models/450cl-c-bobber.webp`')
     errors << "#{language} client catalog lost C5 GEN4 badge" unless menu.match?(/slug:`cforce-c5`[^{}]*badge:`GEN⁴`/)
@@ -320,6 +372,7 @@ bundle_name = config_index[/page-cfmoto-improvements-[a-f0-9]+\.js/]
 if bundle_name
   bundle = read_utf8(File.join(ROOT, "aksesuar-konfiquratoru", "_next", "static", "chunks", "app", bundle_name))
   errors << "Configurator lost 675NK price" unless bundle.include?('"id":"675nk"') && bundle.include?('"basePriceAzn":13290')
+  errors << "Configurator lost U10 XL PRO price" unless bundle.include?('"id":"u10-xl-pro"') && bundle.include?('"basePriceAzn":45900')
   errors << "Configurator Z10-4 must use campaign price" unless bundle.include?('"id":"z10-4"') && bundle.include?('"basePriceAzn":47900')
   errors << "Configurator BOBBER must use campaign price" unless bundle.match?(/"id":"450cl-c-bobber"[^{}]*"basePriceAzn":10900/)
 else
@@ -331,4 +384,4 @@ if errors.any?
   abort "Confirmed pricing audit failed with #{errors.size} error(s)"
 end
 
-puts "Confirmed pricing audit passed: 675NK 13,290; C5 13,900 + GEN⁴; Z10-4 49,900 / 47,900 campaign; BOBBER 12,400 / 10,900 campaign across AZ/RU, calculators, schema and configurator"
+puts "Confirmed pricing audit passed: 675NK 13,290; U10 XL PRO 45,900; C5 13,900 + GEN⁴; Z10-4 49,900 / 47,900 campaign; BOBBER 12,400 / 10,900 campaign across AZ/RU, calculators, schema and configurator"
