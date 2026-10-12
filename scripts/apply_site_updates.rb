@@ -90,12 +90,13 @@ INSTALLMENT_INTEREST_RATES = {
   12 => 0.15,
   18 => 0.23
 }.freeze
-HOME_CALCULATOR_NOTE = "Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Bank şərtləri ayrıca hesablanır."
+HOME_CALCULATOR_NOTE = "Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Faiz ilkin ödənişdən sonra qalan borca tətbiq olunur."
+PREVIOUS_HOME_CALCULATOR_NOTE = "Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Bank şərtləri ayrıca hesablanır."
 OLD_HOME_CALCULATOR_NOTE = "Hesablama məlumat xarakterlidir; bank faizi və komissiyalar daxil deyil. Yekun şərtlər fərqlənə bilər."
 MODEL_CALCULATOR_NOTE = "Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir."
 OLD_MODEL_CALCULATOR_NOTE = "Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir."
-BANK_CALCULATOR_NOTE = "Bank faizi və komissiyası daxil deyil. Yekun aylıq ödəniş bank tərəfindən hesablanır."
-BANK_DEBT_LABEL = "Əsas borc · bank faizi və komissiyası daxil deyil"
+BANK_CALCULATOR_NOTE = "Bank hesablamasında daxili ödənişlə eyni faiz cədvəli qalıq borca tətbiq olunur: 6 ayadək 8%, 12 ayadək 15%, 12 aydan çox 23%. Bank komissiyası daxil deyil; yekun təsdiq bank tərəfindən verilir."
+BANK_DEBT_LABEL = "Faiz daxil qalıq borc · bank komissiyası daxil deyil"
 
 ORIGINAL_FINANCE_POLICY_COPY = "Motosikletlər üçün daxili hissəli ödəniş 20% ilkin ödənişlə 18 ayadək, ATV və buggy üçün 50% ilkin ödənişlə 12 ayadək. Bank krediti 10%-dən başlayır və 35 ayadək mümkündür."
 PREVIOUS_FINANCE_POLICY_COPY = "Mühərrik həcmi 300 cc-dək olan motosikletlər və 450SR üçün daxili hissəli ödəniş 20% ilkin ödənişlə, digər motosikletlər üçün 50% ilkin ödənişlə 18 ayadək. ATV və buggy üçün 50% ilkin ödənişlə 12 ayadək. Bank krediti 10%-dən başlayır və 35 ayadək mümkündür."
@@ -420,6 +421,7 @@ def apply_home_finance_policy!(home)
   financed = format_amount(rounded_amount(installment_total(principal, 18)))
   monthly = format_amount(rounded_amount(installment_total(principal, 18) / 18))
   calculator.gsub!("Maliyyələşdirilən məbləğ", "Faiz daxil borc")
+  calculator.gsub!(PREVIOUS_HOME_CALCULATOR_NOTE, HOME_CALCULATOR_NOTE)
   calculator.gsub!(OLD_HOME_CALCULATOR_NOTE, HOME_CALCULATOR_NOTE)
   patterns = {
     "down-payment heading" => %r{(<div class="range-line"><label for="down">İlkin ödəniş</label><strong>)\d+(<!-- -->% · <!-- -->)[\d,]+(<!-- --> AZN</strong></div>)},
@@ -663,9 +665,10 @@ update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
     javascript,
     [
       '];function f(){',
-      '];const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300);function f(){'
+      '];const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300);function f(){',
+      '];const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300),INTEREST_RATES={6:.08,12:.15,18:.23};function f(){'
     ],
-    '];const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300),INTEREST_RATES={6:.08,12:.15,18:.23};function f(){',
+    '];const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300),INTEREST_RATES={6:.08,12:.15,18:.23},rateForMonths=e=>e<=6?.08:e<=12?.15:.23;function f(){',
     "Home finance eligibility and interest rates"
   )
   replace_required_variant!(
@@ -701,10 +704,13 @@ update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
     'function I(e){let t=a.find(t=>t.name===e);if(g(e),_===`Daxili hissəli`){let e=t?.type!==`Motosiklet`;b(q(t)?20:e?50:40),S(e?12:18)}}',
     "Home model-change finance rule"
   )
-  replace_required_once!(
+  replace_required_variant!(
     javascript,
-    'M=E*A/100,N=E-M,P=N/j;',
-    'M=E*A/100,N=E-M,interestRate=_===`Daxili hissəli`?INTEREST_RATES[j]??0:0,financedWithInterest=N*(1+interestRate),P=financedWithInterest/j;',
+    [
+      'M=E*A/100,N=E-M,P=N/j;',
+      'M=E*A/100,N=E-M,interestRate=_===`Daxili hissəli`?INTEREST_RATES[j]??0:0,financedWithInterest=N*(1+interestRate),P=financedWithInterest/j;'
+    ],
+    'M=E*A/100,N=E-M,interestRate=rateForMonths(j),financedWithInterest=N*(1+interestRate),P=financedWithInterest/j;',
     "Home installment interest calculation"
   )
   replace_required_once!(
@@ -718,6 +724,7 @@ update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
     javascript,
     [
       '(0,c.jsxs)(`p`,{children:[`Faiz daxil borc: `,o(financedWithInterest),` AZN`]})',
+      '(0,c.jsxs)(`p`,{children:[_===`Bank krediti`?`Əsas borc · bank faizi və komissiyası daxil deyil: `:`Faiz daxil borc: `,o(financedWithInterest),` AZN`]})',
       "(0,c.jsxs)(`p`,{children:[_===`Bank krediti`?`#{BANK_DEBT_LABEL}: `:`Faiz daxil borc: `,o(financedWithInterest),` AZN`]})"
     ],
     "(0,c.jsxs)(`p`,{children:[_===`Bank krediti`?`#{BANK_DEBT_LABEL}: `:`Faiz daxil borc: `,o(financedWithInterest),` AZN`]})",
@@ -726,6 +733,7 @@ update_asset(HOME_BUNDLE_SOURCES, NEW_HOME_BUNDLE) do |javascript|
   replace_required_variant!(
     javascript,
     [
+      '(0,c.jsx)(`small`,{className:`calc-note`,children:_===`Bank krediti`?`Bank faizi və komissiyası daxil deyil. Yekun aylıq ödəniş bank tərəfindən hesablanır.`:`Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Bank şərtləri ayrıca hesablanır.`})',
       "(0,c.jsx)(`small`,{className:`calc-note`,children:`#{HOME_CALCULATOR_NOTE}`})",
       "(0,c.jsx)(`small`,{className:`calc-note`,children:_===`Bank krediti`?`#{BANK_CALCULATOR_NOTE}`:`#{HOME_CALCULATOR_NOTE}`})",
       "(0,c.jsx)(`small`,{className:`calc-note`,children:`#{OLD_HOME_CALCULATOR_NOTE}`})"
@@ -837,9 +845,10 @@ SUPPORT_ASSET_SOURCES.each do |source_names, new_name|
         javascript,
         [
           'var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e));function o',
-          "var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e)),q=new Set([#{eligible_models}]);function o"
+          "var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e)),q=new Set([#{eligible_models}]);function o",
+          "var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e)),q=new Set([#{eligible_models}]),INTEREST_RATES={6:.08,12:.15,18:.23};function o"
         ],
-        "var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e)),q=new Set([#{eligible_models}]),INTEREST_RATES={6:.08,12:.15,18:.23};function o",
+        "var r=e(t(),1),i=n(),a=e=>new Intl.NumberFormat(`en-US`,{maximumFractionDigits:0}).format(Math.round(e)),q=new Set([#{eligible_models}]),INTEREST_RATES={6:.08,12:.15,18:.23},rateForMonths=e=>e<=6?.08:e<=12?.15:.23;function o",
         "Model finance eligibility and interest rates"
       )
       replace_required_once!(
@@ -872,10 +881,13 @@ SUPPORT_ASSET_SOURCES.each do |source_names, new_name|
         'm=s?[6,12,18]:[6,12]',
         "Model installment term options"
       )
-      replace_required_once!(
+      replace_required_variant!(
         javascript,
-        'y=(0,r.useMemo)(()=>{let e=f/100*t,n=Math.max(0,t-e);return{downPayment:e,financed:n,monthly:n/u}},[f,u,t])',
-        'y=(0,r.useMemo)(()=>{let e=f/100*t,n=Math.max(0,t-e),interestRate=c===`internal`?INTEREST_RATES[u]??0:0,financed=n*(1+interestRate);return{downPayment:e,financed,monthly:financed/u,interestRate}},[f,u,t,c])',
+        [
+          'y=(0,r.useMemo)(()=>{let e=f/100*t,n=Math.max(0,t-e);return{downPayment:e,financed:n,monthly:n/u}},[f,u,t])',
+          'y=(0,r.useMemo)(()=>{let e=f/100*t,n=Math.max(0,t-e),interestRate=c===`internal`?INTEREST_RATES[u]??0:0,financed=n*(1+interestRate);return{downPayment:e,financed,monthly:financed/u,interestRate}},[f,u,t,c])'
+        ],
+        'y=(0,r.useMemo)(()=>{let e=f/100*t,n=Math.max(0,t-e),interestRate=rateForMonths(u),financed=n*(1+interestRate);return{downPayment:e,financed,monthly:financed/u,interestRate}},[f,u,t,c])',
         "Model installment interest calculation"
       )
       replace_required_variant!(
@@ -883,6 +895,7 @@ SUPPORT_ASSET_SOURCES.each do |source_names, new_name|
         [
           'c===`bank`?`Bank faizi və komissiyası daxil edilməyib.`:`Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir.`',
           'c===`bank`?`Bank faizi və komissiyası daxil edilməyib.`:`Daxili ödəniş faizi: ${Math.round(y.interestRate*100)}%. Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir.`',
+          'c===`bank`?`Bank faizi və komissiyası daxil deyil. Yekun aylıq ödəniş bank tərəfindən hesablanır.`:`Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir.`',
           "c===`bank`?`#{BANK_CALCULATOR_NOTE}`:`Daxili ödəniş faizi: ${Math.round(y.interestRate*100)}%. Yekun şərtlər satış mütəxəssisi tərəfindən təsdiqlənir.`",
           "c===`bank`?`#{BANK_CALCULATOR_NOTE}`:`#{MODEL_CALCULATOR_NOTE}`"
         ],
@@ -894,6 +907,7 @@ SUPPORT_ASSET_SOURCES.each do |source_names, new_name|
         [
           'children:`Maliyyələşən məbləğ`',
           'children:`Faiz daxil borc`',
+          'children:c===`bank`?`Əsas borc · bank faizi və komissiyası daxil deyil`:`Faiz daxil borc`',
           "children:c===`bank`?`#{BANK_DEBT_LABEL}`:`Faiz daxil borc`"
         ],
         "children:c===`bank`?`#{BANK_DEBT_LABEL}`:`Faiz daxil borc`",
@@ -1159,19 +1173,19 @@ checks = {
   "home finance policy copy removed" => FINANCE_POLICY_COPIES.none? { |copy| home.include?(copy) || home_bundle.include?(copy) },
   "home finance policy predicate" => home_bundle.include?('const q=e=>e?.type===`Motosiklet`&&(e.slug===`450sr`||parseInt(e.engineClass,10)<=300)'),
   "home ineligible default calculator" => home.include?('<strong>40<!-- -->% · <!-- -->4,796<!-- --> AZN</strong>') && home.include?('id="down" type="range" min="40" max="80" step="5" value="40"') && home.include?('id="term" type="range" min="6" max="18" step="6" value="18"') && home.include?('<strong>492<!-- --> <small>AZN / ay</small></strong>') && home.include?('Faiz daxil borc: <!-- -->8,849<!-- --> AZN'),
-  "home installment interest formula" => home_bundle.include?('INTEREST_RATES={6:.08,12:.15,18:.23}') && home_bundle.include?('financedWithInterest=N*(1+interestRate),P=financedWithInterest/j') && home_bundle.include?(HOME_CALCULATOR_NOTE),
+  "home installment interest formula" => home_bundle.include?('INTEREST_RATES={6:.08,12:.15,18:.23},rateForMonths=e=>e<=6?.08:e<=12?.15:.23') && home_bundle.include?('interestRate=rateForMonths(j),financedWithInterest=N*(1+interestRate),P=financedWithInterest/j') && home_bundle.include?(HOME_CALCULATOR_NOTE),
   "home internal term excludes 3 months" => home.include?('id="term" type="range" min="6" max="18" step="6" value="18"') && home_bundle.include?('min:_===`Bank krediti`?3:6') && !home.include?('id="term" type="range" min="3"'),
-  "home bank labels exclude uncalculated costs" => home_bundle.include?(BANK_CALCULATOR_NOTE) && home_bundle.include?(BANK_DEBT_LABEL),
+  "home bank uses balance interest and commission caveat" => home_bundle.include?(BANK_CALCULATOR_NOTE) && home_bundle.include?(BANK_DEBT_LABEL) && !home_bundle.include?('interestRate=_===`Daxili hissəli`?'),
   "model finance policy allowlist" => INTERNAL_20_MODEL_NAMES.all? { |model| model_finance_bundle.include?("`#{model}`") } && model_finance_bundle.include?('x=s&&q.has(e)') && model_finance_bundle.include?('[f,p]=(0,r.useState)(x?20:s?40:50)'),
   "motorcycle finance policy partitions all models" => INTERNAL_20_SLUGS.size == 12 && INTERNAL_40_MOTORCYCLE_SLUGS.size == 18 && (INTERNAL_20_SLUGS & INTERNAL_40_MOTORCYCLE_SLUGS).empty?,
   "eligible motorcycle calculators retain 20 percent" => eligible_finance_pages.all? { |_slug, page| page.include?('min="20" max="80" step="5" value="20"') && page.include?("Daxili ödəniş: 20%-dən başlayan ilkin ödəniş") },
   "other motorcycle calculators require 40 percent" => ineligible_finance_pages.all? { |_slug, page| page.include?('min="40" max="80" step="5" value="40"') && page.include?("Daxili ödəniş: 40%-dən başlayan ilkin ödəniş") && !page.include?("Daxili ödəniş: 20%-dən başlayan ilkin ödəniş") && !page.include?("Daxili ödəniş: 50%-dən başlayan ilkin ödəniş") },
   "offroad calculators retain 50 percent" => offroad_finance_pages.size == 18 && offroad_finance_pages.all? { |_slug, page| page.include?('min="50" max="80" step="5" value="50"') && page.include?("Daxili ödəniş: 50%-dən başlayan ilkin ödəniş") },
   "450MT calculator matches interest-bearing SSR" => ineligible_finance_pages.fetch("450mt").include?('<strong>40<!-- -->% · <!-- -->4,796<!-- --> AZN</strong>') && ineligible_finance_pages.fetch("450mt").include?('<strong>689<!-- --> <small>AZN / ay</small></strong>') && ineligible_finance_pages.fetch("450mt").include?('<small>Faiz daxil borc</small><strong>8,273<!-- --> AZN</strong>') && ineligible_finance_pages.fetch("450mt").include?('4%2C796%20AZN%20(40%25)'),
-  "model installment interest formula" => model_finance_bundle.include?('INTEREST_RATES={6:.08,12:.15,18:.23}') && model_finance_bundle.include?('m=s?[6,12,18]:[6,12]') && model_finance_bundle.include?('monthly:financed/u,interestRate'),
+  "model installment interest formula" => model_finance_bundle.include?('INTEREST_RATES={6:.08,12:.15,18:.23},rateForMonths=e=>e<=6?.08:e<=12?.15:.23') && model_finance_bundle.include?('m=s?[6,12,18]:[6,12]') && model_finance_bundle.include?('interestRate=rateForMonths(u)') && model_finance_bundle.include?('monthly:financed/u,interestRate'),
   "model internal terms exclude 3 months" => (eligible_finance_pages.merge(ineligible_finance_pages).values.all? { |page| page.include?('6<!-- --> ay') && page.include?('12<!-- --> ay') && page.include?('18<!-- --> ay') && !page.include?('>3<!-- --> ay</button>') }) && offroad_finance_pages.values.all? { |page| page.include?('6<!-- --> ay') && page.include?('12<!-- --> ay') && !page.include?('>3<!-- --> ay</button>') },
   "model finance note is idempotent" => (eligible_finance_pages.merge(ineligible_finance_pages).merge(offroad_finance_pages)).values.all? { |page| page.scan(MODEL_CALCULATOR_NOTE).size == 1 },
-  "model bank labels exclude uncalculated costs" => model_finance_bundle.include?(BANK_CALCULATOR_NOTE) && model_finance_bundle.include?(BANK_DEBT_LABEL),
+  "model bank uses balance interest and commission caveat" => model_finance_bundle.include?(BANK_CALCULATOR_NOTE) && model_finance_bundle.include?(BANK_DEBT_LABEL) && !model_finance_bundle.include?('interestRate=c===`internal`?'),
   "450SR exception retains 20 percent" => eligible_finance_pages.fetch("450sr").include?('<strong>20<!-- -->% · <!-- -->2,098<!-- --> AZN</strong>'),
   "home active hero preload" => home.include?(hero_preload),
   "home hero image URLs are deferred" => home.scan('style="--hero-image:url(').size == 3 && !home.include?('style="background-image:url(') && home_bundle.include?('style:{"--hero-image":`url(${e.image})`}') && !home_bundle.include?('style:{backgroundImage:`url(${e.image})`}'),

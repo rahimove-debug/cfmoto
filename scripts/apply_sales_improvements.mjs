@@ -75,14 +75,14 @@ const locales = {
     categoryNote: ' model. Kateqoriyanın bütün modelləri göstərilir.',
     catalogLabel: 'Tam model sırası',
     categories: [['Motosikletlər', '/motosiklet/'], ['Kvadrosikllər', '/kvadrosikl/'], ['Buggy və UTV', '/buggy/']],
-    oldCashLabel: 'Yekun nağd qiymət', cashLabel: 'Nağd qiymət', totalLabel: 'Ümumi ödəniş · ilkin ödəniş daxil', surchargeLabel: 'Hissəli ödəniş üzrə əlavə məbləğ',
+    oldCashLabel: 'Yekun nağd qiymət', cashLabel: 'Nağd qiymət', totalLabel: 'Ümumi ödəniş · ilkin ödəniş daxil', bankTotalLabel: 'Təxmini ümumi ödəniş · ilkin ödəniş daxil', surchargeLabel: 'Hissəli ödəniş üzrə əlavə məbləğ', bankSurchargeLabel: 'Bank krediti üzrə təxmini əlavə məbləğ',
     oldEligibility: 'A kateqoriyalı sürücülük vəsiqəsi tələb olunur. Zəmanət: 2 il və ya 24.000 km.',
     internalEligibility: 'Daxili hissəli ödəniş üçün A kateqoriyası və son 6 ay üzrə gəlirin göstərilməsi tələb olunur. Gəlirin rəsmi olması şərt deyil.',
     bankEligibility: 'Bank krediti üçün A kateqoriyalı sürücülük vəsiqəsi tələb olunmur. Sənədlər və yekun təsdiq bankın şərtlərinə əsasən müəyyən olunur.',
     warranty: 'Zəmanət: 2 il və ya 24.000 km.',
     bankMode: 'Bank krediti', internalMode: 'Daxili hissəli',
-    oldHomeNote: 'Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Bank şərtləri ayrıca hesablanır.',
-    bankNote: 'Bank faizi və komissiyası daxil deyil. Yekun aylıq ödəniş bank tərəfindən hesablanır.',
+    oldHomeNote: 'Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Faiz ilkin ödənişdən sonra qalan borca tətbiq olunur.',
+    bankNote: 'Bank hesablamasında daxili ödənişlə eyni faiz cədvəli qalıq borca tətbiq olunur: 6 ayadək 8%, 12 ayadək 15%, 12 aydan çox 23%. Bank komissiyası daxil deyil; yekun təsdiq bank tərəfindən verilir.',
     creditRoute: 'kredit/index.html', creditHeading: 'Alış üçün tələb olunan məlumatlar', internalHeading: 'Daxili hissəli ödəniş', bankHeading: 'Bank krediti',
   },
   ru: {
@@ -93,14 +93,14 @@ const locales = {
     categoryNote: ' моделей. Показаны все модели выбранной категории.',
     catalogLabel: 'Полный модельный ряд',
     categories: [['Мотоциклы', '/ru/motocikly/'], ['Квадроциклы', '/ru/kvadrocikly/'], ['Багги и UTV', '/ru/buggy/']],
-    oldCashLabel: 'Итоговая цена при оплате наличными', cashLabel: 'Цена при оплате наличными', totalLabel: 'Всего к оплате · включая первоначальный взнос', surchargeLabel: 'Переплата по рассрочке',
+    oldCashLabel: 'Итоговая цена при оплате наличными', cashLabel: 'Цена при оплате наличными', totalLabel: 'Всего к оплате · включая первоначальный взнос', bankTotalLabel: 'Примерная общая сумма · включая первоначальный взнос', surchargeLabel: 'Переплата по рассрочке', bankSurchargeLabel: 'Примерная переплата по банковскому кредиту',
     oldEligibility: 'Требуется водительское удостоверение категории A. Гарантия: 2 года или 24 000 км.',
     internalEligibility: 'Для внутренней рассрочки нужны водительское удостоверение категории A и подтверждение дохода за последние 6 месяцев. Официальное трудоустройство не обязательно.',
     bankEligibility: 'Для банковского кредита водительское удостоверение категории A не требуется. Документы и окончательное решение определяются условиями банка.',
     warranty: 'Гарантия: 2 года или 24 000 км.',
     bankMode: 'Банковский кредит', internalMode: 'Внутренняя рассрочка',
-    oldHomeNote: 'Проценты по рассрочке: 6 месяцев — 8%, 12 месяцев — 15%, 18 месяцев — 23%. Банковские условия рассчитываются отдельно.',
-    bankNote: 'Банковский процент и комиссия не включены. Итоговый ежемесячный платёж рассчитывается банком.',
+    oldHomeNote: 'Проценты по рассрочке: 6 месяцев — 8%, 12 месяцев — 15%, 18 месяцев — 23%. Проценты начисляются на остаток после первоначального взноса.',
+    bankNote: 'При банковском расчёте к остатку долга применяется та же шкала процентов, что и для рассрочки: до 6 месяцев — 8%, до 12 месяцев — 15%, свыше 12 месяцев — 23%. Банковская комиссия не включена; окончательное решение принимает банк.',
     creditRoute: 'ru/kredit/index.html', creditHeading: 'Что нужно для покупки', internalHeading: 'Внутренняя рассрочка', bankHeading: 'Банковский кредит',
   },
 };
@@ -125,7 +125,7 @@ for (const [language, copy] of Object.entries(locales)) {
   finance = replace(finance, `s?\`${copy.oldEligibility}\``, `s?(c===\`bank\`?\`${copy.bankEligibility} ${copy.warranty}\`:\`${copy.internalEligibility} ${copy.warranty}\`)`, `${language} finance eligibility`);
   finance = replace(finance, `children:\`${copy.oldCashLabel}\``, `children:\`${copy.cashLabel}\``, `${language} cash price label`);
   const summaryEnd = '(0,i.jsxs)(`strong`,{children:[a(t),` AZN`]})]})]})';
-  const summaryRows = `(0,i.jsxs)(\`strong\`,{children:[a(t),\` AZN\`]})]}),c===\`internal\`&&(0,i.jsxs)(\`div\`,{children:[(0,i.jsx)(\`small\`,{children:\`${copy.surchargeLabel}\`}),(0,i.jsxs)(\`strong\`,{children:[a(y.financed-(t-y.downPayment)),\` AZN\`]})]}),c===\`internal\`&&(0,i.jsxs)(\`div\`,{className:\`finance-total\`,children:[(0,i.jsx)(\`small\`,{children:\`${copy.totalLabel}\`}),(0,i.jsxs)(\`strong\`,{children:[a(y.downPayment+y.financed),\` AZN\`]})]})]})`;
+  const summaryRows = `(0,i.jsxs)(\`strong\`,{children:[a(t),\` AZN\`]})]}),(0,i.jsxs)(\`div\`,{children:[(0,i.jsx)(\`small\`,{children:c===\`bank\`?\`${copy.bankSurchargeLabel}\`:\`${copy.surchargeLabel}\`}),(0,i.jsxs)(\`strong\`,{children:[a(y.financed-(t-y.downPayment)),\` AZN\`]})]}),(0,i.jsxs)(\`div\`,{className:\`finance-total\`,children:[(0,i.jsx)(\`small\`,{children:c===\`bank\`?\`${copy.bankTotalLabel}\`:\`${copy.totalLabel}\`}),(0,i.jsxs)(\`strong\`,{children:[a(y.downPayment+y.financed),\` AZN\`]})]})]})`;
   finance = replace(finance, summaryEnd, summaryRows, `${language} finance totals`);
   write(financeFile, finance);
 
@@ -149,7 +149,7 @@ for (const [language, copy] of Object.entries(locales)) {
   page = page.replace(notePattern, `(0,c.jsxs)(\`p\`,{className:\`catalog-note\`,children:[C.length,p===\`${copy.all}\`?\`${copy.catalogNote}\`:\`${copy.categoryNote}\`]}),(0,c.jsxs)(\`nav\`,{className:\`catalog-links\`,\"aria-label\":\`${copy.catalogLabel}\`,children:[${links}]})`);
   const homeResult = /\(0,c\.jsxs\)\(`p`,\{children:\[_===`[^`]+`\?`[^`]+`:`[^`]+`,o\(financedWithInterest\),` AZN`\]\}\)/;
   assert(homeResult.test(page), `${language} home result not found`);
-  page = page.replace(homeResult, match => `${match},_!==\`${copy.bankMode}\`&&(0,c.jsxs)(\`p\`,{className:\`finance-total\`,children:[\`${copy.totalLabel}: \`,o(M+financedWithInterest),\` AZN\`]})`);
+  page = page.replace(homeResult, match => `${match},(0,c.jsxs)(\`p\`,{className:\`finance-total\`,children:[_===\`${copy.bankMode}\`?\`${copy.bankTotalLabel}: \`:\`${copy.totalLabel}: \`,o(M+financedWithInterest),\` AZN\`]})`);
   const homeNote = /\(0,c\.jsx\)\(`small`,\{className:`calc-note`,children:_===`[^`]+`\?`[^`]+`:`[^`]+`\}\)/;
   assert(homeNote.test(page), `${language} home finance note not found`);
   page = page.replace(homeNote, `(0,c.jsx)(\`small\`,{className:\`calc-note\`,children:(_===\`${copy.bankMode}\`?\`${copy.bankNote}\`:\`${copy.oldHomeNote}\`)+(T.type===\`${copy.motorcycle}\`?\` \`+(_===\`${copy.bankMode}\`?\`${copy.bankEligibility}\`:\`${copy.internalEligibility}\`):\`\`)})`);
@@ -217,15 +217,25 @@ for (const [language, copy] of Object.entries(locales)) {
   let html = read(file);
   const anchor = /(<p[^>]*data-bank-note[^>]*>.*?<\/p>)/s;
   assert(anchor.test(html), `${language} 500SR bank note missing`);
+  html = html.replace(/(<p[^>]*data-bank-note[^>]*>).*?(<\/p>)/s, `$1${copy.bankNote}$2`);
+  html = replace(
+    html,
+    'data-price="13490"',
+    `data-price="13490" data-internal-total-label="${copy.totalLabel}" data-bank-total-label="${copy.bankTotalLabel}"`,
+    `${language} 500SR total labels`,
+  );
   const total500sr = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(13490 * .4 + 13490 * .6 * 1.23);
-  html = html.replace(anchor, `$1<p data-eligibility-internal>${copy.internalEligibility}</p><p class="is-hidden" data-eligibility-bank>${copy.bankEligibility}</p><p class="finance-total" data-installment-total-row>${copy.totalLabel}: <strong data-installment-total>${total500sr}</strong> AZN</p>`);
+  html = html.replace(anchor, `$1<p data-eligibility-internal>${copy.internalEligibility}</p><p class="is-hidden" data-eligibility-bank>${copy.bankEligibility}</p><p class="finance-total" data-installment-total-row><span data-installment-total-label>${copy.totalLabel}</span>: <strong data-installment-total>${total500sr}</strong> AZN</p>`);
   write(file, html);
 }
 const standaloneFinance = path.join(assets, '500sr-finance-v1.js');
 let standalone = read(standaloneFinance);
+assert(standalone.includes('const rateForMonths=months=>months<=6?.08:months<=12?.15:.23;'), '500SR bank rate resolver');
+assert(standalone.includes('const debt=balance*(1+rateForMonths(months));'), '500SR bank balance interest');
 standalone = replace(standalone, 'totalDebt.textContent=format.format(debt);', `totalDebt.textContent=format.format(debt);
     root.querySelector('[data-installment-total]').textContent=format.format(paid+debt);
-    toggle(root.querySelector('[data-installment-total-row]'),mode==='bank');
+    root.querySelector('[data-installment-total-label]').textContent=mode==='bank'?root.dataset.bankTotalLabel:root.dataset.internalTotalLabel;
+    toggle(root.querySelector('[data-installment-total-row]'),false);
     toggle(root.querySelector('[data-eligibility-internal]'),mode==='bank');
     toggle(root.querySelector('[data-eligibility-bank]'),mode!=='bank');`, '500SR totals and eligibility');
 write(standaloneFinance, standalone);

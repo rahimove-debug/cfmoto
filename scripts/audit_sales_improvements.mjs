@@ -56,13 +56,35 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
 
     const bank = componentModule(path.join(assets, files.finance), {}, ['bank', 36, 10]).default(props);
     assert.equal(descendants(bank, node => node.tag === 'input')[0].props.min, 10);
-    assert.equal(descendants(bank, node => hasClass(node, 'finance-total')).length, 0, 'Do not imply unknown bank total');
+    assert.equal(descendants(bank, node => hasClass(node, 'finance-total')).length, 1, `${locale} estimated bank total is visible`);
+    assert(text(descendants(bank, node => hasClass(node, 'finance-total'))[0]).includes(locale === 'az' ? 'Təxmini' : 'Примерная'), `${locale} bank total is explicitly estimated`);
     assert(descendants(bank, node => node.tag === 'button').some(button => text(button) === (locale === 'az' ? '36 ay' : '36 мес.')), `${locale} 36-month bank option`);
     if (example.slug !== 'z10') {
       const note = text(descendants(bank, node => hasClass(node, 'model-finance-note'))[0]);
       assert(note.includes(locale === 'az' ? 'tələb olunmur' : 'не требуется'), `${locale} no A-license condition for bank`);
       assert(!note.includes(locale === 'az' ? 'gəlirin göstərilməsi tələb olunur' : 'подтверждение дохода за последние'), 'No internal requirements on bank tab');
     }
+  }
+
+  // Bank interest must be charged to the post-down-payment balance using the
+  // same term tiers as internal finance. 150SC: 5,490 AZN, 10% down = 4,941
+  // AZN remaining before interest. The hard-coded totals prevent a regression
+  // back to charging interest on the cash price or omitting it entirely.
+  const bankTierModel = models.find(model => model.slug === '150sc');
+  const bankTierProps = { model: bankTierModel.name, price: bankTierModel.price, type: bankTierModel.type, whatsapp: 'https://wa.me/994512332484' };
+  const bankTiers = [
+    { months: 6, monthly: '889', total: '5,885', rate: '8%' },
+    { months: 12, monthly: '474', total: '6,231', rate: '15%' },
+    { months: 18, monthly: '338', total: '6,626', rate: '23%' },
+    { months: 36, monthly: '169', total: '6,626', rate: '23%' },
+  ];
+  for (const tier of bankTiers) {
+    const bank = componentModule(path.join(assets, files.finance), {}, ['bank', tier.months, 10]).default(bankTierProps);
+    const result = text(descendants(bank, node => hasClass(node, 'model-calc-result'))[0]);
+    const total = text(descendants(bank, node => hasClass(node, 'finance-total'))[0]);
+    assert(result.includes(tier.monthly), `${locale} ${tier.months}-month bank payment uses ${tier.rate} on remaining balance`);
+    assert(total.includes(tier.total), `${locale} ${tier.months}-month bank total uses ${tier.rate} on remaining balance`);
+    assert(result.includes(tier.rate), `${locale} ${tier.months}-month bank copy identifies ${tier.rate} tier`);
   }
 
   // Every React calculator must match its model, not just the selected examples.
@@ -89,6 +111,12 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   assert(credit.includes(locale === 'az' ? '36 ayadək' : '36 месяцев'));
   assert(credit.includes('finance-eligibility'));
   assert(!html.includes(locale === 'az' ? '35 ayadək' : '35 месяцев'));
+
+  const standaloneHtml = read(path.join(dist, locale === 'az' ? 'model/500sr/index.html' : 'ru/model/500sr/index.html'));
+  assert(standaloneHtml.includes(locale === 'az' ? 'faiz cədvəli qalıq borca tətbiq olunur' : 'к остатку долга применяется та же шкала процентов'), `${locale} 500SR bank balance note`);
+  assert(standaloneHtml.includes(`data-internal-total-label="${locale === 'az' ? 'Ümumi ödəniş · ilkin ödəniş daxil' : 'Всего к оплате · включая первоначальный взнос'}"`), `${locale} 500SR internal total label`);
+  assert(standaloneHtml.includes(`data-bank-total-label="${locale === 'az' ? 'Təxmini ümumi ödəniş · ilkin ödəniş daxil' : 'Примерная общая сумма · включая первоначальный взнос'}"`), `${locale} 500SR bank total label`);
+  assert(standaloneHtml.includes(`<span data-installment-total-label>${locale === 'az' ? 'Ümumi ödəniş · ilkin ödəniş daxil' : 'Всего к оплате · включая первоначальный взнос'}</span>`), `${locale} 500SR starts with internal total label`);
 }
 
 const service = read(path.join(dist, 'servis/index.html'));
@@ -96,5 +124,12 @@ assert(service.includes("contact_area:declaredArea||(serviceContact?'service':'s
 const css = read(path.join(assets, 'sales-improvements-v1.css'));
 assert(css.includes('.product-copy .hero-actions .button.primary'));
 assert(css.includes('.product-copy .hero-actions .accessory-model-cta'));
+const standaloneFinance = fs.readdirSync(assets).find(name => /^500sr-finance-v1-sales-[a-f0-9]{12}\.js$/.test(name));
+assert(standaloneFinance, 'Fingerprint for 500SR finance module');
+const standaloneFinanceSource = read(path.join(assets, standaloneFinance));
+assert(standaloneFinanceSource.includes('const rateForMonths=months=>months<=6?.08:months<=12?.15:.23;'), '500SR bank rate tiers');
+assert(standaloneFinanceSource.includes('const debt=balance*(1+rateForMonths(months));'), '500SR bank interest applies to remaining balance');
+assert(standaloneFinanceSource.includes("mode==='bank'?root.dataset.bankTotalLabel:root.dataset.internalTotalLabel"), '500SR total label follows finance mode');
+assert(standaloneFinanceSource.includes("toggle(root.querySelector('[data-installment-total-row]'),false);"), '500SR bank total remains visible');
 assert.equal(manifest.bankMaxMonths, 36);
-console.log('Sales audit passed: AZ/RU homepage parity, 48 calculator options, 94 React calculator initial states, internal totals, 36-month bank rules and service attribution');
+console.log('Sales audit passed: AZ/RU homepage parity, 48 calculator options, 94 React calculator initial states, bank balance rates (6/12/18/36 months), 500SR finance and service attribution');

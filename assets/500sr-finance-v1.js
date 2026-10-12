@@ -3,7 +3,7 @@
   if(!root)return;
 
   const price=Number(root.dataset.price);
-  const rates={6:.08,12:.15,18:.23};
+  const rateForMonths=months=>months<=6?.08:months<=12?.15:.23;
   const format=new Intl.NumberFormat("en-US",{maximumFractionDigits:0});
   const down=root.querySelector("[data-down]");
   const downPercent=root.querySelector("[data-down-percent]");
@@ -20,7 +20,7 @@
   const bankNote=root.querySelector("[data-bank-note]");
   const modeButtons=[...root.querySelectorAll("[data-finance-mode]")];
   const termButtons=[...root.querySelectorAll("[data-term]")];
-  const labels={internal:debtLabel.textContent,bank:bankNote.textContent.split(".")[0]};
+  const labels={internal:debtLabel.textContent,bank:root.dataset.bankDebtLabel};
   let mode="internal";
   let term=18;
 
@@ -30,7 +30,7 @@
     const paid=price*percent/100;
     const balance=price-paid;
     const months=mode==="internal"?term:Number(bankTerm.value);
-    const debt=mode==="internal"?balance*(1+rates[term]):balance;
+    const debt=balance*(1+rateForMonths(months));
     downPercent.textContent=percent;
     downAmount.textContent=format.format(paid);
     monthly.textContent=format.format(debt/months);

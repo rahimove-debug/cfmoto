@@ -13,7 +13,6 @@ module RussianUiTranslations
     "${e.type} kateqoriyasını göstər" => "${e.key===`moto`?`Показать категорию мотоциклов`:e.key===`atv`?`Показать категорию квадроциклов`:`Показать категорию багги`}",
     "${u}?text=Salam%2C%20CFMOTO%20haqqında%20məlumat%20almaq%20istəyirəm" => "${u}?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C%20%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D1%8E%20%D0%BE%20CFMOTO.",
     "${u}?text=Salam%2C%20CFMOTO%20modeli%20ilə%20maraqlanıram" => "${u}?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%9C%D0%B5%D0%BD%D1%8F%20%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%B5%D1%81%D1%83%D0%B5%D1%82%20%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%20CFMOTO.",
-    "Bank faizi və komissiyası daxil edilməyib." => "Банковские проценты и комиссии не включены.",
     "Sport · Naked · Adventure · Classic" => "Спорт · Нейкед · Эндуро · Классика",
     "Motosiklet / Touring" => "Мотоцикл / Туристический",
     "Motosiklet · Touring ·" => "Мотоцикл · Туристический ·",

@@ -475,8 +475,9 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
         @errors << "#{relative(finance_asset)}: client slider label still contains Azerbaijani faizi" if finance_javascript.include?(" faizi")
         @errors << "#{relative(finance_asset)}: internal 3-month option is still present" if finance_javascript.include?('m=s?[3,6,12,18]:[3,6,12]')
         @errors << "#{relative(finance_asset)}: installment rates are incomplete" unless finance_javascript.include?('INTEREST_RATES={6:.08,12:.15,18:.23}')
-        @errors << "#{relative(finance_asset)}: bank exclusion note is missing" unless finance_javascript.include?("Банковский процент и комиссия не включены. Итоговый ежемесячный платёж рассчитывается банком.")
-        @errors << "#{relative(finance_asset)}: bank debt label is missing" unless finance_javascript.include?("Основной долг · без банковского процента и комиссии")
+        @errors << "#{relative(finance_asset)}: bank balance rate tiers are missing" unless finance_javascript.include?('rateForMonths=e=>e<=6?.08:e<=12?.15:.23') && finance_javascript.include?('interestRate=rateForMonths(u)')
+        @errors << "#{relative(finance_asset)}: bank balance-rate note is missing" unless finance_javascript.include?("При банковском расчёте к остатку долга применяется та же шкала процентов, что и для рассрочки: до 6 месяцев — 8%, до 12 месяцев — 15%, свыше 12 месяцев — 23%. Банковская комиссия не включена; окончательное решение принимает банк.")
+        @errors << "#{relative(finance_asset)}: bank interest-bearing debt label is missing" unless finance_javascript.include?("Остаток долга с процентами · без банковской комиссии")
       end
 
       home_asset = russian_javascript.find { |path| File.basename(path).start_with?("page-") }
@@ -484,9 +485,11 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
         home_javascript = read(home_asset)
         @errors << "#{relative(home_asset)}: home calculator label is not translated to Модель" unless home_javascript.include?("children:[`Модель`,")
         @errors << "#{relative(home_asset)}: installment rates are incomplete" unless home_javascript.include?('INTEREST_RATES={6:.08,12:.15,18:.23}')
+        @errors << "#{relative(home_asset)}: bank balance rate tiers are missing" unless home_javascript.include?('rateForMonths=e=>e<=6?.08:e<=12?.15:.23') && home_javascript.include?('interestRate=rateForMonths(j)')
         @errors << "#{relative(home_asset)}: internal term still starts at 3 months" unless home_javascript.include?('min:_===`Банковский кредит`?3:6')
-        @errors << "#{relative(home_asset)}: bank exclusion note is missing" unless home_javascript.include?("Банковский процент и комиссия не включены. Итоговый ежемесячный платёж рассчитывается банком.")
-        @errors << "#{relative(home_asset)}: bank debt label is missing" unless home_javascript.include?("Основной долг · без банковского процента и комиссии")
+        @errors << "#{relative(home_asset)}: home balance-rate note is missing" unless home_javascript.include?("Проценты по рассрочке: 6 месяцев — 8%, 12 месяцев — 15%, 18 месяцев — 23%. Проценты начисляются на остаток после первоначального взноса.")
+        @errors << "#{relative(home_asset)}: bank balance-rate note is missing" unless home_javascript.include?("При банковском расчёте к остатку долга применяется та же шкала процентов, что и для рассрочки: до 6 месяцев — 8%, до 12 месяцев — 15%, свыше 12 месяцев — 23%. Банковская комиссия не включена; окончательное решение принимает банк.")
+        @errors << "#{relative(home_asset)}: bank interest-bearing debt label is missing" unless home_javascript.include?("Остаток долга с процентами · без банковской комиссии")
       end
     end
 
