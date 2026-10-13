@@ -8,14 +8,22 @@ module NewsConfig
   ROMANIACS_ARTICLE_SLUG = "cfmoto-450mt-red-bull-romaniacs-2026"
   QUILES_ARTICLE_SLUG = "max-quiles-daniel-holgado-almaniya-gp-iki-podium"
   BREMBO_ARTICLE_SLUG = "cfmoto-brembo-strateji-terefdasliq-2026"
+  WORLDWCR_ARTICLE_SLUG = "cfmoto-675sr-r-2027-worldwcr-resmi-motosikleti"
 
   INDEX_PAGE = {
     path: "/#{ROOT_SLUG}/",
     file: File.join(ROOT_SLUG, "index.html"),
-    image: "/gallery/800mt-x-1.webp"
+    image: "/gallery/cfmoto-675sr-r-worldwcr-2027-hero.jpg"
   }.freeze
 
   ARTICLES = [
+    {
+      slug: WORLDWCR_ARTICLE_SLUG,
+      path: "/#{ROOT_SLUG}/#{WORLDWCR_ARTICLE_SLUG}/",
+      file: File.join(ROOT_SLUG, WORLDWCR_ARTICLE_SLUG, "index.html"),
+      image: "/gallery/cfmoto-675sr-r-worldwcr-2027-hero.jpg",
+      title: "CFMOTO 675SR-R 2027-ci ildən WorldWCR-in rəsmi motosikleti olacaq"
+    },
     {
       slug: SUSPENSION_CALCULATOR_ARTICLE_SLUG,
       path: "/#{ROOT_SLUG}/#{SUSPENSION_CALCULATOR_ARTICLE_SLUG}/",

@@ -10,12 +10,12 @@ ROOT = File.expand_path("..", __dir__)
 STYLE_PATH = File.join(ROOT, "assets", "cfmoto-news-v2.css")
 HOME_STYLE_PATH = File.join(ROOT, "assets", "home-news-v1.css")
 HOME_PATH = File.join(ROOT, "index.html")
-HOME_PAGE_BUNDLE_PATH = File.join(ROOT, "assets", "page-CfmotoHomeNewsV5.js")
-HOME_LOADER_PATH = File.join(ROOT, "assets", "index-CfmotoHomeNewsV5.js")
-HOME_LAYOUT_PATH = File.join(ROOT, "assets", "layout-segment-context-CfmotoHomeNewsV5.js")
-HOME_LINK_PATH = File.join(ROOT, "assets", "link-CfmotoHomeNewsV5.js")
-HOME_ROUTER_PATH = File.join(ROOT, "assets", "router-CfmotoHomeNewsV5.js")
-HOME_MEGA_PATH = File.join(ROOT, "assets", "ProductMegaMenu-CfmotoHomeNewsV5.js")
+HOME_PAGE_BUNDLE_PATH = File.join(ROOT, "assets", "page-CfmotoHomeNewsV6.js")
+HOME_LOADER_PATH = File.join(ROOT, "assets", "index-CfmotoHomeNewsV6.js")
+HOME_LAYOUT_PATH = File.join(ROOT, "assets", "layout-segment-context-CfmotoHomeNewsV6.js")
+HOME_LINK_PATH = File.join(ROOT, "assets", "link-CfmotoHomeNewsV6.js")
+HOME_ROUTER_PATH = File.join(ROOT, "assets", "router-CfmotoHomeNewsV6.js")
+HOME_MEGA_PATH = File.join(ROOT, "assets", "ProductMegaMenu-CfmotoHomeNewsV6.js")
 errors = []
 MIN_NEWS_INDEX_MAIN_WORDS = 220
 
@@ -81,15 +81,15 @@ else
   errors << "Homepage must link to the news index from navigation and footer" unless home.scan('<a href="/xeberler/">Xəbərlər</a>').size == 2
   errors << "Homepage news card is missing the article URL" unless home.scan(%(href="#{article_path}")).size >= 3
   errors << "Homepage news block is missing the listing URL" unless home.include?(%(class="home-news-all" href="#{news_index_path}"))
-  errors << "Homepage news image must be local, lazy and intrinsically sized" unless home.match?(%r{<img src="/gallery/800mt-x-1\.webp"[^>]*width="1140"[^>]*height="892"[^>]*loading="lazy"[^>]*decoding="async"[^>]*fetchpriority="low"}i)
+  errors << "Homepage news image must be local, lazy and intrinsically sized" unless home.match?(%r{<img src="/gallery/cfmoto-675sr-r-worldwcr-2027-hero\.jpg"[^>]*width="1000"[^>]*height="568"[^>]*loading="lazy"[^>]*decoding="async"[^>]*fetchpriority="low"}i)
   errors << "Homepage must load the scoped news stylesheet once" unless home.scan(%(<link rel="stylesheet" href="/assets/home-news-v1.css"/>)).size == 1
   errors << "Homepage must not load the article stylesheet" if home.match?(%r{/assets/cfmoto-news-v\d+\.css})
-  errors << "Homepage must preload the cache-busted news page bundle once" unless home.scan("/assets/page-CfmotoHomeNewsV5.js").size == 1
-  errors << "Homepage must reference the cache-busted news loader twice" unless home.scan("/assets/index-CfmotoHomeNewsV5.js").size == 2
-  errors << "Homepage must reference the cache-busted news layout once" unless home.scan("/assets/layout-segment-context-CfmotoHomeNewsV5.js").size == 1
-  errors << "Homepage must reference the cache-busted news link once" unless home.scan("/assets/link-CfmotoHomeNewsV5.js").size == 1
-  errors << "Homepage must reference the cache-busted news product menu once" unless home.scan("/assets/ProductMegaMenu-CfmotoHomeNewsV5.js").size == 1
-  errors << "Homepage must not reference a stale V1, V2, V3 or V4 news graph" if home.match?(/CfmotoHomeNewsV[1234]\.js/)
+  errors << "Homepage must preload the cache-busted news page bundle once" unless home.scan("/assets/page-CfmotoHomeNewsV6.js").size == 1
+  errors << "Homepage must reference the cache-busted news loader twice" unless home.scan("/assets/index-CfmotoHomeNewsV6.js").size == 2
+  errors << "Homepage must reference the cache-busted news layout once" unless home.scan("/assets/layout-segment-context-CfmotoHomeNewsV6.js").size == 1
+  errors << "Homepage must reference the cache-busted news link once" unless home.scan("/assets/link-CfmotoHomeNewsV6.js").size == 1
+  errors << "Homepage must reference the cache-busted news product menu once" unless home.scan("/assets/ProductMegaMenu-CfmotoHomeNewsV6.js").size == 1
+  errors << "Homepage must not reference a stale V1-V5 news graph" if home.match?(/CfmotoHomeNewsV[12345]\.js/)
   errors << "Homepage must not reference the cached accessory JavaScript graph" if home.include?("CfmotoAccessoryV16.js")
   errors << "Homepage must keep exactly one H1" unless home.scan(/<h1\b/i).size == 1
 end
@@ -101,11 +101,11 @@ else
   errors << "Hydrated homepage must contain one news section" unless home_page_bundle.scan('className:`home-news section`').size == 1
   errors << "Hydrated homepage navigation is missing News" unless home_page_bundle.include?('[`Xəbərlər`,`/xeberler/`]')
   errors << "Hydrated homepage footer is missing News" unless home_page_bundle.include?('(0,c.jsx)(`a`,{href:`/xeberler/`,children:`Xəbərlər`})')
-  errors << "Hydrated homepage news image is not lazy or intrinsically sized" unless home_page_bundle.include?('src:`/gallery/800mt-x-1.webp`') && home_page_bundle.include?('width:1140,height:892,loading:`lazy`,decoding:`async`,fetchPriority:`low`')
-  errors << "Hydrated homepage must import the cache-busted link" unless home_page_bundle.include?("link-CfmotoHomeNewsV5.js")
-  errors << "Hydrated homepage must import the cache-busted product menu" unless home_page_bundle.include?("ProductMegaMenu-CfmotoHomeNewsV5.js")
-  errors << "Hydrated homepage is missing the featured suspension calculator story" unless home_page_bundle.include?(NewsConfig::FEATURED_ARTICLE.fetch(:path)) && home_page_bundle.include?("CFMOTO asqı tənzimləmə kalkulyatoru istifadəyə verildi")
-  errors << "Hydrated homepage must not import a stale V1, V2, V3 or V4 news graph" if home_page_bundle.match?(/CfmotoHomeNewsV[1234]\.js/)
+  errors << "Hydrated homepage news image is not lazy or intrinsically sized" unless home_page_bundle.include?('src:`/gallery/cfmoto-675sr-r-worldwcr-2027-hero.jpg`') && home_page_bundle.include?('width:1000,height:568,loading:`lazy`,decoding:`async`,fetchPriority:`low`')
+  errors << "Hydrated homepage must import the cache-busted link" unless home_page_bundle.include?("link-CfmotoHomeNewsV6.js")
+  errors << "Hydrated homepage must import the cache-busted product menu" unless home_page_bundle.include?("ProductMegaMenu-CfmotoHomeNewsV6.js")
+  errors << "Hydrated homepage is missing the featured WorldWCR story" unless home_page_bundle.include?(NewsConfig::FEATURED_ARTICLE.fetch(:path)) && home_page_bundle.include?("CFMOTO 675SR-R 2027-ci ildən WorldWCR-in rəsmi motosikleti olacaq")
+  errors << "Hydrated homepage must not import a stale V1-V5 news graph" if home_page_bundle.match?(/CfmotoHomeNewsV[12345]\.js/)
   errors << "Hydrated homepage page bundle must not import the cached accessory graph" if home_page_bundle.include?("CfmotoAccessoryV16.js")
 end
 
@@ -113,19 +113,19 @@ if !File.file?(HOME_LOADER_PATH)
   errors << "Missing cache-busted homepage news loader"
 else
   home_loader = File.read(HOME_LOADER_PATH, encoding: "UTF-8")
-  errors << "Homepage news loader does not import the news page bundle" unless home_loader.include?("page-CfmotoHomeNewsV5.js")
+  errors << "Homepage news loader does not import the news page bundle" unless home_loader.include?("page-CfmotoHomeNewsV6.js")
   %w[layout-segment-context link ProductMegaMenu].each do |asset|
-    errors << "Homepage news loader does not import #{asset} from the news graph" unless home_loader.include?("#{asset}-CfmotoHomeNewsV5.js")
+    errors << "Homepage news loader does not import #{asset} from the news graph" unless home_loader.include?("#{asset}-CfmotoHomeNewsV6.js")
   end
-  errors << "Homepage news loader still imports a stale V1, V2, V3 or V4 news graph" if home_loader.match?(/CfmotoHomeNewsV[1234]\.js/)
+  errors << "Homepage news loader still imports a stale V1-V5 news graph" if home_loader.match?(/CfmotoHomeNewsV[12345]\.js/)
   errors << "Homepage news loader still imports the cached accessory graph" if home_loader.include?("CfmotoAccessoryV16.js")
 end
 
 {
-  HOME_LAYOUT_PATH => %w[index-CfmotoHomeNewsV5.js],
-  HOME_LINK_PATH => %w[index-CfmotoHomeNewsV5.js router-CfmotoHomeNewsV5.js],
-  HOME_ROUTER_PATH => %w[index-CfmotoHomeNewsV5.js link-CfmotoHomeNewsV5.js],
-  HOME_MEGA_PATH => %w[link-CfmotoHomeNewsV5.js],
+  HOME_LAYOUT_PATH => %w[index-CfmotoHomeNewsV6.js],
+  HOME_LINK_PATH => %w[index-CfmotoHomeNewsV6.js router-CfmotoHomeNewsV6.js],
+  HOME_ROUTER_PATH => %w[index-CfmotoHomeNewsV6.js link-CfmotoHomeNewsV6.js],
+  HOME_MEGA_PATH => %w[link-CfmotoHomeNewsV6.js],
 }.each do |path, dependencies|
   if !File.file?(path)
     errors << "Missing cache-busted homepage graph asset #{File.basename(path)}"
@@ -136,7 +136,7 @@ end
   dependencies.each do |dependency|
     errors << "#{File.basename(path)} does not import #{dependency}" unless asset.include?(dependency)
   end
-  errors << "#{File.basename(path)} still imports a stale V1, V2, V3 or V4 news graph" if asset.match?(/CfmotoHomeNewsV[1234]\.js/)
+  errors << "#{File.basename(path)} still imports a stale V1-V5 news graph" if asset.match?(/CfmotoHomeNewsV[12345]\.js/)
   errors << "#{File.basename(path)} still imports the cached accessory graph" if asset.include?("CfmotoAccessoryV16.js")
 end
 
@@ -204,10 +204,27 @@ if File.file?(listing_path)
   listing_word_count = visible_main_word_count(listing)
   errors << "News listing main content is too short: #{listing_word_count} words (minimum #{MIN_NEWS_INDEX_MAIN_WORDS})" if listing_word_count < MIN_NEWS_INDEX_MAIN_WORDS
   errors << "News listing stories are missing or out of newest-first order" unless article_positions.all? && article_positions.each_cons(2).all? { |first, second| first < second }
-  errors << "News listing featured image must be eager and intrinsic" unless listing.match?(%r{<img src="/gallery/800mt-x-1\.webp"[^>]*width="1140"[^>]*height="892"[^>]*loading="eager"[^>]*fetchpriority="high"}i)
+  errors << "News listing featured image must be eager and intrinsic" unless listing.match?(%r{<img src="/gallery/cfmoto-675sr-r-worldwcr-2027-hero\.jpg"[^>]*width="1000"[^>]*height="568"[^>]*loading="eager"[^>]*fetchpriority="high"}i)
   NewsConfig::ARTICLES.drop(1).each do |article|
     image = Regexp.escape(article.fetch(:image))
     errors << "News listing older image #{article.fetch(:image)} must be lazy" unless listing.match?(%r{<img src="#{image}"[^>]*loading="lazy"[^>]*fetchpriority="low"}i)
+  end
+end
+
+worldwcr_article_path = File.join(ROOT, NewsConfig::ROOT_SLUG, NewsConfig::WORLDWCR_ARTICLE_SLUG, "index.html")
+if File.file?(worldwcr_article_path)
+  article = File.read(worldwcr_article_path, encoding: "UTF-8")
+  errors << "WorldWCR article is missing NewsArticle schema" unless article.include?('"@type":"NewsArticle"')
+  errors << "WorldWCR article is missing the official 2027 appointment" unless article.include?("2027-ci ildən") && article.include?("rəsmi motosikleti olacaq")
+  errors << "WorldWCR article must identify FIM and Dorna" unless article.include?("FIM") && article.include?("Dorna")
+  errors << "WorldWCR article is missing the verified three-season term" unless article.include?("2027–2029") && article.include?("eksklüziv motosiklet təchizatçısı")
+  errors << "WorldWCR article is missing verified production specifications" unless ["675 cc", "70 kW", "95 a.g.", "70 Nm"].all? { |term| article.include?(term) }
+  errors << "WorldWCR article must distinguish the race bike from the production model" unless article.include?("yarışa hazırlanacaq") && article.include?("seriya modelindən fərqlənə bilər")
+  errors << "WorldWCR article is missing the local 675SR-R link and price" unless article.include?('href="/model/675sr-r/"') && article.include?("15,490 AZN")
+  errors << "WorldWCR article is missing the official CFMOTO source" unless article.include?("https://www.cfmoto.com/global/media-center/news/2026/cfmoto-675sr-r-to-become-official-motorcycle-for-2027-worldwcr.html")
+  errors << "WorldWCR article is missing the official series source" unless article.include?("https://prod.worldsbk.com/en/news/2026/10/09/worldwcr-welcomes-cfmoto-as-exclusive-motorcycle-supplier-from-2027/1175117")
+  %w[hero lineup aspar-team track].each do |image|
+    errors << "WorldWCR article is missing local #{image} media" unless article.include?("/gallery/cfmoto-675sr-r-worldwcr-2027-#{image}.jpg")
   end
 end
 

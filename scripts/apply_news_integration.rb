@@ -9,26 +9,26 @@ SITEMAP_PATH = File.join(ROOT, "sitemap.xml")
 HOME_PATH = File.join(ROOT, "index.html")
 HOME_STYLESHEET = "/assets/home-news-v1.css"
 HOME_PAGE_SOURCE = "/assets/page-CfmotoAccessoryV16.js"
-HOME_PAGE_PUBLIC = "/assets/page-CfmotoHomeNewsV5.js"
+HOME_PAGE_PUBLIC = "/assets/page-CfmotoHomeNewsV6.js"
 HOME_LOADER_SOURCE = "/assets/index-CfmotoAccessoryV16.js"
-HOME_LOADER_PUBLIC = "/assets/index-CfmotoHomeNewsV5.js"
+HOME_LOADER_PUBLIC = "/assets/index-CfmotoHomeNewsV6.js"
 HOME_LAYOUT_SOURCE = "/assets/layout-segment-context-CfmotoAccessoryV16.js"
-HOME_LAYOUT_PUBLIC = "/assets/layout-segment-context-CfmotoHomeNewsV5.js"
+HOME_LAYOUT_PUBLIC = "/assets/layout-segment-context-CfmotoHomeNewsV6.js"
 HOME_LINK_SOURCE = "/assets/link-CfmotoAccessoryV16.js"
-HOME_LINK_PUBLIC = "/assets/link-CfmotoHomeNewsV5.js"
+HOME_LINK_PUBLIC = "/assets/link-CfmotoHomeNewsV6.js"
 HOME_ROUTER_SOURCE = "/assets/router-CfmotoAccessoryV16.js"
-HOME_ROUTER_PUBLIC = "/assets/router-CfmotoHomeNewsV5.js"
+HOME_ROUTER_PUBLIC = "/assets/router-CfmotoHomeNewsV6.js"
 HOME_MEGA_SOURCE = "/assets/ProductMegaMenu-CfmotoAccessoryV16.js"
-HOME_MEGA_PUBLIC = "/assets/ProductMegaMenu-CfmotoHomeNewsV5.js"
+HOME_MEGA_PUBLIC = "/assets/ProductMegaMenu-CfmotoHomeNewsV6.js"
 ARTICLE_PATH = NewsConfig::FEATURED_ARTICLE.fetch(:path)
 NEWS_INDEX_PATH = NewsConfig::INDEX_PAGE.fetch(:path)
 
 HOME_NEWS_HTML = <<~HTML.strip
-  <section class="home-news section" id="xeberler"><div class="home-news-head"><div><p class="eyebrow"><span></span> CFMOTO XƏBƏRLƏRİ</p><h2>Yeniliklər və yeni modellər</h2></div><a class="home-news-all" href="#{NEWS_INDEX_PATH}">Bütün xəbərlər <span>↗︎</span></a></div><article class="home-news-card"><a class="home-news-media" href="#{ARTICLE_PATH}" aria-label="Asqı tənzimləmə kalkulyatoru xəbərini oxu"><img src="/gallery/800mt-x-1.webp" alt="CFMOTO 800MT-X və asqı tənzimləmə kalkulyatoru" width="1140" height="892" loading="lazy" decoding="async" fetchpriority="low"/><span>Rəqəmsal alət</span></a><div class="home-news-copy"><time datetime="2026-09-22">22 sentyabr 2026</time><h3><a href="#{ARTICLE_PATH}">CFMOTO asqı tənzimləmə kalkulyatoru istifadəyə verildi</a></h3><p>Modeli, real yükü və sürüş rejimini seçərək asqı üçün başlanğıc sazlamasını hesablayın.</p><a class="button primary" href="#{ARTICLE_PATH}">Ətraflı oxu <span>↗︎</span></a></div></article></section>
+  <section class="home-news section" id="xeberler"><div class="home-news-head"><div><p class="eyebrow"><span></span> CFMOTO XƏBƏRLƏRİ</p><h2>Yeniliklər və yeni modellər</h2></div><a class="home-news-all" href="#{NEWS_INDEX_PATH}">Bütün xəbərlər <span>↗︎</span></a></div><article class="home-news-card"><a class="home-news-media" href="#{ARTICLE_PATH}" aria-label="CFMOTO 675SR-R WorldWCR xəbərini oxu"><img src="/gallery/cfmoto-675sr-r-worldwcr-2027-hero.jpg" alt="Trek pit-leyndə iki CFMOTO 675SR-R motosikleti" width="1000" height="568" loading="lazy" decoding="async" fetchpriority="low"/><span>Motor idmanı</span></a><div class="home-news-copy"><time datetime="2026-10-09">9 oktyabr 2026</time><h3><a href="#{ARTICLE_PATH}">CFMOTO 675SR-R 2027-ci ildən WorldWCR-in rəsmi motosikleti olacaq</a></h3><p>675SR-R qadınlar üzrə FIM dünya çempionatının vahid yarış platforması seçilib.</p><a class="button primary" href="#{ARTICLE_PATH}">Ətraflı oxu <span>↗︎</span></a></div></article></section>
 HTML
 
 HOME_NEWS_JSX = <<~JS.strip
-  (0,c.jsxs)(`section`,{className:`home-news section`,id:`xeberler`,children:[(0,c.jsxs)(`div`,{className:`home-news-head`,children:[(0,c.jsxs)(`div`,{children:[(0,c.jsxs)(`p`,{className:`eyebrow`,children:[(0,c.jsx)(`span`,{}),` CFMOTO XƏBƏRLƏRİ`]}),(0,c.jsx)(`h2`,{children:`Yeniliklər və yeni modellər`})]}),(0,c.jsxs)(`a`,{className:`home-news-all`,href:`#{NEWS_INDEX_PATH}`,children:[`Bütün xəbərlər `,(0,c.jsx)(`span`,{children:`↗︎`})]})]}),(0,c.jsxs)(`article`,{className:`home-news-card`,children:[(0,c.jsxs)(`a`,{className:`home-news-media`,href:`#{ARTICLE_PATH}`,"aria-label":`Asqı tənzimləmə kalkulyatoru xəbərini oxu`,children:[(0,c.jsx)(`img`,{src:`/gallery/800mt-x-1.webp`,alt:`CFMOTO 800MT-X və asqı tənzimləmə kalkulyatoru`,width:1140,height:892,loading:`lazy`,decoding:`async`,fetchPriority:`low`}),(0,c.jsx)(`span`,{children:`Rəqəmsal alət`})]}),(0,c.jsxs)(`div`,{className:`home-news-copy`,children:[(0,c.jsx)(`time`,{dateTime:`2026-09-22`,children:`22 sentyabr 2026`}),(0,c.jsx)(`h3`,{children:(0,c.jsx)(`a`,{href:`#{ARTICLE_PATH}`,children:`CFMOTO asqı tənzimləmə kalkulyatoru istifadəyə verildi`})}),(0,c.jsx)(`p`,{children:`Modeli, real yükü və sürüş rejimini seçərək asqı üçün başlanğıc sazlamasını hesablayın.`}),(0,c.jsxs)(`a`,{className:`button primary`,href:`#{ARTICLE_PATH}`,children:[`Ətraflı oxu `,(0,c.jsx)(`span`,{children:`↗︎`})]})]})]})]})
+  (0,c.jsxs)(`section`,{className:`home-news section`,id:`xeberler`,children:[(0,c.jsxs)(`div`,{className:`home-news-head`,children:[(0,c.jsxs)(`div`,{children:[(0,c.jsxs)(`p`,{className:`eyebrow`,children:[(0,c.jsx)(`span`,{}),` CFMOTO XƏBƏRLƏRİ`]}),(0,c.jsx)(`h2`,{children:`Yeniliklər və yeni modellər`})]}),(0,c.jsxs)(`a`,{className:`home-news-all`,href:`#{NEWS_INDEX_PATH}`,children:[`Bütün xəbərlər `,(0,c.jsx)(`span`,{children:`↗︎`})]})]}),(0,c.jsxs)(`article`,{className:`home-news-card`,children:[(0,c.jsxs)(`a`,{className:`home-news-media`,href:`#{ARTICLE_PATH}`,"aria-label":`CFMOTO 675SR-R WorldWCR xəbərini oxu`,children:[(0,c.jsx)(`img`,{src:`/gallery/cfmoto-675sr-r-worldwcr-2027-hero.jpg`,alt:`Trek pit-leyndə iki CFMOTO 675SR-R motosikleti`,width:1000,height:568,loading:`lazy`,decoding:`async`,fetchPriority:`low`}),(0,c.jsx)(`span`,{children:`Motor idmanı`})]}),(0,c.jsxs)(`div`,{className:`home-news-copy`,children:[(0,c.jsx)(`time`,{dateTime:`2026-10-09`,children:`9 oktyabr 2026`}),(0,c.jsx)(`h3`,{children:(0,c.jsx)(`a`,{href:`#{ARTICLE_PATH}`,children:`CFMOTO 675SR-R 2027-ci ildən WorldWCR-in rəsmi motosikleti olacaq`})}),(0,c.jsx)(`p`,{children:`675SR-R qadınlar üzrə FIM dünya çempionatının vahid yarış platforması seçilib.`}),(0,c.jsxs)(`a`,{className:`button primary`,href:`#{ARTICLE_PATH}`,children:[`Ətraflı oxu `,(0,c.jsx)(`span`,{children:`↗︎`})]})]})]})]})
 JS
 
 def read(path)

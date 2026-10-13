@@ -68,7 +68,7 @@ function modelHeader(html, language, slug) {
 
 const locales = {
   az: {
-    home: 'index.html', page: 'page-CfmotoHomeNewsV5.js', menu: 'ProductMegaMenu-CfmotoHomeNewsV5.js', finance: 'ModelFinance-CfmotoFinanceFixV12.js',
+    home: 'index.html', page: 'page-CfmotoHomeNewsV6.js', menu: 'ProductMegaMenu-CfmotoHomeNewsV6.js', finance: 'ModelFinance-CfmotoFinanceFixV12.js',
     all: 'Hamısı', motorcycle: 'Motosiklet',
     oldCatalogNote: ' aktual model · Hər modelin ayrıca məlumat səhifəsi mövcuddur.',
     catalogNote: ' seçilmiş model. Tam model sırasına kateqoriyalar üzrə baxın.',
