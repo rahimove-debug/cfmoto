@@ -215,10 +215,12 @@ worldwcr_article_path = File.join(ROOT, NewsConfig::ROOT_SLUG, NewsConfig::WORLD
 if File.file?(worldwcr_article_path)
   article = File.read(worldwcr_article_path, encoding: "UTF-8")
   errors << "WorldWCR article is missing NewsArticle schema" unless article.include?('"@type":"NewsArticle"')
+  errors << "WorldWCR article SEO title is incomplete" unless article.include?("<title>CFMOTO 675SR-R 2027-ci ildən WorldWCR-in rəsmi motosikleti olacaq</title>")
   errors << "WorldWCR article is missing the official 2027 appointment" unless article.include?("2027-ci ildən") && article.include?("rəsmi motosikleti olacaq")
   errors << "WorldWCR article must identify FIM and Dorna" unless article.include?("FIM") && article.include?("Dorna")
   errors << "WorldWCR article is missing the verified three-season term" unless article.include?("2027–2029") && article.include?("eksklüziv motosiklet təchizatçısı")
   errors << "WorldWCR article is missing verified production specifications" unless ["675 cc", "70 kW", "95 a.g.", "70 Nm"].all? { |term| article.include?(term) }
+  errors << "WorldWCR article must label road-model specifications" unless article.include?("Seriya mühərriki") && article.include?("Seriya gücü")
   errors << "WorldWCR article must distinguish the race bike from the production model" unless article.include?("yarışa hazırlanacaq") && article.include?("seriya modelindən fərqlənə bilər")
   errors << "WorldWCR article is missing the local 675SR-R link and price" unless article.include?('href="/model/675sr-r/"') && article.include?("15,490 AZN")
   errors << "WorldWCR article is missing the official CFMOTO source" unless article.include?("https://www.cfmoto.com/global/media-center/news/2026/cfmoto-675sr-r-to-become-official-motorcycle-for-2027-worldwcr.html")
