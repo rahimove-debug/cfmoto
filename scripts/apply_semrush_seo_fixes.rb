@@ -2,9 +2,10 @@
 # frozen_string_literal: true
 
 require "json"
+require_relative "configurator_seo"
 
 ROOT = File.expand_path("..", __dir__)
-CONFIGURATOR_CANONICAL = "https://cfmoto.az/aksesuar-konfiquratoru/"
+CONFIGURATOR_CANONICAL = ConfiguratorSeo::CANONICAL
 SELLER = {
   "@type" => "Organization",
   "name" => "CFMOTO Azerbaijan — SAZMOTO MMC",
@@ -31,14 +32,7 @@ EVENT_TOPICS = {
 def fix_configurator!
   path = File.join(ROOT, "aksesuar-konfiquratoru", "index.html")
   html = File.read(path, encoding: "UTF-8")
-  html.gsub!(
-    %r{<link rel="alternate" hrefLang="(?:az-AZ|x-default)" href="#{Regexp.escape(CONFIGURATOR_CANONICAL)}"/>},
-    ""
-  )
-  html.gsub!(
-    %r{,\[\\"\$\\",\\"link\\",\\"\d+\\",\{\\"rel\\":\\"alternate\\",\\"hrefLang\\":\\"(?:az-AZ|x-default)\\",\\"href\\":\\"#{Regexp.escape(CONFIGURATOR_CANONICAL)}\\"\}\]},
-    ""
-  )
+  ConfiguratorSeo.apply_hreflang!(html)
   html.gsub!('<h1 id="configurator-seo-title">', '<h2 id="configurator-seo-title">')
   html.gsub!('</h1><p>Konfiquratorda', '</h2><p>Konfiquratorda')
   html.gsub!(
@@ -49,7 +43,6 @@ def fix_configurator!
   loading_shell_with_h1 = '<main class="loading-shell"><h1>CFMOTO Aksesuar Konfiquratoru</h1><p>Konfiqurator hazırlanır…</p></main>'
   html.sub!(loading_shell, loading_shell_with_h1) unless html.include?(loading_shell_with_h1)
 
-  abort "Configurator hreflang metadata remains" if html.include?("hrefLang")
   abort "Configurator must expose exactly one static H1" unless html.scan(/<h1\b/i).size == 1
   abort "Configurator persistent SEO heading must remain H2" unless html.include?('<h2 id="configurator-seo-title">')
   File.write(path, html, encoding: "UTF-8")
@@ -60,7 +53,8 @@ def fix_configurator_sitemap!
   sitemap = File.read(path, encoding: "UTF-8")
   sitemap.gsub!(%r{\s*<url><loc>#{Regexp.escape(CONFIGURATOR_CANONICAL)}</loc>.*?</url>\n?}, "")
   abort "Sitemap closing tag not found" unless sitemap.include?("</urlset>")
-  sitemap.sub!("</urlset>", %(  <url><loc>#{CONFIGURATOR_CANONICAL}</loc></url>\n</urlset>))
+  abort "Sitemap XHTML namespace not found" unless sitemap.include?('xmlns:xhtml="http://www.w3.org/1999/xhtml"')
+  sitemap.sub!("</urlset>", "#{ConfiguratorSeo.sitemap_entry}</urlset>")
   File.write(path, sitemap, encoding: "UTF-8")
 end
 

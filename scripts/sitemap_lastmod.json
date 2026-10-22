@@ -1,0 +1,505 @@
+{
+  "version": 1,
+  "pages": [
+    {
+      "path": "/",
+      "lastmod": "2026-10-13"
+    },
+    {
+      "path": "/ru/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/1000mt-x/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/1000mt-x/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/125nk/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/125nk/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/150sc/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/150sc/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/250cl-c/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/250cl-c/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/250dual/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/250dual/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/250nk/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/250nk/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/250sr-fun/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/250sr-fun/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/300nk/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/300nk/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/300sr/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/300sr/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/450cl-c-amt/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/450cl-c-amt/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/450cl-c-bobber/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/450cl-c-bobber/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/450cl-c/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/450cl-c/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/450mt/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/450mt/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/450nk/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/450nk/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/450sr-s/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/450sr-s/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/450sr/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/450sr/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/500sr-voom/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/500sr-voom/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/500sr/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/500sr/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/675nk/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/675nk/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/675sr-r/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/675sr-r/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/700cl-x-sport/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/700cl-x-sport/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/700mt/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/700mt/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/750sr-s/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/750sr-s/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/800mt-explore/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/800mt-explore/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/800mt-sport/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/800mt-sport/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/800mt-x/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/800mt-x/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/800nk-advanced/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/800nk-advanced/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/aura-150/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/aura-150/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/cflite-230-dual/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/cflite-230-dual/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/cforce-110-high/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/cforce-110-high/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/cforce-520-l/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/cforce-520-l/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/cforce-850-touring/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/cforce-850-touring/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/cforce-c4/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/cforce-c4/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/cforce-c5/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/cforce-c5/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/cforce1000-mv/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/cforce1000-mv/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/cforce1000-touring/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/cforce1000-touring/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/cforce625eps-touring/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/cforce625eps-touring/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/goes-terrox-400l/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/goes-terrox-400l/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/papio-xo/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/papio-xo/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/u10-pro/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/u10-pro/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/u10-xl-pro/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/u10-xl-pro/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/uforce-1000-xl/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/uforce-1000-xl/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/uforce-600/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/uforce-600/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/z10-4/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/z10-4/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/z10/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/z10/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/zforce-1000-sport-r/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/zforce-1000-sport-r/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/zforce-800-trail/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/zforce-800-trail/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/model/zforce-950-sport-4/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/model/zforce-950-sport-4/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/kredit/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/ru/kredit/",
+      "lastmod": "2026-10-12"
+    },
+    {
+      "path": "/servis/",
+      "lastmod": "2026-09-02"
+    },
+    {
+      "path": "/ru/servis/",
+      "lastmod": "2026-09-02"
+    },
+    {
+      "path": "/zemanet/",
+      "lastmod": "2026-09-02"
+    },
+    {
+      "path": "/ru/garantiya/",
+      "lastmod": "2026-09-02"
+    },
+    {
+      "path": "/ehtiyat-hisseleri/",
+      "lastmod": "2026-09-02"
+    },
+    {
+      "path": "/ru/zapchasti/",
+      "lastmod": "2026-09-02"
+    },
+    {
+      "path": "/model-muqayisesi/",
+      "lastmod": "2026-09-27"
+    },
+    {
+      "path": "/ru/sravnenie-modeley/",
+      "lastmod": "2026-09-27"
+    },
+    {
+      "path": "/asqi-kalkulyatoru/",
+      "lastmod": "2026-09-22"
+    },
+    {
+      "path": "/ru/kalkulyator-podveski/",
+      "lastmod": "2026-09-22"
+    },
+    {
+      "path": "/motosiklet/",
+      "lastmod": "2026-09-14"
+    },
+    {
+      "path": "/ru/motocikly/",
+      "lastmod": "2026-09-14"
+    },
+    {
+      "path": "/kvadrosikl/",
+      "lastmod": "2026-09-13"
+    },
+    {
+      "path": "/ru/kvadrocikly/",
+      "lastmod": "2026-09-13"
+    },
+    {
+      "path": "/buggy/",
+      "lastmod": "2026-09-27"
+    },
+    {
+      "path": "/ru/buggy/",
+      "lastmod": "2026-09-27"
+    },
+    {
+      "path": "/xeberler/",
+      "lastmod": "2026-10-13"
+    },
+    {
+      "path": "/xeberler/cfmoto-675sr-r-2027-worldwcr-resmi-motosikleti/",
+      "lastmod": "2026-10-13"
+    },
+    {
+      "path": "/xeberler/cfmoto-asqi-tenzimleme-kalkulyatoru/",
+      "lastmod": "2026-09-22"
+    },
+    {
+      "path": "/xeberler/cfmoto-450mt-red-bull-romaniacs-2026/",
+      "lastmod": "2026-08-29"
+    },
+    {
+      "path": "/xeberler/z10-z10-4-turbo-performans-azerbaycanda/",
+      "lastmod": "2026-08-29"
+    },
+    {
+      "path": "/xeberler/cforce-c4-c5-artiq-azerbaycanda/",
+      "lastmod": "2026-08-29"
+    },
+    {
+      "path": "/xeberler/max-quiles-daniel-holgado-almaniya-gp-iki-podium/",
+      "lastmod": "2026-08-30"
+    },
+    {
+      "path": "/xeberler/cfmoto-brembo-strateji-terefdasliq-2026/",
+      "lastmod": "2026-08-30"
+    },
+    {
+      "path": "/aksesuar-konfiquratoru/",
+      "lastmod": "2026-10-22"
+    }
+  ]
+}

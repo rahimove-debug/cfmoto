@@ -62,12 +62,27 @@ const sitemap = read(path.join(dist, 'sitemap.xml'));
 const listed = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1]);
 assert.equal(new Set(listed).size, listed.length, 'Duplicate sitemap URLs');
 assert.deepEqual([...listed].sort(), [...pages.keys()].sort(), 'Sitemap must list every final canonical page exactly once');
+const sitemapNodes = [...sitemap.matchAll(/<url>(.*?)<\/url>/gs)].map(match => match[1]);
+assert.equal(sitemapNodes.length, listed.length, 'Every sitemap URL must have one node');
+for (const node of sitemapNodes) {
+  const location = node.match(/<loc>(.*?)<\/loc>/)?.[1];
+  const lastmods = [...node.matchAll(/<lastmod>(.*?)<\/lastmod>/g)].map(match => match[1]);
+  assert.equal(lastmods.length, 1, `${location}: exactly one sitemap lastmod`);
+  assert(/^\d{4}-\d{2}-\d{2}$/.test(lastmods[0]), `${location}: ISO sitemap lastmod`);
+  assert(Number.isFinite(Date.parse(`${lastmods[0]}T00:00:00Z`)), `${location}: valid sitemap lastmod`);
+}
 for (const [url, page] of pages) {
   for (const alternate of page.links.filter(link => link.rel === 'alternate' && link.hreflang !== 'x-default' && link.hreflang)) {
     const target = pages.get(alternate.href);
     assert(target?.links.some(link => link.rel === 'alternate' && link.href === url), `${page.relative}: non-reciprocal language link`);
   }
 }
+const configuratorUrl = `${origin}/aksesuar-konfiquratoru/`;
+const configuratorAlternates = pages.get(configuratorUrl)?.links
+  .filter(link => link.rel === 'alternate' && link.hreflang)
+  .map(link => [link.hreflang, link.href]);
+assert.deepEqual(configuratorAlternates, [['az', configuratorUrl], ['x-default', configuratorUrl]],
+  'Configurator must publish only Azerbaijani self and x-default hreflang');
 const robots = read(path.join(dist, 'robots.txt'));
 assert(!/^Disallow:\s*\/\s*$/m.test(robots), 'robots.txt blocks the entire site');
 assert(robots.includes(`Sitemap: ${origin}/sitemap.xml`), 'robots.txt sitemap missing');
@@ -102,6 +117,10 @@ const redirects = new Map(read(path.join(dist, '_redirects')).split('\n')
 const oldCredit = encodeURI('/qi\u0307ymət-hi\u0307ssəvi\u0307-ödəni\u0307ş');
 for (const source of [oldCredit, oldCredit + '/', encodeURI('/qiymət-hissəvi-ödəniş'), encodeURI('/qiymət-hissəvi-ödəniş/')]) {
   assert.equal(redirects.get(source), '/kredit/', `Missing traffic-bearing credit redirect: ${source}`);
+}
+const oldMotorcycle = encodeURI('/motosi\u0307klet');
+for (const source of [oldMotorcycle, oldMotorcycle + '/']) {
+  assert.equal(redirects.get(source), '/motosiklet/', `Missing legacy motorcycle redirect: ${source}`);
 }
 for (const locale of ['', '/ru']) {
   const categoryPaths = locale ? ['/ru/motocikly/', '/ru/kvadrocikly/', '/ru/buggy/'] : ['/motosiklet/', '/kvadrosikl/', '/buggy/'];

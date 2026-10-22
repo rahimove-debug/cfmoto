@@ -126,6 +126,14 @@ abort "Confirmed price presentation failed" unless system(RbConfig.ruby, confirm
 suspension_calculator_audit = File.join(__dir__, "audit_suspension_calculator.mjs")
 abort "Suspension calculator audit failed" unless system("node", suspension_calculator_audit, ROOT)
 
+# All sitemap writers have finished. Apply explicit content dates only now so
+# accessory/news generators cannot discard them, then audit before publishing.
+sitemap_lastmod = File.join(__dir__, "apply_sitemap_lastmod.rb")
+abort "Sitemap lastmod processing failed" unless system(RbConfig.ruby, sitemap_lastmod)
+
+sitemap_lastmod_audit = File.join(__dir__, "audit_sitemap_lastmod.rb")
+abort "Sitemap lastmod audit failed" unless system(RbConfig.ruby, sitemap_lastmod_audit)
+
 FileUtils.rm_rf(DIST)
 FileUtils.mkdir_p(DIST)
 

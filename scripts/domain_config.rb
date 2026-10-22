@@ -34,6 +34,7 @@ module DomainConfig
     "/cfmoto" => "/",
     "/motosiklet" => "/motosiklet/",
     "/motosi%CC%87klet" => "/motosiklet/",
+    "/motosi%CC%87klet/" => "/motosiklet/",
     "/kvadrosikl" => "/kvadrosikl/",
     "/buggy" => "/buggy/",
     # August Search Console still reports clicks to this former credit page.

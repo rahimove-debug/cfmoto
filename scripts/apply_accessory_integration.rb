@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
 require "fileutils"
+require_relative "configurator_seo"
 
 ROOT = File.expand_path("..", __dir__)
 ACCESSORY_URL = "/aksesuar-konfiquratoru/"
-ACCESSORY_CANONICAL = "https://cfmoto.az#{ACCESSORY_URL}"
+ACCESSORY_CANONICAL = ConfiguratorSeo::CANONICAL
 STYLESHEET = "/assets/accessory-entry-v1.css"
 PRESELECT_SCRIPT = "/assets/accessory-model-preselect-v2.js"
 HOME_BUNDLE_SOURCE = "/assets/page-CfmotoFinanceFixV12.js"
@@ -56,17 +57,7 @@ def add_script!(html, source)
 end
 
 def fix_configurator_seo!(html)
-  # Query-string configurator states share this static document and canonicalize
-  # to the base URL. Alternates on that document therefore create hreflang /
-  # canonical conflicts, and there is no equivalent Russian configurator page.
-  html.gsub!(
-    %r{<link rel="alternate" hrefLang="(?:az-AZ|x-default)" href="#{Regexp.escape(ACCESSORY_CANONICAL)}"/>},
-    ""
-  )
-  html.gsub!(
-    %r{,\[\\"\$\\",\\"link\\",\\"\d+\\",\{\\"rel\\":\\"alternate\\",\\"hrefLang\\":\\"(?:az-AZ|x-default)\\",\\"href\\":\\"#{Regexp.escape(ACCESSORY_CANONICAL)}\\"\}\]},
-    ""
-  )
+  ConfiguratorSeo.apply_hreflang!(html)
 
   # The client-rendered configurator has its own H1. The loading shell exists
   # only before hydration, so giving it an H1 fixes no-JS crawls without
@@ -84,7 +75,6 @@ def fix_configurator_seo!(html)
     html.sub!(loading_shell, loading_shell_with_h1)
   end
 
-  abort "Configurator hreflang metadata remains" if html.include?("hrefLang")
   abort "Configurator must expose exactly one visible H1" unless html.scan(/<h1\b/i).size == 1
   abort "Configurator SEO heading must remain H2 after hydration" unless html.include?('<h2 id="configurator-seo-title">')
   html
@@ -338,7 +328,8 @@ end
 sitemap_path = File.join(ROOT, "sitemap.xml")
 sitemap = read(sitemap_path)
 sitemap.gsub!(%r{\s*<url><loc>#{Regexp.escape(ACCESSORY_CANONICAL)}</loc>.*?</url>\n?}, "")
-entry = %(  <url><loc>#{ACCESSORY_CANONICAL}</loc></url>\n)
+abort "Sitemap XHTML namespace not found" unless sitemap.include?('xmlns:xhtml="http://www.w3.org/1999/xhtml"')
+entry = ConfiguratorSeo.sitemap_entry
 abort "Sitemap closing tag not found" unless sitemap.include?("</urlset>")
 sitemap.sub!("</urlset>", "#{entry}</urlset>")
 write(sitemap_path, sitemap)

@@ -20,7 +20,12 @@ errors << "Missing accessory image directory" unless Dir.exist?(File.join(ROOT, 
 if File.file?(PAGE)
   page = read(PAGE)
   errors << "Configurator canonical is missing" unless page.include?(%(<link rel="canonical" href="#{CANONICAL}"/>))
-  errors << "Configurator must not publish hreflang without an equivalent locale page" if page.match?(%r{<link rel="alternate"\b}i) || page.include?('\\"hrefLang\\"')
+  expected_hreflang = [["az", CANONICAL], ["x-default", CANONICAL]]
+  static_hreflang = page.scan(%r{<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"\s*/?>}i)
+  rsc_hreflang = page.scan(%r{\{\\"rel\\":\\"alternate\\",\\"hrefLang\\":\\"([^\\"]+)\\",\\"href\\":\\"([^\\"]+)\\"\}})
+  errors << "Configurator static hreflang must be Azerbaijani self + x-default" unless static_hreflang == expected_hreflang
+  errors << "Configurator hydrated hreflang must be Azerbaijani self + x-default" unless rsc_hreflang == expected_hreflang
+  errors << "Configurator must not publish a false Russian alternate" if (static_hreflang + rsc_hreflang).any? { |language, _href| language == "ru" }
   errors << "Configurator must expose exactly one H1" unless page.scan(/<h1\b/i).size == 1
   errors << "Configurator loading-shell H1 is missing" unless page.include?('<main class="loading-shell"><h1>CFMOTO Aksesuar Konfiquratoru</h1>')
   errors << "Configurator persistent SEO heading must remain H2" unless page.include?('<h2 id="configurator-seo-title">') && page.include?('[\\"$\\",\\"h2\\",null,{\\"id\\":\\"configurator-seo-title\\"')
@@ -106,7 +111,8 @@ end
 sitemap = read(File.join(ROOT, "sitemap.xml"))
 errors << "Configurator sitemap URL must appear once" unless sitemap.scan("<loc>#{CANONICAL}</loc>").size == 1
 configurator_sitemap_entry = sitemap[%r{<url><loc>#{Regexp.escape(CANONICAL)}</loc>.*?</url>}m]
-errors << "Configurator sitemap entry must not publish hreflang" if configurator_sitemap_entry&.include?("xhtml:link")
+configurator_sitemap_hreflang = configurator_sitemap_entry.to_s.scan(%r{<xhtml:link rel="alternate" hreflang="([^"]+)" href="([^"]+)"\s*/?>})
+errors << "Configurator sitemap hreflang must be Azerbaijani self + x-default" unless configurator_sitemap_hreflang == [["az", CANONICAL], ["x-default", CANONICAL]]
 
 errors << "Missing configurator entry stylesheet" unless File.file?(File.join(ROOT, "assets", "accessory-entry-v1.css"))
 errors << "Missing model preselection script" unless File.file?(File.join(ROOT, "assets", "accessory-model-preselect-v2.js"))
