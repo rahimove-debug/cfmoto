@@ -7,6 +7,7 @@ require "fileutils"
 SOURCE_ROOT = File.expand_path("..", __dir__)
 TARGET_ROOT = File.expand_path(ARGV[0] || File.join(SOURCE_ROOT, "dist"))
 ASSET_ROOT = File.join(TARGET_ROOT, "assets")
+HERO_STYLESHEET = "hero-performance-v1.css"
 
 COMMON_ADDONS = %w[
   mobile-model-names-v1.css
@@ -61,7 +62,10 @@ PAGES.each do |locale, config|
   abort "#{page_path}: base stylesheet link is missing" unless html.scan(stylesheet_tag_pattern(base)).size == 1
   abort "#{page_path}: standalone hero stylesheet remains" if html.include?("/assets/hero-performance-v1.css")
 
-  content = bundle_content(config.fetch(:addons))
+  # Keep the hero rule inside the new content-hashed bundle as well as the
+  # generated base CSS. The base filename is retained for Vinext/RSC
+  # compatibility and can be cached from an older deployment.
+  content = bundle_content([HERO_STYLESHEET, *config.fetch(:addons)])
   digest = Digest::SHA256.hexdigest(content)[0, 12]
   bundle_name = "home-addons-#{locale}-#{digest}.css"
   bundle_href = "/assets/#{bundle_name}"
@@ -79,5 +83,5 @@ PAGES.each do |locale, config|
 
   File.write(File.join(ASSET_ROOT, bundle_name), content, encoding: "UTF-8")
   File.write(page_path, html, encoding: "UTF-8")
-  puts "Homepage CSS #{locale}: #{config.fetch(:addons).size} requests combined as #{bundle_name}"
+  puts "Homepage CSS #{locale}: #{config.fetch(:addons).size + 1} files combined as #{bundle_name}"
 end

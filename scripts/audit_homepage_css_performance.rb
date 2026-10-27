@@ -9,6 +9,8 @@ TARGET_ROOT = File.expand_path(ARGV[0] || File.join(SOURCE_ROOT, "dist"))
 ASSET_ROOT = File.join(TARGET_ROOT, "assets")
 HERO_PRELOAD = '<link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high"/>'
 HERO_RULE = ".category-hero-panel{background-image:var(--hero-image)}"
+HERO_RULE_PATTERN = /\.category-hero-panel\s*\{\s*background-image:\s*var\(--hero-image\);\s*\}/
+HERO_STYLESHEET = "hero-performance-v1.css"
 
 COMMON_ADDONS = %w[
   mobile-model-names-v1.css
@@ -76,10 +78,11 @@ PAGES.each do |locale, config|
     bundle_path = File.join(TARGET_ROOT, bundle_href.delete_prefix("/"))
     if File.file?(bundle_path)
       actual = File.read(bundle_path, encoding: "UTF-8")
-      expected = expected_bundle(config.fetch(:addons))
+      expected = expected_bundle([HERO_STYLESHEET, *config.fetch(:addons)])
       errors << "#{locale}: bundle content/order differs from source stylesheets" unless actual == expected
       expected_digest = Digest::SHA256.hexdigest(actual)[0, 12]
       errors << "#{locale}: bundle filename hash does not match content" unless File.basename(bundle_path) == "home-addons-#{locale}-#{expected_digest}.css"
+      errors << "#{locale}: cache-safe hero background rule is missing from bundle" unless actual.match?(HERO_RULE_PATTERN)
     else
       errors << "#{locale}: bundle file is missing: #{bundle_href}"
     end
