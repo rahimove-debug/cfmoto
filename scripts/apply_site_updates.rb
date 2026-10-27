@@ -129,6 +129,7 @@ CSS
 MOBILE_PERFORMANCE_CSS_MARKER = "/* CFMOTO:MOBILE-PERFORMANCE */"
 MOBILE_PERFORMANCE_CSS = <<~CSS.strip
   #{MOBILE_PERFORMANCE_CSS_MARKER}
+  .category-hero-panel{background-image:var(--hero-image)}
   @media (width<=860px){.category-hero-panel:not(.active){background-image:none!important}}
 CSS
 MOBILE_DOM_CSS_MARKER = "/* CFMOTO:MOBILE-DOM-PERFORMANCE */"
@@ -1014,10 +1015,7 @@ home.gsub!(%r{style="background-image:url\((/gallery/[^\)]+)\)"}) do
   %(style="--hero-image:url(#{Regexp.last_match(1)})")
 end
 hero_performance_link = %(<link rel="stylesheet" href="#{HERO_PERFORMANCE_STYLESHEET}"/>)
-unless home.include?(hero_performance_link)
-  abort "Home closing head not found for hero performance stylesheet" unless home.include?("</head>")
-  home.sub!("</head>", "#{hero_performance_link}</head>")
-end
+home.gsub!(hero_performance_link, "")
 hero_preload = '<link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high"/>'
 unless home.include?(hero_preload)
   logo_preload = '<link rel="preload" as="image" href="/cfmoto-logo-black.png"/>'
@@ -1121,7 +1119,13 @@ abort "Missing required stylesheet: #{CURRENT_STYLESHEET}" unless stylesheet_sou
 
 stylesheet = read_utf8(stylesheet_source)
 stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_CREDIT_CSS}\n" unless stylesheet.include?(MOBILE_CREDIT_CSS_MARKER)
-stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_PERFORMANCE_CSS}\n" unless stylesheet.include?(MOBILE_PERFORMANCE_CSS_MARKER)
+legacy_mobile_performance_css = <<~CSS.strip
+  #{MOBILE_PERFORMANCE_CSS_MARKER}
+  @media (width<=860px){.category-hero-panel:not(.active){background-image:none!important}}
+CSS
+stylesheet.gsub!(legacy_mobile_performance_css, "")
+stylesheet.gsub!(MOBILE_PERFORMANCE_CSS, "")
+stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_PERFORMANCE_CSS}\n"
 stylesheet = "#{stylesheet.rstrip}\n#{MOBILE_DOM_CSS}\n" unless stylesheet.include?(MOBILE_DOM_CSS_MARKER)
 mobile_category_images_available = MOBILE_CATEGORY_IMAGES.all? { |relative| File.file?(File.join(ROOT, relative)) }
 if mobile_category_images_available
@@ -1205,7 +1209,7 @@ checks = {
   "450SR exception retains 20 percent" => eligible_finance_pages.fetch("450sr").include?('<strong>20<!-- -->% · <!-- -->2,098<!-- --> AZN</strong>'),
   "home active hero preload" => home.include?(hero_preload),
   "home hero image URLs are deferred" => home.scan('style="--hero-image:url(').size == 3 && !home.include?('style="background-image:url(') && home_bundle.include?('style:{"--hero-image":`url(${e.image})`}') && !home_bundle.include?('style:{backgroundImage:`url(${e.image})`}'),
-  "home hero performance stylesheet" => File.file?(File.join(ROOT, HERO_PERFORMANCE_STYLESHEET.delete_prefix("/"))) && home.include?(hero_performance_link),
+  "home hero performance styles consolidated" => File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?('.category-hero-panel{background-image:var(--hero-image)}') && !home.include?(hero_performance_link),
   "home motorcycle hero links to category page" => home.include?('<div class="category-hero-actions"><a class="button primary" href="/motosiklet/" tabindex="0">Modellərə bax') && home_bundle.include?('href:e.key===`moto`?`/motosiklet/`:`#modeller`'),
   "home motorcycle promo links to category page" => home.include?('<h3>Motosikletlər</h3><p>Sport · Naked · Adventure · Classic</p><a href="/motosiklet/">Kəşf et →</a>') && home_bundle.include?('(0,c.jsx)(`a`,{href:`/motosiklet/`,children:`Kəşf et →`})'),
   "mega-menu CTA links to selected category page" => home.include?('<a href="/motosiklet/">Bütün kataloqa bax <span>↗︎</span></a>') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('href:a===`Motosiklet`?`/motosiklet/`:a===`Kvadrosikl`?`/kvadrosikl/`:`/buggy/`'),

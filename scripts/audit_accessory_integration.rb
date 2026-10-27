@@ -31,10 +31,9 @@ if File.file?(PAGE)
   errors << "Configurator persistent SEO heading must remain H2" unless page.include?('<h2 id="configurator-seo-title">') && page.include?('[\\"$\\",\\"h2\\",null,{\\"id\\":\\"configurator-seo-title\\"')
   errors << "Configurator title is missing" unless page.include?("CFMOTO Aksesuar Konfiquratoru: Moto, ATV və Buggy | CFMOTO Azerbaijan")
   errors << "Configurator must contain one GA4 analytics block" unless page.scan(ANALYTICS_START).size == 1 && page.scan(ANALYTICS_END).size == 1
-  ga4_loader_ids = page.scan(%r{googletagmanager\.com/gtag/js\?id=(G-[A-Z0-9]+)}).flatten
-  ga4_config_ids = page.scan(/gtag\('config','(G-[A-Z0-9]+)'\)/).flatten
-  errors << "Configurator GA4 loader must use only #{GA4_MEASUREMENT_ID}" unless ga4_loader_ids == [GA4_MEASUREMENT_ID]
-  errors << "Configurator GA4 configuration must use only #{GA4_MEASUREMENT_ID}" unless ga4_config_ids == [GA4_MEASUREMENT_ID]
+  errors << "Configurator must expose one shared gtag queue" unless page.scan("window.gtag=window.gtag||function(){window.dataLayer.push(arguments)}").size == 1
+  errors << "Configurator direct GA4 loader must be removed" unless page.scan("googletagmanager.com/gtag/js?id=").empty?
+  errors << "Configurator direct GA4 config must be removed" unless page.scan("gtag('js'").empty? && page.scan("gtag('config'").empty?
   errors << "GTM is missing from configurator" unless page.include?("GTM-W9877TBG")
   errors << "Configurator still contains a duplicate direct Meta Pixel loader" if page.include?("connect.facebook.net/en_US/fbevents.js")
   errors << "Configurator still contains a duplicate direct Meta Pixel init" if page.include?("fbq('init','1395135232664282')")

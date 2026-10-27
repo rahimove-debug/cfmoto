@@ -295,8 +295,12 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       normalized = html.gsub("&amp;", "&")
 
       @errors << "#{label}: expected one GTM head marker pair" unless html.scan(GTM_HEAD_START).size == 1 && html.scan(GTM_HEAD_END).size == 1
+      @errors << "#{label}: expected one shared gtag queue" unless html.scan("window.gtag=window.gtag||function(){window.dataLayer.push(arguments)}").size == 1
+      @errors << "#{label}: direct GA4 loader remains outside GTM" unless html.scan("googletagmanager.com/gtag/js?id=").empty?
+      @errors << "#{label}: direct GA4 config remains outside GTM" unless html.scan("gtag('js'").empty? && html.scan("gtag('config'").empty?
       @errors << "#{label}: GTM body marker can trigger hydration mismatch" unless html.scan(GTM_BODY_START).empty? && html.scan(GTM_BODY_END).empty?
       @errors << "#{label}: expected one GTM loader" unless html.scan("googletagmanager.com/gtm.js?id='+i+dl").size == 1 && html.scan("'#{GOOGLE_TAG_MANAGER_ID}'").size == 1
+      @errors << "#{label}: GTM loader must have low fetch priority" unless html.include?("j.fetchPriority='low'")
       @errors << "#{label}: GTM noscript iframe must not sit outside the hydrated tree" unless html.scan("googletagmanager.com/ns.html?id=#{GOOGLE_TAG_MANAGER_ID}").empty?
       @errors << "#{label}: Meta Pixel must be owned only by GTM (head marker found)" unless html.scan(META_PIXEL_HEAD_START).empty? && html.scan(META_PIXEL_HEAD_END).empty?
       @errors << "#{label}: Meta Pixel must be owned only by GTM (body marker found)" unless html.scan(META_PIXEL_BODY_START).empty? && html.scan(META_PIXEL_BODY_END).empty?

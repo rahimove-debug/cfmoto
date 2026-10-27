@@ -174,10 +174,12 @@ NewsConfig::PAGES.each do |page|
   errors << "#{relative}: must not load the stale V1 news stylesheet" if html.include?("/assets/cfmoto-news-v1.css")
   errors << "#{relative}: missing intrinsic logo dimensions" unless html.match?(%r{<img\b[^>]*src="/cfmoto-logo-black\.png"[^>]*width="159"[^>]*height="34"}i)
   errors << "#{relative}: expected one GA4 block" unless html.scan("<!-- CFMOTO:ANALYTICS:START -->").size == 1 && html.scan("<!-- CFMOTO:ANALYTICS:END -->").size == 1
-  errors << "#{relative}: incorrect GA4 ID" unless html.scan("googletagmanager.com/gtag/js?id=#{DomainConfig::GA4_MEASUREMENT_ID}").size == 1 && html.scan("gtag('config','#{DomainConfig::GA4_MEASUREMENT_ID}')").size == 1
+  errors << "#{relative}: expected one shared gtag queue" unless html.scan("window.gtag=window.gtag||function(){window.dataLayer.push(arguments)}").size == 1
+  errors << "#{relative}: direct GA4 loader/config must be owned by GTM" unless html.scan("googletagmanager.com/gtag/js?id=").empty? && html.scan("gtag('js'").empty? && html.scan("gtag('config'").empty?
   errors << "#{relative}: expected one GTM head block" unless html.scan("<!-- CFMOTO:GTM:HEAD:START -->").size == 1 && html.scan("<!-- CFMOTO:GTM:HEAD:END -->").size == 1
   errors << "#{relative}: expected one GTM noscript block" unless html.scan("<!-- CFMOTO:GTM:BODY:START -->").size == 1 && html.scan("<!-- CFMOTO:GTM:BODY:END -->").size == 1
   errors << "#{relative}: incorrect GTM ID" unless html.scan("#{DomainConfig::GOOGLE_TAG_MANAGER_ID}").size >= 2
+  errors << "#{relative}: GTM loader must have low fetch priority" unless html.include?("j.fetchPriority='low'")
   errors << "#{relative}: direct Meta Pixel must not be duplicated" if html.include?("connect.facebook.net/en_US/fbevents.js") || html.include?("fbq('init'")
 
   schemas = html.scan(%r{<script type="application/ld\+json">(.*?)</script>}m).flatten

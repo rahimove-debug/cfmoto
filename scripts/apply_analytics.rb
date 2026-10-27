@@ -31,7 +31,7 @@ gtm_head = <<~HTML
   <script>
   (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.fetchPriority='low';j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','#{GOOGLE_TAG_MANAGER_ID}');
   </script>
@@ -47,12 +47,10 @@ HTML
 
 analytics = <<~HTML
   #{ANALYTICS_START}
-  <script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=#{MEASUREMENT_ID}"></script>
   <script>
+  /* GA4 #{MEASUREMENT_ID} and Meta Pixel are managed once by #{GOOGLE_TAG_MANAGER_ID}. */
   window.dataLayer=window.dataLayer||[];
   window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
-  window.gtag('js',new Date());
-  window.gtag('config','#{MEASUREMENT_ID}');
   document.addEventListener('click',function(event){
     var target=event.target;
     if(!(target instanceof Element))return;
@@ -118,7 +116,14 @@ html_paths.each do |path|
   body_match = html.match(%r{<body\b[^>]*>}i)
   abort "#{path}: missing <body> element" unless body_match
 
-  html.sub!("<head>", "<head>#{gtm_head}#{analytics}")
+  if path == File.join(ROOT, "index.html")
+    # Let the browser discover the homepage hero preload and render-blocking
+    # styles before third-party tracking starts competing for bandwidth.
+    abort "#{path}: missing </head> element" unless html.include?("</head>")
+    html.sub!("</head>", "#{analytics}#{gtm_head}</head>")
+  else
+    html.sub!("<head>", "<head>#{analytics}#{gtm_head}")
+  end
   if news_paths.include?(path)
     body_tag = body_match[0]
     html.sub!(body_tag, "#{body_tag}#{gtm_body}")
@@ -131,7 +136,7 @@ abort "Missing accessory configurator page: #{accessory_path}" unless File.file?
 
 # The standalone configurator ships its own GTM. Keep GTM as the single Meta
 # Pixel owner, strip its direct Pixel copy from every HTML/RSC export, and add
-# GA4 to the public page.
+# route all GA4 events through that same GTM container.
 Dir.glob(File.join(ROOT, "aksesuar-konfiquratoru", "**", "*.{html,txt}"), File::FNM_EXTGLOB).each do |path|
   content = File.read(path, encoding: "UTF-8")
   strip_direct_meta_pixel!(content)
@@ -144,4 +149,4 @@ abort "#{accessory_path}: missing <head> element" unless accessory_html.include?
 accessory_html.sub!("<head>", "<head>#{analytics}")
 File.write(accessory_path, accessory_html, encoding: "UTF-8")
 
-puts "GA4 applied to #{html_paths.size + 1} HTML pages; GTM is the single Meta Pixel source via #{GOOGLE_TAG_MANAGER_ID} (#{MEASUREMENT_ID}, #{META_PIXEL_ID})"
+puts "Tracking applied to #{html_paths.size + 1} HTML pages; #{GOOGLE_TAG_MANAGER_ID} is the single GA4/Meta source (#{MEASUREMENT_ID}, #{META_PIXEL_ID})"

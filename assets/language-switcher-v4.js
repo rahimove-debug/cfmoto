@@ -65,6 +65,11 @@
     const href = "/assets/language-v3.css";
     const matches = Array.from(document.head.querySelectorAll('link[rel="stylesheet"]'))
       .filter((link) => new URL(link.href, document.baseURI).pathname === href);
+    const bundled = document.head.querySelector('link[rel="stylesheet"][data-cfmoto-bundles~="language-v3"]');
+    if (bundled) {
+      matches.forEach((duplicate) => duplicate.remove());
+      return;
+    }
     const stylesheet = matches.shift() || document.createElement("link");
     matches.forEach((duplicate) => duplicate.remove());
     stylesheet.rel = "stylesheet";

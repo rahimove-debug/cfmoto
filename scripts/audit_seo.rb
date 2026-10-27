@@ -154,8 +154,10 @@ html_paths.each do |path|
   errors << "#{relative}: contains broken showroom link" if html.include?('href=".showroom"')
 
   errors << "#{relative}: expected one GA4 analytics block" unless html.scan("<!-- CFMOTO:ANALYTICS:START -->").size == 1 && html.scan("<!-- CFMOTO:ANALYTICS:END -->").size == 1
-  errors << "#{relative}: expected one GA4 loader" unless html.scan("googletagmanager.com/gtag/js?id=#{DomainConfig::GA4_MEASUREMENT_ID}").size == 1
-  errors << "#{relative}: expected one GA4 configuration" unless html.scan("gtag('config','#{DomainConfig::GA4_MEASUREMENT_ID}')").size == 1
+  errors << "#{relative}: expected one shared gtag queue" unless html.scan("window.gtag=window.gtag||function(){window.dataLayer.push(arguments)}").size == 1
+  errors << "#{relative}: duplicate direct GA4 loader remains" unless html.scan("googletagmanager.com/gtag/js?id=").empty?
+  errors << "#{relative}: duplicate direct GA4 js command remains" unless html.scan("gtag('js'").empty?
+  errors << "#{relative}: duplicate direct GA4 config remains" unless html.scan("gtag('config'").empty?
   errors << "#{relative}: expected one GTM head block" unless html.scan(GTM_HEAD_START).size == 1 && html.scan(GTM_HEAD_END).size == 1
   errors << "#{relative}: legacy GTM body block can trigger hydration mismatch" unless html.scan(GTM_BODY_START).empty? && html.scan(GTM_BODY_END).empty?
   errors << "#{relative}: expected one GTM loader" unless html.scan("googletagmanager.com/gtm.js?id='+i+dl").size == 1 && html.scan("'#{GOOGLE_TAG_MANAGER_ID}'").size == 1
@@ -466,7 +468,8 @@ CLEAN_IMAGE_SLUGS.each do |slug|
 end
 
 errors << "Unused Vinext font CSS remains in public HTML" if html_paths.any? { |path| File.read(path, encoding: "UTF-8").include?("<style data-vinext-fonts>") }
-errors << "GA4 loader must have low fetch priority" if html_paths.any? { |path| !File.read(path, encoding: "UTF-8").include?('<script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js') }
+errors << "Direct GA4 loader remains outside GTM" if html_paths.any? { |path| File.read(path, encoding: "UTF-8").include?("googletagmanager.com/gtag/js?id=") }
+errors << "GTM loader must have low fetch priority" if html_paths.any? { |path| !File.read(path, encoding: "UTF-8").include?("j.fetchPriority='low'") }
 
 redirects_path = File.join(ROOT, "_redirects")
 redirects = {}

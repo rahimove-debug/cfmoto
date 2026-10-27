@@ -187,11 +187,19 @@ abort "Published CFLITE 250NK audit failed" unless system(RbConfig.ruby, File.jo
 abort "Configurator improvements failed" unless system("node", File.join(__dir__, "apply_configurator_improvements.mjs"))
 abort "Configurator regression audit failed" unless system("node", File.join(__dir__, "audit_configurator_improvements.mjs"))
 
-# Validate the files actually published, after every final-output transformation.
-abort "Published SEO audit failed" unless system("node", File.join(__dir__, "audit_published_seo.mjs"))
-
 confirmed_pricing_audit = File.join(__dir__, "audit_confirmed_pricing.rb")
 abort "Confirmed pricing audit failed" unless system(RbConfig.ruby, confirmed_pricing_audit, DIST)
+
+# Combine only the final homepage add-on stylesheets. The Vinext base/RSC CSS
+# stays untouched, preserving hydration while removing nine blocking requests.
+homepage_css_performance = File.join(__dir__, "apply_homepage_css_performance.rb")
+abort "Homepage CSS performance processing failed" unless system(RbConfig.ruby, homepage_css_performance, DIST)
+
+homepage_css_performance_audit = File.join(__dir__, "audit_homepage_css_performance.rb")
+abort "Homepage CSS performance audit failed" unless system(RbConfig.ruby, homepage_css_performance_audit, DIST)
+
+# Validate the files actually published, after every final-output transformation.
+abort "Published SEO audit failed" unless system("node", File.join(__dir__, "audit_published_seo.mjs"))
 
 # Re-run against the exact deployment bundle after JavaScript fingerprinting
 # and all final-output transformations.
