@@ -248,7 +248,7 @@ abort "800MT-X model page still contains a scoped old price" unless rendered_rem
 abort "800MT-X model page was not updated" unless model_page.include?("17,900") && model_page.include?("17900")
 
 menu_bundles = Dir.glob(File.join(ROOT, "assets", "ProductMegaMenu-*.js"))
-abort "800MT-X catalogue price missing" unless menu_bundles.any? { |path| File.read(path).match?(/slug:`800mt-x`[^{}]*price:17900/) }
+abort "800MT-X catalogue price missing" unless menu_bundles.any? { |path| File.read(path, encoding: "UTF-8").match?(/slug:`800mt-x`[^{}]*price:17900/) }
 Dir.glob(File.join(ROOT, "assets", "*.js")).each do |path|
   content = File.read(path, encoding: "UTF-8")
   changed = content.gsub(/\{slug:`800mt-x`,[^{}]*\}/) do |record|
