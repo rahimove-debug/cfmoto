@@ -173,7 +173,7 @@ def custom_page(template)
     <!DOCTYPE html><html lang="az"><head>#{tracking_head(template)}
     <meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="preload" href="/cfmoto-logo-black.png" as="image"/><link rel="preload" as="image" href="/models/zeeho-ez4.webp" fetchpriority="high"/>
-    <link rel="stylesheet" href="/assets/index-CfmotoPolicyFixV10.css"/><link rel="stylesheet" href="/assets/language.css"/><link rel="stylesheet" href="/assets/cfmoto-typography-v1.css"/><link rel="stylesheet" href="/assets/500sr-model-v1.css"/><link rel="stylesheet" href="/assets/zeeho-ez4-model-v1.css"/><link rel="stylesheet" href="/assets/accessory-entry-v1.css"/>
+    <link rel="stylesheet" href="/assets/index-CfmotoPolicyFixV10.css"/><link rel="stylesheet" href="/assets/language.css"/><link rel="stylesheet" href="/assets/cfmoto-typography-v1.css"/><link rel="stylesheet" href="/assets/500sr-model-v1.css"/><link rel="stylesheet" href="/assets/zeeho-ez4-model-v1.css?v=#{IMAGE_CACHE_VERSION}"/><link rel="stylesheet" href="/assets/accessory-entry-v1.css"/>
     <link rel="modulepreload" href="/assets/index-CfmotoPolicyFixV10.js" crossorigin=""/>
     <title>ZEEHO EZ4 Elektrik Skuter | Qiymət 2 890 AZN</title>
     <meta name="description" content="ZEEHO EZ4 elektrik skuter — 2 890 AZN. 1,3 kW nominal, 2,4 kW pik güc, 53 km/saatadək sürət, 72 V 23 Ah batareya və 63 km-dən başlayan yürüş ehtiyatı."/>

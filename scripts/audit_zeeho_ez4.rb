@@ -64,7 +64,7 @@ pages.each do |locale, (path, language, canonical)|
   errors << "#{locale}: page must contain exactly one H1" unless html.scan(/<h1\b/i).size == 1
   errors << "#{locale}: model name is missing" unless html.include?("ZEEHO EZ4")
   errors << "#{locale}: confirmed 2,890 AZN price is missing" unless html.include?("2,890 AZN")
-  errors << "#{locale}: EZ4 stylesheet is missing" unless html.include?("/assets/zeeho-ez4-model-v1.css")
+  errors << "#{locale}: cache-versioned EZ4 stylesheet is missing" unless html.include?("/assets/zeeho-ez4-model-v1.css?v=#{IMAGE_CACHE_VERSION}")
   errors << "#{locale}: standalone finance calculator is missing" unless html.include?('id="odenis"') && html.include?('data-ez4-finance') && html.include?('data-price="2890"')
   errors << "#{locale}: internal finance must start at 40%" unless html.include?('data-down type="range" min="40"')
   errors << "#{locale}: bank finance must allow 10% down and 36 months" unless html.include?('data-bank-term type="range" min="3" max="36"')
