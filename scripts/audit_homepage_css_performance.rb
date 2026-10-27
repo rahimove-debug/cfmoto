@@ -7,7 +7,8 @@ require_relative "domain_config"
 SOURCE_ROOT = File.expand_path("..", __dir__)
 TARGET_ROOT = File.expand_path(ARGV[0] || File.join(SOURCE_ROOT, "dist"))
 ASSET_ROOT = File.join(TARGET_ROOT, "assets")
-HERO_PRELOAD = '<link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high"/>'
+LEGACY_HERO_PRELOAD = '<link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high"/>'
+HERO_PRELOAD = '<link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high" media="(min-width: 581px)"/>'
 HERO_RULE = ".category-hero-panel{background-image:var(--hero-image)}"
 HERO_RULE_PATTERN = /\.category-hero-panel\s*\{\s*background-image:\s*var\(--hero-image\);\s*\}/
 HERO_STYLESHEET = "hero-performance-v1.css"
@@ -92,6 +93,7 @@ PAGES.each do |locale, config|
   base_path = File.join(ASSET_ROOT, config.fetch(:base))
   errors << "#{locale}: hero background rule is missing from base CSS" unless File.file?(base_path) && File.read(base_path, encoding: "UTF-8").include?(HERO_RULE)
   errors << "#{locale}: active hero preload must appear exactly once" unless head.scan(HERO_PRELOAD).size == 1
+  errors << "#{locale}: unconditional mobile hero preload remains" if head.include?(LEGACY_HERO_PRELOAD)
   preload_index = head.index(HERO_PRELOAD)
   tracking_index = head.index("googletagmanager.com/gtm.js")
   errors << "#{locale}: hero preload must be discovered before GTM" unless preload_index && tracking_index && preload_index < tracking_index
@@ -116,4 +118,4 @@ end
 
 abort errors.join("\n") unless errors.empty?
 
-puts "Homepage performance audit passed: 2 blocking CSS requests per locale, hero-first discovery and single GTM-owned analytics"
+puts "Homepage performance audit passed: 2 blocking CSS requests per locale, desktop hero-first discovery and single GTM-owned analytics"

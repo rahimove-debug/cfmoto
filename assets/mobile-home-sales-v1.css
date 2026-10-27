@@ -1,4 +1,4 @@
-/* Variant 1: focused mobile sales entry. Desktop keeps the existing category hero. */
+/* Compact mobile entry: campaign first, then the model catalogue. */
 .home-mobile-entry,
 .home-mobile-taskbar {
   display: none;
@@ -21,104 +21,21 @@
     color: #fff;
   }
 
-  .home-mobile-visual {
-    min-height: 430px;
-    display: flex;
-    align-items: flex-end;
-    background-image:
-      linear-gradient(180deg, rgba(5, 9, 11, .08) 6%, rgba(5, 9, 11, .34) 42%, rgba(5, 9, 11, .97) 100%),
-      url("/gallery/800mt-x-1.webp");
-    background-position: 56% center;
-    background-size: cover;
-    position: relative;
-  }
-
-  .home-mobile-copy {
-    width: 100%;
-    padding: 42px 18px 18px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .home-mobile-eyebrow {
-    margin: 0 0 12px;
-    color: #00efd1;
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: .16em;
-    line-height: 1.35;
-    text-transform: uppercase;
-  }
-
-  .home-mobile-title {
-    max-width: 330px;
-    margin: 0;
-    color: #fff;
-    font-size: clamp(37px, 11.5vw, 48px);
-    font-weight: 700;
-    letter-spacing: -.055em;
-    line-height: .98;
-  }
-
-  .home-mobile-summary {
-    max-width: 330px;
-    margin: 14px 0 16px;
-    color: rgba(255, 255, 255, .78);
-    font-size: 13px;
-    line-height: 1.45;
-  }
-
-  .home-mobile-primary.button {
-    width: 100%;
-    min-height: 50px;
-    padding: 0 15px;
+  .home-mobile-a11y-title {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
     border: 0;
-    border-radius: 0;
-    background: linear-gradient(105deg, #009bb4, #00efd1);
-    color: #071113;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 13px;
-    font-weight: 700;
+    overflow: hidden;
+    position: absolute;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
-  .home-mobile-whatsapp {
-    min-height: 44px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  .home-mobile-categories {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1px;
-    background: rgba(255, 255, 255, .16);
-  }
-
-  .home-mobile-categories a {
-    min-width: 0;
-    min-height: 54px;
-    padding: 0 7px;
-    background: #0c1417;
-    color: rgba(255, 255, 255, .78);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 600;
-    text-align: center;
-  }
-
-  .home-mobile-categories a:first-child {
-    box-shadow: inset 0 -2px #00efd1;
-    color: #fff;
+  #modeller.model-section {
+    padding-top: 30px;
   }
 
   .home-mobile-campaign {
@@ -220,24 +137,6 @@
 
   footer {
     padding-bottom: calc(92px + env(safe-area-inset-bottom));
-  }
-}
-
-@media (max-width: 350px) {
-  .home-mobile-visual {
-    min-height: 424px;
-  }
-
-  .home-mobile-copy {
-    padding-inline: 15px;
-  }
-
-  .home-mobile-summary {
-    font-size: 12px;
-  }
-
-  .home-mobile-categories a {
-    font-size: 10px;
   }
 }
 

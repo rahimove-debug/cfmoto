@@ -1016,7 +1016,9 @@ home.gsub!(%r{style="background-image:url\((/gallery/[^\)]+)\)"}) do
 end
 hero_performance_link = %(<link rel="stylesheet" href="#{HERO_PERFORMANCE_STYLESHEET}"/>)
 home.gsub!(hero_performance_link, "")
-hero_preload = '<link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high"/>'
+legacy_hero_preload = '<link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high"/>'
+hero_preload = '<link rel="preload" as="image" href="/gallery/800mt-x-1.webp" fetchpriority="high" media="(min-width: 581px)"/>'
+home.gsub!(legacy_hero_preload, hero_preload)
 unless home.include?(hero_preload)
   logo_preload = '<link rel="preload" as="image" href="/cfmoto-logo-black.png"/>'
   abort "Home logo preload anchor not found" unless home.include?(logo_preload)
