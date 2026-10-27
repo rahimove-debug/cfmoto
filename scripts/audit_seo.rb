@@ -85,7 +85,8 @@ html_paths.each do |path|
   if relative.start_with?("model/")
     model = html[%r{<h1 class="[^"]*\bproduct-title\b[^"]*">(.*?)</h1>}m, 1]
     model = CGI.unescapeHTML(model.to_s.gsub(/<[^>]+>/, "")).strip.sub(/\ACFMOTO\s+/i, "")
-    expected_title = CGI.escapeHTML("CFMOTO #{model} — qiymət və texniki göstəricilər")
+    title_brand = model.start_with?("ZEEHO ") ? "" : "CFMOTO "
+    expected_title = CGI.escapeHTML("#{title_brand}#{model} — qiymət və texniki göstəricilər")
     errors << "#{relative}: product title must describe the price and specifications" unless !model.empty? && title == expected_title
     og_title = html[%r{<meta property="og:title" content="([^"]*)"\s*/>}, 1]
     twitter_title = html[%r{<meta name="twitter:title" content="([^"]*)"\s*/>}, 1]
@@ -322,7 +323,7 @@ content_expectations = {
   "servis" => ["Bazar ertəsi istisna olmaqla", "+994 10 241 42 99", "45 AZN", '"@type":"Service"'],
   "zemanet" => ["2 il / 24.000 km", "model və istifadə rejiminə görə", "ümumi məlumat verir"],
   "ehtiyat-hisseleri" => ["orijinal ehtiyat hissələri", "yağlar və aksesuarlar", "mövcudluq telefon sorğusu"],
-  "model-muqayisesi" => ["48 aktual modeli", "Minimum ilkin ödəniş", '"numberOfItems":48'],
+  "model-muqayisesi" => ["49 aktual CFMOTO və ZEEHO modelini", "Minimum ilkin ödəniş", '"numberOfItems":49'],
   "asqi-kalkulyatoru" => ["data-cfmoto-suspension-calculator", "1000MT-X", "800MT-X", "700MT", "450MT", '"@type":"FAQPage"']
 }
 content_expectations.each do |slug, expected_texts|
@@ -347,8 +348,8 @@ end
 category_expectations = {
   "motosiklet" => {
     title: "Motosiklet Satışı və Qiymətləri | CFMOTO Azerbaijan",
-    count: 30,
-    required: ["CFMOTO motosiklet satışı və qiymətləri", "Maliyyələşmə şərtləri", "20%", "40%"]
+    count: 31,
+    required: ["CFMOTO motosiklet və ZEEHO skuter qiymətləri", "Maliyyələşmə şərtləri", "20%", "40%", "ZEEHO EZ4"]
   },
   "kvadrosikl" => {
     title: "Kvadrosikl (ATV) Satışı və Qiymətləri | CFMOTO Azerbaijan",
@@ -392,7 +393,8 @@ category_expectations.each do |slug, expectation|
     model_500sr_voom_position = category_model_slugs.index("500sr-voom")
     errors << "/motosiklet/ must contain 500SR exactly once" unless category_model_slugs.count("500sr") == 1
     errors << "/motosiklet/ must place 500SR immediately before 500SR VOOM" unless model_500sr_position && model_500sr_voom_position && model_500sr_position + 1 == model_500sr_voom_position
-    errors << "/motosiklet/ must identify 30 current motorcycles" unless category.include?("30 aktual motosiklet")
+    errors << "/motosiklet/ must identify 31 current motorcycles" unless category.include?("31 aktual motosiklet")
+    errors << "/motosiklet/ must contain ZEEHO EZ4 exactly once" unless category_model_slugs.count("zeeho-ez4") == 1
   end
   CategoryConfig::SLUGS.each do |linked_slug|
     errors << "/#{slug}/ is missing internal link /#{linked_slug}/" unless category.include?(%(href="/#{linked_slug}/"))
@@ -400,9 +402,9 @@ category_expectations.each do |slug, expectation|
 end
 
 card_images = Dir.glob(File.join(ROOT, "models", "cards", "*.webp"))
-errors << "Expected 48 base, 4 clean, and 1 cache-versioned optimized model card images, found #{card_images.size}" unless card_images.size == 53
+errors << "Expected 49 base, 4 clean, and 1 cache-versioned optimized model card images, found #{card_images.size}" unless card_images.size == 54
 homepage_card_sources = home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten
-errors << "Homepage must use all 48 optimized model card images" unless homepage_card_sources.uniq.size == 48
+errors << "Homepage must use all 49 optimized model card images" unless homepage_card_sources.uniq.size == 49
 homepage_card_sources.uniq.each do |source|
   errors << "Homepage card image is missing: #{source}" unless File.file?(File.join(ROOT, source.delete_prefix("/")))
 end

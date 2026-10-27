@@ -84,6 +84,7 @@ INTERNAL_40_MOTORCYCLE_SLUGS = %w[
   700cl-x-sport 700mt 675sr-r 675nk 500sr 500sr-voom 450cl-c-bobber 450cl-c
   450cl-c-amt 450sr-s 450mt 450nk
 ].freeze
+FINANCE_EXCLUDED_SLUGS = %w[zeeho-ez4].freeze
 
 INSTALLMENT_INTEREST_RATES = {
   6 => 0.08,
@@ -980,7 +981,7 @@ html_paths.each do |path|
     slug = File.basename(File.dirname(path))
     localize_primary_model_image!(html, slug)
     ensure_clean_model_product_badge!(html, slug)
-    unless slug == "500sr"
+    unless slug == "500sr" || FINANCE_EXCLUDED_SLUGS.include?(slug)
       apply_model_finance_policy!(html, slug)
       normalize_model_finance_calculator!(html, slug)
     end
@@ -1152,6 +1153,7 @@ end
 offroad_slugs = Dir.glob(File.join(ROOT, "model", "*", "index.html")).map do |path|
   File.basename(File.dirname(path))
 end - INTERNAL_20_SLUGS - INTERNAL_40_MOTORCYCLE_SLUGS
+offroad_slugs -= FINANCE_EXCLUDED_SLUGS
 offroad_finance_pages = offroad_slugs.to_h do |slug|
   [slug, read_utf8(File.join(ROOT, "model", slug, "index.html"))]
 end
@@ -1222,7 +1224,7 @@ checks = {
     html.include?(%(<img class="model-color-image" src="#{source}")) &&
       html.include?(%(<link rel="preload" as="image" href="#{source}"))
   end,
-  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 53 && home.scan(%r{class="model-card"}).size == 48 && home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten.uniq.size == 48 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
+  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 54 && home.scan(%r{class="model-card"}).size == 49 && home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten.uniq.size == 49 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
   "clean model images replace red-label originals" => CLEAN_IMAGE_SLUGS.all? do |slug|
     primary = primary_model_image_source(slug)
     card = card_model_image_source(slug)
@@ -1246,7 +1248,11 @@ checks = {
   "home C5 card" => home.include?('href="/model/cforce-c5/"'),
   "home C5 engine class" => home.include?('CFORCE C5</h3><p>Kvadrosikl<!-- --> · <!-- -->500 cc</p>'),
   "home C5 calculator option" => home.include?('value="CFORCE C5"'),
-  "home catalog count" => home.include?("48<!-- --> aktual model") || home.include?("48 aktual model"),
+  "home catalog count" => home.include?("49<!-- --> aktual model") || home.include?("49 aktual model"),
+  "EZ4 finance is not inferred from electric power" => begin
+    ez4 = read_utf8(File.join(ROOT, "model", "zeeho-ez4", "index.html"))
+    !ez4.include?('class="model-calculator"') && !ez4.include?('id="odenis"') && !offroad_slugs.include?("zeeho-ez4")
+  end,
   "C5 VAT price" => c5.include?("13,900 AZN"),
   "C5 GEN4 platform positioning" => c5.include?("Yeni GEN⁴ platforması") && c5.include?("yeni GEN⁴ platformalı 500 cc sinifli ATV-dir"),
   "C5 calculator matches VAT price" => c5.include?('<strong>50<!-- -->% · <!-- -->6,950<!-- --> AZN</strong>') && c5.include?('<strong>666<!-- --> <small>AZN / ay</small></strong>') && c5.include?('6%2C950%20AZN%20(50%25)'),

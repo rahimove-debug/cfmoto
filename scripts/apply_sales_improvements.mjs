@@ -129,8 +129,8 @@ for (const [language, copy] of Object.entries(locales)) {
   finance = replace(finance, summaryEnd, summaryRows, `${language} finance totals`);
   write(financeFile, finance);
 
-  // Keep all 48 models available to the calculator and mega-menu. Only the
-  // displayed homepage selection is capped, with direct routes to full lists.
+  // Keep all 49 models in the catalogue and mega-menu. EZ4 is deliberately
+  // omitted from finance controls until its commercial terms are confirmed.
   const pageFile = path.join(assets, copy.page);
   let page = read(pageFile);
   const selection = `C=(0,s.useMemo)(()=>p===\`${copy.all}\`?a:a.filter(e=>e.type===p),[p])`;
@@ -156,7 +156,7 @@ for (const [language, copy] of Object.entries(locales)) {
   write(pageFile, page);
 
   const { tree, models } = homeModule(assets, copy.page, copy.menu);
-  assert(models.length === 48, `${language} full catalog changed`);
+  assert(models.length === 49, `${language} full catalog changed`);
   const homeFile = path.join(dist, copy.home);
   let home = read(homeFile);
   assert(/<main>.*?<\/main>/s.test(home), `${language} home main missing`);
@@ -168,7 +168,7 @@ for (const [language, copy] of Object.entries(locales)) {
     try { schema = JSON.parse(json); } catch { return match; }
     const visit = node => {
       if (!node || typeof node !== 'object') return;
-      if (node['@type'] === 'ItemList' && Array.isArray(node.itemListElement) && node.itemListElement.length === 48) {
+      if (node['@type'] === 'ItemList' && Array.isArray(node.itemListElement) && node.itemListElement.length === 49) {
         node.itemListElement = featured.map((slug, index) => {
           const item = node.itemListElement.find(item => JSON.stringify(item).includes(`/model/${slug}/`));
           return item ? { ...item, position: index + 1 } : null;
@@ -185,7 +185,7 @@ for (const [language, copy] of Object.entries(locales)) {
   const modelRoot = path.join(dist, language === 'az' ? 'model' : 'ru/model');
   let modelCount = 0;
   for (const slug of fs.readdirSync(modelRoot)) {
-    if (slug === '500sr') continue; // This standalone model uses the DOM adapter below.
+    if (slug === '500sr' || slug === 'zeeho-ez4') continue; // Standalone pages do not use the React finance adapter.
     const file = path.join(modelRoot, slug, 'index.html');
     let html = read(file);
     const model = models.find(model => model.slug === slug);
@@ -259,4 +259,4 @@ for (const file of walk(dist).filter(file => /\.(html|txt)$/.test(file))) {
   write(file, content);
 }
 write(path.join(dist, 'sales-build.json'), JSON.stringify({ revision, featured, bankMaxMonths: 36, price150SC: 5490, locales: Object.fromEntries(Object.entries(locales).map(([language, copy]) => [language, { home: copy.home, page: names[copy.page], menu: names[copy.menu], finance: names[copy.finance] }])) }, null, 2));
-console.log(`Sales improvements ready: 8 featured models, 48 calculator options, 96 localized model finance sections; revision ${revision}`);
+console.log(`Sales improvements ready: 8 featured models, 49 catalogue models, 48 calculator options, 98 localized model pages and 94 React calculator pages; revision ${revision}`);

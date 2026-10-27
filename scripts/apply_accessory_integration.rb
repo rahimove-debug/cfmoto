@@ -19,6 +19,7 @@ ROUTER_SOURCE = "/assets/router-CfmotoPolicyFixV10.js"
 ROUTER_PUBLIC = "/assets/router-CfmotoAccessoryV16.js"
 MEGA_MENU_SOURCE = "/assets/ProductMegaMenu-CfmotoPolicyFixV10.js"
 MEGA_MENU_PUBLIC = "/assets/ProductMegaMenu-CfmotoAccessoryV16.js"
+NO_ACCESSORY_SLUGS = %w[zeeho-ez4].freeze
 
 AZ_PROMO_HTML = <<~HTML.strip
   <section class="accessory-promo section" id="aksesuarlar"><div class="accessory-promo-copy"><p class="eyebrow"><span></span> CFMOTO AKSESUAR KONFİQURATORU</p><h2>Motosikletini özünə uyğun qur.</h2><p>Modelini seç, uyğun orijinal aksesuarları müqayisə et, şəxsi paketini hazırla və təklifi birbaşa WhatsApp ilə göndər.</p><a class="button primary" href="#{ACCESSORY_URL}">Konfiquratoru aç <span>↗︎</span></a></div><div class="accessory-promo-steps" aria-label="Konfiqurator addımları"><div><small>01</small><strong>Modeli seç</strong><span>→</span></div><div><small>02</small><strong>Aksesuarları əlavə et</strong><span>→</span></div><div><small>03</small><strong>Paketi göndər</strong><span>↗︎</span></div></div></section>
@@ -229,10 +230,12 @@ configurator = add_script!(configurator, PRESELECT_SCRIPT)
 write(configurator_path, configurator)
 
 model_pages = Dir.glob(File.join(ROOT, "model", "*", "index.html"))
-abort "Expected 48 model pages, found #{model_pages.size}" unless model_pages.size == 48
+abort "Expected 49 model pages, found #{model_pages.size}" unless model_pages.size == 49
 
 model_pages.each do |path|
   slug = File.basename(File.dirname(path))
+  next if NO_ACCESSORY_SLUGS.include?(slug)
+
   configurator_url = "#{ACCESSORY_URL}?model=#{slug}&bike=0&lock=1"
   html = add_stylesheet!(read(path))
 
@@ -334,4 +337,4 @@ abort "Sitemap closing tag not found" unless sitemap.include?("</urlset>")
 sitemap.sub!("</urlset>", "#{entry}</urlset>")
 write(sitemap_path, sitemap)
 
-puts "Accessory configurator linked from AZ/RU navigation, sales hero, #{model_pages.size - 1} verified model pages, 1 enquiry-only model page, 2 off-road category pages and AZ homepage promo"
+puts "Accessory configurator linked from AZ/RU navigation, sales hero, #{model_pages.size - 2} verified model pages, 1 query-only model, 1 excluded EZ4 and 2 off-road category pages"

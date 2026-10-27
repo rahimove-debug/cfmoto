@@ -22,17 +22,17 @@ CONFIG = {
   "motosiklet" => {
     type: "Motosiklet",
     title: "Motosiklet Satışı və Qiymətləri | CFMOTO Azerbaijan",
-    description: "CFMOTO motosiklet modelləri və Azərbaycandakı nağd satış qiymətləri. Naked, sport, touring, adventure, cruiser və scooter seçimlərini müqayisə edin.",
-    eyebrow: "30 aktual motosiklet",
-    heading: "CFMOTO motosiklet satışı və qiymətləri",
-    intro: "Şəhər, touring, adventure, sport və gündəlik istifadə üçün CFMOTO motosikletlərini aktual qiymətlərlə bir səhifədə müqayisə edin.",
+    description: "CFMOTO motosiklet və ZEEHO elektrik skuter modelləri, Azərbaycandakı nağd satış qiymətləri. Naked, sport, touring, adventure, cruiser və scooter seçimlərini müqayisə edin.",
+    eyebrow: "31 aktual motosiklet",
+    heading: "CFMOTO motosiklet və ZEEHO skuter qiymətləri",
+    intro: "Şəhər, touring, adventure, sport və gündəlik istifadə üçün CFMOTO motosikletlərini və ZEEHO elektrik skuterini aktual qiymətlərlə bir səhifədə müqayisə edin.",
     summary: "Model kartlarında mühərrik sinfini və nağd satış qiymətini yoxlayın; texniki göstəricilər, rənglər və ödəniş hesablaması üçün model səhifəsini açın.",
-    body_heading: "Hansı CFMOTO motosikleti sizə uyğundur?",
-    body: "Naked modellər şəhərdə çevik idarəetmə, SR seriyası sport xarakteri, MT modelləri isə uzun marşrut və dəyişən yol şəraiti üçün hazırlanıb. Cruiser, scooter və dual-sport seçimləri də fərqli sürüş tərzinə uyğun alternativlər təqdim edir.",
-    finance: "Mühərrik həcmi 300 cc-dək olan motosikletlərdə və 450SR modelində daxili hissəli ödəniş üçün minimum ilkin ödəniş 20%-dir. Digər motosikletlərdə minimum ilkin ödəniş 40%, maksimal müddət 18 aydır.",
+    body_heading: "Hansı motosiklet və ya skuter sizə uyğundur?",
+    body: "CFMOTO naked modelləri şəhərdə çevik idarəetmə, SR seriyası sport xarakteri, MT modelləri isə uzun marşrut və dəyişən yol şəraiti üçün hazırlanıb. Cruiser və dual-sport seçimlərinə əlavə olaraq ZEEHO EZ4 səssiz elektrik ötürməsi ilə gündəlik şəhər marşrutlarına alternativ təqdim edir.",
+    finance: "Mühərrik həcmi 300 cc-dək olan motosikletlərdə və 450SR modelində daxili hissəli ödəniş üçün minimum ilkin ödəniş 20%-dir. Digər benzin mühərrikli motosikletlərdə minimum ilkin ödəniş 40%, maksimal müddət 18 aydır. ZEEHO EZ4 maliyyələşmə şərtləri satış nümayəndəsi ilə ayrıca dəqiqləşdirilir.",
     faqs: [
-      ["CFMOTO motosiklet qiymətləri neçə AZN-dən başlayır?", "Səhifədəki aktual model siyahısında hər motosikletin nağd satış qiyməti ayrıca göstərilir. Qiymət və komplektasiya satış zamanı dəqiqləşdirilir."],
-      ["Motosikletlər üçün ilkin ödəniş neçə faizdir?", "300 cc-dək motosikletlər və 450SR üçün minimum ilkin ödəniş 20%, digər motosikletlər üçün 40%-dir."],
+      ["Motosiklet və skuter qiymətləri neçə AZN-dən başlayır?", "Səhifədəki aktual model siyahısında hər motosiklet və skuterin nağd satış qiyməti ayrıca göstərilir. Qiymət, mövcudluq və komplektasiya satış zamanı dəqiqləşdirilir."],
+      ["Motosikletlər üçün ilkin ödəniş neçə faizdir?", "300 cc-dək motosikletlər və 450SR üçün minimum ilkin ödəniş 20%, digər benzin mühərrikli motosikletlər üçün 40%-dir. ZEEHO EZ4 şərtləri ayrıca dəqiqləşdirilir."],
       ["Motosikletlərə zəmanət verilirmi?", "CFMOTO motosikletləri üçün zəmanət 2 il və ya 24.000 km-dir; hansı hədd daha tez tamamlanarsa, o əsas götürülür."],
       ["Modeli harada yaxından görə bilərəm?", "Modellərlə Babək prospekti 188 ünvanındakı CFMOTO Azerbaijan satış mərkəzində tanış ola bilərsiniz."]
     ]
@@ -82,7 +82,7 @@ end
 def models
   home = File.read(File.join(ROOT, "index.html"), encoding: "UTF-8")
   cards = home.scan(%r{<article class="model-card">.*?</article>}m)
-  abort "Expected 48 model cards, found #{cards.size}" unless cards.size == 48
+  abort "Expected 49 model cards, found #{cards.size}" unless cards.size == 49
   cards.map do |card|
     slug = card[%r{href="/model/([^"/]+)/?"}, 1]
     name = html_text(card[%r{<h3>(.*?)</h3>}m, 1])
@@ -198,11 +198,11 @@ all_models = models
 CategoryConfig::SLUGS.each do |slug|
   config = CONFIG.fetch(slug)
   items = all_models.select { |model| model[:type] == config[:type] }
-  expected = { "motosiklet" => 30, "kvadrosikl" => 9, "buggy" => 9 }.fetch(slug)
+  expected = { "motosiklet" => 31, "kvadrosikl" => 9, "buggy" => 9 }.fetch(slug)
   abort "#{slug}: expected #{expected} models, found #{items.size}" unless items.size == expected
   directory = File.join(ROOT, slug)
   FileUtils.mkdir_p(directory)
   File.write(File.join(directory, "index.html"), page_html(slug, config, items), encoding: "UTF-8")
 end
 
-puts "Generated 3 category pages with 48 model cards"
+puts "Generated 3 category pages with 49 model cards"

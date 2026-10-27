@@ -102,7 +102,8 @@ def normalize_model_title!(html, path)
   abort "#{path}: model heading or title is missing" unless model && previous_title
 
   model = CGI.unescapeHTML(model.gsub(/<[^>]+>/, "")).strip.sub(/\ACFMOTO\s+/i, "")
-  title = CGI.escapeHTML("CFMOTO #{model} — qiymət və texniki göstəricilər")
+  title_brand = model.start_with?("ZEEHO ") ? "" : "CFMOTO "
+  title = CGI.escapeHTML("#{title_brand}#{model} — qiymət və texniki göstəricilər")
   # The imported page includes its head metadata in the embedded RSC payload.
   # Replace the existing title in both representations before Russian generation.
   html.gsub!(previous_title, title) unless previous_title == title

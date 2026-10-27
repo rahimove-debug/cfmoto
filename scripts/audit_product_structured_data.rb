@@ -28,7 +28,10 @@ products.each do |path, product|
     next
   end
 
-  %w[price priceCurrency availability url validFrom priceValidUntil itemCondition].each do |property|
+  slug = model_slug(product)
+  offer_properties = %w[price priceCurrency url validFrom priceValidUntil itemCondition]
+  offer_properties << "availability" unless slug == "zeeho-ez4"
+  offer_properties.each do |property|
     errors << "#{label} Offer is missing #{property}" if offer[property].nil? || offer[property] == ""
   end
   errors << "#{label} Offer has the wrong price-validity date" unless offer["priceValidUntil"] == PRICE_VALID_UNTIL
@@ -38,7 +41,17 @@ products.each do |path, product|
   errors << "#{label} Offer seller is missing its URL" unless offer.dig("seller", "url") == SELLER_URL
 end
 
-errors << "Expected Product structured data for both Azerbaijani and Russian model pages" if products.size < 94
+errors << "Expected Product structured data for both Azerbaijani and Russian model pages" if products.size < 98
+
+ez4_products = products.select { |_path, product| model_slug(product) == "zeeho-ez4" }
+errors << "Expected Azerbaijani and Russian ZEEHO EZ4 Product schemas" unless ez4_products.size == 2
+ez4_products.each do |path, product|
+  label = path.delete_prefix("#{ROOT}/")
+  errors << "#{label}: EZ4 brand must be ZEEHO" unless product.dig("brand", "name") == "ZEEHO"
+  errors << "#{label}: EZ4 SKU must remain ZH1300DT-3" unless product["sku"] == "ZH1300DT-3"
+  errors << "#{label}: EZ4 price must be 2890 AZN" unless product.dig("offers", "price").to_s == "2890" && product.dig("offers", "priceCurrency") == "AZN"
+  errors << "#{label}: EZ4 stock status must not be invented" if product.dig("offers", "availability")
+end
 
 if errors.empty?
   puts "Product structured-data audit passed: #{products.size} complete Product offers"

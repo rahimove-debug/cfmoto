@@ -40,9 +40,9 @@ RU_CONTENT_META = {
     heading: "Запчасти и аксессуары CFMOTO"
   },
   "sravnenie-modeley" => {
-    title: "Сравнение моделей CFMOTO | Цены и категории",
-    description: "Сравните 48 моделей CFMOTO по категории, объёму двигателя, цене, первоначальному взносу и максимальному сроку рассрочки.",
-    heading: "Сравните модели CFMOTO"
+    title: "Сравнение моделей CFMOTO и ZEEHO | Цены и категории",
+    description: "Сравните 49 моделей CFMOTO и ZEEHO по категории, классу двигателя, цене, первоначальному взносу и максимальному сроку рассрочки.",
+    heading: "Сравните модели CFMOTO и ZEEHO"
   },
   "kalkulyator-podveski" => {
     title: "Калькулятор настройки подвески CFMOTO | Азербайджан",
@@ -54,8 +54,8 @@ RU_CONTENT_META = {
 RU_CATEGORY_META = {
   "motocikly" => {
     title: "Продажа и цены на мотоциклы | CFMOTO Азербайджан",
-    description: "Мотоциклы CFMOTO и актуальные цены в Азербайджане. Сравните нейкеды, спортивные, туристические модели, эндуро, круизеры и скутеры.",
-    heading: "Мотоциклы CFMOTO: модели и цены"
+    description: "Мотоциклы CFMOTO и электрический скутер ZEEHO, актуальные цены в Азербайджане. Сравните нейкеды, спортивные, туристические модели, эндуро, круизеры и скутеры.",
+    heading: "Мотоциклы CFMOTO и скутер ZEEHO: модели и цены"
   },
   "kvadrocikly" => {
     title: "Продажа и цены на квадроциклы (ATV) | CFMOTO Азербайджан",
@@ -207,9 +207,11 @@ def set_russian_metadata!(html, entry, source_html)
     model = source_html[%r{<h1 class="[^"]*\bproduct-title\b[^"]*">(.*?)</h1>}m, 1]
     abort "#{entry[:slug]}: missing product title" unless model
     title_model = model.sub(/\ACFMOTO\s+/i, "")
+    model_brand = title_model.start_with?("ZEEHO ") ? "" : "CFMOTO "
+    description_brand = title_model.start_with?("ZEEHO ") ? "ZEEHO" : "CFMOTO"
     [
-      "CFMOTO #{title_model} — цена и характеристики",
-      "#{model}: официальная модель CFMOTO в Азербайджане. Характеристики, цена, условия оплаты, фотографии и консультация."
+      "#{model_brand}#{title_model} — цена и характеристики",
+      "#{model}: официальная модель #{description_brand} в Азербайджане. Характеристики, цена, условия оплаты, фотографии и консультация."
     ]
   when :content
     meta = RU_CONTENT_META.fetch(entry[:ru_slug])

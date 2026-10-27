@@ -22,6 +22,9 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   const select = descendants(tree, node => node.tag === 'select')[0];
   const options = descendants(select, node => node.tag === 'option');
   assert.equal(options.length, 48, `${locale} full calculator catalog`);
+  assert.equal(models.length, 49, `${locale} full catalogue`);
+  assert.equal(models.filter(model => model.slug === 'zeeho-ez4').length, 1, `${locale} EZ4 catalogue entry`);
+  assert.equal(options.filter(option => option.props.value === 'ZEEHO EZ4').length, 0, `${locale} EZ4 financing remains unconfirmed`);
   assert.equal(options.filter(option => option.props.value === '500SR').length, 1);
   assert.equal(models.find(model => model.slug === '150sc').price, 5490, 'User-confirmed 150SC price');
   const fullLinks = descendants(tree, node => hasClass(node, 'catalog-links'))[0];
@@ -88,7 +91,7 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   }
 
   // Every React calculator must match its model, not just the selected examples.
-  for (const model of models.filter(model => model.slug !== '500sr')) {
+  for (const model of models.filter(model => !['500sr', 'zeeho-ez4'].includes(model.slug))) {
     const finance = componentModule(path.join(assets, files.finance)).default({ model: model.name, price: model.price, type: model.type, whatsapp: 'https://wa.me/994512332484' });
     const file = path.join(dist, locale === 'az' ? 'model' : 'ru/model', model.slug, 'index.html');
     const modelHtml = read(file);
@@ -117,6 +120,9 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   assert(standaloneHtml.includes(`data-internal-total-label="${locale === 'az' ? 'Ümumi ödəniş · ilkin ödəniş daxil' : 'Всего к оплате · включая первоначальный взнос'}"`), `${locale} 500SR internal total label`);
   assert(standaloneHtml.includes(`data-bank-total-label="${locale === 'az' ? 'Təxmini ümumi ödəniş · ilkin ödəniş daxil' : 'Примерная общая сумма · включая первоначальный взнос'}"`), `${locale} 500SR bank total label`);
   assert(standaloneHtml.includes(`<span data-installment-total-label>${locale === 'az' ? 'Ümumi ödəniş · ilkin ödəniş daxil' : 'Всего к оплате · включая первоначальный взнос'}</span>`), `${locale} 500SR starts with internal total label`);
+  const ez4Html = read(path.join(dist, locale === 'az' ? 'model/zeeho-ez4/index.html' : 'ru/model/zeeho-ez4/index.html'));
+  assert(ez4Html.includes('2,890 AZN'), `${locale} EZ4 confirmed cash price`);
+  assert(!ez4Html.includes('class="model-calculator"') && !ez4Html.includes('id="odenis"'), `${locale} EZ4 has no unconfirmed finance calculator`);
 }
 
 const service = read(path.join(dist, 'servis/index.html'));
@@ -132,4 +138,4 @@ assert(standaloneFinanceSource.includes('const debt=balance*(1+rateForMonths(mon
 assert(standaloneFinanceSource.includes("mode==='bank'?root.dataset.bankTotalLabel:root.dataset.internalTotalLabel"), '500SR total label follows finance mode');
 assert(standaloneFinanceSource.includes("toggle(root.querySelector('[data-installment-total-row]'),false);"), '500SR bank total remains visible');
 assert.equal(manifest.bankMaxMonths, 36);
-console.log('Sales audit passed: AZ/RU homepage parity, 48 calculator options, 94 React calculator initial states, bank balance rates (6/12/18/36 months), 500SR finance and service attribution');
+console.log('Sales audit passed: AZ/RU homepage parity, 49 catalogue models, 48 calculator options, 94 React calculator states, EZ4 cash-only treatment and bank balance rates');

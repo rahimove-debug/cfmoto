@@ -103,7 +103,7 @@ function inspectSchema(value, relative) {
   Object.values(value).forEach(child => inspectSchema(child, relative));
 }
 schemas.forEach(([relative, schema]) => inspectSchema(schema, relative));
-assert(products >= 96, 'Missing localized Product schemas');
+assert(products >= 98, 'Missing localized Product schemas');
 
 const redirects = new Map(read(path.join(dist, '_redirects')).split('\n')
   .filter(line => line.trim() && !line.startsWith('#')).map(line => {
@@ -126,7 +126,7 @@ for (const locale of ['', '/ru']) {
   const categoryPaths = locale ? ['/ru/motocikly/', '/ru/kvadrocikly/', '/ru/buggy/'] : ['/motosiklet/', '/kvadrosikl/', '/buggy/'];
   const linked = new Set(categoryPaths.flatMap(category => tags(read(localFile(category)), 'a')
     .map(link => link.href).filter(href => href?.startsWith(`${locale}/model/`))));
-  assert.equal(linked.size, 48, `${locale || 'az'}: every model must have a full-category link`);
+  assert.equal(linked.size, 49, `${locale || 'az'}: every model must have a full-category link`);
   for (const href of linked) assert(pages.has(origin + href), `Category model route is not canonical: ${href}`);
 }
 console.log(`Published SEO audit passed: ${pages.size} final canonical pages, reciprocal languages, sitemap, assets, ${products} Product offers, ${redirects.size} redirects and full AZ/RU category coverage.`);

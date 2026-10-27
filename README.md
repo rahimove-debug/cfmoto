@@ -13,8 +13,11 @@ CFMOTO Azerbaijan üçün statik sayt, SEO emalı və Cloudflare Pages build pak
 
 `scripts/apply_sales_improvements.mjs` son build mərhələsində yayımlanacaq
 HTML və müştəri modullarını birlikdə hazırlayır. Ana səhifə 8 seçilmiş model
-göstərir; 48 modelin hamısı kateqoriyalarda, menyuda və kalkulyatorda saxlanır.
-Seçim siyahısı həmin skriptdəki `featured` massivində idarə olunur.
+göstərir; 49 modelin hamısı kateqoriyalarda və menyuda saxlanır, təsdiqlənmiş
+maliyyələşmə şərti olan 48 model isə kalkulyatorda göstərilir. ZEEHO EZ4 üçün
+yalnız təsdiqlənmiş 2.890 AZN nağd qiymət təqdim olunur; maliyyələşmə şərtləri
+ayrıca dəqiqləşdirilənədək kalkulyatora daxil edilmir. Seçim siyahısı həmin
+skriptdəki `featured` massivində idarə olunur.
 
 AZ/RU kredit məlumatları bank üçün 36 ayadək müddəti, motosikletlər üzrə
 bank/daxili ödəniş sənədlərinin fərqini və daxili ödənişin yekun məbləğini
@@ -65,7 +68,7 @@ Build zamanı altı yüngül SEO məlumat səhifəsi də yaradılır:
 
 Məhsulları, qiymətləri, izahlı mətni və FAQ bölməsini ehtiva edən ayrıca kateqoriya səhifələri yaradılır:
 
-- `/motosiklet/` — 30 motosiklet
+- `/motosiklet/` — 31 motosiklet və skuter
 - `/kvadrosikl/` — 9 ATV
 - `/buggy/` — 9 buggy/UTV
 
@@ -78,9 +81,9 @@ Xəbərlər bölməsi ayrıca statik marşrutlarla yayımlanır:
 
 Köhnə `/motosi%CC%87klet` yolu `301` statusu ilə `/motosiklet/` səhifəsinə yönləndirilir. Kateqoriya URL-ləri ana səhifəyə yönləndirilmir.
 
-Saytın tam rus dili versiyası `/ru/` altında yaradılır. Buraya 48 model, altı məlumat səhifəsi və üç kateqoriya daxildir. Hər AZ/RU cütü öz canonical URL-inə, qarşılıqlı `hreflang="az"`, `hreflang="ru"` və `x-default` işarələrinə malikdir. Sitemap 123 canonical URL saxlayır.
+Saytın tam rus dili versiyası `/ru/` altında yaradılır. Buraya 49 model, altı məlumat səhifəsi və üç kateqoriya daxildir. Hər AZ/RU cütü öz canonical URL-inə, qarşılıqlı `hreflang="az"`, `hreflang="ru"` və `x-default` işarələrinə malikdir. Sitemap 127 canonical URL saxlayır.
 
-Sayt `404.html` daxil olmaqla 124 HTML faylı yayımlayır. Ana səhifənin model kartları və model mega-menyusu üçün `models/cards/` daxilində 680 px WebP variantları istifadə olunur; model səhifələrinin və xəbər məqalələrinin şəkilləri isə üçüncü tərəf hostu əvəzinə yerli `models/` və `gallery/` fayllarından yüklənir. Dəyişən JavaScript və CSS assetləri keşlənmiş köhnə kodla qarışmaması üçün versiyalı URL-lərlə yayımlanır; rus səhifələri hidratasiya uyğunluğu üçün ayrı rus dili asset paketlərindən istifadə edir.
+Sayt `404.html` daxil olmaqla 128 HTML faylı yayımlayır. Ana səhifənin model kartları və model mega-menyusu üçün `models/cards/` daxilində 680 px WebP variantları istifadə olunur; model səhifələrinin və xəbər məqalələrinin şəkilləri isə üçüncü tərəf hostu əvəzinə yerli `models/` və `gallery/` fayllarından yüklənir. Dəyişən JavaScript və CSS assetləri keşlənmiş köhnə kodla qarışmaması üçün versiyalı URL-lərlə yayımlanır; rus səhifələri hidratasiya uyğunluğu üçün ayrı rus dili asset paketlərindən istifadə edir.
 
 Əsas domen `https://cfmoto.az` olaraq build mənbəyində sabitlənib. Build zamanı
 köhnə `cfmoto.com.az`, `www` və preview originləri canonical, Open Graph,

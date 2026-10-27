@@ -1,11 +1,12 @@
 # CFMOTO Azerbaijan
 
-> CFMOTO motosiklet, kvadrosikl, buggy və UTV modellərinin Azərbaycandakı rəsmi məhsul, qiymət, servis və xəbər mənbəyi.
+> CFMOTO motosiklet, kvadrosikl, buggy və UTV modelləri, həmçinin ZEEHO elektrik skuteri üçün Azərbaycandakı məhsul, qiymət, servis və xəbər mənbəyi.
 
 ## Əsas bölmələr
 
 - [Ana səhifə](https://cfmoto.az/): aktual modellər, kampaniyalar, kredit, servis və satış mərkəzi
-- [Motosikletlər](https://cfmoto.az/motosiklet/): CFMOTO motosiklet modelləri
+- [Motosikletlər və skuterlər](https://cfmoto.az/motosiklet/): CFMOTO motosikletləri və ZEEHO elektrik skuteri
+- [ZEEHO EZ4](https://cfmoto.az/model/zeeho-ez4/): 2 890 AZN satış qiymətli elektrik şəhər skuteri
 - [Kvadrosikllər](https://cfmoto.az/kvadrosikl/): CFORCE ATV modelləri
 - [Buggy və UTV](https://cfmoto.az/buggy/): ZFORCE və UFORCE modelləri
 - [Aksesuar konfiquratoru](https://cfmoto.az/aksesuar-konfiquratoru/): modelə uyğun orijinal aksesuar seçimi

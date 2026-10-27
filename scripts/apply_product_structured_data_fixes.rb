@@ -79,7 +79,7 @@ def apply_product_structured_data_fixes!
         node["description"] ||= reference&.fetch("description", nil)
         node["brand"] ||= reference&.fetch("brand", nil)
         node["category"] ||= reference&.fetch("category", nil)
-        node["sku"] = slug if slug
+        node["sku"] ||= slug if slug
         node["model"] ||= node["name"].to_s.sub(/\ACFMOTO\s+/i, "")
 
         offer["priceValidUntil"] = PRICE_VALID_UNTIL

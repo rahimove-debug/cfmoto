@@ -139,13 +139,19 @@ offroad_slugs = %w[
 ].freeze
 
 model_pages = Dir.glob(File.join(ROOT, "model", "*", "index.html"))
-errors << "Expected 48 model pages, found #{model_pages.size}" unless model_pages.size == 48
+errors << "Expected 49 model pages, found #{model_pages.size}" unless model_pages.size == 49
 missing_offroad_pages = offroad_slugs.reject { |slug| File.file?(File.join(ROOT, "model", slug, "index.html")) }
 errors << "Missing off-road model pages: #{missing_offroad_pages.join(', ')}" unless missing_offroad_pages.empty?
 
 model_pages.each do |path|
   slug = File.basename(File.dirname(path))
   html = read(path)
+  if slug == "zeeho-ez4"
+    errors << "zeeho-ez4: unconfirmed accessory deep link is present" if html.include?("/aksesuar-konfiquratoru/?model=zeeho-ez4")
+    errors << "zeeho-ez4: accessory CTA must stay absent" if html.include?('accessory-model-cta') || html.include?('>Aksesuar seç</a>')
+    errors << "zeeho-ez4: accessory stylesheet must stay absent" if html.include?('/assets/accessory-entry-v1.css')
+    next
+  end
   if slug == "500sr"
     deep_link = "/aksesuar-konfiquratoru/?model=500sr&bike=0&lock=1"
     errors << "500sr: query-only desktop accessory CTA is missing" unless html.include?(%(class="button accessory-model-cta" href="#{deep_link}"))
@@ -192,4 +198,4 @@ errors << "Accessory images are missing cache policy" unless headers.include?("/
 
 abort "Accessory integration audit failed:\n- #{errors.join("\n- ")}" unless errors.empty?
 
-puts "Accessory integration audit passed: #{accessory_images} images, sales hero, #{model_pages.size - 1} verified model deep links (#{offroad_slugs.size} off-road), 1 enquiry-only model, 2 category entry points, SEO and analytics"
+puts "Accessory integration audit passed: #{accessory_images} images, sales hero, #{model_pages.size - 2} verified model deep links (#{offroad_slugs.size} off-road), 1 query-only 500SR, 1 excluded EZ4 and 2 category entry points"

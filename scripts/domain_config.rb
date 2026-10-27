@@ -56,6 +56,7 @@ module DomainConfig
     "/250sr" => "/model/250sr-fun/",
     "/150-sc-scoter" => "/model/150sc/",
     "/150-aura-scoter" => "/model/aura-150/",
+    "/ez4" => "/model/zeeho-ez4/",
     "/papi%CC%87o-xo-125" => "/model/papio-xo/",
     "/papio-xo-125" => "/model/papio-xo/",
     "/1000mv" => "/model/cforce1000-mv/",

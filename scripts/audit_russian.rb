@@ -37,7 +37,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     "Orijinal",
     "Aksesuarlar",
     "2 il / 24.000 km",
-    "48 aktual model",
+    "49 aktual model",
     "<label>Model<select>",
     "<th>Model</th>",
     "children:[`Model`,",
@@ -69,7 +69,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     "5 дюйм LCD",
     "12,3 дюйм MMI"
   ].freeze
-  EXPECTED_MODEL_COUNT = 48
+  EXPECTED_MODEL_COUNT = 49
   EXPECTED_AZ_PAGE_COUNT = 1 + EXPECTED_MODEL_COUNT + ContentConfig::SLUGS.size + CategoryConfig::SLUGS.size
   EXPECTED_RU_PAGE_COUNT = EXPECTED_AZ_PAGE_COUNT
   EXPECTED_SITEMAP_URL_COUNT = EXPECTED_AZ_PAGE_COUNT * 2
@@ -220,7 +220,8 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       if entry.kind == :model && language == "ru"
         model = html[%r{<h1 class="[^"]*\bproduct-title\b[^"]*">(.*?)</h1>}m, 1]
         model = CGI.unescapeHTML(model.to_s.gsub(/<[^>]+>/, "")).strip.sub(/\ACFMOTO\s+/i, "")
-        expected_title = CGI.escapeHTML("CFMOTO #{model} — цена и характеристики")
+        title_brand = model.start_with?("ZEEHO ") ? "" : "CFMOTO "
+        expected_title = CGI.escapeHTML("#{title_brand}#{model} — цена и характеристики")
         @errors << "#{label}: model title must describe price and specifications in Russian" unless !model.empty? && html.include?("<title>#{expected_title}</title>")
         @errors << "#{label}: social titles must match the model title" unless html.include?(%(property="og:title" content="#{expected_title}")) && html.include?(%(name="twitter:title" content="#{expected_title}"))
       end

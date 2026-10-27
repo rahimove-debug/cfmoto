@@ -5,6 +5,7 @@ require_relative "russian_content_schema_translations"
 require_relative "russian_technical_translations"
 require_relative "russian_ui_translations"
 require_relative "russian_suspension_translations"
+require_relative "russian_zeeho_translations"
 
 module RussianConfig
   RU_PREFIX = "/ru"
@@ -101,7 +102,7 @@ module RussianConfig
     "Daxili ödəniş faizi:" => "Процент по рассрочке:",
     "Faiz daxil borc:" => "Долг с учётом процентов:",
     "Faiz daxil borc" => "Долг с учётом процентов",
-    "48 aktual modeli kateqoriya, mühərrik sinfi, nağd qiymət və daxili hissəli ödənişin minimum şərtlərinə görə bir cədvəldə müqayisə edin." => "Сравните 48 актуальных моделей в одной таблице по категории, объёму двигателя, цене и минимальным условиям рассрочки.",
+    "49 aktual modeli kateqoriya, mühərrik sinfi, nağd qiymət və təsdiqlənmiş daxili hissəli ödəniş şərtlərinə görə bir cədvəldə müqayisə edin." => "Сравните 49 актуальных моделей в одной таблице по категории, классу двигателя, цене и подтверждённым условиям рассрочки.",
     "Bank faizi və komissiyalar cədvələ daxil deyil. Yekun qiymət və maliyyələşmə şərtləri satış mütəxəssisi tərəfindən dəqiqləşdirilir." => "Банковские проценты и комиссии не включены в таблицу. Итоговую цену и условия финансирования уточняет специалист по продажам.",
     "Model kateqoriyasına uyğun minimum ilkin ödənişi və maksimal müddəti əvvəlcədən müqayisə edin. Saytdakı kalkulyator ilkin planlama üçündür." => "Заранее сравните минимальный первоначальный взнос и максимальный срок для выбранной категории. Калькулятор на сайте предназначен для предварительного планирования.",
     "Bank krediti 10%-dən başlayan ilkin ödənişlə 35 ayadək mümkündür. Bank faizi, komissiya, tələb olunan sənədlər və yekun təsdiq bankın şərtlərinə əsasən müəyyən olunur." => "Банковский кредит доступен с первоначальным взносом от 10% на срок до 35 месяцев. Процент, комиссия, документы и итоговое решение определяются условиями банка.",
@@ -724,6 +725,7 @@ module RussianConfig
       .merge(RussianTechnicalTranslations::MAP)
       .merge(RussianUiTranslations::MAP)
       .merge(RussianSuspensionTranslations::MAP)
+      .merge(RussianZeehoTranslations::MAP)
       .sort_by { |source, _target| -source.length }
       .each do |source, target|
       translated.gsub!(source, target)

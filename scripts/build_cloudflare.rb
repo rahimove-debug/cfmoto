@@ -29,6 +29,9 @@ abort "Accessory integration cleanup failed" unless system(RbConfig.ruby, access
 model_500sr = File.join(__dir__, "apply_500sr_model.rb")
 abort "500SR model integration failed" unless system(RbConfig.ruby, model_500sr)
 
+zeeho_ez4 = File.join(__dir__, "apply_zeeho_ez4.rb")
+abort "ZEEHO EZ4 model integration failed" unless system(RbConfig.ruby, zeeho_ez4)
+
 confirmed_model_prices = File.join(__dir__, "apply_confirmed_model_prices.rb")
 abort "Confirmed model price update failed" unless system(RbConfig.ruby, confirmed_model_prices)
 
@@ -133,6 +136,11 @@ abort "Sitemap lastmod processing failed" unless system(RbConfig.ruby, sitemap_l
 
 sitemap_lastmod_audit = File.join(__dir__, "audit_sitemap_lastmod.rb")
 abort "Sitemap lastmod audit failed" unless system(RbConfig.ruby, sitemap_lastmod_audit)
+
+# Validate the complete localized EZ4 integration only after structured data,
+# redirects, accessory exclusions and sitemap dates have reached final form.
+zeeho_ez4_audit = File.join(__dir__, "audit_zeeho_ez4.rb")
+abort "ZEEHO EZ4 audit failed" unless system(RbConfig.ruby, zeeho_ez4_audit)
 
 FileUtils.rm_rf(DIST)
 FileUtils.mkdir_p(DIST)
