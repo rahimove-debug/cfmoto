@@ -57,8 +57,13 @@ pages.each do |locale, (path, language, canonical)|
   errors << "#{locale}: model name is missing" unless html.include?("ZEEHO EZ4")
   errors << "#{locale}: confirmed 2,890 AZN price is missing" unless html.include?("2,890 AZN")
   errors << "#{locale}: EZ4 stylesheet is missing" unless html.include?("/assets/zeeho-ez4-model-v1.css")
-  errors << "#{locale}: unconfirmed finance calculator is present" if html.include?('class="model-calculator"') || html.include?('id="odenis"')
-  errors << "#{locale}: unconfirmed accessory entry is present" if html.include?("/aksesuar-konfiquratoru/?model=zeeho-ez4") || html.include?("accessory-model-cta") || html.include?("/assets/accessory-entry-v1.css")
+  errors << "#{locale}: standalone finance calculator is missing" unless html.include?('id="odenis"') && html.include?('data-ez4-finance') && html.include?('data-price="2890"')
+  errors << "#{locale}: internal finance must start at 40%" unless html.include?('data-down type="range" min="40"')
+  errors << "#{locale}: bank finance must allow 10% down and 36 months" unless html.include?('data-bank-term type="range" min="3" max="36"')
+  errors << "#{locale}: EZ4 finance script is missing" unless html.match?(%r{/assets/ez4-finance-v1(?:-sales-[a-f0-9]{12})?\.js})
+  accessory_link = '/aksesuar-konfiquratoru/?model=zeeho-ez4&amp;bike=0&amp;lock=1'
+  errors << "#{locale}: accessory enquiry deep link is missing" unless html.scan(accessory_link).size >= 2
+  errors << "#{locale}: accessory enquiry CTA is missing" unless html.include?('accessory-model-cta') && html.include?('/assets/accessory-entry-v1.css')
   errors << "#{locale}: a remote ZEEHO image is hotlinked" if html.match?(%r{<img[^>]+src="https?://[^"]*zeehoev\.com}i)
   errors << "#{locale}: a Pro/Max-only hero or dashboard asset is present" if html.match?(/ez4-(?:hero|dashboard)/i)
 
@@ -139,9 +144,9 @@ end
   row = html[%r{<tr>(?:(?!</tr>).)*href="/(?:ru/)?model/zeeho-ez4/"(?:(?!</tr>).)*</tr>}m]
   errors << "#{label}: EZ4 comparison row is missing" unless row
   if row
-    errors << "#{label}: unconfirmed down-payment percentage is shown" if row.match?(/(?:20|40|50)%/)
-    expected = label.start_with?("AZ") ? "Satışla dəqiqləşdirin" : "Уточните в отделе продаж"
-    errors << "#{label}: unconfirmed finance cells need a clear label" unless row.scan(expected).size == 2
+    errors << "#{label}: EZ4 must use 40% internal down payment" unless row.include?("40%")
+    expected_term = label.start_with?("AZ") ? "18 ayadək" : "до 18 мес."
+    errors << "#{label}: EZ4 must allow internal finance up to 18 months" unless row.include?(expected_term)
   end
 end
 
@@ -159,13 +164,13 @@ ru_menu = menu_bundles.select { |path| File.basename(path).include?("Russian") }
     record = source[%r{\{slug:`zeeho-ez4`,[^{}]+\}}]
     errors << "#{label}: malformed EZ4 record in #{File.basename(path)}" unless record
     next unless record
-    errors << "#{label}: EZ4 price/finance state is wrong in #{File.basename(path)}" unless record.include?("price:2890") && record.include?("financeEligible:false")
+    errors << "#{label}: EZ4 price/finance state is wrong in #{File.basename(path)}" unless record.include?("price:2890") && record.include?("financeEligible:true")
   end
 end
 
 finance_bundles = Dir.glob(File.join(ROOT, "assets", "page-*.js"))
 finance_filtered = finance_bundles.select { |path| read(path).include?("e.financeEligible!==false") }
-errors << "Homepage finance exclusion filter is missing" if finance_filtered.empty?
+errors << "Homepage finance eligibility filter is missing" if finance_filtered.empty?
 
 redirects_path = File.join(ROOT, "_redirects")
 if File.file?(redirects_path)
@@ -191,7 +196,7 @@ else
 end
 
 if errors.empty?
-  puts "ZEEHO EZ4 audit passed: AZ/RU pages, 2,890 AZN price, official base-model specs and images, catalogue/category placement, SEO and finance/accessory exclusions"
+  puts "ZEEHO EZ4 audit passed: AZ/RU pages, 2,890 AZN price, official base-model specs and images, catalogue/category placement, SEO, 40% finance and accessory enquiry"
 else
   warn errors.map { |error| "- #{error}" }.join("\n")
   exit 1

@@ -573,6 +573,9 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     def az_navigation_target?(href)
       return false if href.nil? || href.empty? || href.start_with?("#")
       return false if href.start_with?("/ru/") || href == "/ru"
+      # The accessory configurator intentionally has one Azerbaijani canonical
+      # and no Russian alternate, so RU pages may link to that shared tool.
+      return false if href.start_with?("/aksesuar-konfiquratoru/")
       return false if href.match?(%r{\A(?:https?:)?//}) && !href.start_with?(SITE_ORIGIN)
       return false if href.match?(%r{\A(?:tel|mailto|sms|whatsapp):}i)
       return false if static_public_path?(href)
@@ -580,6 +583,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
       if href.start_with?(SITE_ORIGIN)
         suffix = href.delete_prefix(SITE_ORIGIN)
         return false if suffix.start_with?("/ru/") || suffix == "/ru"
+        return false if suffix.start_with?("/aksesuar-konfiquratoru/")
         return suffix == "/" || suffix.start_with?("/#") || unprefixed_az_route?(suffix)
       end
 

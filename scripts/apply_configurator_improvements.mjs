@@ -26,6 +26,7 @@ function filesUnder(directory) {
 // 1. Resolve the exact deployed catalog, including the local retail-price overrides.
 let input = source;
 if (!input.includes('"675nk","500sr","500sr-voom"')) input = once(input,'"675nk","500sr-voom"','"675nk","500sr","500sr-voom"');
+if (!input.includes('"aura-150","zeeho-ez4","papio-xo"')) input = once(input,'"aura-150","papio-xo"','"aura-150","zeeho-ez4","papio-xo"');
 const capture = once(input,";function em(){",";globalThis.cfExtractedCatalog=ei;function em(){");
 const context = {self:{webpackChunk_N_E:[]}, Intl};
 vm.createContext(context);
@@ -35,8 +36,11 @@ const requireStub = () => ({}); requireStub.d = () => {};
 module({}, {}, requireStub);
 const catalog = JSON.parse(JSON.stringify(context.cfExtractedCatalog));
 const srIndex = catalog.findIndex(model => model.id === "500sr");
-assert(catalog.length === 48 && srIndex >= 0 && catalog[srIndex+1].id === "500sr-voom", "48-model catalog must include 500SR directly before VOOM");
+const ez4 = catalog.find(model => model.id === "zeeho-ez4");
+assert(catalog.length === 49 && srIndex >= 0 && catalog[srIndex+1].id === "500sr-voom", "49-model catalog must include 500SR directly before VOOM");
 assert(catalog[srIndex].basePriceAzn === 13490, "500SR retail price changed");
+assert(ez4 && ez4.basePriceAzn === 2890 && ez4.image === "/models/zeeho-ez4.webp", "ZEEHO EZ4 enquiry-only catalog entry changed");
+assert(ez4.accessories.length === 0, "ZEEHO EZ4 must not invent accessories");
 
 // 2. Replace the old conversion claims in HTML, RSC and the interactive component.
 const neutral = "Göstərilən qiymətlər AZN ilə yerli satış qiymətləridir. Qiyməti göstərilməyən aksesuarlar üçün satış komandasına müraciət edin. Uyğunluq, stok və yekun qiymət sifarişdən əvvəl təsdiqlənir.";

@@ -82,9 +82,9 @@ INTERNAL_20_MODEL_NAMES = [
 INTERNAL_40_MOTORCYCLE_SLUGS = %w[
   1000mt-x 800mt-explore 800mt-sport 800mt-x 800nk-advanced 750sr-s
   700cl-x-sport 700mt 675sr-r 675nk 500sr 500sr-voom 450cl-c-bobber 450cl-c
-  450cl-c-amt 450sr-s 450mt 450nk
+  450cl-c-amt 450sr-s 450mt 450nk zeeho-ez4
 ].freeze
-FINANCE_EXCLUDED_SLUGS = %w[zeeho-ez4].freeze
+STANDALONE_MODEL_SLUGS = %w[500sr zeeho-ez4].freeze
 
 INSTALLMENT_INTEREST_RATES = {
   6 => 0.08,
@@ -595,6 +595,13 @@ update_asset(MENU_BUNDLE_SOURCES, NEW_MENU_BUNDLE) do |javascript|
   end
   use_clean_model_data_images!(javascript)
 
+  ez4_record = javascript[%r{\{slug:`zeeho-ez4`,[^{}]+\}}]
+  abort "ZEEHO EZ4 model record not found" unless ez4_record
+  unless ez4_record.include?("financeEligible:true")
+    abort "ZEEHO EZ4 finance eligibility anchor not found" unless ez4_record.include?("financeEligible:false")
+    javascript.sub!(ez4_record, ez4_record.sub("financeEligible:false", "financeEligible:true"))
+  end
+
   javascript.gsub!(
     'e.price===null?`Qiyməti dəqiqləşdirin`:`${l(e.price)} AZN`',
     'e.price===null?`Qiyməti dəqiqləşdirin`:`${l(e.price)} AZN${e.vatIncluded?` · ƏDV daxil`:``}`'
@@ -981,7 +988,7 @@ html_paths.each do |path|
     slug = File.basename(File.dirname(path))
     localize_primary_model_image!(html, slug)
     ensure_clean_model_product_badge!(html, slug)
-    unless slug == "500sr" || FINANCE_EXCLUDED_SLUGS.include?(slug)
+    unless STANDALONE_MODEL_SLUGS.include?(slug)
       apply_model_finance_policy!(html, slug)
       normalize_model_finance_calculator!(html, slug)
     end
@@ -1147,13 +1154,13 @@ model_finance_bundle = read_utf8(File.join(ASSETS, NEW_MODEL_FINANCE_BUNDLE))
 eligible_finance_pages = INTERNAL_20_SLUGS.to_h do |slug|
   [slug, read_utf8(File.join(ROOT, "model", slug, "index.html"))]
 end
-ineligible_finance_pages = INTERNAL_40_MOTORCYCLE_SLUGS.to_h do |slug|
+ineligible_finance_pages = (INTERNAL_40_MOTORCYCLE_SLUGS - ["zeeho-ez4"]).to_h do |slug|
   [slug, read_utf8(File.join(ROOT, "model", slug, "index.html"))]
 end
 offroad_slugs = Dir.glob(File.join(ROOT, "model", "*", "index.html")).map do |path|
   File.basename(File.dirname(path))
 end - INTERNAL_20_SLUGS - INTERNAL_40_MOTORCYCLE_SLUGS
-offroad_slugs -= FINANCE_EXCLUDED_SLUGS
+offroad_slugs -= STANDALONE_MODEL_SLUGS
 offroad_finance_pages = offroad_slugs.to_h do |slug|
   [slug, read_utf8(File.join(ROOT, "model", slug, "index.html"))]
 end
@@ -1179,7 +1186,7 @@ checks = {
   "home internal term excludes 3 months" => home.include?('id="term" type="range" min="6" max="18" step="6" value="18"') && home_bundle.include?('min:_===`Bank krediti`?3:6') && !home.include?('id="term" type="range" min="3"'),
   "home bank uses balance interest and commission caveat" => home_bundle.include?(BANK_CALCULATOR_NOTE) && home_bundle.include?(BANK_DEBT_LABEL) && !home_bundle.include?('interestRate=_===`Daxili hissəli`?'),
   "model finance policy allowlist" => INTERNAL_20_MODEL_NAMES.all? { |model| model_finance_bundle.include?("`#{model}`") } && model_finance_bundle.include?('x=s&&q.has(e)') && model_finance_bundle.include?('[f,p]=(0,r.useState)(x?20:s?40:50)'),
-  "motorcycle finance policy partitions all models" => INTERNAL_20_SLUGS.size == 12 && INTERNAL_40_MOTORCYCLE_SLUGS.size == 18 && (INTERNAL_20_SLUGS & INTERNAL_40_MOTORCYCLE_SLUGS).empty?,
+  "motorcycle finance policy partitions all models" => INTERNAL_20_SLUGS.size == 12 && INTERNAL_40_MOTORCYCLE_SLUGS.size == 19 && (INTERNAL_20_SLUGS & INTERNAL_40_MOTORCYCLE_SLUGS).empty?,
   "eligible motorcycle calculators retain 20 percent" => eligible_finance_pages.all? { |_slug, page| page.include?('min="20" max="80" step="5" value="20"') && page.include?("Daxili ödəniş: 20%-dən başlayan ilkin ödəniş") },
   "other motorcycle calculators require 40 percent" => ineligible_finance_pages.all? { |_slug, page| page.include?('min="40" max="80" step="5" value="40"') && page.include?("Daxili ödəniş: 40%-dən başlayan ilkin ödəniş") && !page.include?("Daxili ödəniş: 20%-dən başlayan ilkin ödəniş") && !page.include?("Daxili ödəniş: 50%-dən başlayan ilkin ödəniş") },
   "offroad calculators retain 50 percent" => offroad_finance_pages.size == 18 && offroad_finance_pages.all? { |_slug, page| page.include?('min="50" max="80" step="5" value="50"') && page.include?("Daxili ödəniş: 50%-dən başlayan ilkin ödəniş") },
@@ -1249,9 +1256,15 @@ checks = {
   "home C5 engine class" => home.include?('CFORCE C5</h3><p>Kvadrosikl<!-- --> · <!-- -->500 cc</p>'),
   "home C5 calculator option" => home.include?('value="CFORCE C5"'),
   "home catalog count" => home.include?("49<!-- --> aktual model") || home.include?("49 aktual model"),
-  "EZ4 finance is not inferred from electric power" => begin
+  "EZ4 has explicit 40 percent finance and a standalone calculator" => begin
     ez4 = read_utf8(File.join(ROOT, "model", "zeeho-ez4", "index.html"))
-    !ez4.include?('class="model-calculator"') && !ez4.include?('id="odenis"') && !offroad_slugs.include?("zeeho-ez4")
+    menu = read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE))
+    INTERNAL_40_MOTORCYCLE_SLUGS.include?("zeeho-ez4") &&
+      !ez4.include?('class="model-calculator"') && ez4.include?('id="odenis"') &&
+      ez4.include?('data-ez4-finance') && ez4.include?('data-down type="range" min="40"') &&
+      ez4.include?('data-bank-term type="range" min="3" max="36"') &&
+      !offroad_slugs.include?("zeeho-ez4") &&
+      menu.match?(%r{\{slug:`zeeho-ez4`,[^{}]*financeEligible:true[^{}]*\}})
   end,
   "C5 VAT price" => c5.include?("13,900 AZN"),
   "C5 GEN4 platform positioning" => c5.include?("Yeni GEN⁴ platforması") && c5.include?("yeni GEN⁴ platformalı 500 cc sinifli ATV-dir"),

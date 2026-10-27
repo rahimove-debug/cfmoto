@@ -29,10 +29,10 @@ CONFIG = {
     summary: "Model kartlarında mühərrik sinfini və nağd satış qiymətini yoxlayın; texniki göstəricilər, rənglər və ödəniş hesablaması üçün model səhifəsini açın.",
     body_heading: "Hansı motosiklet və ya skuter sizə uyğundur?",
     body: "CFMOTO naked modelləri şəhərdə çevik idarəetmə, SR seriyası sport xarakteri, MT modelləri isə uzun marşrut və dəyişən yol şəraiti üçün hazırlanıb. Cruiser və dual-sport seçimlərinə əlavə olaraq ZEEHO EZ4 səssiz elektrik ötürməsi ilə gündəlik şəhər marşrutlarına alternativ təqdim edir.",
-    finance: "Mühərrik həcmi 300 cc-dək olan motosikletlərdə və 450SR modelində daxili hissəli ödəniş üçün minimum ilkin ödəniş 20%-dir. Digər benzin mühərrikli motosikletlərdə minimum ilkin ödəniş 40%, maksimal müddət 18 aydır. ZEEHO EZ4 maliyyələşmə şərtləri satış nümayəndəsi ilə ayrıca dəqiqləşdirilir.",
+    finance: "Mühərrik həcmi 300 cc-dək olan motosikletlərdə və 450SR modelində daxili hissəli ödəniş üçün minimum ilkin ödəniş 20%-dir. Digər benzin mühərrikli motosikletlərdə və ZEEHO EZ4 elektrik skuterində minimum ilkin ödəniş 40%, maksimal müddət 18 aydır.",
     faqs: [
       ["Motosiklet və skuter qiymətləri neçə AZN-dən başlayır?", "Səhifədəki aktual model siyahısında hər motosiklet və skuterin nağd satış qiyməti ayrıca göstərilir. Qiymət, mövcudluq və komplektasiya satış zamanı dəqiqləşdirilir."],
-      ["Motosikletlər üçün ilkin ödəniş neçə faizdir?", "300 cc-dək motosikletlər və 450SR üçün minimum ilkin ödəniş 20%, digər benzin mühərrikli motosikletlər üçün 40%-dir. ZEEHO EZ4 şərtləri ayrıca dəqiqləşdirilir."],
+      ["Motosikletlər üçün ilkin ödəniş neçə faizdir?", "300 cc-dək motosikletlər və 450SR üçün minimum ilkin ödəniş 20%, digər benzin mühərrikli motosikletlər və ZEEHO EZ4 elektrik skuteri üçün 40%-dir."],
       ["Motosikletlərə zəmanət verilirmi?", "CFMOTO motosikletləri üçün zəmanət 2 il və ya 24.000 km-dir; hansı hədd daha tez tamamlanarsa, o əsas götürülür."],
       ["Modeli harada yaxından görə bilərəm?", "Modellərlə Babək prospekti 188 ünvanındakı CFMOTO Azerbaijan satış mərkəzində tanış ola bilərsiniz."]
     ]

@@ -18,15 +18,24 @@ const requireStub = () => ({}); requireStub.d = () => {};
 production.self.webpackChunk_N_E[0][1][9170]({}, {}, requireStub);
 const models = JSON.parse(JSON.stringify(production.auditModels));
 let originalScript = fs.readFileSync(path.join(dist,"aksesuar-konfiquratoru/_next/static/chunks/app/page-cfmoto-godaddy-localprices-v9.js"),"utf8");
-originalScript = originalScript.replace('"675nk","500sr-voom"','"675nk","500sr","500sr-voom"').replace(";function em(){",";globalThis.auditOriginal=ei;function em(){");
+originalScript = originalScript
+  .replace('"675nk","500sr-voom"','"675nk","500sr","500sr-voom"')
+  .replace('"aura-150","papio-xo"','"aura-150","zeeho-ez4","papio-xo"')
+  .replace(";function em(){",";globalThis.auditOriginal=ei;function em(){");
 const originalContext = {self:{webpackChunk_N_E:[]},Intl};
 vm.createContext(originalContext);vm.runInContext(originalScript,originalContext);
 originalContext.self.webpackChunk_N_E[0][1][9170]({}, {}, requireStub);
 const originalModels = JSON.parse(JSON.stringify(originalContext.auditOriginal));
-assert.equal(models.length,48);
+assert.equal(models.length,49);
 assert.equal(models[models.findIndex(model=>model.id==="500sr")+1].id,"500sr-voom");
 assert.equal(models.find(model=>model.id==="500sr").accessoryCount,0);
 assert.equal(models.find(model=>model.id==="500sr").basePriceAzn,13490);
+const ez4 = models.find(model=>model.id==="zeeho-ez4");
+assert.ok(ez4,"ZEEHO EZ4 configurator model is missing");
+assert.equal(ez4.basePriceAzn,2890);
+assert.equal(ez4.image,"/models/zeeho-ez4.webp");
+assert.equal(ez4.accessoryCount,0);
+assert.equal(ez4.cfLoaded,true);
 let accessoryCount=0;
 const blackLuggageModels=[];
 for (const model of models) {
@@ -56,6 +65,9 @@ for (const model of models) {
 }
 assert.deepEqual(blackLuggageModels.sort(),["1000mt-x","800mt-x"]);
 assert.equal(accessoryCount,594);
+const ez4Catalog = JSON.parse(fs.readFileSync(path.join(dist,ez4.catalogUrl),"utf8"));
+assert.equal(ez4Catalog.modelId,"zeeho-ez4");
+assert.deepEqual(ez4Catalog.accessories,[],"ZEEHO EZ4 must remain enquiry-only without invented SKU data");
 assert.ok(report.bundleBytes < 60000);
 const html = fs.readFileSync(path.join(dist,"aksesuar-konfiquratoru/index.html"),"utf8");
 assert.ok(html.includes(path.basename(report.bundle)));
@@ -153,4 +165,4 @@ runtime.window.localStorage.getItem=()=>{throw new Error("storage unavailable")}
 runtime.window.localStorage.setItem=()=>{throw new Error("storage unavailable")};
 assert.doesNotThrow(()=>runtime.cfReadDraft());assert.doesNotThrow(()=>runtime.cfSaveDraft("a",{},{}));
 assert.ok(events.every(event=>!JSON.stringify(event).includes("wa.me")&&!JSON.stringify(event).includes("phone")));
-console.log("Configurator audit passed: 48 models/594 accessories, hashed lazy catalog, 500SR, explicit URL precedence, saved selections, blocked storage/clipboard, unpriced analytics, no network events.");
+console.log("Configurator audit passed: 49 models/594 accessories, enquiry-only 500SR/ZEEHO EZ4, hashed lazy catalog, explicit URL precedence, saved selections, blocked storage/clipboard, unpriced analytics, no network events.");

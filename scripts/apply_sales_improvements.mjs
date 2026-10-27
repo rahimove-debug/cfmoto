@@ -120,6 +120,16 @@ for (const file of walk(dist).filter(file => /\.(html|js|txt)$/.test(file))) {
 }
 
 for (const [language, copy] of Object.entries(locales)) {
+  const menuFile = path.join(assets, copy.menu);
+  let menu = read(menuFile);
+  const ez4Record = menu.match(/\{slug:`zeeho-ez4`,[^{}]+\}/)?.[0];
+  assert(ez4Record, `${language} EZ4 catalogue record`);
+  if (!ez4Record.includes('financeEligible:true')) {
+    assert(ez4Record.includes('financeEligible:false'), `${language} EZ4 finance eligibility anchor`);
+    menu = menu.replace(ez4Record, ez4Record.replace('financeEligible:false', 'financeEligible:true'));
+    write(menuFile, menu);
+  }
+
   const financeFile = path.join(assets, copy.finance);
   let finance = read(financeFile);
   finance = replace(finance, `s?\`${copy.oldEligibility}\``, `s?(c===\`bank\`?\`${copy.bankEligibility} ${copy.warranty}\`:\`${copy.internalEligibility} ${copy.warranty}\`)`, `${language} finance eligibility`);
@@ -129,8 +139,9 @@ for (const [language, copy] of Object.entries(locales)) {
   finance = replace(finance, summaryEnd, summaryRows, `${language} finance totals`);
   write(financeFile, finance);
 
-  // Keep all 49 models in the catalogue and mega-menu. EZ4 is deliberately
-  // omitted from finance controls until its commercial terms are confirmed.
+  // Keep all 49 models in the catalogue, mega-menu and homepage calculator.
+  // EZ4 follows the confirmed 40% motorcycle rule but keeps its standalone
+  // model page, so it is not passed through the React model-page adapter.
   const pageFile = path.join(assets, copy.page);
   let page = read(pageFile);
   const selection = `C=(0,s.useMemo)(()=>p===\`${copy.all}\`?a:a.filter(e=>e.type===p),[p])`;
@@ -259,4 +270,4 @@ for (const file of walk(dist).filter(file => /\.(html|txt)$/.test(file))) {
   write(file, content);
 }
 write(path.join(dist, 'sales-build.json'), JSON.stringify({ revision, featured, bankMaxMonths: 36, price150SC: 5490, locales: Object.fromEntries(Object.entries(locales).map(([language, copy]) => [language, { home: copy.home, page: names[copy.page], menu: names[copy.menu], finance: names[copy.finance] }])) }, null, 2));
-console.log(`Sales improvements ready: 8 featured models, 49 catalogue models, 48 calculator options, 98 localized model pages and 94 React calculator pages; revision ${revision}`);
+console.log(`Sales improvements ready: 8 featured models, 49 catalogue models, 49 calculator options, 98 localized model pages and 94 React calculator pages; revision ${revision}`);

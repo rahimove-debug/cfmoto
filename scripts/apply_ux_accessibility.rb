@@ -70,6 +70,17 @@ unless page.include?('id:"500sr",name:"500SR"')
   abort "Configurator 500SR VOOM model anchor not found" unless page.scan(configurator_500sr_anchor).size == 1
   page.sub!(configurator_500sr_anchor, "#{configurator_500sr},#{configurator_500sr_anchor}")
 end
+configurator_ez4 = '{id:"zeeho-ez4",name:"ZEEHO EZ4",family:"Scooter",years:"Cari model ili",basePriceAzn:2890,image:"/models/zeeho-ez4.webp",localUrl:"https://cfmoto.az/model/zeeho-ez4"}'
+unless page.include?('id:"zeeho-ez4",name:"ZEEHO EZ4"')
+  configurator_ez4_anchor = '{id:"aura-150",name:"AURA 150",family:"Scooter",years:"Cari model ili",basePriceAzn:5590,image:"/models/aura-150.webp",localUrl:"https://cfmoto.az/model/aura-150"}'
+  abort "Configurator AURA 150 model anchor not found" unless page.scan(configurator_ez4_anchor).size == 1
+  page.sub!(configurator_ez4_anchor, "#{configurator_ez4_anchor},#{configurator_ez4}")
+end
+unless page.include?('"aura-150","zeeho-ez4","papio-xo"')
+  configurator_ez4_order_anchor = '"aura-150","papio-xo"'
+  abort "Configurator EZ4 order anchor not found" unless page.scan(configurator_ez4_order_anchor).size == 1
+  page.sub!(configurator_ez4_order_anchor, '"aura-150","zeeho-ez4","papio-xo"')
+end
 # Family grouping is handled in the configurator UI so ATV Touring remains a
 # distinct off-road filter and motorcycle Adventure/Touring stays combined.
 page.gsub!('/models/750sr-s.webp', '/models/750sr-s-clean.webp')
@@ -83,7 +94,11 @@ unless page.include?('className:"simple-model-new-badge"')
 end
 page.gsub!(
   'N.id==="750sr-s"&&(0,o.jsx)("span",{className:"simple-model-new-badge",children:"YENİ"})',
-  '["750sr-s","500sr"].includes(N.id)&&(0,o.jsx)("span",{className:"simple-model-new-badge",children:"YENİ"})'
+  '["750sr-s","500sr","zeeho-ez4"].includes(N.id)&&(0,o.jsx)("span",{className:"simple-model-new-badge",children:"YENİ"})'
+)
+page.gsub!(
+  '["750sr-s","500sr"].includes(N.id)&&(0,o.jsx)("span",{className:"simple-model-new-badge",children:"YENİ"})',
+  '["750sr-s","500sr","zeeho-ez4"].includes(N.id)&&(0,o.jsx)("span",{className:"simple-model-new-badge",children:"YENİ"})'
 )
 
 unless page.include?('className:"vehicle-type-filters"')

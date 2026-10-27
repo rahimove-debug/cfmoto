@@ -21,10 +21,10 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   assert.equal(new Set(cards.map(card => text(descendants(card, node => node.tag === 'h3')[0]))).size, 8);
   const select = descendants(tree, node => node.tag === 'select')[0];
   const options = descendants(select, node => node.tag === 'option');
-  assert.equal(options.length, 48, `${locale} full calculator catalog`);
+  assert.equal(options.length, 49, `${locale} full calculator catalog`);
   assert.equal(models.length, 49, `${locale} full catalogue`);
   assert.equal(models.filter(model => model.slug === 'zeeho-ez4').length, 1, `${locale} EZ4 catalogue entry`);
-  assert.equal(options.filter(option => option.props.value === 'ZEEHO EZ4').length, 0, `${locale} EZ4 financing remains unconfirmed`);
+  assert.equal(options.filter(option => option.props.value === 'ZEEHO EZ4').length, 1, `${locale} EZ4 finance option`);
   assert.equal(options.filter(option => option.props.value === '500SR').length, 1);
   assert.equal(models.find(model => model.slug === '150sc').price, 5490, 'User-confirmed 150SC price');
   const fullLinks = descendants(tree, node => hasClass(node, 'catalog-links'))[0];
@@ -68,6 +68,21 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
       assert(!note.includes(locale === 'az' ? 'gəlirin göstərilməsi tələb olunur' : 'подтверждение дохода за последние'), 'No internal requirements on bank tab');
     }
   }
+
+  // EZ4 participates in the homepage calculator as an explicitly confirmed
+  // 40% motorcycle, while its standalone model page remains outside the React
+  // model-page adapter.
+  const ez4Model = models.find(model => model.slug === 'zeeho-ez4');
+  const ez4Props = { model: ez4Model.name, price: ez4Model.price, type: ez4Model.type, whatsapp: 'https://wa.me/994512332484' };
+  const ez4Internal = componentModule(path.join(assets, files.finance), {}, ['internal', 18, 40]).default(ez4Props);
+  assert.equal(descendants(ez4Internal, node => node.tag === 'input')[0].props.min, 40, `${locale} EZ4 internal down payment`);
+  assert(descendants(ez4Internal, node => node.tag === 'button').some(button => text(button) === (locale === 'az' ? '18 ay' : '18 мес.')), `${locale} EZ4 18-month internal term`);
+  assert(text(descendants(ez4Internal, node => hasClass(node, 'model-calc-result'))[0]).includes('118'), `${locale} EZ4 18-month internal payment`);
+  assert(text(descendants(ez4Internal, node => hasClass(node, 'finance-total'))[0]).includes('3,289'), `${locale} EZ4 internal total`);
+  const ez4Bank = componentModule(path.join(assets, files.finance), {}, ['bank', 36, 10]).default(ez4Props);
+  assert.equal(descendants(ez4Bank, node => node.tag === 'input')[0].props.min, 10, `${locale} EZ4 bank down payment`);
+  assert(text(descendants(ez4Bank, node => hasClass(node, 'model-calc-result'))[0]).includes('89'), `${locale} EZ4 36-month bank payment`);
+  assert(text(descendants(ez4Bank, node => hasClass(node, 'finance-total'))[0]).includes('3,488'), `${locale} EZ4 bank total`);
 
   // Bank interest must be charged to the post-down-payment balance using the
   // same term tiers as internal finance. 150SC: 5,490 AZN, 10% down = 4,941
@@ -122,7 +137,11 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   assert(standaloneHtml.includes(`<span data-installment-total-label>${locale === 'az' ? 'Ümumi ödəniş · ilkin ödəniş daxil' : 'Всего к оплате · включая первоначальный взнос'}</span>`), `${locale} 500SR starts with internal total label`);
   const ez4Html = read(path.join(dist, locale === 'az' ? 'model/zeeho-ez4/index.html' : 'ru/model/zeeho-ez4/index.html'));
   assert(ez4Html.includes('2,890 AZN'), `${locale} EZ4 confirmed cash price`);
-  assert(!ez4Html.includes('class="model-calculator"') && !ez4Html.includes('id="odenis"'), `${locale} EZ4 has no unconfirmed finance calculator`);
+  assert(!ez4Html.includes('class="model-calculator"') && ez4Html.includes('id="odenis"') && ez4Html.includes('data-ez4-finance'), `${locale} EZ4 standalone calculator`);
+  assert(ez4Html.includes('data-down type="range" min="40" max="80" step="5" value="40"'), `${locale} EZ4 standalone 40% down payment`);
+  assert(ez4Html.includes('data-bank-term type="range" min="3" max="36" step="1" value="36"'), `${locale} EZ4 standalone 36-month bank term`);
+  assert(ez4Html.includes('<span data-monthly>118</span>') && ez4Html.includes('<strong data-installment-total>3,289</strong>'), `${locale} EZ4 standalone initial calculation`);
+  assert(/\/assets\/ez4-finance-v1-sales-[a-f0-9]{12}\.js/.test(ez4Html), `${locale} fingerprinted EZ4 finance module`);
 }
 
 const service = read(path.join(dist, 'servis/index.html'));
@@ -137,5 +156,12 @@ assert(standaloneFinanceSource.includes('const rateForMonths=months=>months<=6?.
 assert(standaloneFinanceSource.includes('const debt=balance*(1+rateForMonths(months));'), '500SR bank interest applies to remaining balance');
 assert(standaloneFinanceSource.includes("mode==='bank'?root.dataset.bankTotalLabel:root.dataset.internalTotalLabel"), '500SR total label follows finance mode');
 assert(standaloneFinanceSource.includes("toggle(root.querySelector('[data-installment-total-row]'),false);"), '500SR bank total remains visible');
+const ez4StandaloneFinance = fs.readdirSync(assets).find(name => /^ez4-finance-v1-sales-[a-f0-9]{12}\.js$/.test(name));
+assert(ez4StandaloneFinance, 'Fingerprint for EZ4 finance module');
+const ez4StandaloneFinanceSource = read(path.join(assets, ez4StandaloneFinance));
+assert(ez4StandaloneFinanceSource.includes('const rateForMonths=months=>months<=6?.08:months<=12?.15:.23;'), 'EZ4 finance rate tiers');
+assert(ez4StandaloneFinanceSource.includes('const debt=balance*(1+rateForMonths(months));'), 'EZ4 interest applies to remaining balance');
+assert(ez4StandaloneFinanceSource.includes('down.min=bank?"10":"40";'), 'EZ4 mode-specific down payment');
+assert(ez4StandaloneFinanceSource.includes('installmentTotal.textContent=format.format(paid+debt);'), 'EZ4 total includes down payment');
 assert.equal(manifest.bankMaxMonths, 36);
-console.log('Sales audit passed: AZ/RU homepage parity, 49 catalogue models, 48 calculator options, 94 React calculator states, EZ4 cash-only treatment and bank balance rates');
+console.log('Sales audit passed: AZ/RU homepage parity, 49 catalogue and calculator models, 94 React model-page states, EZ4 40%/18-month finance and bank balance rates');

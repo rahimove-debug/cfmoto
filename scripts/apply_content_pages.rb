@@ -22,9 +22,8 @@ INTERNAL_20_SLUGS = %w[
 INTERNAL_40_SLUGS = %w[
   1000mt-x 800mt-explore 800mt-sport 800mt-x 800nk-advanced 750sr-s
   700cl-x-sport 700mt 675sr-r 675nk 500sr 500sr-voom 450cl-c-bobber 450cl-c
-  450cl-c-amt 450sr-s 450mt 450nk
+  450cl-c-amt 450sr-s 450mt 450nk zeeho-ez4
 ].freeze
-FINANCE_EXCLUDED_SLUGS = %w[zeeho-ez4].freeze
 
 def html_text(fragment)
   CGI.unescapeHTML(fragment.to_s.gsub(/<!--.*?-->/m, "").gsub(/<[^>]+>/, "").strip)
@@ -48,16 +47,14 @@ def parse_models
     price_label = html_text(card[%r{<div class="model-price">.*?<strong>(.*?)</strong>}m, 1])
     numeric_price = price_label[/[\d,]+/]
     price = numeric_price&.delete(",")&.to_i
-    percent = if FINANCE_EXCLUDED_SLUGS.include?(slug)
-      nil
-    elsif INTERNAL_20_SLUGS.include?(slug)
+    percent = if INTERNAL_20_SLUGS.include?(slug)
       20
     elsif INTERNAL_40_SLUGS.include?(slug)
       40
     else
       50
     end
-    term = FINANCE_EXCLUDED_SLUGS.include?(slug) ? nil : (type == "Motosiklet" ? 18 : 12)
+    term = type == "Motosiklet" ? 18 : 12
 
     {
       slug: slug,
@@ -177,9 +174,9 @@ models = parse_models
 
 credit_faq = [
   ["Hansı motosikletlərdə ilkin ödəniş 20%-dir?", "Mühərrik həcmi 300 cc-dək olan motosikletlərdə və istisna olaraq 450SR modelində minimum ilkin ödəniş 20%-dir."],
-  ["Digər motosikletlərdə ilkin ödəniş nə qədərdir?", "300 cc-dən böyük digər motosikletlərdə minimum ilkin ödəniş 40%-dir."],
+  ["Digər motosikletlərdə ilkin ödəniş nə qədərdir?", "300 cc-dən böyük digər motosikletlərdə və ZEEHO EZ4 elektrik skuterində minimum ilkin ödəniş 40%-dir."],
   ["ATV və buggy üçün şərtlər necədir?", "ATV və buggy modellərində daxili hissəli ödəniş üçün minimum ilkin ödəniş 50%, maksimal müddət 12 aydır."],
-  ["Bank krediti müddəti nə qədər ola bilər?", "Bank krediti 10%-dən başlayan ilkin ödənişlə 35 ayadək hesablana bilər. Yekun bank şərtləri ayrıca təsdiqlənir."]
+  ["Bank krediti müddəti nə qədər ola bilər?", "Bank krediti 10%-dən başlayan ilkin ödənişlə 36 ayadək hesablana bilər. Yekun bank şərtləri ayrıca təsdiqlənir."]
 ]
 credit_schema = page_schema(
   "kredit",
@@ -192,10 +189,10 @@ credit_body = <<~HTML
   <p class="lead">Model kateqoriyasına uyğun minimum ilkin ödənişi və maksimal müddəti əvvəlcədən müqayisə edin. Saytdakı kalkulyator ilkin planlama üçündür.</p>
   <div class="info-grid">
     <article class="info-card"><span>≤ 300 cc və 450SR</span><h2>Motosikletlər</h2><strong>20% · 18 ayadək</strong><p>Daxili hissəli ödəniş üçün minimum ilkin ödəniş və maksimal müddət.</p></article>
-    <article class="info-card"><span>Digər motosikletlər</span><h2>300 cc-dən yuxarı</h2><strong>40% · 18 ayadək</strong><p>450SR istisna olmaqla digər motosiklet modelləri üçün.</p></article>
+    <article class="info-card"><span>Digər motosikletlər və EZ4</span><h2>40% ilkin ödəniş</h2><strong>40% · 18 ayadək</strong><p>450SR istisna olmaqla 300 cc-dən yuxarı motosikletlər və ZEEHO EZ4 elektrik skuteri üçün.</p></article>
     <article class="info-card"><span>Off-road</span><h2>ATV və buggy</h2><strong>50% · 12 ayadək</strong><p>Kvadrosikl və buggy modelləri üçün daxili hissəli ödəniş.</p></article>
   </div>
-  <section class="prose"><h2>Bank krediti</h2><p>Bank krediti 10%-dən başlayan ilkin ödənişlə 35 ayadək mümkündür. Bank faizi, komissiya, tələb olunan sənədlər və yekun təsdiq bankın şərtlərinə əsasən müəyyən olunur.</p><div class="notice">Kalkulyator bank rejimində daxili ödənişlə eyni faiz cədvəlini qalıq borca tətbiq edir: 6 ayadək 8%, 12 ayadək 15%, 12 aydan çox 23%. Bank komissiyası daxil deyil; yekun şərtlər fərqlənə bilər.</div></section>
+  <section class="prose"><h2>Bank krediti</h2><p>Bank krediti 10%-dən başlayan ilkin ödənişlə 36 ayadək mümkündür. Bank faizi, komissiya, tələb olunan sənədlər və yekun təsdiq bankın şərtlərinə əsasən müəyyən olunur.</p><div class="notice">Kalkulyator bank rejimində daxili ödənişlə eyni faiz cədvəlini qalıq borca tətbiq edir: 6 ayadək 8%, 12 ayadək 15%, 12 aydan çox 23%. Bank komissiyası daxil deyil; yekun şərtlər fərqlənə bilər.</div></section>
   <div class="cta-box"><div><h2>Seçdiyiniz modeli hesablayın</h2><p>Ana səhifədə model, ilkin ödəniş və müddəti dəyişərək təxmini aylıq məbləği görün.</p></div><div class="cta-actions"><a class="button primary" href="/#kredit-kalkulyator">Kalkulyatoru aç</a><a class="button ghost" data-contact-area="finance" href="https://wa.me/#{SALES_WHATSAPP.delete('+')}?text=Salam%2C%20CFMOTO%20kredit%20%C5%9F%C9%99rtl%C9%99ri%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m" target="_blank" rel="noreferrer">Təklif al</a></div></div>
   <section class="faq"><h2>Tez-tez verilən suallar</h2>#{credit_faq.map { |question, answer| "<details><summary>#{question}</summary><p>#{answer}</p></details>" }.join}</section>
 HTML

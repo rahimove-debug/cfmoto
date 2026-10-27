@@ -13,11 +13,10 @@ CFMOTO Azerbaijan üçün statik sayt, SEO emalı və Cloudflare Pages build pak
 
 `scripts/apply_sales_improvements.mjs` son build mərhələsində yayımlanacaq
 HTML və müştəri modullarını birlikdə hazırlayır. Ana səhifə 8 seçilmiş model
-göstərir; 49 modelin hamısı kateqoriyalarda və menyuda saxlanır, təsdiqlənmiş
-maliyyələşmə şərti olan 48 model isə kalkulyatorda göstərilir. ZEEHO EZ4 üçün
-yalnız təsdiqlənmiş 2.890 AZN nağd qiymət təqdim olunur; maliyyələşmə şərtləri
-ayrıca dəqiqləşdirilənədək kalkulyatora daxil edilmir. Seçim siyahısı həmin
-skriptdəki `featured` massivində idarə olunur.
+göstərir; 49 modelin hamısı kateqoriyalarda, menyuda və kalkulyatorda saxlanır.
+ZEEHO EZ4 üçün 2.890 AZN satış qiyməti, 40%-dən başlayan daxili hissəli ödəniş
+və 10%-dən başlayan bank hesablaması ayrıca statik kalkulyatorla təqdim olunur.
+Seçim siyahısı həmin skriptdəki `featured` massivində idarə olunur.
 
 AZ/RU kredit məlumatları bank üçün 36 ayadək müddəti, motosikletlər üzrə
 bank/daxili ödəniş sənədlərinin fərqini və daxili ödənişin yekun məbləğini
@@ -39,9 +38,10 @@ Pixel-i və mövcud hadisələri söndürmür.
 
 `scripts/apply_configurator_improvements.mjs` son mərhələdə yerli qiymət və
 şəkil düzəlişləri tətbiq edilmiş kataloqu modelə görə bölür. İlkin JavaScript
-yalnız 48 modelin əsas məlumatlarını saxlayır; aksesuarlar seçilən model üçün
+yalnız 49 modelin əsas məlumatlarını saxlayır; aksesuarlar seçilən model üçün
 məzmuna əsaslanan, keşlənən JSON URL-dən yüklənir. 500SR ayrıca modeldir;
-VOOM üçün aksesuar uyğunluğu ona avtomatik köçürülmür.
+VOOM üçün aksesuar uyğunluğu ona avtomatik köçürülmür. ZEEHO EZ4 də ayrıca,
+sıfır-aksesuar sorğu modeli kimi göstərilir; təsdiqlənməmiş SKU ona qoşulmur.
 
 Seçimlər bu brauzerdə 90 günə qədər qaralama kimi saxlanır. URL-də verilən
 model, aksesuar və texnikanı cəmə daxil etmə parametrləri qaralamadan üstündür.
