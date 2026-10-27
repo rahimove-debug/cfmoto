@@ -32,6 +32,9 @@ abort "500SR model integration failed" unless system(RbConfig.ruby, model_500sr)
 zeeho_ez4 = File.join(__dir__, "apply_zeeho_ez4.rb")
 abort "ZEEHO EZ4 model integration failed" unless system(RbConfig.ruby, zeeho_ez4)
 
+campaign_800mtx = File.join(__dir__, "apply_800mtx_campaign.rb")
+abort "800MT-X campaign update failed" unless system(RbConfig.ruby, campaign_800mtx)
+
 confirmed_model_prices = File.join(__dir__, "apply_confirmed_model_prices.rb")
 abort "Confirmed model price update failed" unless system(RbConfig.ruby, confirmed_model_prices)
 

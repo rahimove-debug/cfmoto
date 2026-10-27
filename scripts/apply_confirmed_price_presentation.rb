@@ -5,6 +5,15 @@ ROOT = File.expand_path("..", __dir__)
 STYLESHEET = '<link rel="stylesheet" href="/assets/confirmed-pricing-v2.css"/>'
 
 CAMPAIGNS = {
+  "800mt-x" => {
+    model: "800MT-X",
+    list_price: "19,900 AZN",
+    campaign_price: "17,900 AZN",
+    copy: {
+      az: {label: "Nağd kampaniya qiyməti", saving: "2,000 AZN endirim · Nebula Black · 2 ədəd · Stok bitənədək", accessible: "800MT-X: əvvəlki qiymət 19,900 AZN, nağd kampaniya qiyməti 17,900 AZN. Endirim 2,000 AZN."},
+      ru: {label: "Акционная цена наличными", saving: "Скидка 2,000 AZN · Nebula Black · 2 шт. · До окончания запасов", accessible: "800MT-X: прежняя цена 19,900 AZN, акционная цена наличными 17,900 AZN. Скидка 2,000 AZN."}
+    }
+  },
   "z10-4" => {
     model: "Z10-4",
     list_price: "49,900 AZN",
@@ -245,6 +254,7 @@ html_paths.each do |path|
 
   [
     ["Z10-4", "49,900 AZN", "47,900 AZN"],
+    ["800MT-X", "19,900 AZN", "17,900 AZN"],
     ["450CL-C BOBBER", "12,400 AZN", "10,900 AZN"]
   ].each do |model, list_price, campaign_price|
     old_menu = %(<h3>#{model}</h3><p>#{campaign_price}<!-- --> <b>↗︎</b></p>)
@@ -375,6 +385,18 @@ end
 
 # Product detail pages and search/social metadata.
 {
+  File.join(ROOT, "model", "800mt-x", "index.html") => {
+    campaign: "800mt-x", language: :az,
+    before: '<div class="product-price"><small>Nağd satış qiyməti</small><strong>17,900 AZN</strong></div>',
+    title: "CFMOTO 800MT-X — 2,000 AZN endirim, nağd qiymət 17,900 AZN",
+    description: "CFMOTO 800MT-X Nebula Black: 19,900 AZN əvəzinə 17,900 AZN nağd kampaniya qiyməti. Mövcud 2 ədəd üçün, stok bitənədək. Əlaqə: 012 570 97 66."
+  },
+  File.join(ROOT, "ru", "model", "800mt-x", "index.html") => {
+    campaign: "800mt-x", language: :ru,
+    before: '<div class="product-price"><small>Цена при оплате наличными</small><strong>17,900 AZN</strong></div>',
+    title: "CFMOTO 800MT-X — скидка 2,000 AZN, цена наличными 17,900 AZN",
+    description: "CFMOTO 800MT-X Nebula Black: акционная цена наличными 17,900 AZN вместо 19,900 AZN. В наличии 2 шт., до окончания запасов. Телефон: 012 570 97 66."
+  },
   File.join(ROOT, "model", "z10-4", "index.html") => {
     campaign: "z10-4",
     language: :az,
@@ -457,3 +479,20 @@ replace_required!(
 write_utf8(news_path, news)
 
 puts "Confirmed price presentation applied: C5 GEN⁴ positioning plus Z10-4 and 450CL-C BOBBER list/campaign pricing"
+
+# Show the 800MT-X saving where customers compare the model with alternatives.
+["motosiklet/index.html", "ru/motocikly/index.html", "model-muqayisesi/index.html", "ru/sravnenie-modeley/index.html"].each do |relative|
+  path = File.join(ROOT, relative)
+  html = read_utf8(path)
+  russian = relative.start_with?("ru/")
+  label = russian ? "Акция" : "Kampaniya"
+  html = html.gsub(%r{<(article|tr)\b[^>]*>(?:(?!</\1>).)*href="/(?:ru/)?model/800mt-x/"(?:(?!</\1>).)*</\1>}m) do |fragment|
+    next fragment if fragment.include?('<del>19,900 AZN</del>')
+    if fragment.start_with?("<tr")
+      fragment.sub('<td>17,900 AZN</td>', %(<td class="campaign-table-price"><small>#{label}</small><del>19,900 AZN</del><strong>17,900 AZN</strong></td>))
+    else
+      fragment.sub('<strong>17,900 AZN</strong>', %(<div class="category-campaign-price"><small>#{label}</small><del>19,900 AZN</del><strong>17,900 AZN</strong></div>))
+    end
+  end
+  write_utf8(path, html)
+end
