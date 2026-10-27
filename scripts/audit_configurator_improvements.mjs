@@ -33,7 +33,7 @@ assert.equal(models.find(model=>model.id==="500sr").basePriceAzn,13490);
 const ez4 = models.find(model=>model.id==="zeeho-ez4");
 assert.ok(ez4,"ZEEHO EZ4 configurator model is missing");
 assert.equal(ez4.basePriceAzn,2890);
-assert.equal(ez4.image,"/models/zeeho-ez4.webp");
+assert.equal(ez4.image,"/models/zeeho-ez4.webp?v=20261027-2");
 assert.equal(ez4.accessoryCount,0);
 assert.equal(ez4.cfLoaded,true);
 let accessoryCount=0;

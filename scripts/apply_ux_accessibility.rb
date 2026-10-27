@@ -16,6 +16,7 @@ CONFIGURATOR_ROOT = File.join(ROOT, "aksesuar-konfiquratoru")
 CONFIGURATOR_PAGE_TARGET = "page-cfmoto-godaddy-localprices-v9.js"
 CONFIGURATOR_CSS_TARGET = "cfmoto-configurator-offroad-noprice-v5.css"
 CONFIGURATOR_RUNTIME_TARGET = "238-cfmoto-offroad-partsazn-v3.js"
+EZ4_IMAGE_CACHE_VERSION = "20261027-2"
 
 def read(path)
   File.read(path, encoding: "UTF-8")
@@ -70,12 +71,13 @@ unless page.include?('id:"500sr",name:"500SR"')
   abort "Configurator 500SR VOOM model anchor not found" unless page.scan(configurator_500sr_anchor).size == 1
   page.sub!(configurator_500sr_anchor, "#{configurator_500sr},#{configurator_500sr_anchor}")
 end
-configurator_ez4 = '{id:"zeeho-ez4",name:"ZEEHO EZ4",family:"Scooter",years:"Cari model ili",basePriceAzn:2890,image:"/models/zeeho-ez4.webp",localUrl:"https://cfmoto.az/model/zeeho-ez4"}'
+configurator_ez4 = %({id:"zeeho-ez4",name:"ZEEHO EZ4",family:"Scooter",years:"Cari model ili",basePriceAzn:2890,image:"/models/zeeho-ez4.webp?v=#{EZ4_IMAGE_CACHE_VERSION}",localUrl:"https://cfmoto.az/model/zeeho-ez4"})
 unless page.include?('id:"zeeho-ez4",name:"ZEEHO EZ4"')
   configurator_ez4_anchor = '{id:"aura-150",name:"AURA 150",family:"Scooter",years:"Cari model ili",basePriceAzn:5590,image:"/models/aura-150.webp",localUrl:"https://cfmoto.az/model/aura-150"}'
   abort "Configurator AURA 150 model anchor not found" unless page.scan(configurator_ez4_anchor).size == 1
   page.sub!(configurator_ez4_anchor, "#{configurator_ez4_anchor},#{configurator_ez4}")
 end
+page.gsub!(%r{/models/zeeho-ez4\.webp(?:\?v=[A-Za-z0-9._-]+)?}, "/models/zeeho-ez4.webp?v=#{EZ4_IMAGE_CACHE_VERSION}")
 unless page.include?('"aura-150","zeeho-ez4","papio-xo"')
   configurator_ez4_order_anchor = '"aura-150","papio-xo"'
   abort "Configurator EZ4 order anchor not found" unless page.scan(configurator_ez4_order_anchor).size == 1

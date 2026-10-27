@@ -66,6 +66,7 @@ HOME_BUNDLE_SOURCES = [OLD_HOME_BUNDLE, PREVIOUS_HOME_BUNDLE, CURRENT_HOME_BUNDL
 MENU_BUNDLE_SOURCES = [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDLE, CURRENT_V3_MENU_BUNDLE, CURRENT_V4_MENU_BUNDLE, CURRENT_V5_MENU_BUNDLE, CURRENT_V6_MENU_BUNDLE, CURRENT_V7_MENU_BUNDLE, CURRENT_V8_MENU_BUNDLE, CURRENT_V9_MENU_BUNDLE].freeze
 
 CLEAN_IMAGE_SLUGS = %w[1000mt-x 750sr-s cforce-c4 cforce1000-touring].freeze
+EZ4_IMAGE_SOURCE = "/models/zeeho-ez4.webp?v=20261027-2"
 PRODUCT_BADGE_HTML = '<span class="product-badge">Yeni</span>'
 PRODUCT_BADGE_RSC_UNSET = %q{\"className\":\"product-image-wrap\",\"children\":[\"$undefined\",[}
 PRODUCT_BADGE_RSC_NEW = %q{\"className\":\"product-image-wrap\",\"children\":[[\"$\",\"span\",null,{\"className\":\"product-badge\",\"children\":\"Yeni\"}],[}
@@ -273,6 +274,12 @@ end
 def localize_primary_model_image!(content, slug)
   source = content[/<img\s+class="model-color-image"\s+src="([^"]+)"/, 1]
   return unless source
+
+  if slug == "zeeho-ez4" && source == EZ4_IMAGE_SOURCE
+    asset_path = source.sub(/\?.*\z/, "")
+    abort "Missing ZEEHO EZ4 image" unless File.file?(File.join(ROOT, asset_path.delete_prefix("/")))
+    return
+  end
 
   # Preserve verified color-specific heroes on repeat builds. Generic catalog
   # images must not overwrite the exact paint option shown by the selector.
@@ -1222,6 +1229,7 @@ checks = {
     slug = File.basename(File.dirname(path))
     html = read_utf8(path)
     source = primary_model_image_source(slug)
+    source = EZ4_IMAGE_SOURCE if slug == "zeeho-ez4"
     if slug == "aura-150" && html.include?('<img class="model-color-image" src="/models/aura-150-ivory-white-official-v1.png"')
       source = "/models/aura-150-ivory-white-official-v1.png"
     end
@@ -1231,7 +1239,7 @@ checks = {
     html.include?(%(<img class="model-color-image" src="#{source}")) &&
       html.include?(%(<link rel="preload" as="image" href="#{source}"))
   end,
-  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 54 && home.scan(%r{class="model-card"}).size == 49 && home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten.uniq.size == 49 && home.scan(%r{src="/models/cards/[^"]+\.webp"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
+  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 54 && home.scan(%r{class="model-card"}).size == 49 && home.scan(%r{src="(/models/cards/[^"]+\.webp)(?:\?v=[A-Za-z0-9._-]+)?"}).flatten.uniq.size == 49 && home.scan(%r{src="/models/cards/[^"]+\.webp(?:\?v=[A-Za-z0-9._-]+)?"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
   "clean model images replace red-label originals" => CLEAN_IMAGE_SLUGS.all? do |slug|
     primary = primary_model_image_source(slug)
     card = card_model_image_source(slug)

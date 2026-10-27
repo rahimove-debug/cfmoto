@@ -24,6 +24,7 @@ MIN_INFORMATIONAL_MAIN_WORDS = 220
 
 def expected_primary_model_image(slug)
   return "/models/cflite-250nk-zephyr-blue-v1.webp" if slug == "250nk"
+  return "/models/zeeho-ez4.webp?v=20261027-2" if slug == "zeeho-ez4"
 
   suffix = CLEAN_IMAGE_SLUGS.include?(slug) ? "-clean" : ""
   "/models/#{slug}#{suffix}.webp"
@@ -403,7 +404,7 @@ end
 
 card_images = Dir.glob(File.join(ROOT, "models", "cards", "*.webp"))
 errors << "Expected 49 base, 4 clean, and 1 cache-versioned optimized model card images, found #{card_images.size}" unless card_images.size == 54
-homepage_card_sources = home.scan(%r{src="(/models/cards/[^"]+\.webp)"}).flatten
+homepage_card_sources = home.scan(%r{src="(/models/cards/[^"]+\.webp)(?:\?v=[A-Za-z0-9._-]+)?"}).flatten
 errors << "Homepage must use all 49 optimized model card images" unless homepage_card_sources.uniq.size == 49
 homepage_card_sources.uniq.each do |source|
   errors << "Homepage card image is missing: #{source}" unless File.file?(File.join(ROOT, source.delete_prefix("/")))

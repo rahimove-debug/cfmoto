@@ -14,6 +14,14 @@ MODEL_URL = "https://cfmoto.az/model/#{SLUG}/"
 RU_MODEL_URL = "https://cfmoto.az/ru/model/#{SLUG}/"
 OFFICIAL_URL = "https://www.zeehoev.com/global/products/ez/ez4.html"
 WHATSAPP_URL = "https://wa.me/994512332484?text=#{CGI.escape('Salam, ZEEHO EZ4 elektrik skuteri haqqında məlumat və satış təklifi almaq istəyirəm.')}"
+IMAGE_CACHE_VERSION = "20261027-2"
+EZ4_PUBLIC_IMAGES = %w[
+  /models/zeeho-ez4.webp
+  /models/cards/zeeho-ez4.webp
+  /gallery/zeeho-ez4-ergonomics.webp
+  /gallery/zeeho-ez4-practicality.webp
+  /gallery/zeeho-ez4-storage.webp
+].freeze
 
 def read(path)
   File.read(path, encoding: "UTF-8")
@@ -24,6 +32,14 @@ def write(path, content)
   File.write(path, content, encoding: "UTF-8")
 end
 
+def version_ez4_images!(content)
+  content = content.dup
+  EZ4_PUBLIC_IMAGES.each do |source|
+    content.gsub!(%r{#{Regexp.escape(source)}(?:\?v=[A-Za-z0-9._-]+)?}, "#{source}?v=#{IMAGE_CACHE_VERSION}")
+  end
+  content
+end
+
 def add_ez4_mega_item!(html)
   html.gsub!("30<!-- --> model", "31<!-- --> model")
   html.gsub!("30 model", "31 model")
@@ -32,7 +48,7 @@ def add_ez4_mega_item!(html)
     html.sub!(existing) do |item|
       item.sub(%r{<p>.*?<!-- --> <b>}m, '<p>2,890 AZN<!-- --> <b>')
     end
-    return html
+    return version_ez4_images!(html)
   end
 
   anchor = %r{<a href="/model/aura-150/" class="mega-model" role="menuitem">.*?</a>}m
@@ -41,7 +57,7 @@ def add_ez4_mega_item!(html)
     <a href="/model/zeeho-ez4/" class="mega-model" role="menuitem"><div><img src="/models/cards/zeeho-ez4.webp" alt="ZEEHO EZ4 rəsmi foto" loading="lazy" decoding="async" fetchpriority="low"/><em>Yeni</em></div><span>Scooter<!-- --> · <!-- -->Elektrik</span><h3>ZEEHO EZ4</h3><p>2,890 AZN<!-- --> <b>↗︎</b></p></a>
   HTML
   html.sub!(anchor) { |match| "#{match}#{item}" }
-  html
+  version_ez4_images!(html)
 end
 
 def add_ez4_home_card!(home)
@@ -52,7 +68,7 @@ def add_ez4_home_card!(home)
     home.sub!(existing) do |card|
       card.sub(%r{<div class="model-price">.*?</div>}m, '<div class="model-price"><small>Qiymət</small><strong>2,890 AZN</strong></div>')
     end
-    return home
+    return version_ez4_images!(home)
   end
 
   anchor = %r{<article class="model-card"><a href="/model/aura-150/" class="model-visual".*?</article>}m
@@ -61,23 +77,25 @@ def add_ez4_home_card!(home)
     <article class="model-card"><a href="/model/zeeho-ez4/" class="model-visual" aria-label="ZEEHO EZ4 modelinə bax"><img src="/models/cards/zeeho-ez4.webp" alt="ZEEHO EZ4 rəsmi model fotosu" loading="lazy" decoding="async" fetchpriority="low"/><span class="badge">Yeni</span><span class="model-type">Scooter</span></a><div class="model-info"><div><h3>ZEEHO EZ4</h3><p>Motosiklet<!-- --> · <!-- -->Elektrik</p></div><div class="model-price"><small>Qiymət</small><strong>2,890 AZN</strong></div></div><a href="/model/zeeho-ez4/" class="card-link">Modeli kəşf et <span>↗︎</span></a></article>
   HTML
   home.sub!(anchor) { |match| "#{match}#{card}" }
-  home
+  version_ez4_images!(home)
 end
 
 def patch_model_bundle!(javascript, path)
   existing = %r{\{slug:`zeeho-ez4`,[^{}]+\}}
   if javascript.match?(existing)
     javascript.sub!(existing) do |entry|
-      entry.sub(/price:\d+/, "price:2890").sub(/financeEligible:(?:true|false)/, "financeEligible:true")
+      entry.sub(/price:\d+/, "price:2890")
+        .sub(/image:`[^`]+`/, "image:`/models/zeeho-ez4.webp?v=#{IMAGE_CACHE_VERSION}`")
+        .sub(/financeEligible:(?:true|false)/, "financeEligible:true")
     end
-    return javascript
+    return version_ez4_images!(javascript)
   end
 
   anchor = javascript[%r{\{slug:`aura-150`,[^{}]+\}}]
   abort "#{File.basename(path)}: AURA 150 data anchor not found" unless anchor
   entry = '{slug:`zeeho-ez4`,name:`ZEEHO EZ4`,type:`Motosiklet`,segment:`Scooter`,engineClass:`Elektrik`,price:2890,image:`/models/zeeho-ez4.webp`,officialPage:`https://www.zeehoev.com/global/products/ez/ez4.html`,badge:`Yeni`,financeEligible:true}'
   javascript.sub!(anchor, "#{anchor},#{entry}")
-  javascript
+  version_ez4_images!(javascript)
 end
 
 def exclude_ez4_from_home_finance!(javascript, path)
@@ -151,7 +169,7 @@ def custom_page(template)
     ]
   }
 
-  <<~HTML
+  html = <<~HTML
     <!DOCTYPE html><html lang="az"><head>#{tracking_head(template)}
     <meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="preload" href="/cfmoto-logo-black.png" as="image"/><link rel="preload" as="image" href="/models/zeeho-ez4.webp" fetchpriority="high"/>
@@ -176,6 +194,7 @@ def custom_page(template)
     <section class="product-cta section"><div><p class="eyebrow"><span></span> CFMOTO Azerbaijan</p><h2>EZ4 üçün fərdi təklif al.</h2><p>Rəng, komplektasiya, mövcudluq və çatdırılma vaxtını satış komandamızla dəqiqləşdirin.</p></div><a class="button primary" href="#{WHATSAPP_URL}" target="_blank" rel="noreferrer">WhatsApp-la əlaqə <span>↗︎</span></a></section>
     #{footer}<div class="model-mobile-cta ez4-mobile-cta"><a href="/aksesuar-konfiquratoru/?model=zeeho-ez4&amp;bike=0&amp;lock=1">Aksesuar sorğusu</a><a href="#odenis">Aylıq ödəniş</a></div><a class="whatsapp model-whatsapp" href="#{WHATSAPP_URL}" target="_blank" rel="noreferrer" aria-label="WhatsApp ilə əlaqə">WA</a><script defer src="/assets/ez4-finance-v1.js"></script></main></body></html>
   HTML
+  version_ez4_images!(html)
 end
 
 required_images = %w[
@@ -187,6 +206,10 @@ required_images = %w[
 ]
 missing = required_images.reject { |path| File.file?(File.join(ROOT, path)) }
 abort "Missing ZEEHO EZ4 images: #{missing.join(', ')}" unless missing.empty?
+
+style_path = File.join(ASSETS, "zeeho-ez4-model-v1.css")
+abort "Missing ZEEHO EZ4 stylesheet" unless File.file?(style_path)
+write(style_path, version_ez4_images!(read(style_path)))
 
 template_path = File.join(ROOT, "model", "aura-150", "index.html")
 abort "AURA 150 template not found" unless File.file?(template_path)

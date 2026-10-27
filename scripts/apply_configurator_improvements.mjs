@@ -39,7 +39,7 @@ const srIndex = catalog.findIndex(model => model.id === "500sr");
 const ez4 = catalog.find(model => model.id === "zeeho-ez4");
 assert(catalog.length === 49 && srIndex >= 0 && catalog[srIndex+1].id === "500sr-voom", "49-model catalog must include 500SR directly before VOOM");
 assert(catalog[srIndex].basePriceAzn === 13490, "500SR retail price changed");
-assert(ez4 && ez4.basePriceAzn === 2890 && ez4.image === "/models/zeeho-ez4.webp", "ZEEHO EZ4 enquiry-only catalog entry changed");
+assert(ez4 && ez4.basePriceAzn === 2890 && ez4.image === "/models/zeeho-ez4.webp?v=20261027-2", "ZEEHO EZ4 enquiry-only catalog entry changed");
 assert(ez4.accessories.length === 0, "ZEEHO EZ4 must not invent accessories");
 
 // 2. Replace the old conversion claims in HTML, RSC and the interactive component.

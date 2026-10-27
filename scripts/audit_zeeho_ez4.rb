@@ -7,6 +7,14 @@ ROOT = File.expand_path("..", __dir__)
 SLUG = "zeeho-ez4"
 AZ_URL = "https://cfmoto.az/model/#{SLUG}/"
 RU_URL = "https://cfmoto.az/ru/model/#{SLUG}/"
+IMAGE_CACHE_VERSION = "20261027-2"
+VERSIONED_MODEL_IMAGES = %w[
+  /models/zeeho-ez4.webp
+  /models/cards/zeeho-ez4.webp
+  /gallery/zeeho-ez4-ergonomics.webp
+  /gallery/zeeho-ez4-practicality.webp
+  /gallery/zeeho-ez4-storage.webp
+].map { |url| "#{url}?v=#{IMAGE_CACHE_VERSION}" }.freeze
 errors = []
 
 def read(path)
@@ -64,6 +72,9 @@ pages.each do |locale, (path, language, canonical)|
   accessory_link = '/aksesuar-konfiquratoru/?model=zeeho-ez4&amp;bike=0&amp;lock=1'
   errors << "#{locale}: accessory enquiry deep link is missing" unless html.scan(accessory_link).size >= 2
   errors << "#{locale}: accessory enquiry CTA is missing" unless html.include?('accessory-model-cta') && html.include?('/assets/accessory-entry-v1.css')
+  VERSIONED_MODEL_IMAGES.each do |image_url|
+    errors << "#{locale}: cache-versioned EZ4 image is missing: #{image_url}" unless html.include?(image_url)
+  end
   errors << "#{locale}: a remote ZEEHO image is hotlinked" if html.match?(%r{<img[^>]+src="https?://[^"]*zeehoev\.com}i)
   errors << "#{locale}: a Pro/Max-only hero or dashboard asset is present" if html.match?(/ez4-(?:hero|dashboard)/i)
 
@@ -122,6 +133,7 @@ end
   errors << "#{label}: expected 49 model cards" unless html.scan('class="model-card"').size == 49
   errors << "#{label}: EZ4 home card must appear exactly once" unless html.scan(%r{<article class="model-card">(?:(?!</article>).)*href="/(?:ru/)?model/zeeho-ez4/"(?:(?!</article>).)*</article>}m).size == 1
   errors << "#{label}: EZ4 mega-menu link must appear exactly once" unless html.scan(%r{<a href="/(?:ru/)?model/zeeho-ez4/" class="mega-model"}).size == 1
+  errors << "#{label}: cache-versioned EZ4 card image is missing" unless html.include?("/models/cards/zeeho-ez4.webp?v=#{IMAGE_CACHE_VERSION}")
 end
 
 {
@@ -132,6 +144,7 @@ end
 
   html = read(path)
   errors << "#{label}: EZ4 category card must appear exactly once" unless html.scan(%r{<article class="category-model-card">(?:(?!</article>).)*href="/(?:ru/)?model/zeeho-ez4/"(?:(?!</article>).)*</article>}m).size == 1
+  errors << "#{label}: cache-versioned EZ4 category image is missing" unless html.include?("/models/cards/zeeho-ez4.webp?v=#{IMAGE_CACHE_VERSION}")
 end
 
 {
@@ -165,7 +178,16 @@ ru_menu = menu_bundles.select { |path| File.basename(path).include?("Russian") }
     errors << "#{label}: malformed EZ4 record in #{File.basename(path)}" unless record
     next unless record
     errors << "#{label}: EZ4 price/finance state is wrong in #{File.basename(path)}" unless record.include?("price:2890") && record.include?("financeEligible:true")
+    errors << "#{label}: EZ4 image is not cache-versioned in #{File.basename(path)}" unless record.include?("image:`/models/zeeho-ez4.webp?v=#{IMAGE_CACHE_VERSION}`")
   end
+end
+
+style_path = File.join(ROOT, "assets", "zeeho-ez4-model-v1.css")
+if File.file?(style_path)
+  style = read(style_path)
+  errors << "EZ4 banner image is not cache-versioned" unless style.include?("/gallery/zeeho-ez4-ergonomics.webp?v=#{IMAGE_CACHE_VERSION}")
+else
+  errors << "EZ4 stylesheet is missing"
 end
 
 finance_bundles = Dir.glob(File.join(ROOT, "assets", "page-*.js"))

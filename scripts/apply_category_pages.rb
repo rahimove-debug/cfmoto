@@ -14,6 +14,8 @@ SALES_WHATSAPP = "994512332484"
 CLEAN_CARD_IMAGE_SLUGS = %w[1000mt-x 750sr-s cforce-c4 cforce1000-touring].freeze
 
 def category_card_image_source(slug)
+  return "/models/cards/zeeho-ez4.webp?v=20261027-2" if slug == "zeeho-ez4"
+
   suffix = CLEAN_CARD_IMAGE_SLUGS.include?(slug) ? "-clean" : ""
   "/models/cards/#{slug}#{suffix}.webp"
 end
