@@ -21,6 +21,7 @@ TRAILING_ADDONS = %w[
   unified-navigation-v1.css
   confirmed-pricing-v2.css
   sales-improvements-v1.css
+  mobile-home-sales-v1.css
 ].freeze
 
 PAGES = {

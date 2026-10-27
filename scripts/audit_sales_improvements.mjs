@@ -31,8 +31,34 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   assert.equal(descendants(fullLinks, node => node.tag === 'a').length, 3);
   const categoryPaths = locale === 'az' ? ['/motosiklet/', '/kvadrosikl/', '/buggy/'] : ['/ru/motocikly/', '/ru/kvadrocikly/', '/ru/buggy/'];
   const hero = descendants(tree, node => hasClass(node, 'category-hero'))[0];
+  const topAnchor = descendants(tree, node => hasClass(node, 'home-top-anchor'))[0];
+  assert.equal(topAnchor.props.id, 'top');
+  assert.equal(hero.props.id, undefined, `${locale} desktop hero no longer owns the shared anchor`);
   const heroLinks = descendants(hero, node => node.tag === 'a' && hasClass(node, 'primary'));
   assert.deepEqual(heroLinks.map(link => link.props.href), categoryPaths, `${locale} hero opens full categories`);
+  const mobileEntry = descendants(tree, node => hasClass(node, 'home-mobile-entry'))[0];
+  assert(mobileEntry, `${locale} mobile sales entry`);
+  const mobileTitle = descendants(mobileEntry, node => hasClass(node, 'home-mobile-title'))[0];
+  assert.equal(mobileTitle.props.role, 'heading');
+  assert.equal(mobileTitle.props['aria-level'], 1);
+  assert.equal(descendants(tree, node => node.tag === 'h1').length, 1, `${locale} keeps one semantic h1`);
+  const mobilePrimary = descendants(mobileEntry, node => hasClass(node, 'home-mobile-primary'))[0];
+  assert.equal(mobilePrimary.props.href, '#modeller');
+  const mobileWhatsapp = descendants(mobileEntry, node => hasClass(node, 'home-mobile-whatsapp'))[0];
+  assert(mobileWhatsapp.props.href.startsWith('https://wa.me/994512332484?text='));
+  assert.equal(mobileWhatsapp.props['data-contact-area'], 'sales');
+  const mobileCategories = descendants(mobileEntry, node => hasClass(node, 'home-mobile-categories'))[0];
+  assert.deepEqual(descendants(mobileCategories, node => node.tag === 'a').map(link => link.props.href), categoryPaths, `${locale} mobile categories open full catalogues`);
+  const campaignModel = models.find(model => model.slug === '800mt-x');
+  const mobileCampaign = descendants(mobileEntry, node => hasClass(node, 'home-mobile-campaign'))[0];
+  assert.equal(mobileCampaign.props.href, locale === 'az' ? '/model/800mt-x/' : '/ru/model/800mt-x/');
+  assert(text(mobileCampaign).includes(new Intl.NumberFormat('en-US').format(campaignModel.price)), `${locale} mobile campaign price follows catalogue`);
+  const taskbar = descendants(tree, node => hasClass(node, 'home-mobile-taskbar'))[0];
+  assert(taskbar, `${locale} mobile taskbar`);
+  assert.deepEqual(descendants(taskbar, node => node.tag === 'a').map(link => link.props.href).slice(0, 2), ['#modeller', '#kredit-kalkulyator']);
+  const taskWhatsapp = descendants(taskbar, node => node.tag === 'a').at(-1);
+  assert(taskWhatsapp.props.href.startsWith('https://wa.me/994512332484?text='));
+  assert.equal(taskWhatsapp.props['data-contact-area'], 'sales');
   // Selecting a category must not silently omit its ninth (or thirtieth) model.
   for (const category of [...new Set(models.map(model => model.type))]) {
     const filtered = homeModule(assets, files.page, files.menu, [false, 'moto', category]).tree;
@@ -149,6 +175,10 @@ assert(service.includes("contact_area:declaredArea||(serviceContact?'service':'s
 const css = read(path.join(assets, 'sales-improvements-v1.css'));
 assert(css.includes('.product-copy .hero-actions .button.primary'));
 assert(css.includes('.product-copy .hero-actions .accessory-model-cta'));
+const mobileCss = read(path.join(assets, 'mobile-home-sales-v1.css'));
+assert(mobileCss.includes('.home-mobile-entry'));
+assert(mobileCss.includes('url("/gallery/800mt-x-1.webp")'));
+assert(mobileCss.includes('.whatsapp'));
 const standaloneFinance = fs.readdirSync(assets).find(name => /^500sr-finance-v1-sales-[a-f0-9]{12}\.js$/.test(name));
 assert(standaloneFinance, 'Fingerprint for 500SR finance module');
 const standaloneFinanceSource = read(path.join(assets, standaloneFinance));

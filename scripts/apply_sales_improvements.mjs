@@ -84,6 +84,17 @@ const locales = {
     oldHomeNote: 'Daxili ödəniş faizləri: 6 ay 8%, 12 ay 15%, 18 ay 23%. Faiz ilkin ödənişdən sonra qalan borca tətbiq olunur.',
     bankNote: 'Bank hesablamasında daxili ödənişlə eyni faiz cədvəli qalıq borca tətbiq olunur: 6 ayadək 8%, 12 ayadək 15%, 12 aydan çox 23%. Bank komissiyası daxil deyil; yekun təsdiq bank tərəfindən verilir.',
     creditRoute: 'kredit/index.html', creditHeading: 'Alış üçün tələb olunan məlumatlar', internalHeading: 'Daxili hissəli ödəniş', bankHeading: 'Bank krediti',
+    mobile: {
+      aria: 'CFMOTO mobil giriş', eyebrow: 'RƏSMİ CFMOTO AZƏRBAYCAN',
+      title: 'Sənə uyğun CFMOTO-nu tap.',
+      summary: 'Motosiklet, ATV və Buggy modelləri — qiymətlər və kredit imkanları.',
+      primary: 'Modellərə və qiymətlərə bax', whatsapp: 'WhatsApp-da təklif al',
+      whatsappText: 'Salam, CFMOTO modeli ilə maraqlanıram.',
+      categoriesLabel: 'Məhsul kateqoriyaları',
+      categories: [['Motosiklet', '/motosiklet/'], ['ATV', '/kvadrosikl/'], ['Buggy', '/buggy/']],
+      campaign: 'KAMPANİYA', featured: 'SEÇİLMİŞ MODEL', campaignPath: '/model/800mt-x/',
+      taskbarLabel: 'Sürətli keçidlər', models: 'Modellər', credit: 'Kredit', taskWhatsapp: 'WhatsApp',
+    },
   },
   ru: {
     home: 'ru/index.html', page: 'page-CfmotoRussianV7.js', menu: 'ProductMegaMenu-CfmotoRussianV7.js', finance: 'ModelFinance-CfmotoRussianV7.js',
@@ -102,6 +113,17 @@ const locales = {
     oldHomeNote: 'Проценты по рассрочке: 6 месяцев — 8%, 12 месяцев — 15%, 18 месяцев — 23%. Проценты начисляются на остаток после первоначального взноса.',
     bankNote: 'При банковском расчёте к остатку долга применяется та же шкала процентов, что и для рассрочки: до 6 месяцев — 8%, до 12 месяцев — 15%, свыше 12 месяцев — 23%. Банковская комиссия не включена; окончательное решение принимает банк.',
     creditRoute: 'ru/kredit/index.html', creditHeading: 'Что нужно для покупки', internalHeading: 'Внутренняя рассрочка', bankHeading: 'Банковский кредит',
+    mobile: {
+      aria: 'Мобильная главная CFMOTO', eyebrow: 'ОФИЦИАЛЬНЫЙ CFMOTO АЗЕРБАЙДЖАН',
+      title: 'Найдите свой CFMOTO.',
+      summary: 'Мотоциклы, квадроциклы и багги — цены и варианты финансирования.',
+      primary: 'Смотреть модели и цены', whatsapp: 'Получить предложение в WhatsApp',
+      whatsappText: 'Здравствуйте! Меня интересует модель CFMOTO.',
+      categoriesLabel: 'Категории техники',
+      categories: [['Мотоциклы', '/ru/motocikly/'], ['Квадроциклы', '/ru/kvadrocikly/'], ['Багги', '/ru/buggy/']],
+      campaign: 'АКЦИЯ', featured: 'ВЫБРАННАЯ МОДЕЛЬ', campaignPath: '/ru/model/800mt-x/',
+      taskbarLabel: 'Быстрые действия', models: 'Модели', credit: 'Кредит', taskWhatsapp: 'WhatsApp',
+    },
   },
 };
 
@@ -113,6 +135,14 @@ function bankTerm(text) {
     .replaceAll('max="35"', 'max="36"').replaceAll('data-bank-term-value>35<', 'data-bank-term-value>36<')
     .replaceAll('data-bank-term type="range" min="3" max="36" step="1" value="35"', 'data-bank-term type="range" min="3" max="36" step="1" value="36"')
     .replaceAll('Bütün modellər', 'Seçilmiş modellər').replaceAll('Все модели', 'Избранные модели');
+}
+
+function mobileHomepageEntry(copy) {
+  const mobile = copy.mobile;
+  const whatsapp = `https://wa.me/994512332484?text=${encodeURIComponent(mobile.whatsappText)}`;
+  const campaignModel = 'a.find(model=>model.slug===`800mt-x`)';
+  const categoryLinks = mobile.categories.map(([label, href]) => `(0,c.jsx)(\`a\`,{href:\`${href}\`,children:\`${label}\`})`).join(',');
+  return `(0,c.jsxs)(\`section\`,{className:\`home-mobile-entry\`,"aria-label":\`${mobile.aria}\`,children:[(0,c.jsx)(\`div\`,{className:\`home-mobile-visual\`,children:(0,c.jsxs)(\`div\`,{className:\`home-mobile-copy\`,children:[(0,c.jsx)(\`p\`,{className:\`home-mobile-eyebrow\`,children:\`${mobile.eyebrow}\`}),(0,c.jsx)(\`p\`,{className:\`home-mobile-title\`,role:\`heading\`,"aria-level":1,children:\`${mobile.title}\`}),(0,c.jsx)(\`p\`,{className:\`home-mobile-summary\`,children:\`${mobile.summary}\`}),(0,c.jsxs)(\`a\`,{className:\`button primary home-mobile-primary\`,href:\`#modeller\`,children:[\`${mobile.primary} \`,(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`↗︎\`})]}),(0,c.jsxs)(\`a\`,{className:\`home-mobile-whatsapp\`,href:\`${whatsapp}\`,target:\`_blank\`,rel:\`noreferrer\`,"data-contact-area":\`sales\`,children:[\`${mobile.whatsapp} \`,(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`→\`})]})]})}),(0,c.jsxs)(\`nav\`,{className:\`home-mobile-categories\`,"aria-label":\`${mobile.categoriesLabel}\`,children:[${categoryLinks}]}),(0,c.jsxs)(\`a\`,{className:\`home-mobile-campaign\`,href:\`${mobile.campaignPath}\`,children:[(0,c.jsxs)(\`span\`,{children:[(0,c.jsx)(\`small\`,{children:${campaignModel}?.listPrice?\`${mobile.campaign}\`:\`${mobile.featured}\`}),(0,c.jsxs)(\`strong\`,{children:[${campaignModel}?.name??\`800MT-X\`,\` · \`,o(${campaignModel}?.price??0),\` AZN\`]})]}),(0,c.jsx)(\`b\`,{"aria-hidden":\`true\`,children:\`↗︎\`})]})]}),(0,c.jsxs)(\`nav\`,{className:\`home-mobile-taskbar\`,"aria-label":\`${mobile.taskbarLabel}\`,children:[(0,c.jsxs)(\`a\`,{href:\`#modeller\`,children:[(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`▦\`}),(0,c.jsx)(\`strong\`,{children:\`${mobile.models}\`})]}),(0,c.jsxs)(\`a\`,{href:\`#kredit-kalkulyator\`,children:[(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`₼\`}),(0,c.jsx)(\`strong\`,{children:\`${mobile.credit}\`})]}),(0,c.jsxs)(\`a\`,{href:\`${whatsapp}\`,target:\`_blank\`,rel:\`noreferrer\`,"data-contact-area":\`sales\`,children:[(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`WA\`}),(0,c.jsx)(\`strong\`,{children:\`${mobile.taskWhatsapp}\`})]})]})`;
 }
 for (const file of walk(dist).filter(file => /\.(html|js|txt)$/.test(file))) {
   const original = read(file), updated = bankTerm(original);
@@ -164,6 +194,10 @@ for (const [language, copy] of Object.entries(locales)) {
   const homeNote = /\(0,c\.jsx\)\(`small`,\{className:`calc-note`,children:_===`[^`]+`\?`[^`]+`:`[^`]+`\}\)/;
   assert(homeNote.test(page), `${language} home finance note not found`);
   page = page.replace(homeNote, `(0,c.jsx)(\`small\`,{className:\`calc-note\`,children:(_===\`${copy.bankMode}\`?\`${copy.bankNote}\`:\`${copy.oldHomeNote}\`)+(T.type===\`${copy.motorcycle}\`?\` \`+(_===\`${copy.bankMode}\`?\`${copy.bankEligibility}\`:\`${copy.internalEligibility}\`):\`\`)})`);
+  const heroSection = '(0,c.jsxs)(`section`,{className:`category-hero`,id:`top`';
+  const desktopHero = '(0,c.jsxs)(`section`,{className:`category-hero`';
+  const topAnchor = '(0,c.jsx)(`span`,{className:`home-top-anchor`,id:`top`,"aria-hidden":`true`})';
+  page = replace(page, heroSection, `${topAnchor},${mobileHomepageEntry(copy)},${desktopHero}`, `${language} mobile sales entry`);
   write(pageFile, page);
 
   const { tree, models } = homeModule(assets, copy.page, copy.menu);
@@ -264,9 +298,13 @@ for (const name of moduleFiles) write(path.join(assets, names[name]), rewriteRef
 // Open tabs from the previous deployment may still request old module URLs.
 // Preserve those originals; all new HTML uses the fingerprinted graph above.
 for (const [name, content] of Object.entries(originalModules)) write(path.join(assets, name), content);
+const homepageFiles = new Set(Object.values(locales).map(copy => path.join(dist, copy.home)));
 for (const file of walk(dist).filter(file => /\.(html|txt)$/.test(file))) {
   let content = rewriteReferences(read(file));
-  if (file.endsWith('.html')) content = content.replace('</head>', '<link rel="stylesheet" href="/assets/sales-improvements-v1.css"/></head>');
+  if (file.endsWith('.html')) {
+    const mobileStylesheet = homepageFiles.has(file) ? '<link rel="stylesheet" href="/assets/mobile-home-sales-v1.css"/>' : '';
+    content = content.replace('</head>', `<link rel="stylesheet" href="/assets/sales-improvements-v1.css"/>${mobileStylesheet}</head>`);
+  }
   write(file, content);
 }
 write(path.join(dist, 'sales-build.json'), JSON.stringify({ revision, featured, bankMaxMonths: 36, price150SC: 5490, locales: Object.fromEntries(Object.entries(locales).map(([language, copy]) => [language, { home: copy.home, page: names[copy.page], menu: names[copy.menu], finance: names[copy.finance] }])) }, null, 2));
