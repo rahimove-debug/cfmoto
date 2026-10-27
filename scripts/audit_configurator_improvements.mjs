@@ -74,6 +74,10 @@ assert.ok(html.includes(path.basename(report.bundle)));
 assert.ok(!html.includes("page-cfmoto-godaddy-localprices-v9"));
 assert.ok(!html.includes("accessory-model-preselect-"));
 assert.ok(!/CFMoto USA Parts|1 USD = 1\.7000|\$159\.99/.test(html+script));
+assert.ok(
+  script.includes("0===N.accessoryCount?`${N.name} üçün uyğun orijinal aksesuarları satış komandamızdan soruş"),
+  "Enquiry-only models must not invite users to select unavailable accessories"
+);
 const schemaTags = [...html.matchAll(new RegExp(`<script id="${configuratorSchemaId}" type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>`,"g"))];
 assert.equal(schemaTags.length,1,"Exactly one server-rendered configurator graph is required");
 assert.deepEqual(JSON.parse(schemaTags[0][1]),configuratorStructuredData);

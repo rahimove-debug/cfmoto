@@ -95,6 +95,11 @@ output = once(output,'className:"clear-button",onClick:()=>{E(e=>({...e,[N.id]:[
 output = once(output,'className:"quote-button",disabled:!W,onClick:()=>{T(null),U(!0)}','className:"quote-button",disabled:!W,onClick:()=>{T(null),U(!0);cfPackageEvent("begin_checkout",N,I,w)}');
 output = once(output,'className:"whatsapp-button",href:Z,target:"_blank",rel:"noreferrer",children:', 'className:"whatsapp-button",href:Z,target:"_blank",rel:"noreferrer",onClick:()=>cfPackageEvent("generate_lead",N,I,w),children:');
 output = once(output,'className:`site-shell ${i?"model-locked":""}`,children:[', 'className:`site-shell ${i?"model-locked":""}`,children:[cfLoading&&(0,o.jsx)("div",{className:"cf-model-status",role:"status",children:`${cfLoading} aksesuarları yüklənir…`}),cfLoadError&&(0,o.jsxs)("div",{className:"cf-model-status cf-model-error",role:"alert",children:["Aksesuarlar yüklənmədi. ",(0,o.jsx)("button",{type:"button",onClick:()=>ea(cfLoadError),children:"Yenidən cəhd et"})]}),');
+output = once(
+  output,
+  'children:i?`${N.name} \\xfc\\xe7\\xfcn uyğun aksesuarları se\\xe7, texnikanı yekun cəmə daxil et və konfiqurasiyanı satış komandası ilə paylaş.`:',
+  'children:i?0===N.accessoryCount?`${N.name} üçün uyğun orijinal aksesuarları satış komandamızdan soruş, model ili və komplektasiyaya görə fərdi seçim əldə et.`:`${N.name} üçün uyğun aksesuarları seç, texnikanı yekun cəmə daxil et və konfiqurasiyanı satış komandası ilə paylaş.`:'
+);
 output = once(output,'(0,o.jsxs)("p",{className:"summary-disclaimer",id:"summary-disclaimer"', `(0,o.jsxs)("div",{className:"cf-package-share",children:[(0,o.jsx)("button",{type:"button",className:"cf-share-button",onClick:async()=>{const request=++cfShareSequence.current;const shared=await cfCopyPackage(N,I,w);if(request===cfShareSequence.current)cfSetShared(shared)},children:"Paket keçidini kopyala"}),cfShared&&cfShared.url===cfPackageUrl(N,I,w)&&(0,o.jsxs)("div",{children:[(0,o.jsx)("p",{role:"status",children:cfShared.message}),(0,o.jsx)("input",{type:"text",readOnly:true,value:cfShared.url,"aria-label":"Paketin paylaşım keçidi",onFocus:event=>event.target.select()})]})]}),(0,o.jsxs)("p",{className:"summary-disclaimer",id:"summary-disclaimer"`);
 new vm.Script(output);
 const filename = `page-cfmoto-improvements-${hash(output)}.js`;
