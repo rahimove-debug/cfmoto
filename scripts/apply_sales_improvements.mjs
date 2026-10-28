@@ -11,6 +11,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 const assets = path.join(dist, 'assets');
 const featured = ['750sr-s', '450mt', '150sc', 'aura-150', 'cforce-c4', 'cforce-c5', 'z10', 'z10-4'];
+const motorcyclePriority = ['675sr-r', '750sr-s', '675nk', '800mt-x', '450sr-s'];
 const read = file => fs.readFileSync(file, 'utf8');
 const write = (file, text) => fs.writeFileSync(file, text);
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
@@ -178,7 +179,7 @@ for (const [language, copy] of Object.entries(locales)) {
   const pageFile = path.join(assets, copy.page);
   let page = read(pageFile);
   const selection = `C=(0,s.useMemo)(()=>p===\`${copy.all}\`?a:a.filter(e=>e.type===p),[p])`;
-  const selectionNew = `C=(0,s.useMemo)(()=>{const featured=${JSON.stringify(featured)},ordered=[...featured.map(slug=>a.find(model=>model.slug===slug)),...a.filter(model=>!featured.includes(model.slug))].filter(Boolean),isScooter=model=>model.segment===\`${copy.scooterSegment}\`;return p===\`${copy.all}\`?ordered.slice(0,8):p===\`${copy.scooter}\`?ordered.filter(isScooter):p===\`${copy.motorcycle}\`?ordered.filter(model=>model.type===\`${copy.motorcycle}\`&&!isScooter(model)):ordered.filter(model=>model.type===p)},[p])`;
+  const selectionNew = `C=(0,s.useMemo)(()=>{const featured=${JSON.stringify(featured)},motorcyclePriority=${JSON.stringify(motorcyclePriority)},ordered=[...featured.map(slug=>a.find(model=>model.slug===slug)),...a.filter(model=>!featured.includes(model.slug))].filter(Boolean),isScooter=model=>model.segment===\`${copy.scooterSegment}\`;if(p===\`${copy.all}\`)return ordered.slice(0,8);if(p===\`${copy.scooter}\`)return ordered.filter(isScooter);if(p===\`${copy.motorcycle}\`){const motorcycles=ordered.filter(model=>model.type===\`${copy.motorcycle}\`&&!isScooter(model));return[...motorcyclePriority.map(slug=>motorcycles.find(model=>model.slug===slug)),...motorcycles.filter(model=>!motorcyclePriority.includes(model.slug))].filter(Boolean)}return ordered.filter(model=>model.type===p)},[p])`;
   page = replace(page, selection, selectionNew, `${language} catalog selection`);
   const filterLiteral = labels => `[${labels.map(label => `\`${label}\``).join(',')}]`;
   page = replace(page, `children:${filterLiteral(copy.oldModelFilters)}.map`, `children:${filterLiteral(copy.modelFilters)}.map`, `${language} scooter filter tab`);

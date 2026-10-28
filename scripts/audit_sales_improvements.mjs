@@ -83,8 +83,15 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   assert.equal(text(selectedScooterButtons[0]), scooterLabel, `${locale} scooter filter selected state`);
   const motorcycleTree = homeModule(assets, files.page, files.menu, [false, 'moto', motorcycleLabel]).tree;
   const motorcycleSlugs = cardSlugs(motorcycleTree);
+  const motorcyclePrioritySlugs = ['675sr-r', '750sr-s', '675nk', '800mt-x', '450sr-s'];
+  assert.deepEqual(motorcycleSlugs.slice(0, motorcyclePrioritySlugs.length), motorcyclePrioritySlugs, `${locale} priority motorcycle order`);
   assert.equal(motorcycleSlugs.length, models.filter(model => model.type === motorcycleType).length - scooterSlugs.length, `${locale} motorcycle filter count`);
+  assert.equal(new Set(motorcycleSlugs).size, motorcycleSlugs.length, `${locale} motorcycle filter has no duplicates`);
   assert(scooterSlugs.every(slug => !motorcycleSlugs.includes(slug)), `${locale} scooter cards excluded from motorcycle filter`);
+  const selectedMotorcycleButtons = descendants(descendants(motorcycleTree, node => hasClass(node, 'filter-row'))[0], node => node.tag === 'button' && node.props['aria-selected']);
+  assert.equal(selectedMotorcycleButtons.length, 1, `${locale} one selected motorcycle filter`);
+  assert.equal(text(selectedMotorcycleButtons[0]), motorcycleLabel, `${locale} motorcycle filter selected state`);
+  assert.deepEqual(cardSlugs(tree), ['750sr-s', '450mt', '150sc', 'aura-150', 'cforce-c4', 'cforce-c5', 'z10', 'z10-4'], `${locale} all filter order unchanged`);
 
   // ATV and Buggy filters remain complete after the scooter split.
   for (const category of filterLabels.slice(3)) {
