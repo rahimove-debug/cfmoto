@@ -67,6 +67,25 @@ MENU_BUNDLE_SOURCES = [OLD_MENU_BUNDLE, PREVIOUS_MENU_BUNDLE, CURRENT_MENU_BUNDL
 
 CLEAN_IMAGE_SLUGS = %w[1000mt-x 750sr-s cforce-c4 cforce1000-touring].freeze
 EZ4_IMAGE_SOURCE = "/models/zeeho-ez4.webp?v=20261027-2"
+VERIFIED_PRIMARY_COLOR_IMAGES = {
+  "125nk" => "/models/125nk-gem-black-official-v1.webp",
+  "150sc" => "/models/150sc-space-silver-official-v1.webp",
+  "250cl-c" => "/models/250cl-c-nebula-black-official-v1.webp",
+  "250dual" => "/models/250dual-lime-green-official-v1.webp",
+  "300sr" => "/models/300sr-nebula-black-official-v1.webp",
+  "450sr-s" => "/models/450sr-s-gem-black-official-v1.webp",
+  "500sr-voom" => "/models/500sr-voom-zephyr-blue-official-v1.webp",
+  "675nk" => "/models/675nk-glacier-white-official-v1.webp",
+  "675sr-r" => "/models/675sr-r-nebula-white-official-v1.webp",
+  "700mt" => "/models/700mt-nebula-white-official-v1.webp",
+  "800mt-x" => "/models/800mt-x-zephyr-blue-official-v1.webp",
+  "cflite-230-dual" => "/models/cflite-230-dual-zephyr-blue-official-v1.webp",
+  "cforce-520-l" => "/models/cforce-520-l-magma-red-official-v1.webp",
+  "u10-xl-pro" => "/models/u10-xl-pro-bordeaux-red-official-v1.webp",
+  "uforce-600" => "/models/uforce-600-desert-tan-official-v1.webp",
+  "zforce-1000-sport-r" => "/models/zforce-1000-sport-r-desert-tan-official-v1.webp",
+  "zforce-950-sport-4" => "/models/zforce-950-sport-4-nebula-black-official-v1.webp"
+}.freeze
 PRODUCT_BADGE_HTML = '<span class="product-badge">Yeni</span>'
 PRODUCT_BADGE_RSC_UNSET = %q{\"className\":\"product-image-wrap\",\"children\":[\"$undefined\",[}
 PRODUCT_BADGE_RSC_NEW = %q{\"className\":\"product-image-wrap\",\"children\":[[\"$\",\"span\",null,{\"className\":\"product-badge\",\"children\":\"Yeni\"}],[}
@@ -291,6 +310,11 @@ def localize_primary_model_image!(content, slug)
 
   if slug == "450cl-c-bobber" && source == "/models/450cl-c-bobber-ivory-white-official-v1.webp"
     abort "Missing official BOBBER Ivory White image" unless File.file?(File.join(ROOT, source.delete_prefix("/")))
+    return
+  end
+
+  if source == VERIFIED_PRIMARY_COLOR_IMAGES[slug]
+    abort "#{slug}: missing verified primary color image" unless File.file?(File.join(ROOT, source.delete_prefix("/")))
     return
   end
 
