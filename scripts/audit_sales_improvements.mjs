@@ -57,8 +57,37 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   const taskWhatsapp = descendants(taskbar, node => node.tag === 'a').at(-1);
   assert(taskWhatsapp.props.href.startsWith('https://wa.me/994512332484?text='));
   assert.equal(taskWhatsapp.props['data-contact-area'], 'sales');
-  // Selecting a category must not silently omit its ninth (or thirtieth) model.
-  for (const category of [...new Set(models.map(model => model.type))]) {
+  const filterLabels = locale === 'az'
+    ? ['Hamısı', 'Motosiklet', 'Skuter', 'Kvadrosikl', 'Buggy']
+    : ['Все', 'Мотоцикл', 'Скутер', 'Квадроцикл', 'Багги'];
+  const filterRow = descendants(tree, node => hasClass(node, 'filter-row'))[0];
+  const filterButtons = descendants(filterRow, node => node.tag === 'button');
+  assert.deepEqual(filterButtons.map(text), filterLabels, `${locale} model filter order`);
+  assert.equal(filterButtons.filter(button => button.props['aria-selected']).length, 1, `${locale} one selected model filter`);
+  assert.equal(text(filterButtons.find(button => button.props['aria-selected'])), filterLabels[0], `${locale} default model filter`);
+
+  const scooterSlugs = ['150sc', 'aura-150', 'zeeho-ez4'];
+  const motorcycleType = locale === 'az' ? 'Motosiklet' : 'Мотоцикл';
+  const scooterSegment = locale === 'az' ? 'Scooter' : 'Скутер';
+  const scooterLabel = filterLabels[2];
+  const motorcycleLabel = filterLabels[1];
+  const cardSlugs = selectedTree => descendants(selectedTree, node => hasClass(node, 'model-card'))
+    .map(card => descendants(card, node => node.tag === 'a' && hasClass(node, 'model-visual'))[0].props.href.split('/').filter(Boolean).at(-1));
+  const scooterModels = models.filter(model => model.segment === scooterSegment);
+  assert.deepEqual(Array.from(scooterModels, model => model.slug).sort(), scooterSlugs.slice().sort(), `${locale} scooter catalogue membership`);
+  assert(scooterModels.every(model => model.type === motorcycleType), `${locale} scooters preserve motorcycle finance type`);
+  const scooterTree = homeModule(assets, files.page, files.menu, [false, 'moto', scooterLabel]).tree;
+  assert.deepEqual(cardSlugs(scooterTree).sort(), scooterSlugs.slice().sort(), `${locale} scooter filter cards`);
+  const selectedScooterButtons = descendants(descendants(scooterTree, node => hasClass(node, 'filter-row'))[0], node => node.tag === 'button' && node.props['aria-selected']);
+  assert.equal(selectedScooterButtons.length, 1, `${locale} one selected scooter filter`);
+  assert.equal(text(selectedScooterButtons[0]), scooterLabel, `${locale} scooter filter selected state`);
+  const motorcycleTree = homeModule(assets, files.page, files.menu, [false, 'moto', motorcycleLabel]).tree;
+  const motorcycleSlugs = cardSlugs(motorcycleTree);
+  assert.equal(motorcycleSlugs.length, models.filter(model => model.type === motorcycleType).length - scooterSlugs.length, `${locale} motorcycle filter count`);
+  assert(scooterSlugs.every(slug => !motorcycleSlugs.includes(slug)), `${locale} scooter cards excluded from motorcycle filter`);
+
+  // ATV and Buggy filters remain complete after the scooter split.
+  for (const category of filterLabels.slice(3)) {
     const filtered = homeModule(assets, files.page, files.menu, [false, 'moto', category]).tree;
     const filteredCards = descendants(filtered, node => hasClass(node, 'model-card'));
     assert.equal(filteredCards.length, models.filter(model => model.type === category).length, `${locale} complete ${category} filter`);

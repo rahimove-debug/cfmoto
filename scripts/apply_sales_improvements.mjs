@@ -69,7 +69,9 @@ function modelHeader(html, language, slug) {
 const locales = {
   az: {
     home: 'index.html', page: 'page-CfmotoHomeNewsV6.js', menu: 'ProductMegaMenu-CfmotoHomeNewsV6.js', finance: 'ModelFinance-CfmotoFinanceFixV12.js',
-    all: 'Hamısı', motorcycle: 'Motosiklet',
+    all: 'Hamısı', motorcycle: 'Motosiklet', scooter: 'Skuter', scooterSegment: 'Scooter',
+    oldModelFilters: ['Hamısı', 'Motosiklet', 'Kvadrosikl', 'Buggy'],
+    modelFilters: ['Hamısı', 'Motosiklet', 'Skuter', 'Kvadrosikl', 'Buggy'],
     oldCatalogNote: ' aktual model · Hər modelin ayrıca məlumat səhifəsi mövcuddur.',
     catalogNote: ' seçilmiş model. Tam model sırasına kateqoriyalar üzrə baxın.',
     categoryNote: ' model. Kateqoriyanın bütün modelləri göstərilir.',
@@ -98,7 +100,9 @@ const locales = {
   },
   ru: {
     home: 'ru/index.html', page: 'page-CfmotoRussianV7.js', menu: 'ProductMegaMenu-CfmotoRussianV7.js', finance: 'ModelFinance-CfmotoRussianV7.js',
-    all: 'Все', motorcycle: 'Мотоцикл',
+    all: 'Все', motorcycle: 'Мотоцикл', scooter: 'Скутер', scooterSegment: 'Скутер',
+    oldModelFilters: ['Все', 'Мотоцикл', 'Квадроцикл', 'Багги'],
+    modelFilters: ['Все', 'Мотоцикл', 'Скутер', 'Квадроцикл', 'Багги'],
     oldCatalogNote: ' актуальных моделей · У каждой модели есть отдельная страница с информацией.',
     catalogNote: ' избранных моделей. Полный модельный ряд — в разделах каталога.',
     categoryNote: ' моделей. Показаны все модели выбранной категории.',
@@ -174,8 +178,10 @@ for (const [language, copy] of Object.entries(locales)) {
   const pageFile = path.join(assets, copy.page);
   let page = read(pageFile);
   const selection = `C=(0,s.useMemo)(()=>p===\`${copy.all}\`?a:a.filter(e=>e.type===p),[p])`;
-  const selectionNew = `C=(0,s.useMemo)(()=>{const featured=${JSON.stringify(featured)},ordered=[...featured.map(slug=>a.find(model=>model.slug===slug)),...a.filter(model=>!featured.includes(model.slug))].filter(Boolean);return p===\`${copy.all}\`?ordered.slice(0,8):ordered.filter(model=>model.type===p)},[p])`;
+  const selectionNew = `C=(0,s.useMemo)(()=>{const featured=${JSON.stringify(featured)},ordered=[...featured.map(slug=>a.find(model=>model.slug===slug)),...a.filter(model=>!featured.includes(model.slug))].filter(Boolean),isScooter=model=>model.segment===\`${copy.scooterSegment}\`;return p===\`${copy.all}\`?ordered.slice(0,8):p===\`${copy.scooter}\`?ordered.filter(isScooter):p===\`${copy.motorcycle}\`?ordered.filter(model=>model.type===\`${copy.motorcycle}\`&&!isScooter(model)):ordered.filter(model=>model.type===p)},[p])`;
   page = replace(page, selection, selectionNew, `${language} catalog selection`);
+  const filterLiteral = labels => `[${labels.map(label => `\`${label}\``).join(',')}]`;
+  page = replace(page, `children:${filterLiteral(copy.oldModelFilters)}.map`, `children:${filterLiteral(copy.modelFilters)}.map`, `${language} scooter filter tab`);
   const [motoCategory, atvCategory, buggyCategory] = copy.categories.map(([, href]) => href);
   page = replace(page,
     `href:e.key===\`moto\`?\`${motoCategory}\`:\`#modeller\`,tabIndex:t?0:-1,onClick:e.key===\`moto\`?void 0:()=>m(e.type)`,
