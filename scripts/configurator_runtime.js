@@ -63,6 +63,12 @@ function cfEvent(name, model, items = [], extra = {}) {
     unpriced_count:items.filter(item => item.priceAzn === null).length, ...extra};
   if (typeof window.gtag === "function") window.gtag("event", name, params);
 }
+function cfWhatsAppAccessoryLine(item, formatter) {
+  const rawCode = typeof item.partNumber === "string" ? item.partNumber.trim() : "";
+  const code = rawCode ? ` · Məhsul kodu: ${rawCode}` : "";
+  const price = item.priceAzn === null ? "qiymət sorğu ilə" : `${formatter.format(item.priceAzn)} ₼`;
+  return `• ${item.name}${code} — ${price}`;
+}
 function cfPackageEvent(name, model, ids, includeBike) {
   const selected = model.accessories.filter(item => ids.includes(item.id));
   const items = includeBike ? [{id:`vehicle:${model.id}`,name:model.name,priceAzn:model.basePriceAzn},...selected] : selected;

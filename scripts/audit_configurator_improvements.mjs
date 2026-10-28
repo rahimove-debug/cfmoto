@@ -78,6 +78,8 @@ assert.ok(
   script.includes("0===N.accessoryCount?`${N.name} üçün uyğun orijinal aksesuarları satış komandamızdan soruş"),
   "Enquiry-only models must not invite users to select unavailable accessories"
 );
+assert.ok(script.includes("L.map(e=>cfWhatsAppAccessoryLine(e,es))"), "WhatsApp package must use the product-code-aware line formatter");
+assert.ok(!script.includes('L.map(e=>{let r;return null===e.priceAzn?`• ${e.name} — qiymət sorğu ilə`'), "Legacy WhatsApp accessory formatter remains");
 const schemaTags = [...html.matchAll(new RegExp(`<script id="${configuratorSchemaId}" type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>`,"g"))];
 assert.equal(schemaTags.length,1,"Exactly one server-rendered configurator graph is required");
 assert.deepEqual(JSON.parse(schemaTags[0][1]),configuratorStructuredData);
@@ -142,6 +144,10 @@ const runtime = {
 };
 vm.createContext(runtime);vm.runInContext(fs.readFileSync(path.join(root,"scripts/configurator_runtime.js"),"utf8"),runtime);
 const plain=value=>JSON.parse(JSON.stringify(value));
+const aznFormatter = new Intl.NumberFormat("az-AZ",{maximumFractionDigits:2});
+assert.equal(runtime.cfWhatsAppAccessoryLine(accessories[0],aznFormatter),"• Known · Məhsul kodu: SKU-1 — 25 ₼");
+assert.equal(runtime.cfWhatsAppAccessoryLine(accessories[1],aznFormatter),"• Unknown · Məhsul kodu: SKU-2 — qiymət sorğu ilə");
+assert.equal(runtime.cfWhatsAppAccessoryLine({name:"No code",partNumber:"  ",priceAzn:null},aznFormatter),"• No code — qiymət sorğu ilə");
 assert.equal(runtime.cfLoadModel(fixtures[0]),runtime.cfLoadModel(fixtures[0]));
 await runtime.cfLoadModel(fixtures[0]); assert.equal(fetchCount,1);
 assert.deepEqual(plain(runtime.cfValidSelections(fixtures[0],["known","bad","known"])),["known"]);
@@ -169,4 +175,4 @@ runtime.window.localStorage.getItem=()=>{throw new Error("storage unavailable")}
 runtime.window.localStorage.setItem=()=>{throw new Error("storage unavailable")};
 assert.doesNotThrow(()=>runtime.cfReadDraft());assert.doesNotThrow(()=>runtime.cfSaveDraft("a",{},{}));
 assert.ok(events.every(event=>!JSON.stringify(event).includes("wa.me")&&!JSON.stringify(event).includes("phone")));
-console.log("Configurator audit passed: 49 models/594 accessories, enquiry-only 500SR/ZEEHO EZ4, hashed lazy catalog, explicit URL precedence, saved selections, blocked storage/clipboard, unpriced analytics, no network events.");
+console.log("Configurator audit passed: 49 models/594 accessories, WhatsApp product codes, enquiry-only 500SR/ZEEHO EZ4, hashed lazy catalog, explicit URL precedence, saved selections, blocked storage/clipboard, unpriced analytics, no network events.");

@@ -77,6 +77,11 @@ output = output.replace(/"(?:ATV və Buggy qiymətləri|Aksesuar məbləğləri)
 assert(!output.includes("CFMoto USA Parts") && !output.includes("1.7000"), "Old price-conversion text remains in UI bundle");
 const runtime = fs.readFileSync(path.join(root,"scripts/configurator_runtime.js"),"utf8");
 output = once(output,";function em(){",`;const cfStructuredData=${JSON.stringify(configuratorStructuredData)},cfSchemaId=${JSON.stringify(configuratorSchemaId)};${runtime}\nfunction em(){`);
+output = once(
+  output,
+  'L.map(e=>{let r;return null===e.priceAzn?`• ${e.name} — qiymət sorğu ilə`:`• ${e.name} — ${r=e.priceAzn,es.format(r)} ₼`})',
+  'L.map(e=>cfWhatsAppAccessoryLine(e,es))'
+);
 const routeStart = output.indexOf("function eu(){");
 const componentStart = output.indexOf("function ep({");
 assert(routeStart > 0 && componentStart > routeStart,"Configurator route boundary missing");
