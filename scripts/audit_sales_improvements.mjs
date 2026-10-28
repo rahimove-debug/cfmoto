@@ -39,11 +39,14 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   const mobileEntry = descendants(tree, node => hasClass(node, 'home-mobile-entry'))[0];
   assert(mobileEntry, `${locale} mobile sales entry`);
   assert.equal(descendants(tree, node => node.tag === 'h1').length, 1, `${locale} keeps one semantic h1`);
-  const mobileA11yTitle = descendants(mobileEntry, node => hasClass(node, 'home-mobile-a11y-title'))[0];
-  assert.equal(mobileA11yTitle.props.role, 'heading');
-  assert.equal(mobileA11yTitle.props['aria-level'], 1);
+  const mobileTitle = descendants(mobileEntry, node => hasClass(node, 'home-mobile-title'))[0];
+  assert.equal(mobileTitle.props.role, 'heading');
+  assert.equal(mobileTitle.props['aria-level'], 1);
+  assert.equal(text(mobileTitle), locale === 'az' ? 'Modelini seç.' : 'Выберите свою модель.');
+  const mobileIntro = descendants(mobileEntry, node => hasClass(node, 'home-mobile-intro'))[0];
+  assert(mobileIntro, `${locale} compact catalogue intro`);
+  assert(text(mobileIntro).includes(locale === 'az' ? 'Motosiklet, skuter, ATV və buggy' : 'мотоциклы, скутеры, квадроциклы и багги'));
   assert.equal(descendants(mobileEntry, node => hasClass(node, 'home-mobile-visual')).length, 0, `${locale} mobile visual intro removed`);
-  assert.equal(descendants(mobileEntry, node => hasClass(node, 'home-mobile-title')).length, 0, `${locale} mobile intro title removed`);
   assert.equal(descendants(mobileEntry, node => hasClass(node, 'home-mobile-primary')).length, 0, `${locale} mobile intro CTA removed`);
   assert.equal(descendants(mobileEntry, node => hasClass(node, 'home-mobile-whatsapp')).length, 0, `${locale} mobile intro WhatsApp row removed`);
   assert.equal(descendants(mobileEntry, node => hasClass(node, 'home-mobile-categories')).length, 0, `${locale} mobile category row removed`);
@@ -91,7 +94,7 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   const selectedMotorcycleButtons = descendants(descendants(motorcycleTree, node => hasClass(node, 'filter-row'))[0], node => node.tag === 'button' && node.props['aria-selected']);
   assert.equal(selectedMotorcycleButtons.length, 1, `${locale} one selected motorcycle filter`);
   assert.equal(text(selectedMotorcycleButtons[0]), motorcycleLabel, `${locale} motorcycle filter selected state`);
-  assert.deepEqual(cardSlugs(tree), ['750sr-s', '450mt', '150sc', 'aura-150', 'cforce-c4', 'cforce-c5', 'z10', 'z10-4'], `${locale} all filter order unchanged`);
+  assert.deepEqual(cardSlugs(tree), ['800mt-x', '750sr-s', '450mt', '150sc', 'aura-150', 'cforce-c4', 'cforce-c5', 'z10'], `${locale} compact catalogue featured order`);
 
   // ATV and Buggy filters remain complete after the scooter split.
   for (const category of filterLabels.slice(3)) {
@@ -212,6 +215,8 @@ assert(css.includes('.product-copy .hero-actions .accessory-model-cta'));
 const mobileCss = read(path.join(assets, 'mobile-home-sales-v1.css'));
 assert(mobileCss.includes('.home-mobile-entry'));
 assert(mobileCss.includes('.home-mobile-campaign'));
+assert(mobileCss.includes('.home-mobile-intro'));
+assert(mobileCss.includes('.home-mobile-title'));
 assert(mobileCss.includes('#modeller.model-section'));
 assert(!mobileCss.includes('.home-mobile-visual'));
 assert(!mobileCss.includes('url("/gallery/800mt-x-1.webp")'));

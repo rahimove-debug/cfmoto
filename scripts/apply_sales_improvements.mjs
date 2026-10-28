@@ -10,7 +10,7 @@ import { componentModule, homeModule, render } from './sales_render.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 const assets = path.join(dist, 'assets');
-const featured = ['750sr-s', '450mt', '150sc', 'aura-150', 'cforce-c4', 'cforce-c5', 'z10', 'z10-4'];
+const featured = ['800mt-x', '750sr-s', '450mt', '150sc', 'aura-150', 'cforce-c4', 'cforce-c5', 'z10'];
 const motorcyclePriority = ['675sr-r', '750sr-s', '675nk', '800mt-x', '450sr-s'];
 const read = file => fs.readFileSync(file, 'utf8');
 const write = (file, text) => fs.writeFileSync(file, text);
@@ -89,8 +89,8 @@ const locales = {
     creditRoute: 'kredit/index.html', creditHeading: 'Alış üçün tələb olunan məlumatlar', internalHeading: 'Daxili hissəli ödəniş', bankHeading: 'Bank krediti',
     mobile: {
       aria: 'CFMOTO mobil giriş', eyebrow: 'RƏSMİ CFMOTO AZƏRBAYCAN',
-      title: 'Sənə uyğun CFMOTO-nu tap.',
-      summary: 'Motosiklet, ATV və Buggy modelləri — qiymətlər və kredit imkanları.',
+      catalogEyebrow: 'MODEL SIRASI', title: 'Modelini seç.',
+      summary: 'Motosiklet, skuter, ATV və buggy modellərini müqayisə et.',
       primary: 'Modellərə və qiymətlərə bax', whatsapp: 'WhatsApp-da təklif al',
       whatsappText: 'Salam, CFMOTO modeli ilə maraqlanıram.',
       categoriesLabel: 'Məhsul kateqoriyaları',
@@ -120,8 +120,8 @@ const locales = {
     creditRoute: 'ru/kredit/index.html', creditHeading: 'Что нужно для покупки', internalHeading: 'Внутренняя рассрочка', bankHeading: 'Банковский кредит',
     mobile: {
       aria: 'Мобильная главная CFMOTO', eyebrow: 'ОФИЦИАЛЬНЫЙ CFMOTO АЗЕРБАЙДЖАН',
-      title: 'Найдите свой CFMOTO.',
-      summary: 'Мотоциклы, квадроциклы и багги — цены и варианты финансирования.',
+      catalogEyebrow: 'МОДЕЛЬНЫЙ РЯД', title: 'Выберите свою модель.',
+      summary: 'Сравните мотоциклы, скутеры, квадроциклы и багги.',
       primary: 'Смотреть модели и цены', whatsapp: 'Получить предложение в WhatsApp',
       whatsappText: 'Здравствуйте! Меня интересует модель CFMOTO.',
       categoriesLabel: 'Категории техники',
@@ -146,7 +146,7 @@ function mobileHomepageEntry(copy) {
   const mobile = copy.mobile;
   const whatsapp = `https://wa.me/994512332484?text=${encodeURIComponent(mobile.whatsappText)}`;
   const campaignModel = 'a.find(model=>model.slug===`800mt-x`)';
-  return `(0,c.jsxs)(\`section\`,{className:\`home-mobile-entry\`,"aria-label":\`${mobile.aria}\`,children:[(0,c.jsx)(\`span\`,{className:\`home-mobile-a11y-title\`,role:\`heading\`,"aria-level":1,children:\`${mobile.title}\`}),(0,c.jsxs)(\`a\`,{className:\`home-mobile-campaign\`,href:\`${mobile.campaignPath}\`,children:[(0,c.jsxs)(\`span\`,{children:[(0,c.jsx)(\`small\`,{children:${campaignModel}?.listPrice?\`${mobile.campaign}\`:\`${mobile.featured}\`}),(0,c.jsxs)(\`strong\`,{children:[${campaignModel}?.name??\`800MT-X\`,\` · \`,o(${campaignModel}?.price??0),\` AZN\`]})]}),(0,c.jsx)(\`b\`,{"aria-hidden":\`true\`,children:\`↗︎\`})]})]}),(0,c.jsxs)(\`nav\`,{className:\`home-mobile-taskbar\`,"aria-label":\`${mobile.taskbarLabel}\`,children:[(0,c.jsxs)(\`a\`,{href:\`#modeller\`,children:[(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`▦\`}),(0,c.jsx)(\`strong\`,{children:\`${mobile.models}\`})]}),(0,c.jsxs)(\`a\`,{href:\`#kredit-kalkulyator\`,children:[(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`₼\`}),(0,c.jsx)(\`strong\`,{children:\`${mobile.credit}\`})]}),(0,c.jsxs)(\`a\`,{href:\`${whatsapp}\`,target:\`_blank\`,rel:\`noreferrer\`,"data-contact-area":\`sales\`,children:[(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`WA\`}),(0,c.jsx)(\`strong\`,{children:\`${mobile.taskWhatsapp}\`})]})]})`;
+  return `(0,c.jsxs)(\`section\`,{className:\`home-mobile-entry\`,"aria-label":\`${mobile.aria}\`,children:[(0,c.jsxs)(\`a\`,{className:\`home-mobile-campaign\`,href:\`${mobile.campaignPath}\`,children:[(0,c.jsxs)(\`span\`,{children:[(0,c.jsx)(\`small\`,{children:${campaignModel}?.listPrice?\`${mobile.campaign}\`:\`${mobile.featured}\`}),(0,c.jsxs)(\`strong\`,{children:[${campaignModel}?.name??\`800MT-X\`,\` · \`,o(${campaignModel}?.price??0),\` AZN\`]})]}),(0,c.jsx)(\`b\`,{"aria-hidden":\`true\`,children:\`↗︎\`})]}),(0,c.jsxs)(\`div\`,{className:\`home-mobile-intro\`,children:[(0,c.jsx)(\`small\`,{className:\`home-mobile-kicker\`,children:\`${mobile.catalogEyebrow}\`}),(0,c.jsx)(\`span\`,{className:\`home-mobile-title\`,role:\`heading\`,"aria-level":1,children:\`${mobile.title}\`}),(0,c.jsx)(\`p\`,{children:\`${mobile.summary}\`})]})]}),(0,c.jsxs)(\`nav\`,{className:\`home-mobile-taskbar\`,"aria-label":\`${mobile.taskbarLabel}\`,children:[(0,c.jsxs)(\`a\`,{href:\`#modeller\`,children:[(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`▦\`}),(0,c.jsx)(\`strong\`,{children:\`${mobile.models}\`})]}),(0,c.jsxs)(\`a\`,{href:\`#kredit-kalkulyator\`,children:[(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`₼\`}),(0,c.jsx)(\`strong\`,{children:\`${mobile.credit}\`})]}),(0,c.jsxs)(\`a\`,{href:\`${whatsapp}\`,target:\`_blank\`,rel:\`noreferrer\`,"data-contact-area":\`sales\`,children:[(0,c.jsx)(\`span\`,{"aria-hidden":\`true\`,children:\`WA\`}),(0,c.jsx)(\`strong\`,{children:\`${mobile.taskWhatsapp}\`})]})]})`;
 }
 for (const file of walk(dist).filter(file => /\.(html|js|txt)$/.test(file))) {
   const original = read(file), updated = bankTerm(original);
