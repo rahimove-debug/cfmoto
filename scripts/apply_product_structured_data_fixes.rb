@@ -82,8 +82,16 @@ def apply_product_structured_data_fixes!
         node["sku"] ||= slug if slug
         node["model"] ||= node["name"].to_s.sub(/\ACFMOTO\s+/i, "")
 
-        offer["priceValidUntil"] = PRICE_VALID_UNTIL
-        offer["validFrom"] ||= OFFER_VALID_FROM
+        if slug == "cforce-c6-pro"
+          # The local launch is a preorder without a confirmed end date. Keep
+          # the explicit preorder state and do not manufacture offer dates.
+          offer["availability"] = "https://schema.org/PreOrder"
+          offer.delete("priceValidUntil")
+          offer.delete("validFrom")
+        else
+          offer["priceValidUntil"] = PRICE_VALID_UNTIL
+          offer["validFrom"] ||= OFFER_VALID_FROM
+        end
         offer["itemCondition"] = NEW_CONDITION
         seller = offer["seller"]
         seller["url"] ||= SELLER_URL if seller.is_a?(Hash)

@@ -229,13 +229,25 @@ configurator = add_script!(configurator, PRESELECT_SCRIPT)
 write(configurator_path, configurator)
 
 model_pages = Dir.glob(File.join(ROOT, "model", "*", "index.html"))
-abort "Expected 49 model pages, found #{model_pages.size}" unless model_pages.size == 49
+abort "Expected 50 model pages, found #{model_pages.size}" unless model_pages.size == 50
 
 model_pages.each do |path|
   slug = File.basename(File.dirname(path))
 
   configurator_url = "#{ACCESSORY_URL}?model=#{slug}&bike=0&lock=1"
-  html = add_stylesheet!(read(path))
+  html = read(path)
+
+  # C6 PRO is a preorder campaign. No verified compatible accessory catalogue
+  # exists yet, so do not imply that the unspecified preorder gift can be
+  # selected in the configurator.
+  if slug == "cforce-c6-pro"
+    abort "cforce-c6-pro: configurator link must not be published" if html.include?("#{ACCESSORY_URL}?model=cforce-c6-pro")
+    abort "cforce-c6-pro: preorder campaign copy is missing" unless html.include?("Ön sifariş") && html.include?("aksesuar hədiyyə")
+    write(path, html)
+    next
+  end
+
+  html = add_stylesheet!(html)
 
   # EZ4 is intentionally enquiry-only until a verified ZEEHO accessory
   # catalogue is available. Its standalone page authors both visible CTAs and
@@ -348,4 +360,4 @@ abort "Sitemap closing tag not found" unless sitemap.include?("</urlset>")
 sitemap.sub!("</urlset>", "#{entry}</urlset>")
 write(sitemap_path, sitemap)
 
-puts "Accessory configurator linked from AZ/RU navigation, sales hero, #{model_pages.size - 2} verified-accessory model pages, 2 enquiry-only models and 2 off-road category pages"
+puts "Accessory configurator linked from AZ/RU navigation, sales hero, #{model_pages.size - 3} verified-accessory model pages, 2 enquiry-only models, 1 preorder-only model and 2 off-road category pages"

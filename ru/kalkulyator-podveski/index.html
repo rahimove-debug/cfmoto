@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ru">
+<head><!-- CFMOTO:ANALYTICS:START -->
+<script>
+/* GA4 G-X0Y85BJ9ST and Meta Pixel are managed once by GTM-W9877TBG. */
+window.dataLayer=window.dataLayer||[];
+window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
+document.addEventListener('click',function(event){
+  var target=event.target;
+  if(!(target instanceof Element))return;
+  var link=target.closest('a[href]');
+  if(!link)return;
+  var href=link.getAttribute('href')||'';
+  var text=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
+  var normalizedHref=href.toLowerCase();
+  var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
+  var params={link_text:text,page_path:window.location.pathname};
+  var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
+  if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
+    var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
+    send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
+    if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
+    return;
+  }
+  if(normalizedHref.startsWith('tel:')){
+    var normalizedText=text.toLowerCase();
+    var serviceContact=normalizedHref.replace(/[^+0-9:tel]/g,'')==='tel:+994102414299'||['сервис','запчаст','доставк'].some(function(term){return normalizedText.includes(term)});
+    send('phone_click',{contact_area:declaredArea||(serviceContact?'service':'sales')});
+    return;
+  }
+  if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){
+    send('directions_click',{destination:'showroom'});
+  }
+},true);
+</script>
+<!-- CFMOTO:ANALYTICS:END -->
+<!-- CFMOTO:GTM:HEAD:START -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.fetchPriority='low';j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9877TBG');
+</script>
+<!-- CFMOTO:GTM:HEAD:END -->
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Калькулятор настройки подвески CFMOTO | Азербайджан</title>
+  <meta name="description" content="Подберите начальные настройки преднатяга, сжатия и отбоя подвески CFMOTO с учётом модели, нагрузки и условий движения."/>
+  <link rel="canonical" href="https://cfmoto.az/ru/kalkulyator-podveski/"/><link rel="alternate" hreflang="az" href="https://cfmoto.az/asqi-kalkulyatoru/"/><link rel="alternate" hreflang="ru" href="https://cfmoto.az/ru/kalkulyator-podveski/"/><link rel="alternate" hreflang="x-default" href="https://cfmoto.az/asqi-kalkulyatoru/"/>
+  <meta property="og:title" content="Калькулятор настройки подвески CFMOTO | Азербайджан"/>
+  <meta property="og:description" content="Подберите начальные настройки преднатяга, сжатия и отбоя подвески CFMOTO с учётом модели, нагрузки и условий движения."/>
+  <meta property="og:url" content="https://cfmoto.az/ru/kalkulyator-podveski/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://cfmoto.az/official-800mtx-hero.webp"/>
+  <meta property="og:image:alt" content="CFMOTO Азербайджан"/>
+  <meta property="og:locale" content="ru_RU"/><meta property="og:locale:alternate" content="az_AZ"/>
+  <meta property="og:site_name" content="CFMOTO Азербайджан"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Калькулятор настройки подвески CFMOTO | Азербайджан"/>
+  <meta name="twitter:description" content="Подберите начальные настройки преднатяга, сжатия и отбоя подвески CFMOTO с учётом модели, нагрузки и условий движения."/>
+  <meta name="twitter:image" content="https://cfmoto.az/official-800mtx-hero.webp"/>
+  <meta name="twitter:image:alt" content="CFMOTO Азербайджан"/>
+  <link rel="icon" href="/favicon.svg"/>
+  <link rel="stylesheet" href="/assets/content.css"/>
+  <link rel="stylesheet" href="/assets/suspension-calculator-v1.css"/><script defer src="/assets/suspension-calculator-v1.js"></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://cfmoto.az/ru/kalkulyator-podveski/#webpage","url":"https://cfmoto.az/ru/kalkulyator-podveski/","name":"Калькулятор настройки подвески CFMOTO | Азербайджан","description":"Подберите начальные настройки преднатяга, сжатия и отбоя подвески CFMOTO с учётом модели, нагрузки и условий движения.","inLanguage":"ru","isPartOf":{"@id":"https://cfmoto.az/#website"},"about":{"@id":"https://cfmoto.az/#organization"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://cfmoto.az/ru/"},{"@type":"ListItem","position":2,"name":"Подвеска kalkulyatoru","item":"https://cfmoto.az/ru/kalkulyator-podveski/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Значения основаны на заводских данных?","acceptedAnswer":{"@type":"Answer","text":"Опорные точки расчёта взяты из таблиц настройки в руководствах пользователя CFMOTO. Для промежуточного веса показывается начальное значение, рассчитанное между этими официальными точками."}},{"@type":"Question","name":"Почему результат меняется вместе с весом?","acceptedAnswer":{"@type":"Answer","text":"При изменении общей нагрузки на подвеску выполняется пропорциональный расчёт между двумя подходящими строками таблицы. Поэтому начальная настройка лучше соответствует фактической нагрузке, а не ограничивается четырьмя стандартными сценариями."}},{"@type":"Question","name":"Режим плохой дороги доступен для всех моделей?","acceptedAnswer":{"@type":"Answer","text":"Нет. Этот выбор показывается только для моделей, в официальном руководстве которых есть отдельная строка для длительной плохой дороги или лёгкого бездорожья. Для остальных моделей неподтверждённое смягчение или ужесточение не применяется."}},{"@type":"Question","name":"Что происходит, если нагрузка выше максимума таблицы?","acceptedAnswer":{"@type":"Answer","text":"Калькулятор сохраняет самую высокую официальную строку таблицы и показывает предупреждение. Это не означает допустимую максимальную нагрузку мотоцикла; предел нагрузки следует отдельно проверить в руководстве пользователя."}}]}]}</script>
+<link rel="stylesheet" href="/assets/language-v3.css"/><link rel="stylesheet" href="/assets/cfmoto-typography-v2.css"/><!-- CFMOTO:UX-ACCESSIBILITY:START --><link rel="stylesheet" href="/assets/ux-accessibility-v1.css"/><!-- CFMOTO:UX-ACCESSIBILITY:END --><!-- CFMOTO:UNIFIED-NAV:HEAD:START --><link rel="stylesheet" href="/assets/unified-navigation-v1.css"><script defer src="/assets/unified-navigation-v1.js"></script><script defer src="/assets/suspension-entry-v1.js"></script><!-- CFMOTO:UNIFIED-NAV:HEAD:END --><link rel="stylesheet" href="/assets/confirmed-pricing-v2.css"/></head>
+<body class="suspension-calculator-page">
+  <!-- CFMOTO:UNIFIED-NAV:HEADER:START -->
+<div class="unified-topline"><span>Официальный представитель CFMOTO в Азербайджане</span><span class="topline-detail">пр. Бабека, 188 · Салон ежедневно 10:00–19:00</span></div>
+<header class="site-header unified-site-header">
+  <a class="brand" href="/ru/" aria-label="CFMOTO Азербайджан — главная"><img src="/assets/cfmoto-logo-transparent-v1.svg" alt="CFMOTO" width="159" height="34"><b>АЗЕРБАЙДЖАН</b></a>
+  <nav class="main-nav" id="site-primary-navigation" aria-label="Главное меню">
+    <details class="unified-products-menu"><summary>Модели <span aria-hidden="true">⌄</span></summary><div class="unified-products-panel"><a href="/ru/motocikly/">Мотоциклы<span>↗</span></a><a href="/ru/kvadrocikly/">Квадроциклы<span>↗</span></a><a href="/ru/buggy/">Багги и UTV<span>↗</span></a><a href="/ru/#modeller">Все модели<span>↗</span></a></div></details>
+    <a href="/aksesuar-konfiquratoru/">Аксессуары</a><a href="/ru/kredit/">Кредит</a><a href="/ru/kalkulyator-podveski/" data-suspension-entry="true">Подвеска</a><a href="/ru/servis/">Сервис</a><a href="/xeberler/">Новости</a><a href="/ru/#showroom">Салон</a>
+    <a class="nav-cta" href="https://wa.me/994512332484?text=Salam%2C%20CFMOTO%20modeli%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m" target="_blank" rel="noreferrer">Связаться</a>
+  </nav>
+  <script defer src="/assets/language-switcher-v4.js" data-language="ru" data-counterpart="/asqi-kalkulyatoru/" data-canonical="https://cfmoto.az/ru/kalkulyator-podveski/" data-az="https://cfmoto.az/asqi-kalkulyatoru/" data-ru="https://cfmoto.az/ru/kalkulyator-podveski/" data-default="https://cfmoto.az/asqi-kalkulyatoru/"></script>
+  <button class="menu-button" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="site-primary-navigation"><span></span><span></span></button>
+</header>
+<!-- CFMOTO:UNIFIED-NAV:HEADER:END -->
+  <main>
+    <section class="content-hero">
+      <nav class="breadcrumbs" aria-label="Навигация"><a href="/ru/">Главная</a><span>›</span><span>Подвеска kalkulyatoru</span></nav>
+      <p class="eyebrow">Информационный инструмент настройки</p>
+      <h1>Калькулятор настройки подвески CFMOTO</h1>
+      <p>Выберите модель, фактическую нагрузку и условия движения, чтобы сразу получить начальные настройки передней и задней подвески по таблицам из официальных руководств пользователя.</p>
+    </section>
+    <div class="content-main"><div class="content-wrap"><div id="cfmoto-suspension-calculator" class="suspension-calculator" data-cfmoto-suspension-calculator data-initial-model="800mt-x" data-source-1000mt-x="https://cfimages.cfmoto.com/cfmoto/1000_MT_X_CF_900_2_2_A_6_WXV_380101_2002_11_CN_262_20260429_b73ad233af.pdf" data-source-800mt-x="https://cfimages.cfmoto.com/cfmoto/800_MT_X_CF_800_11_11_A_6_WWV_380101_8000_11_CN_249_20260310_d146c3982b.pdf" data-source-800mt="https://cfimages.cfmoto.com/cfmoto/CF_800_5_CF_800_5_A_6_WWV_380101_5_A00_11_CN_248_20260310_f9054e92c0.pdf" data-source-700mt="https://cfimages.cfmoto.com/cfmoto/700_MT_CF_700_9_A_9_B_6_GUV_380101_2000_11_CN_249_20251010_6ddf70826f.pdf" data-source-450mt="https://cfimages.cfmoto.com/cfmoto/450_MT_CF_400_8_8_A_6_AQV_380101_6000_11_CN_23_A_20260526_526d9d775f.pdf"></div>
+<noscript><p class="notice">Для работы калькулятора необходимо включить JavaScript.</p></noscript>
+<section class="prose suspension-guide">
+  <h2>Что делает этот калькулятор?</h2>
+  <p>Инструмент переводит в цифровой формат таблицы подвески, опубликованные в руководстве пользователя выбранной модели CFMOTO. После ввода веса водителя, пассажира и багажа рассчитывается общая нагрузка, затем выполняется линейный расчёт между двумя ближайшими официальными точками нагрузки. Результат округляется с учётом реального шага регулировки: клики — до целого, обороты и миллиметры — до половины шага.</p>
+  <p>Если нагрузка выходит ниже или выше границ официальной таблицы, калькулятор не придумывает новое значение: он сохраняет ближайшую документированную настройку и показывает предупреждение. Главным источником всегда остаётся руководство пользователя для конкретного года выпуска и рыночной версии, включая допустимую нагрузку модели.</p>
+  <h2>Как выполняется расчёт</h2>
+  <ol><li>Выберите модель мотоцикла и режим движения.</li><li>Укажите сценарий: один водитель, с багажом или с пассажиром.</li><li>Введите фактический вес с учётом экипировки и перевозимых вещей.</li><li>Проверьте значения передней и задней подвески, направление отсчёта и объяснение расчёта.</li></ol>
+  <h2>Как применять результат?</h2>
+  <p>Установите мотоцикл на ровной устойчивой поверхности, выключите двигатель и перед каждым изменением запишите текущую настройку. Если левая и правая передние стойки регулируются отдельно, установите одинаковое значение с обеих сторон. Не прилагайте усилие к регулятору в крайнем положении: после лёгкого упора начинайте отсчёт в направлении, указанном калькулятором. Меняйте только один параметр за раз и оценивайте результат во время короткой безопасной пробной поездки.</p>
+  <p>Подвеска влияет на устойчивость мотоцикла, поведение при торможении и контакт шин с дорогой. При необычном шуме, утечке масла, повреждении деталей, нестабильном управлении или несовпадении числа регулировочных шагов прекратите поездку и обратитесь в официальный сервис. Для измерения SAG и индивидуальной настройки точнее воспользоваться помощью профессионального техника.</p>
+  <h2>Почему в списке есть не все модели?</h2>
+  <p>В первой версии показаны только представленные в каталоге Азербайджана модели 1000MT-X, 800MT-X, 800MT SPORT, 800MT EXPLORE, 700MT и 450MT, для которых таблица регулировок подтверждена официальным руководством. Для нерегулируемых узлов или подвески без официальной таблицы по нагрузке приблизительные значения не выдаются. Другие модели будут добавлены только после проверки соответствующего руководства и местной комплектации.</p>
+  <div class="notice">Эти результаты служат отправной точкой и не заменяют сервисную диагностику и руководство пользователя вашего мотоцикла. Возможны различия в зависимости от года выпуска и комплектации.</div>
+</section>
+<section class="faq"><h2>Часто задаваемые вопросы</h2><details><summary>Значения основаны на заводских данных?</summary><p>Опорные точки расчёта взяты из таблиц настройки в руководствах пользователя CFMOTO. Для промежуточного веса показывается начальное значение, рассчитанное между этими официальными точками.</p></details><details><summary>Почему результат меняется вместе с весом?</summary><p>При изменении общей нагрузки на подвеску выполняется пропорциональный расчёт между двумя подходящими строками таблицы. Поэтому начальная настройка лучше соответствует фактической нагрузке, а не ограничивается четырьмя стандартными сценариями.</p></details><details><summary>Режим плохой дороги доступен для всех моделей?</summary><p>Нет. Этот выбор показывается только для моделей, в официальном руководстве которых есть отдельная строка для длительной плохой дороги или лёгкого бездорожья. Для остальных моделей неподтверждённое смягчение или ужесточение не применяется.</p></details><details><summary>Что происходит, если нагрузка выше максимума таблицы?</summary><p>Калькулятор сохраняет самую высокую официальную строку таблицы и показывает предупреждение. Это не означает допустимую максимальную нагрузку мотоцикла; предел нагрузки следует отдельно проверить в руководстве пользователя.</p></details></section>
+<div class="cta-box"><div><h2>Уточните настройку в официальном сервисе</h2><p>Свяжитесь с сервисной командой для индивидуальной проверки с учётом года выпуска, местной комплектации и фактического измерения SAG.</p></div><div class="cta-actions"><a class="button primary" href="tel:+994102414299" data-contact-area="service">Позвонить в сервис</a><a class="button ghost" href="/ru/servis/">+994 10 241 42 99</a></div></div>
+</div></div>
+  </main>
+  <aside class="content-links" aria-label="Полезная информация"><div><a href="/ru/motocikly/">Мотоциклы →</a><a href="/ru/kvadrocikly/">Квадроциклы →</a><a href="/ru/buggy/">Багги и UTV →</a><a href="/ru/kredit/">Условия кредита →</a><a href="/ru/servis/">Официальный сервис →</a><a href="/ru/garantiya/">Гарантия →</a><a href="/ru/zapchasti/">Запчасти →</a><a href="/ru/sravnenie-modeley/">Сравнение моделей →</a><a href="/ru/kalkulyator-podveski/" aria-current="page">Подвеска kalkulyatoru →</a></div></aside>
+  <footer class="content-footer">
+    <a class="brand" href="/ru/"><img src="/assets/cfmoto-logo-transparent-v1.svg" alt="CFMOTO" width="159" height="34"/><b>АЗЕРБАЙДЖАН</b></a>
+    <div><a href="/ru/motocikly/">Мотоциклы</a><a href="/ru/kvadrocikly/">Квадроциклы</a><a href="/ru/buggy/">Багги и UTV</a><a href="/ru/kredit/">Кредит</a><a href="/ru/servis/">Сервис</a><a href="/ru/zapchasti/">Запчасти</a><a href="https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a></div>
+    <small>© 2026 CFMOTO Азербайджан · SAZMOTO MMC. Все права защищены.</small>
+  </footer>
+</body>
+</html>

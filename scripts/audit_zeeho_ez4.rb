@@ -130,7 +130,7 @@ end
   next errors << "#{label}: page is missing" unless File.file?(path)
 
   html = read(path)
-  errors << "#{label}: expected 49 model cards" unless html.scan('class="model-card"').size == 49
+  errors << "#{label}: expected 50 model cards" unless html.scan('class="model-card"').size == 50
   errors << "#{label}: EZ4 home card must appear exactly once" unless html.scan(%r{<article class="model-card">(?:(?!</article>).)*href="/(?:ru/)?model/zeeho-ez4/"(?:(?!</article>).)*</article>}m).size == 1
   errors << "#{label}: EZ4 mega-menu link must appear exactly once" unless html.scan(%r{<a href="/(?:ru/)?model/zeeho-ez4/" class="mega-model"}).size == 1
   errors << "#{label}: cache-versioned EZ4 card image is missing" unless html.include?("/models/cards/zeeho-ez4.webp?v=#{IMAGE_CACHE_VERSION}")

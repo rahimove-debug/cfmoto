@@ -7,7 +7,7 @@ module RussianZeehoTranslations
     "CFMOTO və ZEEHO model müqayisəsi" => "Сравнение моделей CFMOTO и ZEEHO",
     "CFMOTO və ZEEHO modellərini müqayisə et" => "Сравните модели CFMOTO и ZEEHO",
     "Qiymət, kateqoriya, mühərrik sinfi və təsdiqlənmiş maliyyələşmə məlumatını bir baxışda müqayisə edin." => "Сравните цену, категорию, класс двигателя и подтверждённую информацию о финансировании.",
-    "49 aktual CFMOTO və ZEEHO modelini kateqoriya, mühərrik sinfi, nağd qiymət və təsdiqlənmiş daxili hissəli ödəniş şərtlərinə görə bir cədvəldə müqayisə edin." => "Сравните 49 актуальных моделей CFMOTO и ZEEHO в одной таблице по категории, классу двигателя, цене и подтверждённым условиям рассрочки.",
+    "50 aktual CFMOTO və ZEEHO modelini kateqoriya, mühərrik sinfi, nağd qiymət və təsdiqlənmiş daxili hissəli ödəniş şərtlərinə görə bir cədvəldə müqayisə edin." => "Сравните 50 актуальных моделей CFMOTO и ZEEHO в одной таблице по категории, классу двигателя, цене и подтверждённым условиям рассрочки.",
     "Satışla dəqiqləşdirin" => "Уточните в отделе продаж",
     "CFMOTO motosiklet və ZEEHO elektrik skuter modelləri, Azərbaycandakı nağd satış qiymətləri. Naked, sport, touring, adventure, cruiser və scooter seçimlərini müqayisə edin." => "Мотоциклы CFMOTO и электрический скутер ZEEHO, актуальные цены в Азербайджане. Сравните нейкеды, спортивные, туристические модели, эндуро, круизеры и скутеры.",
     "CFMOTO motosiklet və ZEEHO skuter qiymətləri" => "Мотоциклы CFMOTO и скутер ZEEHO: модели и цены",
@@ -108,8 +108,8 @@ module RussianZeehoTranslations
     "Şəhər üçün skuter modelləri." => "Скутеры для города.",
     "EZ4 üçün fərdi təklif al." => "Получите персональное предложение на EZ4.",
     "31 aktual motosiklet" => "31 актуальный мотоцикл",
-    "49 aktual modeli" => "49 актуальных моделей",
-    "49 aktual model" => "49 актуальных моделей",
+    "50 aktual modeli" => "50 актуальных моделей",
+    "50 aktual model" => "50 актуальных моделей",
     "Elektrik" => "Электрический"
   }.freeze
 end

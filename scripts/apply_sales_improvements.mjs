@@ -10,7 +10,7 @@ import { componentModule, homeModule, render } from './sales_render.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 const assets = path.join(dist, 'assets');
-const featured = ['800mt-x', '750sr-s', '450mt', '150sc', 'aura-150', 'cforce-c4', 'cforce-c5', 'z10'];
+const featured = ['800mt-x', '750sr-s', '450mt', '150sc', 'aura-150', 'cforce-c5', 'cforce-c6-pro', 'z10'];
 const motorcyclePriority = ['675sr-r', '750sr-s', '675nk', '800mt-x', '450sr-s'];
 const read = file => fs.readFileSync(file, 'utf8');
 const write = (file, text) => fs.writeFileSync(file, text);
@@ -173,9 +173,10 @@ for (const [language, copy] of Object.entries(locales)) {
   finance = replace(finance, summaryEnd, summaryRows, `${language} finance totals`);
   write(financeFile, finance);
 
-  // Keep all 49 models in the catalogue, mega-menu and homepage calculator.
-  // EZ4 follows the confirmed 40% motorcycle rule but keeps its standalone
-  // model page, so it is not passed through the React model-page adapter.
+  // Keep all 50 models in the catalogue and mega-menu. The C6 preorder has no
+  // confirmed finance terms, so only the other 49 models appear in the home
+  // calculator. EZ4 follows the confirmed 40% motorcycle rule but keeps its
+  // standalone model page, so it is not passed through the React adapter.
   const pageFile = path.join(assets, copy.page);
   let page = read(pageFile);
   const selection = `C=(0,s.useMemo)(()=>p===\`${copy.all}\`?a:a.filter(e=>e.type===p),[p])`;
@@ -207,7 +208,7 @@ for (const [language, copy] of Object.entries(locales)) {
   write(pageFile, page);
 
   const { tree, models } = homeModule(assets, copy.page, copy.menu);
-  assert(models.length === 49, `${language} full catalog changed`);
+  assert(models.length === 50, `${language} full catalog changed`);
   const homeFile = path.join(dist, copy.home);
   let home = read(homeFile);
   assert(/<main>.*?<\/main>/s.test(home), `${language} home main missing`);
@@ -219,7 +220,7 @@ for (const [language, copy] of Object.entries(locales)) {
     try { schema = JSON.parse(json); } catch { return match; }
     const visit = node => {
       if (!node || typeof node !== 'object') return;
-      if (node['@type'] === 'ItemList' && Array.isArray(node.itemListElement) && node.itemListElement.length === 49) {
+      if (node['@type'] === 'ItemList' && Array.isArray(node.itemListElement) && node.itemListElement.length === 50) {
         node.itemListElement = featured.map((slug, index) => {
           const item = node.itemListElement.find(item => JSON.stringify(item).includes(`/model/${slug}/`));
           return item ? { ...item, position: index + 1 } : null;
@@ -236,7 +237,7 @@ for (const [language, copy] of Object.entries(locales)) {
   const modelRoot = path.join(dist, language === 'az' ? 'model' : 'ru/model');
   let modelCount = 0;
   for (const slug of fs.readdirSync(modelRoot)) {
-    if (slug === '500sr' || slug === 'zeeho-ez4') continue; // Standalone pages do not use the React finance adapter.
+    if (slug === '500sr' || slug === 'zeeho-ez4' || slug === 'cforce-c6-pro') continue; // Standalone/preorder pages do not use the React finance adapter.
     const file = path.join(modelRoot, slug, 'index.html');
     let html = read(file);
     const model = models.find(model => model.slug === slug);
@@ -314,4 +315,4 @@ for (const file of walk(dist).filter(file => /\.(html|txt)$/.test(file))) {
   write(file, content);
 }
 write(path.join(dist, 'sales-build.json'), JSON.stringify({ revision, featured, bankMaxMonths: 36, price150SC: 5490, locales: Object.fromEntries(Object.entries(locales).map(([language, copy]) => [language, { home: copy.home, page: names[copy.page], menu: names[copy.menu], finance: names[copy.finance] }])) }, null, 2));
-console.log(`Sales improvements ready: 8 featured models, 49 catalogue models, 49 calculator options, 98 localized model pages and 94 React calculator pages; revision ${revision}`);
+console.log(`Sales improvements ready: 8 featured models, 50 catalogue models, 49 calculator options, 100 localized model pages and 94 React calculator pages; revision ${revision}`);

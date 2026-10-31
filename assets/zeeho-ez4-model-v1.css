@@ -5,7 +5,7 @@
 .model-page[data-model="zeeho-ez4"] .model-color-image{position:relative;z-index:1;object-fit:contain}
 .model-page[data-model="zeeho-ez4"] .product-badge{z-index:3}
 .zeeho-mark{position:absolute;top:28px;right:30px;z-index:2;color:#071719;font-size:clamp(16px,2vw,28px);font-weight:900;letter-spacing:.18em}
-.zeeho-ez4-banner{position:relative;min-height:min(49vw,680px);display:flex;align-items:flex-end;background:#071113 url(/gallery/zeeho-ez4-ergonomics.webp) center/cover no-repeat;color:#fff;overflow:hidden}
+.zeeho-ez4-banner{position:relative;min-height:min(49vw,680px);display:flex;align-items:flex-end;background:#071113 url(/gallery/zeeho-ez4-ergonomics.webp?v=20261027-2) center/cover no-repeat;color:#fff;overflow:hidden}
 .zeeho-ez4-banner:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(1,16,20,.76),rgba(1,16,20,.08) 62%),linear-gradient(0deg,rgba(1,16,20,.64),transparent 58%)}
 .zeeho-ez4-banner-copy{position:relative;z-index:1;width:min(720px,92%);padding:clamp(32px,6vw,88px)}
 .zeeho-ez4-banner-copy>span{display:inline-flex;border-left:4px solid #00d5cb;padding-left:12px;color:#b8fffb;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}

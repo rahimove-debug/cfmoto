@@ -75,6 +75,7 @@ end
 if File.file?(script_path)
   javascript = read(script_path)
   errors << "Detail headers must receive a mobile menu button" unless javascript.include?("ensureDetailMenuButton")
+  errors << "Generated detail-menu buttons must localize their accessible label" unless javascript.include?('document.documentElement.lang === "ru" ? "Открыть меню" : "Menyunu aç"')
   errors << "Unified mobile menu Escape support is missing" unless javascript.include?('event.key !== "Escape"')
   errors << "Language switcher must move into existing headers" unless javascript.include?("moveLanguageSwitcher")
 else

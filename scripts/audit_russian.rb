@@ -37,7 +37,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     "Orijinal",
     "Aksesuarlar",
     "2 il / 24.000 km",
-    "49 aktual model",
+    "50 aktual model",
     "<label>Model<select>",
     "<th>Model</th>",
     "children:[`Model`,",
@@ -69,7 +69,7 @@ GOOGLE_TAG_MANAGER_ID = DomainConfig::GOOGLE_TAG_MANAGER_ID
     "5 дюйм LCD",
     "12,3 дюйм MMI"
   ].freeze
-  EXPECTED_MODEL_COUNT = 49
+  EXPECTED_MODEL_COUNT = 50
   EXPECTED_AZ_PAGE_COUNT = 1 + EXPECTED_MODEL_COUNT + ContentConfig::SLUGS.size + CategoryConfig::SLUGS.size
   EXPECTED_RU_PAGE_COUNT = EXPECTED_AZ_PAGE_COUNT
   EXPECTED_SITEMAP_URL_COUNT = EXPECTED_AZ_PAGE_COUNT * 2

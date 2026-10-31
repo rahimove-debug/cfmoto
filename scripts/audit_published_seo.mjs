@@ -96,14 +96,22 @@ function inspectSchema(value, relative) {
     const offer = value.offers;
     assert(offer?.['@type'] === 'Offer', `${relative}: Product offer missing`);
     assert.equal(offer.priceCurrency, 'AZN', `${relative}: Product currency`);
-    assert(/^\d{4}-\d{2}-\d{2}$/.test(offer.validFrom || ''), `${relative}: offer start date missing`);
-    assert(Number.isFinite(Date.parse(offer.validFrom)) && offer.validFrom <= offer.priceValidUntil, `${relative}: invalid offer dates`);
+    const c6Preorder = /(?:^|\/)model\/cforce-c6-pro\//.test(relative) || /\/model\/cforce-c6-pro\/$/.test(offer.url || '');
+    if (c6Preorder) {
+      assert.equal(String(offer.price), '16900', `${relative}: C6 preorder price`);
+      assert.equal(offer.availability, 'https://schema.org/PreOrder', `${relative}: C6 preorder availability`);
+      assert.equal(offer.validFrom, undefined, `${relative}: C6 offer start date must not be invented`);
+      assert.equal(offer.priceValidUntil, undefined, `${relative}: C6 offer end date must not be invented`);
+    } else {
+      assert(/^\d{4}-\d{2}-\d{2}$/.test(offer.validFrom || ''), `${relative}: offer start date missing`);
+      assert(Number.isFinite(Date.parse(offer.validFrom)) && offer.validFrom <= offer.priceValidUntil, `${relative}: invalid offer dates`);
+    }
     assert(pages.has(offer.url), `${relative}: offer destination is not canonical`);
   }
   Object.values(value).forEach(child => inspectSchema(child, relative));
 }
 schemas.forEach(([relative, schema]) => inspectSchema(schema, relative));
-assert(products >= 98, 'Missing localized Product schemas');
+assert(products >= 100, 'Missing localized Product schemas');
 
 const redirects = new Map(read(path.join(dist, '_redirects')).split('\n')
   .filter(line => line.trim() && !line.startsWith('#')).map(line => {
@@ -126,7 +134,7 @@ for (const locale of ['', '/ru']) {
   const categoryPaths = locale ? ['/ru/motocikly/', '/ru/kvadrocikly/', '/ru/buggy/'] : ['/motosiklet/', '/kvadrosikl/', '/buggy/'];
   const linked = new Set(categoryPaths.flatMap(category => tags(read(localFile(category)), 'a')
     .map(link => link.href).filter(href => href?.startsWith(`${locale}/model/`))));
-  assert.equal(linked.size, 49, `${locale || 'az'}: every model must have a full-category link`);
+  assert.equal(linked.size, 50, `${locale || 'az'}: every model must have a full-category link`);
   for (const href of linked) assert(pages.has(origin + href), `Category model route is not canonical: ${href}`);
 }
 console.log(`Published SEO audit passed: ${pages.size} final canonical pages, reciprocal languages, sitemap, assets, ${products} Product offers, ${redirects.size} redirects and full AZ/RU category coverage.`);

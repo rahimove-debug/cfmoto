@@ -1,0 +1,35 @@
+/* CFORCE C6 PRO TOURING preorder page */
+.model-page[data-model="cforce-c6-pro"] .product-price strong{font-size:clamp(30px,4vw,54px)}
+.model-page[data-model="cforce-c6-pro"] .product-image-wrap{isolation:isolate;background:#fff}
+.model-page[data-model="cforce-c6-pro"] .product-image-wrap:after{display:none}
+.model-page[data-model="cforce-c6-pro"] .model-color-image{position:relative;z-index:1;object-fit:contain}
+.model-page[data-model="cforce-c6-pro"] .product-badge{z-index:3;background:#ef6c00;color:#fff}
+.c6-preorder-note{max-width:630px;margin:20px 0 0;padding:16px 18px;border-left:4px solid #ef6c00;background:#fff4e8;display:grid;gap:5px}
+.c6-preorder-note strong{color:#7b3100;font-size:15px;text-transform:uppercase;letter-spacing:.04em}
+.c6-preorder-note span{color:#5d4a3f;font-size:13px;line-height:1.55}
+.c6-feature-lead{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);align-items:stretch;background:#061517;color:#fff}
+.c6-feature-lead figure{margin:0;min-height:520px;background:#edf4f4;overflow:hidden}
+.c6-feature-lead img{width:100%;height:100%;display:block;object-fit:contain}
+.c6-feature-lead-copy{padding:clamp(34px,6vw,84px);display:flex;flex-direction:column;justify-content:center}
+.c6-feature-lead-copy>span{display:inline-flex;align-self:flex-start;padding:8px 11px;background:#ef6c00;color:#fff;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.c6-feature-lead-copy h2{margin:22px 0 16px;font-size:clamp(42px,6vw,84px);line-height:.92;letter-spacing:-.06em;text-transform:uppercase}
+.c6-feature-lead-copy p{max-width:570px;margin:0;color:rgba(255,255,255,.74);font-size:clamp(15px,1.5vw,19px);line-height:1.65}
+.c6-spec-note{margin-top:22px;padding:16px 18px;border-left:4px solid #ef6c00;background:#fff5e9;color:#52463f;font-size:13px;line-height:1.65}
+.c6-source{margin-top:14px;color:#748083;font-size:12px}
+.c6-source a{color:#087f87;text-decoration:underline;text-underline-offset:3px}
+.c6-preorder{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);align-items:center;gap:clamp(28px,6vw,90px);background:linear-gradient(120deg,#061315,#0a3338);color:#fff}
+.c6-preorder h2{max-width:850px;margin:0;font-size:clamp(42px,6vw,86px);line-height:.92;letter-spacing:-.06em;text-transform:uppercase}
+.c6-preorder p:not(.eyebrow){max-width:760px;margin:22px 0 0;color:rgba(255,255,255,.74);line-height:1.65}
+.c6-preorder-card{padding:clamp(24px,4vw,42px);border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.075)}
+.c6-preorder-card small{display:block;color:#b7c7c9;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.c6-preorder-card strong{display:block;margin:9px 0 20px;font-size:clamp(38px,5vw,62px);letter-spacing:-.05em}
+.c6-preorder-card b{display:block;margin-bottom:22px;color:#ffb571;font-size:16px;line-height:1.45}
+.c6-gallery{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px}
+.c6-gallery figure{margin:0;min-height:280px;background:#eaf1f1;overflow:hidden}
+.c6-gallery figure:first-child{grid-row:span 2}
+.c6-gallery img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .4s ease}
+.c6-gallery figure:first-child img{object-fit:contain}
+.c6-gallery figure:hover img{transform:scale(1.025)}
+.model-page[data-model="cforce-c6-pro"] .model-mobile-cta{grid-template-columns:1fr}
+@media(max-width:900px){.c6-feature-lead{grid-template-columns:1fr}.c6-feature-lead figure{min-height:440px}.c6-preorder{grid-template-columns:1fr}.c6-gallery{grid-template-columns:1fr 1fr}.c6-gallery figure:first-child{grid-column:1/-1;grid-row:auto;min-height:420px}}
+@media(max-width:580px){.model-page[data-model="cforce-c6-pro"] .product-image-wrap:after{display:none}.c6-feature-lead figure{min-height:320px}.c6-feature-lead-copy{padding:42px 20px}.c6-preorder{padding:46px 20px}.c6-preorder h2{font-size:42px}.c6-gallery{grid-template-columns:1fr}.c6-gallery figure:first-child{grid-column:auto;min-height:300px}.c6-gallery figure{min-height:240px}.c6-preorder-card{padding:24px 20px}.c6-preorder-note{margin-top:16px}}

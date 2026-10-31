@@ -28,7 +28,7 @@ module RussianUiTranslations
     "Aksesuarlar" => "Аксессуары",
     "Orijinal" => "Оригинальные",
     "2 il / 24.000 km" => "2 года / 24 000 км",
-    "49 aktual model" => "49 актуальных моделей",
+    "50 aktual model" => "50 актуальных моделей",
     ">Off-road<" => ">Внедорожная техника<",
     "PRODUCTS" => "МОДЕЛИ",
     ">En<" => ">Ширина<",

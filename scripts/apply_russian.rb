@@ -41,7 +41,7 @@ RU_CONTENT_META = {
   },
   "sravnenie-modeley" => {
     title: "Сравнение моделей CFMOTO и ZEEHO | Цены и категории",
-    description: "Сравните 49 моделей CFMOTO и ZEEHO по категории, классу двигателя, цене, первоначальному взносу и максимальному сроку рассрочки.",
+    description: "Сравните 50 моделей CFMOTO и ZEEHO по категории, классу двигателя, цене, первоначальному взносу и максимальному сроку рассрочки.",
     heading: "Сравните модели CFMOTO и ZEEHO"
   },
   "kalkulyator-podveski" => {
@@ -209,9 +209,14 @@ def set_russian_metadata!(html, entry, source_html)
     title_model = model.sub(/\ACFMOTO\s+/i, "")
     model_brand = title_model.start_with?("ZEEHO ") ? "" : "CFMOTO "
     description_brand = title_model.start_with?("ZEEHO ") ? "ZEEHO" : "CFMOTO"
+    model_description = if entry[:slug] == "cforce-c6-pro"
+      "CFORCE C6 PRO TOURING: предзаказ в Азербайджане за 16 900 AZN и дополнительный аксессуар в подарок. Характеристики и официальные фото."
+    else
+      "#{model}: официальная модель #{description_brand} в Азербайджане. Характеристики, цена, условия оплаты, фотографии и консультация."
+    end
     [
       "#{model_brand}#{title_model} — цена и характеристики",
-      "#{model}: официальная модель #{description_brand} в Азербайджане. Характеристики, цена, условия оплаты, фотографии и консультация."
+      model_description
     ]
   when :content
     meta = RU_CONTENT_META.fetch(entry[:ru_slug])
@@ -326,8 +331,12 @@ def normalize_schema!(html, language:, home:)
 end
 
 def translate_whatsapp_links!(content)
+  c6_placeholder = "__CFMOTO_C6_RU_WHATSAPP__"
+  c6_message = CGI.escape("Здравствуйте! Хочу получить информацию о предзаказе CFORCE C6 PRO за 16 900 AZN и подарочном аксессуаре.")
+  content = content.gsub(%r{https://wa\.me/994512332484\?text=[^"`<\\]*CFORCE\+C6\+PRO[^"`<\\]+}, c6_placeholder)
   generic = CGI.escape("Здравствуйте! Хочу получить информацию о CFMOTO.")
-  content.gsub(%r{https://wa\.me/994512332484\?text=[^"`<\\]+}, "https://wa.me/994512332484?text=#{generic}")
+  content = content.gsub(%r{https://wa\.me/994512332484\?text=[^"`<\\]+}, "https://wa.me/994512332484?text=#{generic}")
+  content.gsub(c6_placeholder, "https://wa.me/994512332484?text=#{c6_message}")
 end
 
 def build_sitemap!(page_entries)

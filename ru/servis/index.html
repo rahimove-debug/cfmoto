@@ -1,21 +1,10 @@
 <!doctype html>
 <html lang="ru">
-<head><!-- CFMOTO:GTM:HEAD:START -->
+<head><!-- CFMOTO:ANALYTICS:START -->
 <script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-W9877TBG');
-</script>
-<!-- CFMOTO:GTM:HEAD:END -->
-<!-- CFMOTO:ANALYTICS:START -->
-<script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=G-X0Y85BJ9ST"></script>
-<script>
+/* GA4 G-X0Y85BJ9ST and Meta Pixel are managed once by GTM-W9877TBG. */
 window.dataLayer=window.dataLayer||[];
 window.gtag=window.gtag||function(){window.dataLayer.push(arguments)};
-window.gtag('js',new Date());
-window.gtag('config','G-X0Y85BJ9ST');
 document.addEventListener('click',function(event){
   var target=event.target;
   if(!(target instanceof Element))return;
@@ -24,10 +13,10 @@ document.addEventListener('click',function(event){
   var href=link.getAttribute('href')||'';
   var text=(link.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
   var normalizedHref=href.toLowerCase();
+  var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
   var params={link_text:text,page_path:window.location.pathname};
   var send=function(name,extra){window.gtag('event',name,Object.assign({},params,extra||{}))};
   if(normalizedHref.startsWith('https://wa.me/')||normalizedHref.startsWith('https://api.wa.me/')){
-    var declaredArea=link.getAttribute('data-contact-area')||(link.closest('[data-contact-area]')||{}).dataset?.contactArea;
     var finance=declaredArea==='finance'||!!link.closest('.calculator,.model-calculator');
     send('whatsapp_click',{contact_area:declaredArea||(finance?'finance':'sales')});
     if(finance)send('finance_lead_click',{lead_type:'whatsapp_offer'});
@@ -35,8 +24,8 @@ document.addEventListener('click',function(event){
   }
   if(normalizedHref.startsWith('tel:')){
     var normalizedText=text.toLowerCase();
-    var serviceContact=['сервис','запчаст','доставк'].some(function(term){return normalizedText.includes(term)});
-    send('phone_click',{contact_area:serviceContact?'service':'sales'});
+    var serviceContact=normalizedHref.replace(/[^+0-9:tel]/g,'')==='tel:+994102414299'||['сервис','запчаст','доставк'].some(function(term){return normalizedText.includes(term)});
+    send('phone_click',{contact_area:declaredArea||(serviceContact?'service':'sales')});
     return;
   }
   if(normalizedHref.includes('maps.app.goo.gl')||normalizedHref.includes('maps.google')||(normalizedHref.includes('google.')&&normalizedHref.includes('/maps'))){
@@ -45,6 +34,15 @@ document.addEventListener('click',function(event){
 },true);
 </script>
 <!-- CFMOTO:ANALYTICS:END -->
+<!-- CFMOTO:GTM:HEAD:START -->
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.fetchPriority='low';j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9877TBG');
+</script>
+<!-- CFMOTO:GTM:HEAD:END -->
 
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -66,16 +64,17 @@ document.addEventListener('click',function(event){
   <meta name="twitter:image:alt" content="CFMOTO Азербайджан"/>
   <link rel="icon" href="/favicon.svg"/>
   <link rel="stylesheet" href="/assets/content.css"/>
+  
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://cfmoto.az/ru/servis/#webpage","url":"https://cfmoto.az/ru/servis/","name":"Официальный сервис CFMOTO в Баку | Обслуживание и ремонт","description":"Диагностика, техническое обслуживание и ремонт CFMOTO в Баку. Телефон сервиса: +994 10 241 42 99; ежедневно, кроме понедельника, 10:00–19:00.","inLanguage":"ru","isPartOf":{"@id":"https://cfmoto.az/#website"},"about":{"@id":"https://cfmoto.az/#organization"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://cfmoto.az/ru/"},{"@type":"ListItem","position":2,"name":"Официальный сервис","item":"https://cfmoto.az/ru/servis/"}]},{"@type":"Service","@id":"https://cfmoto.az/ru/servis/#service","name":"Официальный сервис CFMOTO","serviceType":["Диагностика","Техническое обслуживание","Ремонт"],"provider":{"@id":"https://cfmoto.az/#organization"},"areaServed":{"@type":"Country","name":"Азербайджан"},"telephone":"+994102414299"}]}</script>
-<link rel="stylesheet" href="/assets/language-v3.css"/><link rel="stylesheet" href="/assets/cfmoto-typography-v2.css"/><!-- CFMOTO:UX-ACCESSIBILITY:START --><link rel="stylesheet" href="/assets/ux-accessibility-v1.css"/><!-- CFMOTO:UX-ACCESSIBILITY:END --><!-- CFMOTO:UNIFIED-NAV:HEAD:START --><link rel="stylesheet" href="/assets/unified-navigation-v1.css"><script defer src="/assets/unified-navigation-v1.js"></script><!-- CFMOTO:UNIFIED-NAV:HEAD:END --></head>
+<link rel="stylesheet" href="/assets/language-v3.css"/><link rel="stylesheet" href="/assets/cfmoto-typography-v2.css"/><!-- CFMOTO:UX-ACCESSIBILITY:START --><link rel="stylesheet" href="/assets/ux-accessibility-v1.css"/><!-- CFMOTO:UX-ACCESSIBILITY:END --><!-- CFMOTO:UNIFIED-NAV:HEAD:START --><link rel="stylesheet" href="/assets/unified-navigation-v1.css"><script defer src="/assets/unified-navigation-v1.js"></script><script defer src="/assets/suspension-entry-v1.js"></script><!-- CFMOTO:UNIFIED-NAV:HEAD:END --><link rel="stylesheet" href="/assets/confirmed-pricing-v2.css"/></head>
 <body>
   <!-- CFMOTO:UNIFIED-NAV:HEADER:START -->
 <div class="unified-topline"><span>Официальный представитель CFMOTO в Азербайджане</span><span class="topline-detail">пр. Бабека, 188 · Салон ежедневно 10:00–19:00</span></div>
 <header class="site-header unified-site-header">
-  <a class="brand" href="/ru/" aria-label="CFMOTO Азербайджан — главная"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"><b>АЗЕРБАЙДЖАН</b></a>
+  <a class="brand" href="/ru/" aria-label="CFMOTO Азербайджан — главная"><img src="/assets/cfmoto-logo-transparent-v1.svg" alt="CFMOTO" width="159" height="34"><b>АЗЕРБАЙДЖАН</b></a>
   <nav class="main-nav" id="site-primary-navigation" aria-label="Главное меню">
     <details class="unified-products-menu"><summary>Модели <span aria-hidden="true">⌄</span></summary><div class="unified-products-panel"><a href="/ru/motocikly/">Мотоциклы<span>↗</span></a><a href="/ru/kvadrocikly/">Квадроциклы<span>↗</span></a><a href="/ru/buggy/">Багги и UTV<span>↗</span></a><a href="/ru/#modeller">Все модели<span>↗</span></a></div></details>
-    <a href="/aksesuar-konfiquratoru/">Аксессуары</a><a href="/ru/kredit/">Кредит</a><a href="/ru/servis/">Сервис</a><a href="/xeberler/">Новости</a><a href="/ru/#showroom">Салон</a>
+    <a href="/aksesuar-konfiquratoru/">Аксессуары</a><a href="/ru/kredit/">Кредит</a><a href="/ru/kalkulyator-podveski/" data-suspension-entry="true">Подвеска</a><a href="/ru/servis/">Сервис</a><a href="/xeberler/">Новости</a><a href="/ru/#showroom">Салон</a>
     <a class="nav-cta" href="https://wa.me/994512332484?text=Salam%2C%20CFMOTO%20modeli%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m" target="_blank" rel="noreferrer">Связаться</a>
   </nav>
   <script defer src="/assets/language-switcher-v4.js" data-language="ru" data-counterpart="/servis/" data-canonical="https://cfmoto.az/ru/servis/" data-az="https://cfmoto.az/servis/" data-ru="https://cfmoto.az/ru/servis/" data-default="https://cfmoto.az/servis/"></script>
@@ -95,9 +94,9 @@ document.addEventListener('click',function(event){
 <div class="cta-box"><div><h2>Запись в сервис</h2><p>Ежедневно, кроме понедельника, 10:00–19:00.</p></div><div class="cta-actions"><a class="button primary" href="tel:+994102414299" data-contact-area="service">+994 10 241 42 99</a><a class="button ghost" href="/ru/zapchasti/">Запчасти</a></div></div>
 </div></div>
   </main>
-  <aside class="content-links" aria-label="Полезная информация"><div><a href="/ru/motocikly/">Мотоциклы →</a><a href="/ru/kvadrocikly/">Квадроциклы →</a><a href="/ru/buggy/">Багги и UTV →</a><a href="/ru/kredit/">Условия кредита →</a><a href="/ru/servis/" aria-current="page">Официальный сервис →</a><a href="/ru/garantiya/">Гарантия →</a><a href="/ru/zapchasti/">Запчасти →</a><a href="/ru/sravnenie-modeley/">Сравнение моделей →</a></div></aside>
+  <aside class="content-links" aria-label="Полезная информация"><div><a href="/ru/motocikly/">Мотоциклы →</a><a href="/ru/kvadrocikly/">Квадроциклы →</a><a href="/ru/buggy/">Багги и UTV →</a><a href="/ru/kredit/">Условия кредита →</a><a href="/ru/servis/" aria-current="page">Официальный сервис →</a><a href="/ru/garantiya/">Гарантия →</a><a href="/ru/zapchasti/">Запчасти →</a><a href="/ru/sravnenie-modeley/">Сравнение моделей →</a><a href="/ru/kalkulyator-podveski/">Подвеска kalkulyatoru →</a></div></aside>
   <footer class="content-footer">
-    <a class="brand" href="/ru/"><img src="/cfmoto-logo-black.png" alt="CFMOTO" width="159" height="34"/><b>АЗЕРБАЙДЖАН</b></a>
+    <a class="brand" href="/ru/"><img src="/assets/cfmoto-logo-transparent-v1.svg" alt="CFMOTO" width="159" height="34"/><b>АЗЕРБАЙДЖАН</b></a>
     <div><a href="/ru/motocikly/">Мотоциклы</a><a href="/ru/kvadrocikly/">Квадроциклы</a><a href="/ru/buggy/">Багги и UTV</a><a href="/ru/kredit/">Кредит</a><a href="/ru/servis/">Сервис</a><a href="/ru/zapchasti/">Запчасти</a><a href="https://www.instagram.com/cfmoto_azerbaijan?igsi=MWR6ZnNhM2ltcHRtNQ%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">Instagram</a></div>
     <small>© 2026 CFMOTO Азербайджан · SAZMOTO MMC. Все права защищены.</small>
   </footer>

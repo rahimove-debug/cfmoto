@@ -6,7 +6,7 @@
     const button = document.createElement("button");
     button.className = "menu-button";
     button.type = "button";
-    button.setAttribute("aria-label", "Menyunu aç");
+    button.setAttribute("aria-label", document.documentElement.lang === "ru" ? "Открыть меню" : "Menyunu aç");
     button.setAttribute("aria-expanded", "false");
     button.innerHTML = "<span></span><span></span>";
     header.append(button);

@@ -44,7 +44,10 @@ def replace_deep!(value)
     end
   when Hash
     value.each do |key, child|
-      next if key == "listPrice"
+      # Final-state campaign markup keeps the public list price inside its
+      # accessibility label. The approved presentation pass owns that label,
+      # so a repeat build must not rewrite 19,900 there as 17,900.
+      next if key == "listPrice" || key == "aria-label"
       if child.is_a?(String) || child.is_a?(Integer)
         changed = replace_price_tokens(child)
         replacements += 1 if changed != child

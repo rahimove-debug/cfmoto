@@ -29,19 +29,32 @@ products.each do |path, product|
   end
 
   slug = model_slug(product)
-  offer_properties = %w[price priceCurrency url validFrom priceValidUntil itemCondition]
+  offer_properties = %w[price priceCurrency url itemCondition]
+  offer_properties.concat(%w[validFrom priceValidUntil]) unless slug == "cforce-c6-pro"
   offer_properties << "availability" unless slug == "zeeho-ez4"
   offer_properties.each do |property|
     errors << "#{label} Offer is missing #{property}" if offer[property].nil? || offer[property] == ""
   end
-  errors << "#{label} Offer has the wrong price-validity date" unless offer["priceValidUntil"] == PRICE_VALID_UNTIL
-  errors << "#{label} Offer has an invalid start date" unless offer["validFrom"].to_s.match?(/\A\d{4}-\d{2}-\d{2}\z/) && offer["validFrom"] <= offer["priceValidUntil"]
+  unless slug == "cforce-c6-pro"
+    errors << "#{label} Offer has the wrong price-validity date" unless offer["priceValidUntil"] == PRICE_VALID_UNTIL
+    errors << "#{label} Offer has an invalid start date" unless offer["validFrom"].to_s.match?(/\A\d{4}-\d{2}-\d{2}\z/) && offer["validFrom"] <= offer["priceValidUntil"]
+  end
   errors << "#{label} Offer is not marked as new" unless offer["itemCondition"] == NEW_CONDITION
   errors << "#{label} Offer seller is missing its name" if offer.dig("seller", "name").to_s.empty?
   errors << "#{label} Offer seller is missing its URL" unless offer.dig("seller", "url") == SELLER_URL
 end
 
-errors << "Expected Product structured data for both Azerbaijani and Russian model pages" if products.size < 98
+errors << "Expected Product structured data for both Azerbaijani and Russian model pages" if products.size < 100
+
+c6_products = products.select { |_path, product| model_slug(product) == "cforce-c6-pro" }
+errors << "Expected Azerbaijani and Russian C6 Product schemas" unless c6_products.size == 2
+c6_products.each do |path, product|
+  label = path.delete_prefix("#{ROOT}/")
+  offer = product["offers"] || {}
+  errors << "#{label}: C6 price must be 16900 AZN" unless offer["price"].to_s == "16900" && offer["priceCurrency"] == "AZN"
+  errors << "#{label}: C6 must remain a preorder" unless offer["availability"] == "https://schema.org/PreOrder"
+  errors << "#{label}: C6 preorder must not invent offer dates" if offer.key?("validFrom") || offer.key?("priceValidUntil")
+end
 
 ez4_products = products.select { |_path, product| model_slug(product) == "zeeho-ez4" }
 errors << "Expected Azerbaijani and Russian ZEEHO EZ4 Product schemas" unless ez4_products.size == 2

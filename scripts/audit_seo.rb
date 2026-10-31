@@ -9,6 +9,25 @@ require_relative "russian_config"
 ROOT = File.expand_path("..", __dir__)
 SITE_ORIGIN = DomainConfig::SITE_ORIGIN
 CLEAN_IMAGE_SLUGS = %w[1000mt-x 750sr-s cforce-c4 cforce1000-touring].freeze
+VERIFIED_PRIMARY_COLOR_IMAGES = {
+  "125nk" => "/models/125nk-gem-black-official-v1.webp",
+  "150sc" => "/models/150sc-space-silver-official-v1.webp",
+  "250cl-c" => "/models/250cl-c-nebula-black-official-v1.webp",
+  "250dual" => "/models/250dual-lime-green-official-v1.webp",
+  "300sr" => "/models/300sr-nebula-black-official-v1.webp",
+  "450sr-s" => "/models/450sr-s-gem-black-official-v1.webp",
+  "500sr-voom" => "/models/500sr-voom-zephyr-blue-official-v1.webp",
+  "675nk" => "/models/675nk-glacier-white-official-v1.webp",
+  "675sr-r" => "/models/675sr-r-nebula-white-official-v1.webp",
+  "700mt" => "/models/700mt-nebula-white-official-v1.webp",
+  "800mt-x" => "/models/800mt-x-zephyr-blue-official-v1.webp",
+  "cflite-230-dual" => "/models/cflite-230-dual-zephyr-blue-official-v1.webp",
+  "cforce-520-l" => "/models/cforce-520-l-magma-red-official-v1.webp",
+  "u10-xl-pro" => "/models/u10-xl-pro-bordeaux-red-official-v1.webp",
+  "uforce-600" => "/models/uforce-600-desert-tan-official-v1.webp",
+  "zforce-1000-sport-r" => "/models/zforce-1000-sport-r-desert-tan-official-v1.webp",
+  "zforce-950-sport-4" => "/models/zforce-950-sport-4-nebula-black-official-v1.webp"
+}.freeze
 META_PIXEL_ID = DomainConfig::META_PIXEL_ID
 META_PIXEL_HEAD_START = "<!-- CFMOTO:META-PIXEL:HEAD:START -->"
 META_PIXEL_HEAD_END = "<!-- CFMOTO:META-PIXEL:HEAD:END -->"
@@ -28,6 +47,13 @@ def expected_primary_model_image(slug)
 
   suffix = CLEAN_IMAGE_SLUGS.include?(slug) ? "-clean" : ""
   "/models/#{slug}#{suffix}.webp"
+end
+
+def expected_primary_model_images(slug)
+  sources = [expected_primary_model_image(slug), VERIFIED_PRIMARY_COLOR_IMAGES[slug]].compact
+  sources << "/models/aura-150-ivory-white-official-v1.png" if slug == "aura-150"
+  sources << "/models/450cl-c-bobber-ivory-white-official-v1.webp" if slug == "450cl-c-bobber"
+  sources.uniq
 end
 
 def walk_json(value, &block)
@@ -190,7 +216,7 @@ html_paths.each do |path|
     errors << "#{relative}: missing GA4 event #{event_name}" unless html.include?("'#{event_name}'")
   end
 
-  logo_tags = html.scan(%r{<img\b[^>]*src="/cfmoto-logo-black\.png"[^>]*>})
+  logo_tags = html.scan(%r{<img\b[^>]*src="/(?:cfmoto-logo-black\.png|assets/cfmoto-logo-transparent-v1\.svg)"[^>]*>})
   errors << "#{relative}: missing CFMOTO logo" if logo_tags.empty?
   logo_tags.each do |tag|
     errors << "#{relative}: CFMOTO logo is missing intrinsic dimensions" unless tag.include?('width="159"') && tag.include?('height="34"')
@@ -326,7 +352,7 @@ content_expectations = {
   "servis" => ["Bazar ertəsi istisna olmaqla", "+994 10 241 42 99", "45 AZN", '"@type":"Service"'],
   "zemanet" => ["2 il / 24.000 km", "model və istifadə rejiminə görə", "ümumi məlumat verir"],
   "ehtiyat-hisseleri" => ["orijinal ehtiyat hissələri", "yağlar və aksesuarlar", "mövcudluq telefon sorğusu"],
-  "model-muqayisesi" => ["49 aktual CFMOTO və ZEEHO modelini", "Minimum ilkin ödəniş", '"numberOfItems":49'],
+  "model-muqayisesi" => ["50 aktual CFMOTO və ZEEHO modelini", "Minimum ilkin ödəniş", '"numberOfItems":50'],
   "asqi-kalkulyatoru" => ["data-cfmoto-suspension-calculator", "1000MT-X", "800MT-X", "700MT", "450MT", '"@type":"FAQPage"']
 }
 content_expectations.each do |slug, expected_texts|
@@ -356,7 +382,7 @@ category_expectations = {
   },
   "kvadrosikl" => {
     title: "Kvadrosikl (ATV) Satışı və Qiymətləri | CFMOTO Azerbaijan",
-    count: 9,
+    count: 10,
     required: ["CFMOTO kvadrosikl və ATV qiymətləri", "Maliyyələşmə şərtləri", "50%"]
   },
   "buggy" => {
@@ -405,9 +431,9 @@ category_expectations.each do |slug, expectation|
 end
 
 card_images = Dir.glob(File.join(ROOT, "models", "cards", "*.webp"))
-errors << "Expected 49 base, 4 clean, and 1 cache-versioned optimized model card images, found #{card_images.size}" unless card_images.size == 54
+errors << "Expected 50 base, 4 clean, and 1 cache-versioned optimized model card images, found #{card_images.size}" unless card_images.size == 55
 homepage_card_sources = home.scan(%r{src="(/models/cards/[^"]+\.webp)(?:\?v=[A-Za-z0-9._-]+)?"}).flatten
-errors << "Homepage must use all 49 optimized model card images" unless homepage_card_sources.uniq.size == 49
+errors << "Homepage must use all 50 optimized model card images" unless homepage_card_sources.uniq.size == 50
 homepage_card_sources.uniq.each do |source|
   errors << "Homepage card image is missing: #{source}" unless File.file?(File.join(ROOT, source.delete_prefix("/")))
 end
@@ -432,19 +458,15 @@ end
 Dir.glob(File.join(ROOT, "model", "*", "index.html")).sort.each do |path|
   slug = File.basename(File.dirname(path))
   content = File.read(path, encoding: "UTF-8")
-  primary = expected_primary_model_image(slug)
-  # Rebuilt AURA pages retain the verified local Ivory White color photo.
-  if slug == "aura-150" && content.include?('<img class="model-color-image" src="/models/aura-150-ivory-white-official-v1.png"')
-    primary = "/models/aura-150-ivory-white-official-v1.png"
-    errors << "#{slug}: official Ivory White image is missing" unless File.file?(File.join(ROOT, primary.delete_prefix("/")))
+  candidates = expected_primary_model_images(slug)
+  primary = candidates.find do |source|
+    content.match?(%r{<img class="model-color-image"[^>]*src="#{Regexp.escape(source)}"})
   end
-  # Rebuilt BOBBER pages retain the verified local Ivory White hero; the
-  # Nebula Black selector asset is checked by audit_model_images.rb.
-  if slug == "450cl-c-bobber" && content.include?('<img class="model-color-image" src="/models/450cl-c-bobber-ivory-white-official-v1.webp"')
-    primary = "/models/450cl-c-bobber-ivory-white-official-v1.webp"
-    errors << "#{slug}: official Ivory White image is missing" unless File.file?(File.join(ROOT, primary.delete_prefix("/")))
-  end
-  errors << "#{slug}: primary model image is not local" unless content.match?(%r{<img class="model-color-image"[^>]*src="#{Regexp.escape(primary)}"})
+  errors << "#{slug}: primary model image is not local" unless primary
+  next unless primary
+
+  local_source = primary.split("?", 2).first
+  errors << "#{slug}: primary model image file is missing" unless File.file?(File.join(ROOT, local_source.delete_prefix("/")))
   errors << "#{slug}: primary model preload is not local" unless content.include?(%(<link rel="preload" as="image" href="#{primary}"))
 end
 

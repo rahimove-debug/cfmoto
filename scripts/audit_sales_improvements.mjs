@@ -22,8 +22,13 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   const select = descendants(tree, node => node.tag === 'select')[0];
   const options = descendants(select, node => node.tag === 'option');
   assert.equal(options.length, 49, `${locale} full calculator catalog`);
-  assert.equal(models.length, 49, `${locale} full catalogue`);
+  assert.equal(models.length, 50, `${locale} full catalogue`);
   assert.equal(models.filter(model => model.slug === 'zeeho-ez4').length, 1, `${locale} EZ4 catalogue entry`);
+  const c6 = models.find(model => model.slug === 'cforce-c6-pro');
+  assert(c6, `${locale} C6 preorder catalogue entry`);
+  assert.equal(c6.price, 16900, `${locale} C6 confirmed preorder price`);
+  assert.equal(c6.financeEligible, false, `${locale} C6 remains outside unconfirmed finance`);
+  assert.equal(options.filter(option => option.props.value === c6.name).length, 0, `${locale} C6 excluded from finance calculator`);
   assert.equal(options.filter(option => option.props.value === 'ZEEHO EZ4').length, 1, `${locale} EZ4 finance option`);
   assert.equal(options.filter(option => option.props.value === '500SR').length, 1);
   assert.equal(models.find(model => model.slug === '150sc').price, 5490, 'User-confirmed 150SC price');
@@ -94,7 +99,7 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   const selectedMotorcycleButtons = descendants(descendants(motorcycleTree, node => hasClass(node, 'filter-row'))[0], node => node.tag === 'button' && node.props['aria-selected']);
   assert.equal(selectedMotorcycleButtons.length, 1, `${locale} one selected motorcycle filter`);
   assert.equal(text(selectedMotorcycleButtons[0]), motorcycleLabel, `${locale} motorcycle filter selected state`);
-  assert.deepEqual(cardSlugs(tree), ['800mt-x', '750sr-s', '450mt', '150sc', 'aura-150', 'cforce-c4', 'cforce-c5', 'z10'], `${locale} compact catalogue featured order`);
+  assert.deepEqual(cardSlugs(tree), ['800mt-x', '750sr-s', '450mt', '150sc', 'aura-150', 'cforce-c5', 'cforce-c6-pro', 'z10'], `${locale} compact catalogue featured order`);
 
   // ATV and Buggy filters remain complete after the scooter split.
   for (const category of filterLabels.slice(3)) {
@@ -169,7 +174,7 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
   }
 
   // Every React calculator must match its model, not just the selected examples.
-  for (const model of models.filter(model => !['500sr', 'zeeho-ez4'].includes(model.slug))) {
+  for (const model of models.filter(model => !['500sr', 'zeeho-ez4', 'cforce-c6-pro'].includes(model.slug))) {
     const finance = componentModule(path.join(assets, files.finance)).default({ model: model.name, price: model.price, type: model.type, whatsapp: 'https://wa.me/994512332484' });
     const file = path.join(dist, locale === 'az' ? 'model' : 'ru/model', model.slug, 'index.html');
     const modelHtml = read(file);
@@ -237,4 +242,4 @@ assert(ez4StandaloneFinanceSource.includes('const debt=balance*(1+rateForMonths(
 assert(ez4StandaloneFinanceSource.includes('down.min=bank?"10":"40";'), 'EZ4 mode-specific down payment');
 assert(ez4StandaloneFinanceSource.includes('installmentTotal.textContent=format.format(paid+debt);'), 'EZ4 total includes down payment');
 assert.equal(manifest.bankMaxMonths, 36);
-console.log('Sales audit passed: AZ/RU homepage parity, 49 catalogue and calculator models, 94 React model-page states, EZ4 40%/18-month finance and bank balance rates');
+console.log('Sales audit passed: AZ/RU homepage parity, 50 catalogue models, 49 calculator models, 94 React model-page states, C6 preorder exclusion and EZ4 40%/18-month finance');

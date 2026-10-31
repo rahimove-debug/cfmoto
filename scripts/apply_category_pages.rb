@@ -43,16 +43,16 @@ CONFIG = {
     type: "Kvadrosikl",
     title: "Kvadrosikl (ATV) Satışı və Qiymətləri | CFMOTO Azerbaijan",
     description: "CFMOTO kvadrosikl və ATV modelləri, xüsusiyyətləri və Azərbaycandakı nağd satış qiymətləri. Utility, touring, premium və youth ATV seçimləri.",
-    eyebrow: "9 aktual kvadrosikl",
+    eyebrow: "10 aktual kvadrosikl",
     heading: "CFMOTO kvadrosikl və ATV qiymətləri",
     intro: "İş, təsərrüfat, istirahət və çətin relyef üçün CFMOTO CFORCE və GOES kvadrosikllərini qiymət və mühərrik sinfinə görə müqayisə edin.",
     summary: "Hər kvadrosiklin mühərrik sinfi və nağd satış qiyməti aşağıda göstərilir. Avadanlıq və texniki göstəriciləri model səhifəsində yoxlayın.",
     body_heading: "Kvadrosikl seçərkən nələrə baxmaq lazımdır?",
     body: "Mühərrik sinfi, oturacaq quruluşu, yük və yedəkləmə ehtiyacı, asqı və istifadə ediləcək relyef əsas seçim meyarlarıdır. Utility və touring modelləri işlə istirahət arasında fərqli balans təqdim edir.",
-    finance: "Kvadrosikl modellərində daxili hissəli ödəniş üçün minimum ilkin ödəniş 50%, maksimal müddət 12 aydır. Yekun maliyyələşmə şərtləri satış mütəxəssisi tərəfindən təsdiqlənir.",
+    finance: "Maliyyələşməsi təsdiqlənmiş kvadrosikl modellərində daxili hissəli ödəniş üçün minimum ilkin ödəniş 50%, maksimal müddət 12 aydır. Ön sifariş modelləri daxil olmaqla, hər model üzrə yekun maliyyələşmə şərtləri satış mütəxəssisi tərəfindən ayrıca təsdiqlənir.",
     faqs: [
       ["CFMOTO kvadrosikl qiymətləri necə müqayisə olunur?", "Bütün aktual ATV modellərinin nağd satış qiyməti və mühərrik sinfi bu səhifədə göstərilir."],
-      ["Kvadrosikl üçün ilkin ödəniş nə qədərdir?", "Daxili hissəli ödənişdə minimum ilkin ödəniş 50%, maksimal müddət 12 aydır."],
+      ["Kvadrosikl üçün ilkin ödəniş nə qədərdir?", "Maliyyələşməsi təsdiqlənmiş modellərdə daxili hissəli ödəniş üçün minimum ilkin ödəniş 50%, maksimal müddət 12 aydır. Ön sifariş modellərinin şərtləri ayrıca dəqiqləşdirilir."],
       ["ATV modeli seçərkən hansı məlumatlar vacibdir?", "İstifadə məqsədi, mühərrik sinfi, oturacaq sayı, yük və yedəkləmə tələbi, asqı və təkər ölçüləri nəzərə alınmalıdır."],
       ["Kvadrosikl servisi və ehtiyat hissələri varmı?", "Rəsmi servis və ehtiyat hissələri üçün +994 10 241 42 99 nömrəsi ilə əlaqə saxlaya bilərsiniz."]
     ]
@@ -84,7 +84,7 @@ end
 def models
   home = File.read(File.join(ROOT, "index.html"), encoding: "UTF-8")
   cards = home.scan(%r{<article class="model-card">.*?</article>}m)
-  abort "Expected 49 model cards, found #{cards.size}" unless cards.size == 49
+  abort "Expected 50 model cards, found #{cards.size}" unless cards.size == 50
   cards.map do |card|
     slug = card[%r{href="/model/([^"/]+)/?"}, 1]
     name = html_text(card[%r{<h3>(.*?)</h3>}m, 1])
@@ -96,7 +96,10 @@ def models
       type: type,
       engine: engine,
       segment: html_text(card[%r{<span class="model-type">(.*?)</span>}m, 1]),
-      price: html_text(card[%r{<div class="model-price">.*?<strong>(.*?)</strong>}m, 1])
+      # Final-state campaign cards add an extra class to the price container.
+      # Accept any class list containing model-price so repeat builds preserve
+      # the approved sale price.
+      price: html_text(card[%r{<div class="[^"]*\bmodel-price\b[^"]*">.*?<strong>(.*?)</strong>}m, 1])
     }
   end
 end
@@ -200,11 +203,11 @@ all_models = models
 CategoryConfig::SLUGS.each do |slug|
   config = CONFIG.fetch(slug)
   items = all_models.select { |model| model[:type] == config[:type] }
-  expected = { "motosiklet" => 31, "kvadrosikl" => 9, "buggy" => 9 }.fetch(slug)
+  expected = { "motosiklet" => 31, "kvadrosikl" => 10, "buggy" => 9 }.fetch(slug)
   abort "#{slug}: expected #{expected} models, found #{items.size}" unless items.size == expected
   directory = File.join(ROOT, slug)
   FileUtils.mkdir_p(directory)
   File.write(File.join(directory, "index.html"), page_html(slug, config, items), encoding: "UTF-8")
 end
 
-puts "Generated 3 category pages with 49 model cards"
+puts "Generated 3 category pages with 50 model cards"

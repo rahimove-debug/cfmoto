@@ -13,8 +13,8 @@ end
 
 home_path = File.join(ROOT, "index.html")
 home = read(home_path)
-%w[V5 V4 V3 V2 V1].each do |version|
-  accessory_version = version == "V5" ? "V16" : "V15"
+%w[V6 V5 V4 V3 V2 V1].each do |version|
+  accessory_version = %w[V6 V5].include?(version) ? "V16" : "V15"
   home.gsub!("/assets/page-CfmotoHomeNews#{version}.js", "/assets/page-CfmotoAccessory#{accessory_version}.js")
   home.gsub!("/assets/index-CfmotoHomeNews#{version}.js", "/assets/index-CfmotoAccessory#{accessory_version}.js")
   home.gsub!("/assets/layout-segment-context-CfmotoHomeNews#{version}.js", "/assets/layout-segment-context-CfmotoAccessory#{accessory_version}.js")
@@ -77,7 +77,7 @@ write(bundle_path, bundle)
     FileUtils.rm_f(File.join(ROOT, "assets", "#{asset}-#{version}.js"))
   end
 end
-%w[V5 V4 V3 V2 V1].each do |version|
+%w[V6 V5 V4 V3 V2 V1].each do |version|
   %w[page index layout-segment-context link router ProductMegaMenu].each do |asset|
     FileUtils.rm_f(File.join(ROOT, "assets", "#{asset}-CfmotoHomeNews#{version}.js"))
   end

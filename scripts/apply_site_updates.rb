@@ -104,7 +104,7 @@ INTERNAL_40_MOTORCYCLE_SLUGS = %w[
   700cl-x-sport 700mt 675sr-r 675nk 500sr 500sr-voom 450cl-c-bobber 450cl-c
   450cl-c-amt 450sr-s 450mt 450nk zeeho-ez4
 ].freeze
-STANDALONE_MODEL_SLUGS = %w[500sr zeeho-ez4].freeze
+STANDALONE_MODEL_SLUGS = %w[500sr zeeho-ez4 cforce-c6-pro].freeze
 
 INSTALLMENT_INTEREST_RATES = {
   6 => 0.08,
@@ -1245,7 +1245,10 @@ checks = {
   "mobile category backgrounds" => !mobile_category_images_available || (File.file?(new_stylesheet_path) && read_utf8(new_stylesheet_path).include?('/official-800mtx-hero-mobile.jpg') && read_utf8(new_stylesheet_path).include?('/models/z10-4-mobile.jpg')),
   "correct Instagram profile" => [home, home_bundle].all? { |content| content.include?(INSTAGRAM_URL) } && DomainConfig::LEGACY_INSTAGRAM_URLS.none? { |url| [home, home_bundle].any? { |content| content.include?(url) } },
   "logo dimensions in prerendered HTML" => html_paths.all? do |path|
-    tags = read_utf8(path).scan(%r{<img\b[^>]*src="/cfmoto-logo-black\.png"[^>]*>})
+    # Repeat builds run after unified navigation has replaced the legacy PNG
+    # with the official transparent SVG. Both variants must remain explicitly
+    # sized so the header does not shift while the logo loads.
+    tags = read_utf8(path).scan(%r{<img\b[^>]*src="/(?:cfmoto-logo-black\.png|assets/cfmoto-logo-transparent-v1\.svg)"[^>]*>})
     !tags.empty? && tags.all? { |tag| tag.include?(%(width="#{LOGO_WIDTH}")) && tag.include?(%(height="#{LOGO_HEIGHT}")) }
   end,
   "logo dimensions in client bundles" => Dir.glob(File.join(ASSETS, "*.js")).all? do |path|
@@ -1266,10 +1269,14 @@ checks = {
     if slug == "450cl-c-bobber" && html.include?('<img class="model-color-image" src="/models/450cl-c-bobber-ivory-white-official-v1.webp"')
       source = "/models/450cl-c-bobber-ivory-white-official-v1.webp"
     end
+    verified_source = VERIFIED_PRIMARY_COLOR_IMAGES[slug]
+    if verified_source && html.include?(%(<img class="model-color-image" src="#{verified_source}"))
+      source = verified_source
+    end
     html.include?(%(<img class="model-color-image" src="#{source}")) &&
       html.include?(%(<link rel="preload" as="image" href="#{source}"))
   end,
-  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 54 && home.scan(%r{class="model-card"}).size == 49 && home.scan(%r{src="(/models/cards/[^"]+\.webp)(?:\?v=[A-Za-z0-9._-]+)?"}).flatten.uniq.size == 49 && home.scan(%r{src="/models/cards/[^"]+\.webp(?:\?v=[A-Za-z0-9._-]+)?"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
+  "optimized homepage and mega-menu images" => Dir.glob(File.join(ROOT, "models", "cards", "*.webp")).size == 55 && home.scan(%r{class="model-card"}).size == 50 && home.scan(%r{src="(/models/cards/[^"]+\.webp)(?:\?v=[A-Za-z0-9._-]+)?"}).flatten.uniq.size == 50 && home.scan(%r{src="/models/cards/[^"]+\.webp(?:\?v=[A-Za-z0-9._-]+)?"}).size == home.scan(%r{class="model-card"}).size + home.scan(%r{class="mega-model"}).size && home_bundle.include?('e.image.replace(`/models/`,`/models/cards/`)') && read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE)).include?('e.image.replace(`/models/`,`/models/cards/`)'),
   "clean model images replace red-label originals" => CLEAN_IMAGE_SLUGS.all? do |slug|
     primary = primary_model_image_source(slug)
     card = card_model_image_source(slug)
@@ -1281,7 +1288,12 @@ checks = {
   end,
   "SEO and category footer links" => html_paths.all? { |path| read_utf8(path).include?('href="/motosiklet/"') && read_utf8(path).include?('href="/kvadrosikl/"') && read_utf8(path).include?('href="/buggy/"') && read_utf8(path).include?('href="/model-muqayisesi/"') && read_utf8(path).include?('href="/zemanet/"') } && home_bundle.include?('href:`/motosiklet/`') && home_bundle.include?('href:`/kvadrosikl/`') && home_bundle.include?('href:`/buggy/`') && home_bundle.include?('href:`/model-muqayisesi/`'),
   "internal directory links avoid redirect hops" => html_paths.all? { |path| !read_utf8(path).match?(%r{href="/(?:model/[^"/?#]+|kredit|servis|zemanet|ehtiyat-hisseleri|model-muqayisesi)"}) } && [home_bundle, read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE))].all? { |content| !content.match?(%r{href:`/(?:model/\$\{e\.slug\}|kredit|servis|zemanet|ehtiyat-hisseleri|model-muqayisesi)`}) },
-  "single runtime module preload" => html_paths.all? { |path| read_utf8(path).scan(%r{<link rel="modulepreload" href="/assets/#{Regexp.escape(NEW_RUNTIME)}"[^>]*>}).size == 1 },
+  # The optimized homepage receives a content-hashed HomeNews entry point in a
+  # later build stage, while detail pages retain the policy runtime. A repeat
+  # build must accept either final entry point, but never duplicate them.
+  "single runtime module preload" => html_paths.all? do |path|
+    read_utf8(path).scan(%r{<link rel="modulepreload" href="/assets/(?:#{Regexp.escape(NEW_RUNTIME)}|index-CfmotoHomeNewsV\d+\.js)"[^>]*>}).size == 1
+  end,
   "static links use native navigation" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('ref:A,href:C,onClick:c,onMouseEnter:l,onTouchStart:u,...I,children:a'),
   "static links skip RSC prefetch" => read_utf8(File.join(ASSETS, NEW_LINK_BUNDLE)).include?('function re(e){return!1}'),
   "alternate color images load on demand" => !read_utf8(File.join(ASSETS, NEW_MODEL_COLOR_BUNDLE)).include?('let t=new Image;t.src=e.image'),
@@ -1293,7 +1305,7 @@ checks = {
   "home C5 card" => home.include?('href="/model/cforce-c5/"'),
   "home C5 engine class" => home.include?('CFORCE C5</h3><p>Kvadrosikl<!-- --> · <!-- -->500 cc</p>'),
   "home C5 calculator option" => home.include?('value="CFORCE C5"'),
-  "home catalog count" => home.include?("49<!-- --> aktual model") || home.include?("49 aktual model"),
+  "home catalog count" => home.include?("50<!-- --> aktual model") || home.include?("50 aktual model"),
   "EZ4 has explicit 40 percent finance and a standalone calculator" => begin
     ez4 = read_utf8(File.join(ROOT, "model", "zeeho-ez4", "index.html"))
     menu = read_utf8(File.join(ASSETS, NEW_MENU_BUNDLE))

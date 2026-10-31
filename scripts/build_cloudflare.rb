@@ -32,6 +32,9 @@ abort "500SR model integration failed" unless system(RbConfig.ruby, model_500sr)
 zeeho_ez4 = File.join(__dir__, "apply_zeeho_ez4.rb")
 abort "ZEEHO EZ4 model integration failed" unless system(RbConfig.ruby, zeeho_ez4)
 
+cforce_c6 = File.join(__dir__, "apply_cforce_c6.rb")
+abort "CFORCE C6 PRO model integration failed" unless system(RbConfig.ruby, cforce_c6)
+
 campaign_800mtx = File.join(__dir__, "apply_800mtx_campaign.rb")
 abort "800MT-X campaign update failed" unless system(RbConfig.ruby, campaign_800mtx)
 
@@ -145,6 +148,9 @@ abort "Sitemap lastmod audit failed" unless system(RbConfig.ruby, sitemap_lastmo
 zeeho_ez4_audit = File.join(__dir__, "audit_zeeho_ez4.rb")
 abort "ZEEHO EZ4 audit failed" unless system(RbConfig.ruby, zeeho_ez4_audit)
 
+cforce_c6_audit = File.join(__dir__, "audit_cforce_c6.rb")
+abort "CFORCE C6 PRO audit failed" unless system(RbConfig.ruby, cforce_c6_audit)
+
 FileUtils.rm_rf(DIST)
 FileUtils.mkdir_p(DIST)
 
@@ -181,6 +187,10 @@ abort "Sales regression audit failed" unless system("node", File.join(__dir__, "
 # two-variant hero and localized product schema in the actual deploy output.
 abort "Published CFLITE 250NK update failed" unless system(RbConfig.ruby, cflite_250nk, DIST)
 abort "Published CFLITE 250NK audit failed" unless system(RbConfig.ruby, File.join(__dir__, "audit_cflite_250nk.rb"), DIST)
+
+# Confirm the preorder campaign, localized page and PreOrder structured data in
+# the exact deployment tree after the catalogue rendering pass.
+abort "Published CFORCE C6 PRO audit failed" unless system(RbConfig.ruby, cforce_c6_audit, DIST)
 
 # Keep the imported configurator as the audited source; publish its resolved
 # catalog in model-sized files only after all local price/image patches ran.

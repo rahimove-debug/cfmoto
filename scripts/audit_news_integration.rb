@@ -172,7 +172,7 @@ NewsConfig::PAGES.each do |page|
   errors << "#{relative}: contains non-local stylesheet" if html.match?(%r{<link\b[^>]*rel="stylesheet"[^>]*href="https?://}i)
   errors << "#{relative}: must load the V2 news stylesheet once" unless html.scan(%(<link rel="stylesheet" href="/assets/cfmoto-news-v2.css">)).size == 1
   errors << "#{relative}: must not load the stale V1 news stylesheet" if html.include?("/assets/cfmoto-news-v1.css")
-  errors << "#{relative}: missing intrinsic logo dimensions" unless html.match?(%r{<img\b[^>]*src="/cfmoto-logo-black\.png"[^>]*width="159"[^>]*height="34"}i)
+  errors << "#{relative}: missing intrinsic logo dimensions" unless html.match?(%r{<img\b[^>]*src="/(?:cfmoto-logo-black\.png|assets/cfmoto-logo-transparent-v1\.svg)"[^>]*width="159"[^>]*height="34"}i)
   errors << "#{relative}: expected one GA4 block" unless html.scan("<!-- CFMOTO:ANALYTICS:START -->").size == 1 && html.scan("<!-- CFMOTO:ANALYTICS:END -->").size == 1
   errors << "#{relative}: expected one shared gtag queue" unless html.scan("window.gtag=window.gtag||function(){window.dataLayer.push(arguments)}").size == 1
   errors << "#{relative}: direct GA4 loader/config must be owned by GTM" unless html.scan("googletagmanager.com/gtag/js?id=").empty? && html.scan("gtag('js'").empty? && html.scan("gtag('config'").empty?
