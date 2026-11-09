@@ -2,6 +2,7 @@
 
 module NewsConfig
   ROOT_SLUG = "xeberler"
+  EICMA_ARTICLE_SLUG = "cfmoto-azerbaycan-eicma-2026"
   SUSPENSION_CALCULATOR_ARTICLE_SLUG = "cfmoto-asqi-tenzimleme-kalkulyatoru"
   CFORCE_ARTICLE_SLUG = "cforce-c4-c5-artiq-azerbaycanda"
   Z10_ARTICLE_SLUG = "z10-z10-4-turbo-performans-azerbaycanda"
@@ -13,10 +14,17 @@ module NewsConfig
   INDEX_PAGE = {
     path: "/#{ROOT_SLUG}/",
     file: File.join(ROOT_SLUG, "index.html"),
-    image: "/gallery/cfmoto-675sr-r-worldwcr-2027-hero.jpg"
+    image: "/gallery/cfmoto-eicma-2026-stand.webp"
   }.freeze
 
   ARTICLES = [
+    {
+      slug: EICMA_ARTICLE_SLUG,
+      path: "/#{ROOT_SLUG}/#{EICMA_ARTICLE_SLUG}/",
+      file: File.join(ROOT_SLUG, EICMA_ARTICLE_SLUG, "index.html"),
+      image: "/gallery/cfmoto-eicma-2026-stand.webp",
+      title: "CFMOTO Azərbaycan komandası EICMA 2026 sərgisində iştirak etdi"
+    },
     {
       slug: WORLDWCR_ARTICLE_SLUG,
       path: "/#{ROOT_SLUG}/#{WORLDWCR_ARTICLE_SLUG}/",
@@ -68,7 +76,8 @@ module NewsConfig
     }
   ].freeze
 
-  FEATURED_ARTICLE = ARTICLES.first
+  # Keep the existing homepage feature; the new article is added to the news listing.
+  FEATURED_ARTICLE = ARTICLES.find { |article| article.fetch(:slug) == WORLDWCR_ARTICLE_SLUG }
   PAGES = [INDEX_PAGE, *ARTICLES].freeze
 
   module_function

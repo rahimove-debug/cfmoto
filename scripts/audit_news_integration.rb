@@ -206,7 +206,8 @@ if File.file?(listing_path)
   listing_word_count = visible_main_word_count(listing)
   errors << "News listing main content is too short: #{listing_word_count} words (minimum #{MIN_NEWS_INDEX_MAIN_WORDS})" if listing_word_count < MIN_NEWS_INDEX_MAIN_WORDS
   errors << "News listing stories are missing or out of newest-first order" unless article_positions.all? && article_positions.each_cons(2).all? { |first, second| first < second }
-  errors << "News listing featured image must be eager and intrinsic" unless listing.match?(%r{<img src="/gallery/cfmoto-675sr-r-worldwcr-2027-hero\.jpg"[^>]*width="1000"[^>]*height="568"[^>]*loading="eager"[^>]*fetchpriority="high"}i)
+  latest_image = Regexp.escape(NewsConfig::ARTICLES.first.fetch(:image))
+  errors << "News listing latest image must be eager and intrinsic" unless listing.match?(%r{<img src="#{latest_image}"[^>]*width="[1-9]\d*"[^>]*height="[1-9]\d*"[^>]*loading="eager"[^>]*fetchpriority="high"}i)
   NewsConfig::ARTICLES.drop(1).each do |article|
     image = Regexp.escape(article.fetch(:image))
     errors << "News listing older image #{article.fetch(:image)} must be lazy" unless listing.match?(%r{<img src="#{image}"[^>]*loading="lazy"[^>]*fetchpriority="low"}i)
