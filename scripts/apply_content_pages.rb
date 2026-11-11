@@ -178,25 +178,43 @@ end
 models = parse_models
 
 credit_faq = [
+  ["Kreditlə motosiklet necə almaq olar?", "Əvvəlcə motosiklet modelini seçin, sonra bank krediti və daxili hissəli ödəniş variantlarını müqayisə edin. Model səhifəsində ilkin ödənişi və müddəti dəyişərək aylıq ödənişi hesablayın; sənədləri və yekun təklifi satış mütəxəssisi ilə dəqiqləşdirin."],
   ["Hansı motosikletlərdə ilkin ödəniş 20%-dir?", "Mühərrik həcmi 300 cc-dək olan motosikletlərdə və istisna olaraq 450SR modelində minimum ilkin ödəniş 20%-dir."],
   ["Digər motosikletlərdə ilkin ödəniş nə qədərdir?", "300 cc-dən böyük digər motosikletlərdə və ZEEHO EZ4 elektrik skuterində minimum ilkin ödəniş 40%-dir."],
   ["ATV və buggy üçün şərtlər necədir?", "ATV və buggy modellərində daxili hissəli ödəniş üçün minimum ilkin ödəniş 50%, maksimal müddət 12 aydır."],
-  ["Bank krediti müddəti nə qədər ola bilər?", "Bank krediti 10%-dən başlayan ilkin ödənişlə 36 ayadək hesablana bilər. Yekun bank şərtləri ayrıca təsdiqlənir."]
+  ["Bank krediti müddəti nə qədər ola bilər?", "Bank krediti 10%-dən başlayan ilkin ödənişlə 36 ayadək hesablana bilər. Yekun bank şərtləri ayrıca təsdiqlənir."],
+  ["Aylıq ödəniş necə hesablanır?", "Daxili hissəli ödənişdə nağd qiymətdən ilkin ödəniş çıxılır. Qalan borca 6 ay üçün 8%, 12 ay üçün 15%, 18 ay üçün 23% əlavə olunur və məbləğ seçilən ay sayına bölünür. Modelin kalkulyatorunda aylıq və ümumi ödənişi birlikdə yoxlayın."]
 ]
+credit_title = "Kreditlə Motosiklet və Hissəli Ödəniş | CFMOTO"
+credit_description = "Kreditlə motosiklet almaq üçün CFMOTO modellərini və ilkin ödənişləri müqayisə edin. Daxili hissəli ödəniş 18 ayadək, bank krediti 36 ayadək; aylıq ödənişi hesablayın."
 credit_schema = page_schema(
   "kredit",
-  "CFMOTO Kredit və Hissəli Ödəniş | Azərbaycan",
-  "CFMOTO motosiklet, ATV və buggy modelləri üçün daxili hissəli ödəniş və bank krediti şərtləri. İlkin ödənişləri və müddətləri öyrənin.",
+  credit_title,
+  credit_description,
   ContentConfig::LABELS.fetch("kredit"),
   [{ "@type" => "FAQPage", "mainEntity" => credit_faq.map { |question, answer| { "@type" => "Question", "name" => question, "acceptedAnswer" => { "@type" => "Answer", "text" => answer } } } }]
 )
+# Read the same approved catalogue used by model/comparison pages, so this
+# guide cannot retain stale prices or invent a separate financing policy.
+credit_models = %w[cflite-230-dual 250nk 150sc aura-150 300sr 450sr 450mt 800mt-x].map do |slug|
+  model = models.find { |item| item[:slug] == slug }
+  abort "Missing credit-guide model #{slug}" unless model && model[:price] && model[:percent] && model[:term]
+  model
+end
+credit_rows = credit_models.map do |model|
+  %(<tr><th scope="row"><a href="/model/#{model[:slug]}/#odenis">#{CGI.escapeHTML(model[:name])}</a></th><td>#{format_amount(model[:price])} AZN</td><td>#{model[:percent]}% · #{format_amount(model[:down_payment])} AZN</td><td>#{model[:term]} ayadək</td></tr>)
+end.join
 credit_body = <<~HTML
-  <p class="lead">Model kateqoriyasına uyğun minimum ilkin ödənişi və maksimal müddəti əvvəlcədən müqayisə edin. Saytdakı kalkulyator ilkin planlama üçündür.</p>
+  <p class="lead">Kreditlə motosiklet almaq üçün bank krediti və ya CFMOTO-nun daxili hissəli ödəniş variantını seçə bilərsiniz. Əvvəlcə uyğun modeli və ilkin ödənişi müqayisə edin, sonra aylıq və ümumi ödənişi hesablayın.</p>
   <div class="info-grid">
     <article class="info-card"><span>≤ 300 cc və 450SR</span><h2>Motosikletlər</h2><strong>20% · 18 ayadək</strong><p>Daxili hissəli ödəniş üçün minimum ilkin ödəniş və maksimal müddət.</p></article>
     <article class="info-card"><span>Digər motosikletlər və EZ4</span><h2>40% ilkin ödəniş</h2><strong>40% · 18 ayadək</strong><p>450SR istisna olmaqla 300 cc-dən yuxarı motosikletlər və ZEEHO EZ4 elektrik skuteri üçün.</p></article>
     <article class="info-card"><span>Off-road</span><h2>ATV və buggy</h2><strong>50% · 12 ayadək</strong><p>Kvadrosikl və buggy modelləri üçün daxili hissəli ödəniş.</p></article>
   </div>
+  <section class="prose" id="motosiklet-modelleri"><h2>Hissəli ödənişlə ala biləcəyiniz motosikletlər</h2><p>Seçilmiş modellərin nağd qiyməti və minimum daxili ilkin ödənişi aşağıdadır. Modelin adına keçərək onun kalkulyatorunda müddəti və aylıq ödənişi seçin.</p></section>
+  <div class="table-wrap" role="region" aria-label="Motosikletlərin ilkin ödəniş müqayisəsi" tabindex="0"><table class="credit-model-table"><thead><tr><th scope="col">Motosiklet modeli</th><th scope="col">Nağd qiymət</th><th scope="col">Minimum ilkin ödəniş</th><th scope="col">Daxili ödəniş müddəti</th></tr></thead><tbody>#{credit_rows}</tbody></table></div>
+  <p class="table-note">Cədvəldəki ilkin ödəniş aylıq ödəniş deyil. Faiz əlavəsi və ümumi ödəniş modelin kalkulyatorunda ayrıca göstərilir. Qiymət, mövcudluq və yekun şərtlər satış zamanı dəqiqləşdirilir.</p>
+  <p class="credit-catalog-link"><a class="button ghost" href="/motosiklet/">Bütün motosikletləri və qiymətləri müqayisə et</a></p>
   <section class="prose"><h2>Bank krediti</h2><p>Bank krediti 10%-dən başlayan ilkin ödənişlə 36 ayadək mümkündür. Bank faizi, komissiya, tələb olunan sənədlər və yekun təsdiq bankın şərtlərinə əsasən müəyyən olunur.</p><div class="notice">Kalkulyator bank rejimində daxili ödənişlə eyni faiz cədvəlini qalıq borca tətbiq edir: 6 ayadək 8%, 12 ayadək 15%, 12 aydan çox 23%. Bank komissiyası daxil deyil; yekun şərtlər fərqlənə bilər.</div></section>
   <div class="cta-box"><div><h2>Seçdiyiniz modeli hesablayın</h2><p>Ana səhifədə model, ilkin ödəniş və müddəti dəyişərək təxmini aylıq məbləği görün.</p></div><div class="cta-actions"><a class="button primary" href="/#kredit-kalkulyator">Kalkulyatoru aç</a><a class="button ghost" data-contact-area="finance" href="https://wa.me/#{SALES_WHATSAPP.delete('+')}?text=Salam%2C%20CFMOTO%20kredit%20%C5%9F%C9%99rtl%C9%99ri%20haqq%C4%B1nda%20m%C9%99lumat%20almaq%20ist%C9%99yir%C9%99m" target="_blank" rel="noreferrer">Təklif al</a></div></div>
   <section class="faq"><h2>Tez-tez verilən suallar</h2>#{credit_faq.map { |question, answer| "<details><summary>#{question}</summary><p>#{answer}</p></details>" }.join}</section>
@@ -293,7 +311,7 @@ suspension_body = <<~HTML
 HTML
 
 pages = {
-  "kredit" => page_html(slug: "kredit", title: "CFMOTO Kredit və Hissəli Ödəniş | Azərbaycan", description: "CFMOTO motosiklet, ATV və buggy modelləri üçün daxili hissəli ödəniş və bank krediti şərtləri. İlkin ödənişləri və müddətləri öyrənin.", eyebrow: "Maliyyələşmə", heading: "CFMOTO kredit və hissəli ödəniş şərtləri", intro: "Motosiklet, ATV və buggy üçün ilkin ödənişləri, müddətləri və hesablama qaydasını aydın şəkildə öyrənin.", body: credit_body, schema: credit_schema),
+  "kredit" => page_html(slug: "kredit", title: credit_title, description: credit_description, eyebrow: "CFMOTO Azərbaycan", heading: "Kreditlə motosiklet və hissəli ödəniş", intro: "Motosiklet modelini, ilkin ödənişi və müddəti müqayisə edin. Bank krediti və daxili hissəli ödəniş arasındakı fərqi öyrənin.", body: credit_body, schema: credit_schema, extra_head: '<link rel="stylesheet" href="/assets/credit-guide-v1.css"/>'),
   "servis" => page_html(slug: "servis", title: "CFMOTO Rəsmi Servis Bakı | Texniki Qulluq və Təmir", description: "CFMOTO standartlarına uyğun diaqnostika, texniki qulluq və təmir. Servis: +994 10 241 42 99; bazar ertəsi xaric hər gün 10:00–19:00.", eyebrow: "Rəsmi texniki xidmət", heading: "CFMOTO servis, texniki qulluq və təmir", intro: "Diaqnostikadan planlı qulluğa qədər CFMOTO texnikanız üçün rəsmi servis dəstəyi.", body: service_body, schema: service_schema),
   "zemanet" => page_html(slug: "zemanet", title: "CFMOTO Zəmanət Şərtləri | Azərbaycan", description: "CFMOTO motosikletləri üçün 2 il və ya 24.000 km zəmanət məlumatı. ATV və buggy şərtləri model və istifadə rejiminə görə dəqiqləşdirilir.", eyebrow: "Rəsmi məlumat", heading: "CFMOTO zəmanət şərtləri", intro: "Motosiklet, ATV və buggy modelləri üçün zəmanət məlumatını və dəqiqləşdirmə qaydasını öyrənin.", body: warranty_body, schema: warranty_schema),
   "ehtiyat-hisseleri" => page_html(slug: "ehtiyat-hisseleri", title: "CFMOTO Ehtiyat Hissələri və Aksesuarlar | Bakı", description: "CFMOTO modellərinə uyğun orijinal ehtiyat hissələri, yağlar və aksesuarlar. Uyğunluğu dəqiqləşdirmək üçün +994 10 241 42 99 ilə əlaqə saxlayın.", eyebrow: "Modelə uyğun seçim", heading: "CFMOTO ehtiyat hissələri və aksesuarlar", intro: "Orijinal hissələr, qulluq məhsulları və aksesuarlar üçün modelə uyğun məlumat alın.", body: parts_body, schema: parts_schema),
