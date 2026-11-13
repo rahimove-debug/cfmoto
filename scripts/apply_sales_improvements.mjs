@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { componentModule, homeModule, render } from './sales_render.mjs';
+import { campaignFinance, campaignHome } from './november_sr_campaign.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
@@ -171,6 +172,7 @@ for (const [language, copy] of Object.entries(locales)) {
   const summaryEnd = '(0,i.jsxs)(`strong`,{children:[a(t),` AZN`]})]})]})';
   const summaryRows = `(0,i.jsxs)(\`strong\`,{children:[a(t),\` AZN\`]})]}),(0,i.jsxs)(\`div\`,{children:[(0,i.jsx)(\`small\`,{children:c===\`bank\`?\`${copy.bankSurchargeLabel}\`:\`${copy.surchargeLabel}\`}),(0,i.jsxs)(\`strong\`,{children:[a(y.financed-(t-y.downPayment)),\` AZN\`]})]}),(0,i.jsxs)(\`div\`,{className:\`finance-total\`,children:[(0,i.jsx)(\`small\`,{children:c===\`bank\`?\`${copy.bankTotalLabel}\`:\`${copy.totalLabel}\`}),(0,i.jsxs)(\`strong\`,{children:[a(y.downPayment+y.financed),\` AZN\`]})]})]})`;
   finance = replace(finance, summaryEnd, summaryRows, `${language} finance totals`);
+  finance = campaignFinance(finance, language === 'ru');
   write(financeFile, finance);
 
   // Keep all 50 models in the catalogue and mega-menu. The C6 preorder has no
@@ -205,6 +207,7 @@ for (const [language, copy] of Object.entries(locales)) {
   const desktopHero = '(0,c.jsxs)(`section`,{className:`category-hero`';
   const topAnchor = '(0,c.jsx)(`span`,{className:`home-top-anchor`,id:`top`,"aria-hidden":`true`})';
   page = replace(page, heroSection, `${topAnchor},${mobileHomepageEntry(copy)},${desktopHero}`, `${language} mobile sales entry`);
+  page = campaignHome(page, language === 'ru');
   write(pageFile, page);
 
   const { tree, models } = homeModule(assets, copy.page, copy.menu);

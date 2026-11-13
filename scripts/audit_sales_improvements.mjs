@@ -110,7 +110,8 @@ for (const [locale, files] of Object.entries(manifest.locales)) {
 
   const internalExamples = [
     { slug: '150sc', down: 20, monthly: '421', total: '6,149' },
-    { slug: '750sr-s', down: 40, monthly: '972', total: '18,421' },
+    { slug: '675sr-r', down: 40, monthly: '774.50', total: '15,490' },
+    { slug: '750sr-s', down: 40, monthly: '845', total: '16,900' },
     { slug: 'z10', down: 50, monthly: '2,199', total: '49,343' },
   ];
   for (const example of internalExamples) {

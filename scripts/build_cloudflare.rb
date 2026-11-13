@@ -180,6 +180,7 @@ puts "Cloudflare bundle ready: #{html_count} HTML files in dist/"
 
 # Apply the authored sales changes to the deployment output. Keep the complete
 # imported catalog in the source snapshot for category/SEO generation.
+abort "November SR campaign failed" unless system("node", File.join(__dir__, "november_sr_campaign.mjs"))
 abort "Sales improvements failed" unless system("node", File.join(__dir__, "apply_sales_improvements.mjs"))
 abort "Sales regression audit failed" unless system("node", File.join(__dir__, "audit_sales_improvements.mjs"))
 
@@ -196,6 +197,7 @@ abort "Published CFORCE C6 PRO audit failed" unless system(RbConfig.ruby, cforce
 # catalog in model-sized files only after all local price/image patches ran.
 abort "Configurator improvements failed" unless system("node", File.join(__dir__, "apply_configurator_improvements.mjs"))
 abort "Configurator regression audit failed" unless system("node", File.join(__dir__, "audit_configurator_improvements.mjs"))
+abort "November SR campaign audit failed" unless system("node", File.join(__dir__, "audit_november_sr_campaign.mjs"))
 
 confirmed_pricing_audit = File.join(__dir__, "audit_confirmed_pricing.rb")
 abort "Confirmed pricing audit failed" unless system(RbConfig.ruby, confirmed_pricing_audit, DIST)
